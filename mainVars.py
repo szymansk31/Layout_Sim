@@ -1,3 +1,5 @@
+import json
+from fileNameSetup import *
 
 class mainVar:
     numYards = int
@@ -6,12 +8,18 @@ class mainVar:
     numOperators = int
     
     def __init__(self):
-        pass
-    
-    def defYardDict(self):
-        yardDict
-    
-
+        self.files = fileNames()
+     
+    def readParams(self):
+        print("\nreading param File")
+        try: 
+            jsonFile = open (self.files.paramDictFile, "r")
+            paramDict = json.load(jsonFile)
+            jsonFile.close()
+        except FileNotFoundError:
+            print("\njson file does not exist; returning")
+            return
+        print("paramDict: ", paramDict)
 
 
 class indices:

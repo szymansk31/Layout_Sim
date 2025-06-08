@@ -1,0 +1,21 @@
+{
+"locoType": "2-8-0",
+"origLocation": "yard1",
+"finalLocation": "yard2",
+"numStops": 0,
+"stops": {
+    "swArea1"   :[1,2,3,4,5,6,7],
+    "swArea2"   :[1,2,3,4,5,6,7],
+    "end"       :[1,2,3,4,5,6,7],
+    "swArea1"   :[1,2,3,4,5,6,7],
+    "swArea1"   :[1,2,3,4,5,6,7],
+    "swArea1"   :[1,2,3,4,5,6,7]
+},
+"numBox": 0,
+"numTank": 0,
+"numReefer": 0,
+"numHopper": 0,
+"numGon": 0,
+"numFlat": 0,
+"numPsgr": 0
+}
