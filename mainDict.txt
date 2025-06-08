@@ -1,0 +1,26 @@
+{
+"Boxcar": { "total" : 0, 
+            "numThisLoc": 0, 
+            "numEaDest":  0
+    },
+"Tankcar": { "total" : 0, 
+            "numThisLoc": 0, 
+            "numEaDest":  0
+    },
+"Reefer": { "total" : 0, 
+            "numThisLoc": 0, 
+            "numEaDest":  0
+    },
+"Hopper": { "total" : 0, 
+            "numThisLoc": 0, 
+            "numEaDest":  0
+    },
+"Gon": { "total" : 0, 
+            "numThisLoc": 0, 
+            "numEaDest":  0
+    },
+"Flat": { "total" : 0, 
+            "numThisLoc": 0, 
+            "numEaDest":  0
+    }
+}
