@@ -3,24 +3,21 @@ from mainVars import *
  
             
 #=================================================
-class setupGeometry():
+class layoutGeom():
     
     def __init__(self):
-        yardName = str
-        numTracks  = int
-        numDest = int
-        fracTrainBuild = int        #fraction of classified cars built into trains
-        rateClassification = int    #num cars classified/time
-        numAdjYards = int           #num adjacent yards
-        adjYardNames = []
-        time2AdjYards = []
-        trainOut = int
+        pass
+    
+    def readLayoutGeom(self, files):
+        print("\nsetting up layout geometry", files.layoutGeomFile)
+        try: 
+            jsonFile = open (files.layoutGeomFile, "r")
+            geometry = json.load(jsonFile)
+            jsonFile.close()
+        except FileNotFoundError:
+            print("\njson file does not exist; returning")
+            return
+        print("geometry: ", geometry)
+        return geometry
 
-    
-    def yardSetup(self):
-        print("\nsetting up yard ", self.yardName)
-        
-        
-    def yardCalcs(self):
-        self.trainOut = self.rateClassification*self.fracTrainBuild/mainVar.trainSize
-    
+     

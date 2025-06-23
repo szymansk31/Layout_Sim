@@ -6,7 +6,9 @@ defLayoutGeomFile = "layoutGeom.txt"
 
 #=================================================
 class fileNames:
+    
     def __init__(self):
+        #self.files = fileNames()
         self.paramDictFile = defParamDictFile
         self.trainDictFile = defTrainDictFile
         self.layoutGeomFile = defLayoutGeomFile

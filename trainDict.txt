@@ -1,7 +1,7 @@
 {
 "locoType": "2-8-0",
-"origLocation": "yard1",
-"finalLocation": "yard2",
+"origLoc": "yard1",
+"finalLoc": "yard2",
 "numStops": 0,
 "stops": {
     "swArea1"   :[1,2,3,4,5,6,7],

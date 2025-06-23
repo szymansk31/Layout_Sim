@@ -10,24 +10,20 @@ class mainVar:
     trains = []
     
     def __init__(self):
-        self.files = fileNames()
+        pass
+        #self.files = fileNames()
      
-    def readParams(self):
-        print("\nreading param file ", self.files.paramDictFile)
+    def readParams(self, files):
+        print("\nreading param file ", files.paramDictFile)
         try: 
-            jsonFile = open (self.files.paramDictFile, "r")
+            jsonFile = open (files.paramDictFile, "r")
             paramDict = json.load(jsonFile)
             jsonFile.close()
         except FileNotFoundError:
             print("\njson file does not exist; returning")
             return
-        print("trainDict: ", paramDict)
+        print("paramDict: ", paramDict)
 
-
-#=================================================
-class indices:
-    def __init__(self):
-        self.mainIDX = 0
 
 #=================================================
 class carHdr:

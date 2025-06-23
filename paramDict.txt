@@ -1,30 +1,5 @@
 {
-"Boxcar": { "total" : 0, 
-            "numThisLoc": 0, 
-            "numEachDest":  0
-    },
-"Tankcar": { "total" : 0, 
-            "numThisLoc": 0, 
-            "numEachDest":  0
-    },
-"Reefer": { "total" : 0, 
-            "numThisLoc": 0, 
-            "numEachDest":  0
-    },
-"Hopper": { "total" : 0, 
-            "numThisLoc": 0, 
-            "numEachDest":  0
-    },
-"Gon": { "total" : 0, 
-            "numThisLoc": 0, 
-            "numEachDest":  0
-    },
-"Flat": { "total" : 0, 
-            "numThisLoc": 0, 
-            "numEachDest":  0
-    },
-"Passenger": { "total" : 0, 
-        "numThisLoc": 0, 
-        "numEachDest":  0
-    }
+    "trainSize": 10,
+    "numOperators": 5,
+    "trains": []
 }

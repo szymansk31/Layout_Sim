@@ -2,7 +2,6 @@ import numpy as np
 import json
 import tkinter as tk
 from tkinter import ttk
-from mainVars import *
  
             
 #=================================================
@@ -94,8 +93,12 @@ files = fileNames()
 # read paramDict from last save (overwrites excel file 
 # contents with changes from Car_Cards)
 
+from mainVars import mainVar
 vars = mainVar()
-vars.readParams()
+vars.readParams(files)
+from layoutGeom import layoutGeom
+geometry = layoutGeom()
+geometry.readLayoutGeom(files)
 
 train1 = trainProc.initTrainDict()
 
@@ -130,6 +133,3 @@ setXLOutFname(fileNameEntry)
 # Execute tkinter 
 editWindow.mainloop()
 """
-
-#if __name__=="__main__":
-#    main()
