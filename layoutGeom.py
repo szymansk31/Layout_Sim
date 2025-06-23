@@ -9,7 +9,7 @@ class layoutGeom():
         pass
     
     def readLayoutGeom(self, files):
-        print("\nsetting up layout geometry", files.layoutGeomFile)
+        print("\nsetting up layout geometry from file: ", files.layoutGeomFile)
         try: 
             jsonFile = open (files.layoutGeomFile, "r")
             geometry = json.load(jsonFile)

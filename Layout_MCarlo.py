@@ -8,20 +8,7 @@ from tkinter import ttk
 class yardProc():
     
     def __init__(self):
-        yardName = str
-        numTracks  = int
-        numDest = int
-        fracTrainBuild = int        #fraction of classified cars built into trains
-        rateClassification = int    #num cars classified/time
-        numAdjYards = int           #num adjacent yards
-        adjYardNames = []
-        time2AdjYards = []
-        trainOut = int
-
-    
-    def yardSetup(self):
-        print("\nsetting up yard ", self.yardName)
-        
+        pass
         
     def yardCalcs(self):
         self.trainOut = self.rateClassification*self.fracTrainBuild/mainVar.trainSize
@@ -97,8 +84,16 @@ from mainVars import mainVar
 vars = mainVar()
 vars.readParams(files)
 from layoutGeom import layoutGeom
-geometry = layoutGeom()
-geometry.readLayoutGeom(files)
+layout = layoutGeom()
+geometry = layout.readLayoutGeom(files)
+
+ydProc = yardProc()
+idx = 0
+print("\n")
+for loc in geometry:
+    print("location: ", loc, ", index: ", idx, ": ", geometry[loc])
+    idx +=1
+    ydProc.yardCalcs(geometry[loc])
 
 train1 = trainProc.initTrainDict()
 
@@ -107,6 +102,10 @@ print("trains: ", vars.trains)
 # 
 # Create root object 
 # and window
+"""
+vars.trains.append(train1)
+vars.trains.remove(train1)
+"""
 
 """
 editWindow = tk.Tk() 
