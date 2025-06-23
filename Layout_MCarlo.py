@@ -1,5 +1,3 @@
-import xlrd
-import xlsxwriter
 import numpy as np
 import json
 import tkinter as tk
@@ -30,23 +28,27 @@ class yardProc():
         self.trainOut = self.rateClassification*self.fracTrainBuild/mainVar.trainSize
     
 #=================================================
-class roadTrainProc():
-    
+class trainProc():
+    numTrains = 0
     def __init__(self):
-        self.trainID = int
-    
-    def readTrainDict(self):
-        print("\nreading train dictionary ", self.trainID)
+        #self.trainID = int
+        pass
+        
+    def initTrainDict():
+        print("\n creating train dictionary ", trainProc.numTrains)
         try: 
-            jsonFile = open ("trainDict.txt", "r")
+            jsonFile = open (files.trainDictFile, "r")
             trainDict = json.load(jsonFile)
             jsonFile.close()
+            trainProc.numTrains +=1
         except FileNotFoundError:
             print("\njson file does not exist; returning")
             return
         print("trainDict: ", trainDict)
+        return trainDict
+
         
-    def roadTrainCalcs(self):
+    def trainCalcs(self):
         self.trainOut = self.rateClassification*self.fracTrainBuild/mainVar.trainSize
     
 #=================================================
@@ -60,37 +62,20 @@ class swAreaProc():
     adjYardNames = []
     time2AdjYards = []
     trainOut = int
+    swAreaNames = []
     
     
     def __init__(self):
         pass
     
     def swAreaSetup(self):
-        print("\nsetting up switching area ", self.swAreaName)
+        print("\nsetting up switching area ", self.swAreaNames)
         
         
     def swAreaCalcs(self):
         self.trainOut = self.rateClassification*self.fracTrainBuild/mainVar.trainSize
     
-    
-#=================================================
-class fileIO():
-    def __init__(self):
-        self.procObj  
-    
-    def writeCardPage(tmpFileName):
-        print("\nwriting card page")
-        print("writing paramDictFile: ", tmpFileName, " and closing xlsx file: ", files.xlsxOutputFile)
-        with open (tmpFileName, "w") as jsonFile:
-            json.dump(paramDict, jsonFile)
-        try:    
-            xlsxWorkbook.close()
-        except:
-            print("\nworkbook does not exist; starting new")
-
-
-#=================================================
-        
+            
 
 #########################################################
 # start of code
@@ -98,30 +83,24 @@ class fileIO():
 
 #def main():    
 # Open Excel file
-from fileNameSetup import fileNames
+from fileNamesIO import fileNames
 files = fileNames()
 #from sharedVars import frmsWind, indices, carHdr
 #idxObj = indices()
 #frames = frmsWind()
-
-#excelFile = xlrd.open_workbook(files.excelDBFile)
-#print("opened excel file: ", files.excelDBFile)
 
 # Open sheets and populate data lists
 #getCarInfo(excelFile)
 # read paramDict from last save (overwrites excel file 
 # contents with changes from Car_Cards)
 
-paramObj = mainVar()
-paramObj.readParams()
+vars = mainVar()
+vars.readParams()
 
-trainObj = roadTrainProc()
-trainObj.readTrainDict()
+train1 = trainProc.initTrainDict()
 
-#paramObj.createOptionlists()
-#if (debug):
-#    print("optionLists = ", optionLists)
-
+vars.trains.append(train1)
+print("trains: ", vars.trains)
 # 
 # Create root object 
 # and window

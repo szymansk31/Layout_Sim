@@ -1,17 +1,19 @@
 import json
-from fileNameSetup import *
+from fileNamesIO import *
 
 class mainVar:
     numYards = int
     numTowns = int
     trainSize = int
     numOperators = int
+    paramDict = {}
+    trains = []
     
     def __init__(self):
         self.files = fileNames()
      
     def readParams(self):
-        print("\nreading param File")
+        print("\nreading param file ", self.files.paramDictFile)
         try: 
             jsonFile = open (self.files.paramDictFile, "r")
             paramDict = json.load(jsonFile)
@@ -19,13 +21,15 @@ class mainVar:
         except FileNotFoundError:
             print("\njson file does not exist; returning")
             return
-        print("paramDict: ", paramDict)
+        print("trainDict: ", paramDict)
 
 
+#=================================================
 class indices:
     def __init__(self):
         self.mainIDX = 0
 
+#=================================================
 class carHdr:
     carType = str
     totCarType = int
@@ -52,6 +56,7 @@ class carHdr:
             
         }
         
+#=================================================
 class dictProc():
     shade = 0
     def __init__(self):
