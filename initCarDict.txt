@@ -1,0 +1,14 @@
+{
+"yard1": {
+"status": "enterYard",
+"currentLoc": "yard1",
+"nextLoc": "yard2",
+"timeEnRoute": 0,
+"boxCars":  {"numBox": 0, "num2Class": 0, "numClassified": 0, "numEnterYard": 0, "nextDest": {}},
+"tankCars": {"numTank": 0, "num2Class": 0, "numClassified": 0, "numEnterYard": 0, "nextDest": {}},
+"reefers":  {"numReefer": 0, "num2Class": 0, "numClassified": 0, "numEnterYard": 0, "nextDest": {}},
+"hoppers":  {"numHopper": 0, "num2Class": 0, "numClassified": 0, "numEnterYard": 0, "nextDest": {}},
+"gons":     {"numGon": 0, "num2Class": 0, "numClassified": 0, "numEnterYard": 0, "nextDest": {}},
+"flats":    {"numFlat": 0, "num2Class": 0, "numClassified": 0, "numEnterYard": 0, "nextDest": {}},
+"psgr":     {"numPsgr": 0, "num2Class": 0, "numClassified": 0, "numEnterYard": 0, "nextDest": {}}}
+}

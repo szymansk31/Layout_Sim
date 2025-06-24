@@ -1,13 +1,15 @@
 import json
 from fileNamesIO import *
 
-class mainVar:
-    numYards = int
-    numTowns = int
-    trainSize = int
-    numOperators = int
-    paramDict = {}
+class mVars:       #short for mainVars
+    time = 0
+    numOpBusy = 0
+    prms = {}
+    geometry = {}
     trains = []
+    routes = {}
+    carsAtLocs = {}
+    carTypes = ["boxCars", "tankCars", "reefers", "hoppers", "gons", "flats", "psgr"]
     
     def __init__(self):
         pass
@@ -17,12 +19,12 @@ class mainVar:
         print("\nreading param file ", files.paramDictFile)
         try: 
             jsonFile = open (files.paramDictFile, "r")
-            paramDict = json.load(jsonFile)
+            mVars.prms = json.load(jsonFile)
             jsonFile.close()
         except FileNotFoundError:
             print("\njson file does not exist; returning")
             return
-        print("paramDict: ", paramDict)
+        print("paramDict: ", mVars.prms)
 
 
 #=================================================

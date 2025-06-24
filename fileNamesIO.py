@@ -3,6 +3,7 @@ import json
 defParamDictFile = "paramDict.txt"
 defTrainDictFile = "trainDict.txt"
 defLayoutGeomFile = "layoutGeom.txt"
+defCarDictFile    = "initCarDict.txt"
 
 #=================================================
 class fileNames:
@@ -12,6 +13,7 @@ class fileNames:
         self.paramDictFile = defParamDictFile
         self.trainDictFile = defTrainDictFile
         self.layoutGeomFile = defLayoutGeomFile
+        self.carDictFile = defCarDictFile
 
 
 #=================================================

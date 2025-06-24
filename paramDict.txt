@@ -1,4 +1,6 @@
 {
+    "maxTime": 30,
+    "timeStep": 1,
     "trainSize": 10,
     "numOperators": 5,
     "trains": []

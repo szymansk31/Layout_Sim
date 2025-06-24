@@ -1,26 +1,31 @@
 import numpy as np
 from mainVars import *
- 
             
 #=================================================
-class layoutGeom():
+class carProc():
     
     def __init__(self):
         pass
     
-    def readLayoutGeom(self, files):
-        print("\nsetting up layout geometry from file: ", files.layoutGeomFile)
+    def readCarInitInfo(self, files):
+        print("\nReading initial car info from file: ", files.carDictFile)
         try: 
-            jsonFile = open (files.layoutGeomFile, "r")
-            #mVars.geometry = json.load(jsonFile)
-            geometry = json.load(jsonFile)
+            jsonFile = open (files.carDictFile, "r")
+            carDict = json.load(jsonFile)
             jsonFile.close()
         except FileNotFoundError:
             print("\njson file does not exist; returning")
             return
-        print("geometry: ", geometry)
-        return geometry
+        print("carDict: ", carDict)
+        return carDict
     
+    def procCarFileInfo(self, carDict):
+        for loc in mVars.geometry:
+            for carType in mVars.carTypes:
+                for nextLoc in mVars.geometry:
+                    carDict[loc][carType]["nextDest"].update({nextLoc: 0})
+                print("carDict for carType: ", carType, ": ", carDict[loc][carType])
+                
     def defRoutes(self, geometry):
         idx = 1
         routes = {}
