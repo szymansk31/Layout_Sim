@@ -2,6 +2,7 @@ import numpy as np
 import json
 import tkinter as tk
 from tkinter import ttk
+import random
  
             
 #=================================================
@@ -9,14 +10,44 @@ class locProc():
     
     def __init__(self):
         self.thisLoc = {}
-        pass
-    def analyzeTrains(self):
-        for trainIDX in self.thisloc["trains"]:
-            match mVars.trains[trainIDX]:
+        self.actionList = ["classifyTrain", "buildTrain", "classifyCars", "servIndus"]
+        self.weights = [0.3, 0.3, 0.3, 0.1]
+        mVars.locs = {}
+
+    def initLocationInfo(files):
+        print("\n creating location dictionary ")
+        try: 
+            jsonFile = open (files.locInfoFile, "r")
+            locDict = json.load(jsonFile)
+            jsonFile.close()
+        except FileNotFoundError:
+            print("\njson file does not exist; returning")
+            return
+        print("locDict: ", locDict)
+        return locDict
+
+    def yardCalcs(self, thisloc, loc):
+        self.thisLoc = thisloc
+        self.analyzeTrains(thisloc, loc)
+        match random.choices(self.actionList, weights=self.weights, k=1):
+            case "classifyTrain":
+                self.classifyTrain()
+                pass
+            case "buildTrain":
+                pass
+            case "classifyCars":
+                pass
+            case "servIndus":
+                pass
+            
+    def analyzeTrains(self, thisLoc, loc):
+        for trainIDX in thisLoc[loc]["trains"]:
+            match mVars.trains[trainIDX]["status"]:
                 case "enterYard":
+                    self.classifyTrain()
                     pass
         
-    def breakDownTrain(self):
+    def classifyTrain(self):
         pass
     def buildTrain(self):
         pass
@@ -24,60 +55,12 @@ class locProc():
         pass
     def servIndus(self):
         pass
-    def yardCalcs(self, thisloc, loc):
-        self.thisLoc = thisloc
-            
     # calc trains that arrive, trains ready to leave (and do they?)
     # cars classified; need a dict with all car types, next dest (track or 
     # loc), status (ready to classify, classified, in arriving train)
         #self.trainOut = self.rateClassification*self.fracTrainBuild/mVars.trainSize
 
 
-#=================================================
-class trainProc():
-    numTrains = 0
-    def __init__(self):
-        #self.trainID = int
-        pass
-        
-    def initTrain():
-        print("\n creating train dictionary ", trainProc.numTrains)
-        try: 
-            jsonFile = open (files.trainDictFile, "r")
-            trainDict = json.load(jsonFile)
-            jsonFile.close()
-            trainProc.numTrains +=1
-        except FileNotFoundError:
-            print("\njson file does not exist; returning")
-            return
-        print("trainDict: ", trainDict)
-        return trainDict
-
-        
-    def trainCalcs(self, trainDict):
-        match trainDict["status"]:
-            case "enroute":
-                variance = np.random.normal(loc=0, scale=0.25, size=1)
-                timeEnRoute = trainDict["timeEnRoute"] + vars.prms["timeStep"] + variance
-                trainDict["timeEnRoute"] = timeEnRoute
-                route = trainDict["currentLoc"]
-                transTime = vars.routes[trainDict["currentLoc"]]["transTime"]
-                print("trainCalcs: train: ", trainDict["trainNum"], "route: ", route, 
-                    ", transTime:", transTime, ", timeEnRoute: ", timeEnRoute,
-                    ", variance: ", variance)
-                if trainDict["timeEnRoute"] >= transTime:
-                    trainDict["currentLoc"] = vars.routes[trainDict["currentLoc"]]["dest"]
-                    geometry[trainDict["currentLoc"]]["trains"].append(trainDict["trainNum"])
-                    trainDict["status"] = "enterYard"
-                    trainDict["timeEnRoute"] = 0
-                    vars.numOpBusy -=1
-                    
-            case "enterYard":
-                pass
-            case "leaving":
-                pass
-            case "switching":
-                pass
             
 #=================================================
 class swAreaProc():
@@ -123,19 +106,19 @@ files = fileNames()
 # contents with changes from Car_Cards)
 
 from mainVars import mVars
-vars = mVars()
-vars.readParams(files)
+mVars.readParams(files)
 
 from layoutGeom import layoutGeom
 layout = layoutGeom()
-geometry = mVars.geometry = layout.readLayoutGeom(files)
-vars.routes = layout.defRoutes(geometry)
+geometry = mVars.geometry = layout.readLayoutGeom(files)  #geometry is for input to local processing
+mVars.routes = layout.defRoutes(geometry)
 
+from trainCalcs import trainProc
 trainObj = trainProc()
-train1 = trainProc.initTrain()
+train1 = trainProc.initTrain(files)
 
-vars.trains.append(train1)
-print("trains: ", vars.trains)
+mVars.trains.append(train1)
+print("trains: ", mVars.trains)
 
 #setup initial car distribution
 from carProc import carProc
@@ -153,26 +136,26 @@ for loc in geometry:
     idx +=1
 
 #main loop:
-print("vars.time: ", vars.time, "maxtime: ", vars.prms["maxTime"])
-while vars.time < vars.prms["maxTime"]:
-    for trainIDX in range(len(vars.trains)):
-        trainObj.trainCalcs(vars.trains[trainIDX])
+print("mVars.time: ", mVars.time, "maxtime: ", mVars.prms["maxTime"])
+while mVars.time < mVars.prms["maxTime"]:
+    for trainIDX in range(len(mVars.trains)):
+        trainObj.trainCalcs(mVars.trains[trainIDX])
     count +=1
     if count == maxCount:
-        print("trainDict[",trainIDX,"] = ", vars.trains[trainIDX])
-        currentLoc = vars.trains[trainIDX]["currentLoc"]
+        print("trainDict[",trainIDX,"] = ", mVars.trains[trainIDX])
+        currentLoc = mVars.trains[trainIDX]["currentLoc"]
         if "route" not in currentLoc:
             print("\nloc[",currentLoc,"]", geometry[currentLoc])
         count = 0
     for loc in geometry:
         ydProc.yardCalcs(geometry, loc)
-    vars.time +=1
+    mVars.time +=1
 # 
 # Create root object 
 # and window
 """
-vars.trains.append(train1)
-vars.trains.remove(train1)
+mVars.trains.append(train1)
+mVars.trains.remove(train1)
 """
 
 """

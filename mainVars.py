@@ -8,6 +8,7 @@ class mVars:       #short for mainVars
     geometry = {}
     trains = []
     routes = {}
+    locs = {}
     carsAtLocs = {}
     carTypes = ["boxCars", "tankCars", "reefers", "hoppers", "gons", "flats", "psgr"]
     
@@ -15,7 +16,7 @@ class mVars:       #short for mainVars
         pass
         #self.files = fileNames()
      
-    def readParams(self, files):
+    def readParams(files):
         print("\nreading param file ", files.paramDictFile)
         try: 
             jsonFile = open (files.paramDictFile, "r")
