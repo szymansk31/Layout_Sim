@@ -16,7 +16,7 @@ class carProc():
         except FileNotFoundError:
             print("\njson file does not exist; returning")
             return
-        print("carDict: ", carDict)
+        #print("carDict: ", carDict)
         return carDict
     
     def procCarFileInfo(self, carDict):

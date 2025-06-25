@@ -10,8 +10,8 @@ class trainProc():
         #self.trainID = int
         pass
         
-    def initTrain(files):
-        print("\n creating train dictionary ", trainProc.numTrains)
+    def initTrain(self, files):
+        print("\ncreating train dictionary ", trainProc.numTrains)
         try: 
             jsonFile = open (files.trainDictFile, "r")
             trainDict = json.load(jsonFile)
@@ -22,15 +22,16 @@ class trainProc():
             return
         print("trainDict: ", trainDict)
         print("adding initial consist")
+        consist = self.initConsist(files)
+        trainDict["consistNum"] = consist["consistNum"]
         return trainDict
 
-    def initConsist(files):
-        print("\n creating train dictionary ", trainProc.numTrains)
+    def initConsist(self, files):
+        print("\ncreating consist ")
         try: 
             jsonFile = open (files.consistFile, "r")
             consistDict = json.load(jsonFile)
             jsonFile.close()
-            trainProc.numTrains +=1
         except FileNotFoundError:
             print("\njson file does not exist; returning")
             return
@@ -52,13 +53,23 @@ class trainProc():
                 if trainDict["timeEnRoute"] >= transTime:
                     trainDict["currentLoc"] = mVars.routes[trainDict["currentLoc"]]["dest"]
                     mVars.geometry[trainDict["currentLoc"]]["trains"].append(trainDict["trainNum"])
-                    trainDict["status"] = "enterYard"
+                    if trainDict["currentLoc"] == trainDict["finalLoc"]:
+                        trainDict["status"] = "terminate"
+                    else: 
+                        trainDict["status"] = "dropPickup"
                     trainDict["timeEnRoute"] = 0
                     mVars.numOpBusy -=1
                     
-            case "enterYard":
+            case "building":
                 pass
-            case "leaving":
+            case "terminate":
                 pass
-            case "switching":
+            case "dropPickup":
+                if "sw" in trainDict["currentLoc"]:   
+                    pass
+                else: 
+                    pass
+                pass
+            case "ready2Leave":
+                trainDict["status"] = "enroute"
                 pass

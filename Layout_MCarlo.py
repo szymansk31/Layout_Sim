@@ -10,48 +10,40 @@ class locProc():
     
     def __init__(self):
         self.thisLoc = {}
-        self.actionList = ["classifyTrain", "buildTrain", "classifyCars", "servIndus"]
+        self.actionList = ["brkDownTrain", "swTrain", "buildTrain", "classCars", "servIndus", "misc"]
         self.weights = [0.3, 0.3, 0.3, 0.1]
         mVars.locs = {}
-
-    def initLocationInfo(files):
-        print("\n creating location dictionary ")
-        try: 
-            jsonFile = open (files.locInfoFile, "r")
-            locDict = json.load(jsonFile)
-            jsonFile.close()
-        except FileNotFoundError:
-            print("\njson file does not exist; returning")
-            return
-        print("locDict: ", locDict)
-        return locDict
 
     def yardCalcs(self, thisloc, loc):
         self.thisLoc = thisloc
         self.analyzeTrains(thisloc, loc)
         match random.choices(self.actionList, weights=self.weights, k=1):
-            case "classifyTrain":
-                self.classifyTrain()
+            case "brkDownTrain":
+                self.brkDownTrain()
+                pass
+            case "swTrain":
                 pass
             case "buildTrain":
                 pass
-            case "classifyCars":
+            case "classCars":
                 pass
             case "servIndus":
+                pass
+            case "misc":
                 pass
             
     def analyzeTrains(self, thisLoc, loc):
         for trainIDX in thisLoc[loc]["trains"]:
             match mVars.trains[trainIDX]["status"]:
-                case "enterYard":
-                    self.classifyTrain()
+                case "terminate":
+                    self.brkDownTrain()
                     pass
         
-    def classifyTrain(self):
+    def brkDownTrain(self):
         pass
     def buildTrain(self):
         pass
-    def classifyCars(self):
+    def classCars(self):
         pass
     def servIndus(self):
         pass
@@ -115,7 +107,7 @@ mVars.routes = layout.defRoutes(geometry)
 
 from trainCalcs import trainProc
 trainObj = trainProc()
-train1 = trainProc.initTrain(files)
+train1 = trainObj.initTrain(files)
 
 mVars.trains.append(train1)
 print("trains: ", mVars.trains)
