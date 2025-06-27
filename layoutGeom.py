@@ -18,7 +18,7 @@ class layoutGeom():
         except FileNotFoundError:
             print("\njson file does not exist; returning")
             return
-        print("geometry: ", geometry)
+        if mVars.prms.debugGeom: print("geometry: ", geometry)
         return geometry
     
     def defRoutes(self, geometry):
@@ -27,17 +27,17 @@ class layoutGeom():
         for loc in geometry:
             destIDX = 0
             for dest in geometry[loc]["adjLocNames"]:
-                print("in defRoutes; orig, dest: ", loc, ",", dest)
+                if mVars.prms.debugGeom: print("in defRoutes; orig, dest: ", loc, ",", dest)
                 transTime = geometry[loc]["time2AdjLocs"][destIDX]
                 routeName = "route"+str(idx)
                 routes[routeName] = {"origin": loc, "dest": dest, "transTime": transTime}
                 rtList = geometry[loc].get("routes")
                 rtList.append(idx)
                 geometry[loc]["routes"] = rtList
-                print("\ndefRoutes: geometry for loc: ", loc, "is", geometry[loc])
+                if mVars.prms.debugGeom: print("\ndefRoutes: geometry for loc: ", loc, "is", geometry[loc])
                 destIDX +=1
                 idx +=1
-        print("\nroutes: ", routes)
+        if mVars.prms.debugGeom: print("\nroutes: ", routes)
         return routes
 
      

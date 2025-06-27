@@ -1,5 +1,6 @@
 import numpy as np
 from mainVars import *
+import random
             
 #=================================================
 class carProc():
@@ -25,24 +26,23 @@ class carProc():
                 for nextLoc in mVars.geometry:      #nextLoc is a new name for a second loc var
                     carDict[loc][carType]["nextDest"].update({nextLoc: 0})
                 #print("carDict for carType: ", carType, ": ", carDict[loc][carType])
-                
-    def defRoutes(self, geometry):
-        idx = 1
-        routes = {}
-        for loc in geometry:
-            destIDX = 0
-            for dest in geometry[loc]["adjLocNames"]:
-                print("in defRoutes; orig, dest: ", loc, ",", dest)
-                transTime = geometry[loc]["time2AdjLocs"][destIDX]
-                routeName = "route"+str(idx)
-                routes[routeName] = {"origin": loc, "dest": dest, "transTime": transTime}
-                rtList = geometry[loc].get("routes")
-                rtList.append(idx)
-                geometry[loc]["routes"] = rtList
-                print("\ndefRoutes: geometry for loc: ", loc, "is", geometry[loc])
-                destIDX +=1
-                idx +=1
-        print("\nroutes: ", routes)
-        return routes
+                    
+    def carTypeSel(self, consist, loc):
+        carSelDict = {}
+        carSelList = []
+        typeCount = 0
+        for cartyp in list(consist["stops"][loc].keys()):
+            if consist["stops"][loc][cartyp] != 0:
+                carSelDict[cartyp] = 1
+                typeCount +=1
+        idx = 0
+        for keys in carSelDict.keys():
+            carSelList[idx] = carSelDict[keys]/typeCount
+            idx +=1
+        return carSelList, typeCount
+        
+    def randomCar(self, carSelList):
+        return random.choices(mVars.carTypes, weights=carSelList, k=1)
+        
 
      

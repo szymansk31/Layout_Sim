@@ -20,9 +20,10 @@ class trainProc():
         except FileNotFoundError:
             print("\njson file does not exist; returning")
             return
-        print("trainDict: ", trainDict)
+        if mVars.prms.debugTrainDict: print("trainDict: ", trainDict)
         print("adding initial consist")
         consist = self.initConsist(files)
+        mVars.consists.update(consist)
         trainDict["consistNum"] = consist["consistNum"]
         return trainDict
 
@@ -35,7 +36,9 @@ class trainProc():
         except FileNotFoundError:
             print("\njson file does not exist; returning")
             return
-        print("consistDict: ", consistDict)
+        consistDict["consistNum"] = mVars.numConsists
+        mVars.numConsists +=1
+        if mVars.prms.debugTrainDict: print("consistDict: ", consistDict)
         return consistDict
 
         
@@ -47,7 +50,7 @@ class trainProc():
                 trainDict["timeEnRoute"] = timeEnRoute
                 route = trainDict["currentLoc"]
                 transTime = mVars.routes[trainDict["currentLoc"]]["transTime"]
-                print("trainCalcs: train: ", trainDict["trainNum"], "route: ", route, 
+                if mVars.prms.debugTrainProc: print("trainCalcs: train: ", trainDict["trainNum"], "route: ", route, 
                     ", transTime:", transTime, ", timeEnRoute: ", timeEnRoute,
                     ", variance: ", variance)
                 if trainDict["timeEnRoute"] >= transTime:

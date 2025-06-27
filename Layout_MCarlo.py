@@ -12,6 +12,7 @@ class locProc():
         self.thisLoc = {}
         self.actionList = ["brkDownTrain", "swTrain", "buildTrain", "classCars", "servIndus", "misc"]
         self.weights = [0.3, 0.3, 0.3, 0.1]
+        self.ydTrains = {"brkDownTrain": [], "swTrain": [], "buildTrain": []}
         mVars.locs = {}
 
     def yardCalcs(self, thisloc, loc):
@@ -19,7 +20,7 @@ class locProc():
         self.analyzeTrains(thisloc, loc)
         match random.choices(self.actionList, weights=self.weights, k=1):
             case "brkDownTrain":
-                self.brkDownTrain()
+                self.brkDownTrain(loc)
                 pass
             case "swTrain":
                 pass
@@ -36,11 +37,25 @@ class locProc():
         for trainIDX in thisLoc[loc]["trains"]:
             match mVars.trains[trainIDX]["status"]:
                 case "terminate":
-                    self.brkDownTrain()
-                    pass
+                    self.ydTrains["brkDownTrain"].append(trainIDX)
+                case "swTrain":
+                    self.ydTrains["swTrain"].append(trainIDX)
         
-    def brkDownTrain(self):
-        pass
+    def brkDownTrain(self, loc):
+        from carProc import randomCar, carTypeSel
+        carProcObj = carProc()
+        rate = mVars.geometry[loc]["classRate"]
+        for ydtrainNum in self.ydTrains["brkDownTrain"]:
+            consistNum = mVars.trains[ydtrainNum]["consistNum"]
+            consist = mVars.consists[consistNum]
+            carSel, typeCount = carProcObj.carTypeSel(consist, loc)
+            if mVars.prms.debugYardProc: print("brkDownTrain: carSel: ", carSel)
+            if typeCount < rate: typeCount = rate
+            while typeIdx < typeCount:
+                carClassType = carProcObj.randomCar(carSel)
+                typeIdx +=1
+            # remove cars from consist
+                consist["stops"][loc][carClassType] = consist["stops"][loc][carClassType] - 1
     def buildTrain(self):
         pass
     def classCars(self):
@@ -110,7 +125,7 @@ trainObj = trainProc()
 train1 = trainObj.initTrain(files)
 
 mVars.trains.append(train1)
-print("trains: ", mVars.trains)
+if mVars.prms.debugTrainDict: print("trains: ", mVars.trains)
 
 #setup initial car distribution
 from carProc import carProc
@@ -124,7 +139,7 @@ count = 0
 maxCount = 7
 print("\n")
 for loc in geometry:
-    print("location: ", loc, ", index: ", idx, ": ", geometry[loc])
+    if mVars.prms.debugGeom: print("location: ", loc, ", index: ", idx, ": ", geometry[loc])
     idx +=1
 
 #main loop:
@@ -134,7 +149,7 @@ while mVars.time < mVars.prms["maxTime"]:
         trainObj.trainCalcs(mVars.trains[trainIDX])
     count +=1
     if count == maxCount:
-        print("trainDict[",trainIDX,"] = ", mVars.trains[trainIDX])
+        if mVars.prms.debugTrainProc: print("trainDict[",trainIDX,"] = ", mVars.trains[trainIDX])
         currentLoc = mVars.trains[trainIDX]["currentLoc"]
         if "route" not in currentLoc:
             print("\nloc[",currentLoc,"]", geometry[currentLoc])
@@ -142,36 +157,3 @@ while mVars.time < mVars.prms["maxTime"]:
     for loc in geometry:
         ydProc.yardCalcs(geometry, loc)
     mVars.time +=1
-# 
-# Create root object 
-# and window
-"""
-mVars.trains.append(train1)
-mVars.trains.remove(train1)
-"""
-
-"""
-editWindow = tk.Tk() 
-#editWindow = tk.Toplevel(root)
-editWindow.title("Car Card Selection")
-# Adjust size 
-editWindow.geometry( "800x600" ) 
-
-
-frames.setFrms(editWindow, tk)
-
-global tabControl
-tabControl = ttk.Notebook(editWindow)
-createTabs(tabControl)
-"""
-"""
-tabControl.grid(row=tabRow, column=tabCol, sticky="nw")
-for idx in range(numTabs):
-    createRRLists(sheetNames[idx], tabs[idx], rrBox)
-    tabContents(sheetNames[idx], tabs[idx], frames)
-    
-setXLOutFname(fileNameEntry)
-
-# Execute tkinter 
-editWindow.mainloop()
-"""
