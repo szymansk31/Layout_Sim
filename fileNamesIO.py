@@ -11,13 +11,13 @@ defConsistFile    = "consist.txt"
 class fileNames:
     
     def __init__(self):
-        #self.files = fileNames()
-        self.paramDictFile = defParamDictFile
-        self.trainDictFile = defTrainDictFile
-        self.layoutGeomFile = defLayoutGeomFile
-        self.carDictFile = defCarDictFile
-        #self.locInfoFile = defLocInfoFile
-        self.consistFile = defConsistFile
+        self.fNames = {
+            "paramFile": "paramDict.txt",
+            "trainFile": "trainDict.txt",
+            "layoutGeomFile": "layoutGeom.txt",
+            "carFile": "initCarDict.txt",
+            "consistFile": "consist.txt"
+            }
 
 
 #=================================================

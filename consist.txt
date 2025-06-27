@@ -1,4 +1,5 @@
 {
+"consist10": {
 "consistNum": 10,
 "trainNum": 0,
 "stops": {
@@ -15,5 +16,5 @@
 "numHopper": 0,
 "numGon": 0,
 "numFlat": 0,
-"numPsgr": 0
+"numPsgr": 0}
 }

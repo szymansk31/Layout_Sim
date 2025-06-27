@@ -4,14 +4,11 @@ from fileNamesIO import *
 class mVars:       #short for mainVars
     time = 0
     numOpBusy = 0
-    numConsists = 0
     prms = {}
     geometry = {}
-    trains = []
     routes = {}
     locs = {}
     carsAtLocs = {}
-    consists = {}
     carTypes = ["boxCars", "tankCars", "reefers", "hoppers", "gons", "flats", "psgr"]
     
     def __init__(self):
@@ -27,7 +24,7 @@ class mVars:       #short for mainVars
         except FileNotFoundError:
             print("\njson file does not exist; returning")
             return
-        if mVars.prms.debugParamSetup: print("paramDict: ", mVars.prms)
+        if mVars.prms["debugParamSetup"]: print("paramDict: ", mVars.prms)
 
 
 #=================================================
