@@ -15,6 +15,7 @@ class fileNames:
             "paramFile": "paramDict.txt",
             "trainFile": "trainDict.txt",
             "layoutGeomFile": "layoutGeom.txt",
+            "locationFile": "locationInfo.txt",
             "carFile": "initCarDict.txt",
             "consistFile": "consist.txt"
             }

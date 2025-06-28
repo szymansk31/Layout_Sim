@@ -3,18 +3,27 @@ import json
 import random
 from mainVars import mVars
 from trainProc import trainDB
+from layoutGeom import geom
  
-            
+         
+#=================================================
+class locs():
+    locs = {}
 #=================================================
 class locProc():
     
     def __init__(self):
         self.thisLoc = {}
+        self.wrkngConsist = {}
         self.actionList = ["brkDownTrain", "swTrain", "buildTrain", "classCars", "servIndus", "misc"]
         #self.weights = [0.18, 0.18, 0.18, 0.18, 0.18, 0.1]
         self.weights = [1, 0, 0, 0, 0, 0]
         self.ydTrains = {"brkDownTrain": [], "swTrain": [], "buildTrain": []}
-        mVars.locs = {}
+        from fileProc import readFiles
+        files = readFiles()
+        print("initializing location dicts: ")
+        locs.locs = files.readFile("locationFile")
+    #classmethod:
 
     def yardCalcs(self, thisloc, loc):
         self.thisLoc = thisloc
@@ -43,14 +52,16 @@ class locProc():
                 pass
             
     def analyzeTrains(self, thisLoc, loc):
-        for trainIDX in thisLoc[loc]["trains"]:
-            match trainDB.trains[trainIDX]["status"]:
+        self.ydTrains = {"brkDownTrain": [], "swTrain": [], "buildTrain": []}
+
+        for trainNam in thisLoc[loc]["trains"]:
+            match trainDB.trains[trainNam]["status"]:
                 case "terminate":
-                    if trainIDX not in self.ydTrains["brkDownTrain"]:
-                        self.ydTrains["brkDownTrain"].append(trainIDX)
+                    if trainNam not in self.ydTrains["brkDownTrain"]:
+                        self.ydTrains["brkDownTrain"].append(trainNam)
                 case "dropPickup":
-                    if trainIDX not in self.ydTrains["swTrain"]:
-                        self.ydTrains["swTrain"].append(trainIDX)
+                    if trainNam not in self.ydTrains["swTrain"]:
+                        self.ydTrains["swTrain"].append(trainNam)
         
     def brkDownTrain(self, loc):
         from carProc import carProc
@@ -58,19 +69,27 @@ class locProc():
         rate = mVars.geometry[loc]["classRate"]
         for ydtrainNum in self.ydTrains["brkDownTrain"]:
             consistNum = trainDB.trains[ydtrainNum]["consistNum"]
-            consist = trainDB.consists[consistNum]
+            consistNam = "consist"+str(consistNum)
+            consist = trainDB.consists[consistNam]["stops"][loc]
+            
             carSel, typeCount = carProcObj.carTypeSel(consist, loc)
             if mVars.prms["debugYardProc"]: print("brkDownTrain: carSel: ", carSel)
+            if typeCount <= 0: return
             if typeCount < rate: typeCount = rate
-            while typeIdx < typeCount:
+            typeIdx = 0
+            while typeIdx < rate:
                 carClassType = carProcObj.randomCar(carSel)
+                carClassType = ''.join(carClassType)
                 typeIdx +=1
             # remove cars from consist
-                consist["stops"][loc][carClassType] = consist["stops"][loc][carClassType] - 1
+                if consist[carClassType] >0:
+                    consist[carClassType] = consist[carClassType] - 1
         try:
-            trainDB().consists[consistNum] = consist
+            trainDB().consists[consistNum]["stops"][loc] = consist
         except:
             pass
+# assign cars to destinations randomly
+
         
     def buildTrain(self):
         pass

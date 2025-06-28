@@ -29,16 +29,18 @@ class carProc():
                     
     def carTypeSel(self, consist, loc):
         carSelDict = {}
-        carSelList = []
+        carSelList = [0 for _ in range(mVars.numCarTyp)]  # Creates a list like [0, 0, 0, 0, 0]
+
         typeCount = 0
-        for cartyp in list(consist["stops"][loc].keys()):
-            if consist["stops"][loc][cartyp] != 0:
-                carSelDict[cartyp] = 1
-                typeCount +=1
+        for cartyp in list(consist.keys()):
+            carSelDict[cartyp] = consist[cartyp]
+            typeCount += consist[cartyp]
         idx = 0
-        for keys in carSelDict.keys():
-            carSelList[idx] = carSelDict[keys]/typeCount
-            idx +=1
+        print("carSelDict: ", carSelDict, ", typeCount: ", typeCount)
+        if typeCount != 0:
+            for keys in carSelDict.keys():
+                carSelList[idx] = carSelDict[keys]/typeCount
+                idx +=1
         return carSelList, typeCount
         
     def randomCar(self, carSelList):

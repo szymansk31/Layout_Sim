@@ -3,8 +3,8 @@
 "consistNum": 10,
 "trainNum": 0,
 "stops": {
-    "swArea1"   :{"boxCars": 0, "tankCars": 0,"reefers": 0, "hoppers": 0, 
-        "gons": 0, "flats": 0, "psgr": 0},
+    "swArea1"   :{"boxCars": 3, "tankCars": 2,"reefers": 0, "hoppers": 3, 
+        "gons": 0, "flats": 1, "psgr": 0},
     "swArea2"   :{"boxCars": 0, "tankCars": 0,"reefers": 0, "hoppers": 0, 
         "gons": 0, "flats": 0, "psgr": 0},
     "yard2"    :{"boxCars": 0, "tankCars": 0,"reefers": 0, "hoppers": 0, 

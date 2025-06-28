@@ -3,10 +3,17 @@ from mainVars import *
  
             
 #=================================================
-class layoutGeom():
-    
+class geom():
+    layoutLocsRoutes = {}
+    locList = []
+
     def __init__(self):
         pass
+    
+    def locListInit(self, geometry):
+        for loc in geometry:
+            geom.locList.append(loc)
+        if mVars.prms["debugGeom"]: print("locList: ", geom.locList)
     
     def defRoutes(self, geometry):
         idx = 1

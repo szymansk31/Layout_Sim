@@ -1,30 +1,11 @@
 {
-"yard1": {"type": "yard",
-    "numTracks": 5,
-    "numAdjLocs": 2,
-    "adjLocNames": ["swArea1", "yard2"],
-    "time2AdjLocs": [10, 20],
-    "fracTrainBuild": 0.50,
-    "classRate": 2,
-    "routes": [],
-    "trains": [{      "classifyTrain", "buildTrain", "classifyCars", "servIndus"
-}]},
-"swArea1": {"type": "swArea",
-    "numSpots": 5,
-    "numAdjLocs": 1,
-    "adjLocNames": ["yard1"],
-    "time2AdjLocs": [10],
-    "fracTrainBuild": 0.50,
-    "classRate": 2,
-    "routes": [],
-    "trains": []},
-"yard2": {"type": "yard",
-    "numTracks": 10,
-    "numAdjLocs": 1,
-    "adjLocNames": ["yard1"],
-    "time2AdjLocs": [20],
-    "fracTrainBuild": 0.50,
-    "classRate": 2,    
-    "routes": [],
-    "trains": []}
+"yard1": {
+    "tracks": {"swArea1": 0, "yard2": 0, "industries": 0}
+},
+"swArea1": {
+    "tracks": {"yard1": 0, "yard2": 0, "industries": 0}
+},
+"yard2": {
+    "tracks": {"swArea1": 0, "yard1": 0, "industries": 0}
+}
 }

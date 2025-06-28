@@ -1,5 +1,5 @@
 {
-    "maxTime": 30,
+    "maxTime": 5,
     "timeStep": 1,
     "trainSize": 10,
     "numOperators": 5,
@@ -7,6 +7,7 @@
     "debugFileRead": 1,
     "debugGeom" : 1,
     "debugTrainDict" : 1,
+    "debugMainLoop": 1,
     "debugCarProc": 1,
     "debugTrainProc": 1,
     "debugYardProc": 1

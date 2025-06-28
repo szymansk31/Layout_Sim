@@ -36,10 +36,11 @@ files = readFiles()
 from mainVars import mVars
 mVars.prms = files.readFile("paramFile")
 
-from layoutGeom import layoutGeom
-layout = layoutGeom()
+from layoutGeom import geom
+layoutObj = geom()
 geometry = mVars.geometry = files.readFile("layoutGeomFile")
-mVars.routes = layout.defRoutes(geometry)
+layoutObj.locListInit(geometry)
+mVars.routes = layoutObj.defRoutes(geometry)
 
 
 #setup initial car distribution
@@ -66,16 +67,23 @@ for loc in geometry:
 #main loop:
 print("mVars.time: ", mVars.time, "maxtime: ", mVars.prms["maxTime"])
 while mVars.time < mVars.prms["maxTime"]:
+    print("\nmVars.time: ", mVars.time)
     for train in trainDB.trains:
-        trnProcObj.trainCalcs(trainDB.trains[train])
+        currentLoc = trainDB.trains[train]["currentLoc"]
+        if mVars.prms["debugMainLoop"]: print ("Before train processing: train: ", 
+            train, "currentLoc: ", currentLoc)
+        trnProcObj.trainCalcs(trainDB.trains[train], train)
     count +=1
 
     if count == maxCount:
-        if mVars.prms["debugTrainProc"]: print("trainDict[",train,"] = ", trainDB.trains[train])
+        if mVars.prms["debugMainLoop"]: print("trainDict[",train,"] = ", trainDB.trains[train])
         currentLoc = trainDB.trains[train]["currentLoc"]
         if "route" not in currentLoc:
             print("\nloc[",currentLoc,"]", geometry[currentLoc])
         count = 0
     for loc in geometry:
+        if mVars.prms["debugMainLoop"]: print ("Before loc processing: loc: ", 
+            loc, "currentLoc: ", currentLoc)
+
         ydProcObj.yardCalcs(geometry, loc)
     mVars.time +=1
