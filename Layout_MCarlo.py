@@ -58,7 +58,7 @@ trains.initTrain()
 
 from gui import gui, display
 guiObj = gui()
-guiDict = files.readFile("guiInfo.txt")
+guiDict = files.readFile("guiFile")
 dispObj = display()
 dispObj.drawLayout(guiDict)
 

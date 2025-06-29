@@ -33,33 +33,38 @@ class display():
             match guiDict[item]["type"]:
                 case "loc":
                     tmpObj = gui.C.create_rectangle(
-                        guiDict["x0"], 
-                        guiDict["y0"], 
-                        guiDict["x1"],
-                        guiDict["y1"],
-                        )
+                        guiDict[item]["x0"], 
+                        guiDict[item]["y0"], 
+                        guiDict[item]["x1"],
+                        guiDict[item]["y1"],
+                    )
                     gui.objects.append(tmpObj)
+                    gui.C.create_text(
+                        (guiDict[item]["x0"]+guiDict[item]["x1"])/2, 
+                        (guiDict[item]["y0"]+10),
+                        text=guiDict[item]["text"]
+                    )
+                case "route":
+                    lftObjNam = guiDict[item]["leftObj"]
+                    rtObjNam = guiDict[item]["rtObj"]
+                    leftEnd = guiDict[lftObjNam]["x1"]
+                    rightEnd = guiDict[guiDict[item]["rtObj"]]["x0"]
+                    yLoc = (guiDict[lftObjNam]["y0"]+guiDict[lftObjNam]["y1"])/2
+                    xLocTxt = (guiDict[lftObjNam]["x0"]+guiDict[rtObjNam]["x1"])/2
+                    tmpObj = gui.C.create_line(
+                        leftEnd, yLoc, rightEnd, yLoc
+                    )
+                    gui.objects.append(tmpObj)
+                    gui.C.create_text(
+                        xLocTxt, yLoc+10,
+                        text=guiDict[item]["text"]
+                    )
+                    
 
 
 #=================================================
 """
-class drawTrains():
+class dispTrains():
     
 
-    route2_4 = C.create_line(200, 130, 500, 130)
-    route2_4Text = C.create_text(350, 140, text="Routes 2 and 4")
-
-    route1_3 = C.create_line(600, 130, 900, 130)
-    route1_3Text = C.create_text(750, 140, text="Routes 1 and 3")
-
-    train1Dict = {"x0": 210, "y0": 115, "width": 20, "height": 10}
-    train1 = C.create_rectangle(train1Dict["x0"], train1Dict["y0"], 
-            train1Dict["x0"]+train1Dict["width"],
-            train1Dict["y0"]+train1Dict["height"],
-            )
-    train1Text = C.create_text(250, 80, text="train1", anchor="nw")
-    train1_consist = C.create_text(250, 95, text="3, 1, 2, 2, 0, 0", anchor="nw")
-
-    C.update()
-    C.after(1000, lambda: C.move(train1, 50, 0))
 """
