@@ -1,0 +1,26 @@
+{
+"yard2": {
+    "type": "loc",
+    "x0": 100, "y0": 100, "x1": 200, "y1": 160,
+    "text": {"x": 150, "y": 110, "Yard 2"}
+},
+"yard1": {
+    "type": "loc",
+    "x0": 500, "y0": 100, "x1": 600, "y1": 160,
+    "text": {"x": 550, "y": 110, "Yard 2"}
+},
+"swArea1": {
+    "type": "loc",
+    "x0": 900, "y0": 100, "x1": 1000, "y1": 160,
+    "text": {"x": 950, "y": 110, "Sw Area 1"}
+},
+"route2_4": {
+    "type": "route",
+    "text": {"x": 350, "y": 140, "Routes 2 and 4"}
+},
+"route1_": {
+    "type": "route",
+    "text": {"x": 750, "y": 140, "Routes 1 and 3"}
+},
+
+}

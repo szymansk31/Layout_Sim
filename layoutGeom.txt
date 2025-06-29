@@ -6,8 +6,8 @@
     "time2AdjLocs": [10, 20],
     "fracTrainBuild": 0.50,
     "classRate": 2,
-    "routes": [],
-    "trains": []},
+    "routes": []
+    },
 "swArea1": {"type": "swArea",
     "numSpots": 5,
     "numAdjLocs": 1,
@@ -15,8 +15,8 @@
     "time2AdjLocs": [10],
     "fracTrainBuild": 0.50,
     "classRate": 2,
-    "routes": [],
-    "trains": []},
+    "routes": []
+    },
 "yard2": {"type": "yard",
     "numTracks": 10,
     "numAdjLocs": 1,
@@ -24,6 +24,6 @@
     "time2AdjLocs": [20],
     "fracTrainBuild": 0.50,
     "classRate": 2,    
-    "routes": [],
-    "trains": []}
+    "routes": []
+    }
 }

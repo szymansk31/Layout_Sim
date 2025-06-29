@@ -20,7 +20,7 @@ class readFiles():
         except FileNotFoundError:
             print("\njson file does not exist; returning")
             return
-        #if mVars.prms["debugFileRead"]: print("Dict Read: ", inputDict)
+        #if mVars.prms["dbgFileRd"]: print("Dict Read: ", inputDict)
         print("Dict Read: ", inputDict)
         return inputDict
 

@@ -24,7 +24,7 @@ class mVars:       #short for mainVars
         except FileNotFoundError:
             print("\njson file does not exist; returning")
             return
-        if mVars.prms["debugParamSetup"]: print("paramDict: ", mVars.prms)
+        if mVars.prms["dbgPrmInit"]: print("paramDict: ", mVars.prms)
 
 
 #=================================================

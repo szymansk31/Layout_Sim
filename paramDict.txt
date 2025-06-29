@@ -1,14 +1,14 @@
 {
-    "maxTime": 5,
+    "maxTime": 20,
     "timeStep": 1,
     "trainSize": 10,
     "numOperators": 5,
-    "debugParamSetup": 1,
-    "debugFileRead": 1,
+    "dbgPrmInit": 1,
+    "dbgFileRd": 1,
     "debugGeom" : 1,
-    "debugTrainDict" : 1,
-    "debugMainLoop": 1,
+    "dbgTrnInit" : 1,
+    "dbgLoop": 1,
     "debugCarProc": 1,
-    "debugTrainProc": 1,
-    "debugYardProc": 1
+    "dbgTrnProc": 1,
+    "dbgYdProc": 1
 }

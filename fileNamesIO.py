@@ -1,11 +1,3 @@
-import json
-
-defParamDictFile = "paramDict.txt"
-defTrainDictFile = "trainDict.txt"
-defLayoutGeomFile = "layoutGeom.txt"
-defCarDictFile    = "initCarDict.txt"
-#defLocInfoFile    = "locationInfo.txt"
-defConsistFile    = "consist.txt"
 
 #=================================================
 class fileNames:
@@ -17,7 +9,8 @@ class fileNames:
             "layoutGeomFile": "layoutGeom.txt",
             "locationFile": "locationInfo.txt",
             "carFile": "initCarDict.txt",
-            "consistFile": "consist.txt"
+            "consistFile": "consist.txt",
+            "guiFile": "guiInfo.txt"
             }
 
 

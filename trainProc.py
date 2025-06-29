@@ -38,7 +38,7 @@ class trainDB():
         print("\ncreating consist ", self.conName)
         self.consist[self.conName]["consistNum"] = trainDB.numConsists
         trainDB.numConsists +=1
-        if mVars.prms["debugTrainDict"]: print("consistDict: ", self.consist)
+        if mVars.prms["dbgTrnInit"]: print("consistDict: ", self.consist)
         return
     
     def trnNam(self):
@@ -50,6 +50,8 @@ class trainDB():
   
 class trainProc:      
     def trainCalcs(self, trainDict, trnName):
+        from locProc import locs
+
         match trainDict["status"]:
             case "enroute":
                 variance = np.random.normal(loc=0, scale=0.25, size=1)
@@ -57,12 +59,12 @@ class trainProc:
                 trainDict["timeEnRoute"] = timeEnRoute
                 route = trainDict["currentLoc"]
                 transTime = mVars.routes[trainDict["currentLoc"]]["transTime"]
-                if mVars.prms["debugTrainProc"]: print("trainCalcs: train: ", trainDict["trainNum"], "route: ", route, 
+                if mVars.prms["dbgTrnProc"]: print("trainCalcs: train: ", trainDict["trainNum"], "route: ", route, 
                     ", transTime:", transTime, ", timeEnRoute: ", timeEnRoute,
                     ", variance: ", variance)
                 if trainDict["timeEnRoute"] >= transTime:
                     trainDict["currentLoc"] = mVars.routes[trainDict["currentLoc"]]["dest"]
-                    mVars.geometry[trainDict["currentLoc"]]["trains"].append(trnName)
+                    locs.locDat[trainDict["currentLoc"]]["trains"].append(trnName)
                     if trainDict["currentLoc"] == trainDict["finalLoc"]:
                         trainDict["status"] = "terminate"
                     else: 

@@ -56,12 +56,18 @@ trnProcObj = trainProc()
 trains = trainDB()
 trains.initTrain()
 
+from gui import gui, display
+guiObj = gui()
+guiDict = files.readFile("guiInfo.txt")
+dispObj = display()
+dispObj.drawLayout(guiDict)
+
 idx = 0
 count = 0
 maxCount = 7
 print("\n")
 for loc in geometry:
-    if mVars.prms["debugGeom"]: print("location: ", loc, ", index: ", idx, ": ", geometry[loc])
+    if mVars.prms["debugGeom"]: print("location: ", loc,": ", geometry[loc])
     idx +=1
 
 #main loop:
@@ -70,20 +76,22 @@ while mVars.time < mVars.prms["maxTime"]:
     print("\nmVars.time: ", mVars.time)
     for train in trainDB.trains:
         currentLoc = trainDB.trains[train]["currentLoc"]
-        if mVars.prms["debugMainLoop"]: print ("Before train processing: train: ", 
+        if mVars.prms["dbgLoop"]: print ("Before train processing: train: ", 
             train, "currentLoc: ", currentLoc)
         trnProcObj.trainCalcs(trainDB.trains[train], train)
     count +=1
 
     if count == maxCount:
-        if mVars.prms["debugMainLoop"]: print("trainDict[",train,"] = ", trainDB.trains[train])
+        if mVars.prms["dbgLoop"]: print("trainDict[",train,"] = ", trainDB.trains[train])
         currentLoc = trainDB.trains[train]["currentLoc"]
         if "route" not in currentLoc:
             print("\nloc[",currentLoc,"]", geometry[currentLoc])
         count = 0
     for loc in geometry:
-        if mVars.prms["debugMainLoop"]: print ("Before loc processing: loc: ", 
+        if mVars.prms["dbgLoop"]: print ("\nBefore loc processing: loop var loc: ", 
             loc, "currentLoc: ", currentLoc)
 
         ydProcObj.yardCalcs(geometry, loc)
     mVars.time +=1
+
+gui.editWindow.mainloop()
