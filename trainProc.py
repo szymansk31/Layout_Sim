@@ -1,5 +1,5 @@
 import numpy as np
-import json
+from time import sleep
 from mainVars import mVars
 from fileProc import readFiles
 
@@ -49,19 +49,33 @@ class trainDB():
 
   
 class trainProc:      
+    def __init__(self):
+        self.timeEnRoute_Old = 0
+        self.trainImage = any
+        self.deltaT = 0.0
+        self.xTrain = 0.0
+        
     def trainCalcs(self, trainDict, trnName):
         from locProc import locs
-
+        from gui import gui
+        from trainProc import trainDB
+        trainObj = trainDB()
         match trainDict["status"]:
             case "enroute":
                 variance = np.random.normal(loc=0, scale=0.25, size=1)
-                timeEnRoute = trainDict["timeEnRoute"] + mVars.prms["timeStep"] + variance
-                trainDict["timeEnRoute"] = timeEnRoute
+                self.timeEnRoute_Old = trainDict["timeEnRoute"]
                 route = trainDict["currentLoc"]
+                sleep(1)
+                self.xTrain = mVars.routes[route]["xTrnInit"]
+                if self.timeEnRoute_Old == 0: self.drawTrain()
+                self.deltaT = mVars.prms["timeStep"] + variance
+                
+                trainDict["timeEnRoute"] = self.timeEnRoute_Old + self.deltaT
                 transTime = mVars.routes[trainDict["currentLoc"]]["transTime"]
                 if mVars.prms["dbgTrnProc"]: print("trainCalcs: train: ", trainDict["trainNum"], "route: ", route, 
-                    ", transTime:", transTime, ", timeEnRoute: ", timeEnRoute,
+                    ", transTime:", transTime, ", timeEnRoute: ", trainDict["timeEnRoute"],
                     ", variance: ", variance)
+                self.drawTrain()
                 if trainDict["timeEnRoute"] >= transTime:
                     trainDict["currentLoc"] = mVars.routes[trainDict["currentLoc"]]["dest"]
                     locs.locDat[trainDict["currentLoc"]]["trains"].append(trnName)
@@ -71,6 +85,7 @@ class trainProc:
                         trainDict["status"] = "dropPickup"
                     trainDict["timeEnRoute"] = 0
                     mVars.numOpBusy -=1
+                    trainObj.initTrain()
                     
             case "building":
                 pass
@@ -85,3 +100,30 @@ class trainProc:
             case "ready2Leave":
                 trainDict["status"] = "enroute"
                 pass
+            
+    def drawTrain(self):
+        from gui import gui
+        for train in trainDB.trains:
+            trainLoc = trainDB.trains[train]["currentLoc"]
+            match trainLoc:
+                case trainLoc if "route" in trainLoc:
+                    origLoc = trainDB.trains[train]["origLoc"]
+                    route = mVars.routes[trainLoc]
+                    yTrn = route["yTrn"]
+                    trnWd = route["trnWid"]
+                    trnHt = route["trnHt"]
+                    xTrnTxt = route["xTrnTxt"]
+                    yTrnTxt = route["yTrnTxt"]
+                    yTrnCon = route["yTrnCon"]
+                    xInit = route["xTrnInit"]
+                    print("drawTrain: deltaT, distnce/time: ", self.deltaT, mVars.routes[trainLoc]["distPerTime"])
+                    deltaX = int(self.deltaT*mVars.routes[trainLoc]["distPerTime"])
+                    self.xTrain += deltaX
+                    print("drawTrain: coordinates: ", self.xTrain, yTrn, self.xTrain+trnWd, yTrn+trnHt)
+                    if self.timeEnRoute_Old == 0:
+                        self.trainImage = gui.C.create_rectangle(xInit, yTrn, xInit+trnWd, yTrn+trnHt)
+                    else:
+                        print("moving train by: ", deltaX)
+                        gui.C.move(self.trainImage, deltaX, 0)
+                        #trainImage = gui.C.create_rectangle(xTrn, yTrn, xTrn+trnWd, yTrn+trnHt)
+

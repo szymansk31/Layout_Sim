@@ -12,23 +12,23 @@ class gui():
     editWindow = tk.Tk() 
     C = Canvas(editWindow, height=800, width=1200, bg="yellow")
     objects = []
+    guiDict = {}
+    
     def __init__(self):
         gui.editWindow.title("Layout Simulation")
         # Adjust size 
         gui.editWindow.geometry( "1200x800" ) 
         gui.C.pack()
-        
-    def initGui(self, files):
-        files.readFile("guiInfo.txt")
-
-        
+                
     
 #=================================================
-class display():
+class dispSim():
     def __init__(self):
         pass
 
     def drawLayout(self, guiDict):
+        routeCount = 0
+        guiDict = gui.guiDict
         for item in guiDict:
             match guiDict[item]["type"]:
                 case "loc":
@@ -45,26 +45,24 @@ class display():
                         text=guiDict[item]["text"]
                     )
                 case "route":
-                    lftObjNam = guiDict[item]["leftObj"]
-                    rtObjNam = guiDict[item]["rtObj"]
-                    leftEnd = guiDict[lftObjNam]["x1"]
-                    rightEnd = guiDict[guiDict[item]["rtObj"]]["x0"]
-                    yLoc = (guiDict[lftObjNam]["y0"]+guiDict[lftObjNam]["y1"])/2
-                    xLocTxt = (guiDict[lftObjNam]["x0"]+guiDict[rtObjNam]["x1"])/2
-                    tmpObj = gui.C.create_line(
-                        leftEnd, yLoc, rightEnd, yLoc
-                    )
-                    gui.objects.append(tmpObj)
-                    gui.C.create_text(
-                        xLocTxt, yLoc+10,
-                        text=guiDict[item]["text"]
-                    )
+                    if routeCount < 2:
+                    # lftObjNam = guiDict[item]["leftObj"]
+                    # rtObjNam = guiDict[item]["rtObj"]
+                        x0 = mVars.routes[item]["x0"]
+                        x1 = mVars.routes[item]["x1"]
+                        y0 = mVars.routes[item]["y0"]
+                        y1 = mVars.routes[item]["y1"]
+                        yLoc = (y0 + y1)/2
+                        xLocTxt = (x0 + x1)/2
+                        tmpObj = gui.C.create_line(
+                            x0, yLoc, x1, yLoc
+                        )
+                        gui.objects.append(tmpObj)
+                        gui.C.create_text(
+                            xLocTxt, yLoc+10,
+                            text=guiDict[item]["text"]
+                        )
+                        routeCount +=1
+                case "train":
+                    pass
                     
-
-
-#=================================================
-"""
-class dispTrains():
-    
-
-"""

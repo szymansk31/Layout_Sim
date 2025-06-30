@@ -1,5 +1,29 @@
             
 #=================================================
+def main_loop():
+    print("mVars.time: ", mVars.time, "maxtime: ", mVars.prms["maxTime"])
+    while mVars.time < mVars.prms["maxTime"]:
+        print("\nmVars.time: ", mVars.time)
+        for train in trainDB.trains:
+            currentLoc = trainDB.trains[train]["currentLoc"]
+            if mVars.prms["dbgLoop"]: print ("Before train processing: train: ", 
+                train, "currentLoc: ", currentLoc)
+            trnProcObj.trainCalcs(trainDB.trains[train], train)
+        count +=1
+
+        if count == maxCount:
+            if mVars.prms["dbgLoop"]: print("trainDict[",train,"] = ", trainDB.trains[train])
+            currentLoc = trainDB.trains[train]["currentLoc"]
+            if "route" not in currentLoc:
+                print("\nloc[",currentLoc,"]", geometry[currentLoc])
+            count = 0
+        for loc in geometry:
+            if mVars.prms["dbgLoop"]: print ("\nBefore loc processing: loop var loc: ", 
+                loc, "currentLoc: ", currentLoc)
+
+            ydProcObj.yardCalcs(geometry, loc)
+        mVars.time +=1
+
 class swAreaProc():
     yardName = str
     numTracks  = int
@@ -37,10 +61,13 @@ from mainVars import mVars
 mVars.prms = files.readFile("paramFile")
 
 from layoutGeom import geom
+from gui import gui, dispSim
 layoutObj = geom()
 geometry = mVars.geometry = files.readFile("layoutGeomFile")
 layoutObj.locListInit(geometry)
-mVars.routes = layoutObj.defRoutes(geometry)
+guiObj = gui()
+gui.guiDict = files.readFile("guiFile")
+mVars.routes = layoutObj.initRoutes(geometry, gui.guiDict)
 
 
 #setup initial car distribution
@@ -56,11 +83,9 @@ trnProcObj = trainProc()
 trains = trainDB()
 trains.initTrain()
 
-from gui import gui, display
-guiObj = gui()
-guiDict = files.readFile("guiFile")
-dispObj = display()
-dispObj.drawLayout(guiDict)
+# from gui.py
+dispObj = dispSim()
+dispObj.drawLayout(gui.guiDict)
 
 idx = 0
 count = 0
@@ -71,27 +96,6 @@ for loc in geometry:
     idx +=1
 
 #main loop:
-print("mVars.time: ", mVars.time, "maxtime: ", mVars.prms["maxTime"])
-while mVars.time < mVars.prms["maxTime"]:
-    print("\nmVars.time: ", mVars.time)
-    for train in trainDB.trains:
-        currentLoc = trainDB.trains[train]["currentLoc"]
-        if mVars.prms["dbgLoop"]: print ("Before train processing: train: ", 
-            train, "currentLoc: ", currentLoc)
-        trnProcObj.trainCalcs(trainDB.trains[train], train)
-    count +=1
-
-    if count == maxCount:
-        if mVars.prms["dbgLoop"]: print("trainDict[",train,"] = ", trainDB.trains[train])
-        currentLoc = trainDB.trains[train]["currentLoc"]
-        if "route" not in currentLoc:
-            print("\nloc[",currentLoc,"]", geometry[currentLoc])
-        count = 0
-    for loc in geometry:
-        if mVars.prms["dbgLoop"]: print ("\nBefore loc processing: loop var loc: ", 
-            loc, "currentLoc: ", currentLoc)
-
-        ydProcObj.yardCalcs(geometry, loc)
-    mVars.time +=1
+gui.editWindow.after(300, main_loop())
 
 gui.editWindow.mainloop()
