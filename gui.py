@@ -17,7 +17,7 @@ class gui():
     def __init__(self):
         gui.editWindow.title("Layout Simulation")
         # Adjust size 
-        gui.editWindow.geometry( "1200x800" ) 
+        gui.editWindow.geometry( "1200x500" ) 
         gui.C.pack()
                 
     

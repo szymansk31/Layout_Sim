@@ -27,7 +27,7 @@ class carProc():
                     carDict[loc][carType]["nextDest"].update({nextLoc: 0})
                 #print("carDict for carType: ", carType, ": ", carDict[loc][carType])
                     
-    def carTypeSel(self, consist, loc):
+    def carTypeSel(self, consist):
         carSelDict = {}
         carSelList = [0 for _ in range(mVars.numCarTyp)]  # Creates a list like [0, 0, 0, 0, 0]
 
@@ -44,7 +44,7 @@ class carProc():
         return carSelList, typeCount
         
     def randomCar(self, carSelList):
-        return random.choices(mVars.carTypes, weights=carSelList, k=1)
-        
+        tmpCarClass = random.choices(mVars.carTypes, weights=carSelList, k=1)
+        return ''.join(tmpCarClass)
 
      

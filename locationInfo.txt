@@ -1,14 +1,38 @@
 {
 "yard1": {
-    "tracks": {"swArea1": 0, "yard2": 0, "industries": 0},
+    "trackTots": {"swArea1": 0, "yard2": 0, "industries": 0},
+    "cars": {
+        "swArea1"   :{"boxCars": 0, "tankCars": 0,"reefers": 0, "hoppers": 0, 
+        "gons": 0, "flats": 0, "psgr": 0},
+        "yard2"    :{"boxCars": 0, "tankCars": 0,"reefers": 0, "hoppers": 0, 
+        "gons": 0, "flats": 0, "psgr": 0},
+        "industries"   :{"boxCars": 0, "tankCars": 0,"reefers": 0, "hoppers": 0, 
+        "gons": 0, "flats": 0, "psgr": 0}
+    },
     "trains": []
 },
 "swArea1": {
-    "tracks": {"yard1": 0, "yard2": 0, "industries": 0},
+    "trackTots": {"yard1": 16, "yard2": 0, "industries": 0},
+    "cars": {
+        "yard1"   :{"boxCars": 2, "tankCars": 2,"reefers": 3, "hoppers": 3, 
+        "gons": 2, "flats": 4, "psgr": 0},
+        "yard2"    :{"boxCars": 0, "tankCars": 0,"reefers": 0, "hoppers": 0, 
+        "gons": 0, "flats": 0, "psgr": 0},
+        "industries"   :{"boxCars": 0, "tankCars": 0,"reefers": 0, "hoppers": 0, 
+        "gons": 0, "flats": 0, "psgr": 0}
+    },
     "trains": []
 },
 "yard2": {
-    "tracks": {"swArea1": 0, "yard1": 0, "industries": 0},
+    "trackTots": {"swArea1": 0, "yard1": 0, "industries": 0},
+    "cars": {
+        "swArea1"   :{"boxCars": 0, "tankCars": 0,"reefers": 0, "hoppers": 0, 
+        "gons": 0, "flats": 0, "psgr": 0},
+        "yard1"    :{"boxCars": 0, "tankCars": 0,"reefers": 0, "hoppers": 0, 
+        "gons": 0, "flats": 0, "psgr": 0},
+        "industries"   :{"boxCars": 0, "tankCars": 0,"reefers": 0, "hoppers": 0, 
+        "gons": 0, "flats": 0, "psgr": 0}
+    },
     "trains": []
 }
 }

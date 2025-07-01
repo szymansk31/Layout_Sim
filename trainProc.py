@@ -120,13 +120,10 @@ class trnProc:
                     yTrnTxt = route["yTrnTxt"]
                     yTrnCon = route["yTrnCon"]
                     xInit = route["xTrnInit"]
+                    print("drawTrain: deltaT, distnce/time: ", self.deltaT, mVars.routes[trainLoc]["distPerTime"])
                     deltaX = int(self.deltaT*mVars.routes[trainLoc]["distPerTime"])
-                    print("drawTrain: deltaT, distnce/time: ", self.deltaT, 
-                          mVars.routes[trainLoc]["distPerTime"], " , deltaX: ", deltaX,
-                          ", trainDB.xTrain: ", 
-                          trainDB.xTrain, ", timeEnRoute_Old",self.timeEnRoute_Old)
-                    trainDB.xTrain = trainDB.xTrain + deltaX
-                    print("drawTrain: coordinates: ", trainDB.xTrain, yTrn, trainDB.xTrain+trnWd, yTrn+trnHt)
+                    self.xTrain += deltaX
+                    print("drawTrain: coordinates: ", self.xTrain, yTrn, self.xTrain+trnWd, yTrn+trnHt)
                     if self.timeEnRoute_Old == 0:
                         self.trainImage = gui.C.create_rectangle(xInit, yTrn, xInit+trnWd, yTrn+trnHt)
                     else:

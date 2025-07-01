@@ -2,6 +2,7 @@
 "train3": {
 "trainNum": 3,
 "consistNum": 0,
+"numCars": 0,
 "status": "enroute",
 "origLoc": "yard1",
 "finalLoc": "swArea1",
