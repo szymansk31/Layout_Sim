@@ -2,6 +2,7 @@ import numpy as np
 from time import sleep
 from mainVars import mVars
 from fileProc import readFiles
+np.set_printoptions(precision=2, suppress=True) 
 
 
 #=================================================
@@ -11,6 +12,9 @@ class trainDB():
 
     trains = {}
     consists = {}
+    
+    xTrain = 0.0
+
     def __init__(self):
         #self.trainID = int
         self.train = {}
@@ -48,32 +52,32 @@ class trainDB():
 
 
   
-class trainProc:      
+class trnProc:    
+  
     def __init__(self):
         self.timeEnRoute_Old = 0
         self.trainImage = any
         self.deltaT = 0.0
-        self.xTrain = 0.0
         
     def trainCalcs(self, trainDict, trnName):
         from locProc import locs
         from gui import gui
-        from trainProc import trainDB
-        trainObj = trainDB()
         match trainDict["status"]:
             case "enroute":
                 variance = np.random.normal(loc=0, scale=0.25, size=1)
                 self.timeEnRoute_Old = trainDict["timeEnRoute"]
                 route = trainDict["currentLoc"]
-                sleep(1)
-                self.xTrain = mVars.routes[route]["xTrnInit"]
-                if self.timeEnRoute_Old == 0: self.drawTrain()
+                if self.timeEnRoute_Old == 0: 
+                    self.drawTrain()
+                    trainDB.xTrain = mVars.routes[route]["xTrnInit"]
                 self.deltaT = mVars.prms["timeStep"] + variance
                 
                 trainDict["timeEnRoute"] = self.timeEnRoute_Old + self.deltaT
                 transTime = mVars.routes[trainDict["currentLoc"]]["transTime"]
-                if mVars.prms["dbgTrnProc"]: print("trainCalcs: train: ", trainDict["trainNum"], "route: ", route, 
-                    ", transTime:", transTime, ", timeEnRoute: ", trainDict["timeEnRoute"],
+                if mVars.prms["dbgTrnProc"]: print("trainCalcs: train: ", 
+                    trainDict["trainNum"], "route: ", route, 
+                    ", transTime:", transTime, 
+                    ", timeEnRoute: ", trainDict["timeEnRoute"], 
                     ", variance: ", variance)
                 self.drawTrain()
                 if trainDict["timeEnRoute"] >= transTime:
@@ -85,7 +89,7 @@ class trainProc:
                         trainDict["status"] = "dropPickup"
                     trainDict["timeEnRoute"] = 0
                     mVars.numOpBusy -=1
-                    trainObj.initTrain()
+                    #trainObj.initTrain()
                     
             case "building":
                 pass
@@ -116,14 +120,18 @@ class trainProc:
                     yTrnTxt = route["yTrnTxt"]
                     yTrnCon = route["yTrnCon"]
                     xInit = route["xTrnInit"]
-                    print("drawTrain: deltaT, distnce/time: ", self.deltaT, mVars.routes[trainLoc]["distPerTime"])
                     deltaX = int(self.deltaT*mVars.routes[trainLoc]["distPerTime"])
-                    self.xTrain += deltaX
-                    print("drawTrain: coordinates: ", self.xTrain, yTrn, self.xTrain+trnWd, yTrn+trnHt)
+                    print("drawTrain: deltaT, distnce/time: ", self.deltaT, 
+                          mVars.routes[trainLoc]["distPerTime"], " , deltaX: ", deltaX,
+                          ", trainDB.xTrain: ", 
+                          trainDB.xTrain, ", timeEnRoute_Old",self.timeEnRoute_Old)
+                    trainDB.xTrain = trainDB.xTrain + deltaX
+                    print("drawTrain: coordinates: ", trainDB.xTrain, yTrn, trainDB.xTrain+trnWd, yTrn+trnHt)
                     if self.timeEnRoute_Old == 0:
                         self.trainImage = gui.C.create_rectangle(xInit, yTrn, xInit+trnWd, yTrn+trnHt)
                     else:
                         print("moving train by: ", deltaX)
                         gui.C.move(self.trainImage, deltaX, 0)
                         #trainImage = gui.C.create_rectangle(xTrn, yTrn, xTrn+trnWd, yTrn+trnHt)
+                    #gui.C.pack()
 

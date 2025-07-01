@@ -1,0 +1,17 @@
+{
+"yard1": {
+    "tracks": {"swArea1": 0, "yard2": 0},
+    "industries": 0,
+    "trains": []
+},
+"swArea1": {
+    "tracks": {"yard1": 0, "yard2": 0},
+    "industries": 0,
+    "trains": []
+},
+"yard2": {
+    "tracks": {"swArea1": 0, "yard1": 0},
+    "industries": 0,
+    "trains": []
+}
+}
