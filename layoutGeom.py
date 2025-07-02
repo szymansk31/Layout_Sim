@@ -29,9 +29,9 @@ class geom():
                     routes[routeName].update(self.routeLine(routes[routeName], routeName, guiDict))
                 if mVars.prms["debugGeom"]: print("\ninitRoutes: route[",routeName,"] = ", routes[routeName])
                 rtList = geometry[loc].get("routes")
-                rtList.append(idx)
+                rtList.append(routeName)
                 geometry[loc]["routes"] = rtList
-                if mVars.prms["debugGeom"]: print("\ndefRoutes: geometry for loc: ", loc, "is", geometry[loc])
+                if mVars.prms["debugGeom"]: print("\ninitRoutes: geometry for loc: ", loc, "is", geometry[loc])
                 destIDX +=1
                 idx +=1
         if mVars.prms["debugGeom"]: print("\nroutes: ", routes)

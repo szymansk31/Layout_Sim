@@ -13,8 +13,6 @@ class trainDB():
     trains = {}
     consists = {}
     
-    xTrain = 0.0
-
     def __init__(self):
         #self.trainID = int
         self.train = {}
@@ -26,29 +24,79 @@ class trainDB():
     def initTrain(self):
         files = readFiles()
         self.train = files.readFile("trainFile")
-        self.trnNam()
+        self.trnNam(self.train)
 
         print("adding initial consist")
-        self.initConsist(files)
+        self.initConsist(files, "consistFile")
+        self.conName
         self.consist[self.conName]["trainNum"] = self.train[self.trnName]["trainNum"]
         trainDB.consists.update(self.consist)
         self.train[self.trnName]["consistNum"] = self.consist[self.conName]["consistNum"]
         trainDB.trains.update(self.train)
         return 
 
-    def initConsist(self, files):
-        self.consist = files.readFile("consistFile")
-        self.conNam()
+    def initConsist(self, files, fkey):
+        self.consist = files.readFile(fkey)
+        self.conNam(self.consist)
         print("\ncreating consist ", self.conName)
         self.consist[self.conName]["consistNum"] = trainDB.numConsists
         trainDB.numConsists +=1
         if mVars.prms["dbgTrnInit"]: print("consistDict: ", self.consist)
         return
     
-    def trnNam(self):
-        self.trnName = next(iter(self.train))
-    def conNam(self):
-        self.conName = next(iter(self.consist))
+    def trnNam(self, train):
+        self.trnName = next(iter(train))
+    def conNam(self, consist):
+        self.conName = next(iter(consist))
+        
+        
+    def newTrain(self):
+        newTrainNum = trainDB.numTrains+1
+        newTrainNam = "train"+str(newTrainNum)
+        newConsistNum = trainDB.numConsists+1 
+        newConsistNam = "consist"+str(newConsistNum)
+        
+        trainDB.trains.update(
+        {
+        newTrainNam: {
+            "trainNum": newTrainNum,
+            "consistNum": newConsistNum,
+            "numCars": 0,
+            "status": "",
+            "origLoc": "",
+            "finalLoc": "",
+            "currentLoc": "",
+            "timeEnRoute": 0,
+            "numStops": 0,
+            "stops": [
+                ],
+            "locoType": "2-8-0"}
+        })
+        self.newConsist(newConsistNum, newTrainNum)
+        trainDB.numTrains +=1
+        trainDB.numConsists +=1
+        return newTrainNam, newConsistNam
+    
+    def newConsist(self, newConsistNum, newTrainNum):
+        newConNam = "consist"+str(newConsistNum)
+        trainDB.consists.update(
+        {
+        newConNam: {
+            "consistNum": newConsistNum,
+            "trainNum": newTrainNum,
+            "stops": {
+                "yard"   :{"boxCars": 0, "tankCars": 0,"reefers": 0, "hoppers": 0, 
+                    "gons": 0, "flats": 0, "psgr": 0},
+            },
+            "numBox": 0,
+            "numTank": 0,
+            "numReefer": 0,
+            "numHopper": 0,
+            "numGon": 0,
+            "numFlat": 0,
+            "numPsgr": 0}
+        })
+        return 
 
 
   
@@ -58,7 +106,9 @@ class trnProc:
         self.timeEnRoute_Old = 0
         self.trainImage = any
         self.deltaT = 0.0
-        
+        self.xTrain = 0.0
+
+
     def trainCalcs(self, trainDict, trnName):
         from locProc import locs
         from gui import gui
@@ -69,7 +119,7 @@ class trnProc:
                 route = trainDict["currentLoc"]
                 if self.timeEnRoute_Old == 0: 
                     self.drawTrain()
-                    trainDB.xTrain = mVars.routes[route]["xTrnInit"]
+                    self.xTrain = mVars.routes[route]["xTrnInit"]
                 self.deltaT = mVars.prms["timeStep"] + variance
                 
                 trainDict["timeEnRoute"] = self.timeEnRoute_Old + self.deltaT

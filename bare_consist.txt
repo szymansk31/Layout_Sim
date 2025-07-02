@@ -1,0 +1,16 @@
+{
+"consist10": {
+"consistNum": ,
+"trainNum": 0,
+"stops": {
+    "yard"   :{"boxCars": 0, "tankCars": 0,"reefers": 0, "hoppers": 0, 
+        "gons": 0, "flats": 0, "psgr": 0},
+},
+"numBox": 0,
+"numTank": 0,
+"numReefer": 0,
+"numHopper": 0,
+"numGon": 0,
+"numFlat": 0,
+"numPsgr": 0}
+}

@@ -15,6 +15,7 @@ class locProc():
     def __init__(self):
         self.thisLoc = {}
         self.thisConsist = {}
+        self.bldConsist = {}
         self.actionList = ["brkDnTrn", "swTrain", "bldTrn", "classCars", "servIndus", "misc"]
         #self.weights = [0.18, 0.18, 0.18, 0.18, 0.18, 0.1]
         self.weights = [0.5, 0, 0.5, 0, 0, 0]
@@ -102,7 +103,7 @@ class locProc():
                     self.thisConsist[carClassType] = self.thisConsist[carClassType] - 1
                     destTrack = self.randomTrack()
                     locs.locDat[loc]["trackTots"][destTrack] +=1
-                    locs.locDat[loc]["cars"][destTrack][carClassType] +=1
+                    locs.locDat[loc]["tracks"][destTrack][carClassType] +=1
                     typeCount -=1
             
             if dbgLocal: print("brkDownTrain: after while loop: typeCount = ", typeCount, ", ydTrainNam = ", ydtrainNam)
@@ -124,10 +125,6 @@ class locProc():
         
     def buildTrain(self, loc):
         numCarsAvail = 0
-
-        for trackTots in locs.locDat[loc]["trackTots"]:
-            if "indust" not in trackTots:
-                numCarsAvail += locs.locDat[loc]["trackTots"][trackTots]
         
         if mVars.prms["dbgYdProc"]: print("bldTrn: number of cars available: ", numCarsAvail)
         # yard has no train undergoing build
@@ -139,12 +136,19 @@ class locProc():
         # single train is max number building in a yard
         else:         
             self.add2Train(loc)  
-            ydtrainNam =  self.ydTrains["buildTrain"]
+            ydtrainNam =  ''.join(self.ydTrains["buildTrain"])
 
             if trainDB.trains[ydtrainNam]["numCars"] >= mVars.prms["trainSize"]:
                 # train has reached max size
                 trainDB.trains[ydtrainNam]["status"] = "ready2Leave"
+                trainDB.trains[ydtrainNam]["currentLoc"] = self.findRoutes(loc, ydtrainNam)
             if mVars.prms["dbgYdProc"]: print("train",ydtrainNam," built: ",trainDB.trains[ydtrainNam])
+
+    def findRoutes(self, loc, ydtrainNam):
+        for routeNam in mVars.geometry[loc]["routes"]:
+            if mVars.routes[routeNam]["origin"] == loc and \
+                mVars.routes[routeNam]["dest"] == trainDB.trains[ydtrainNam]["finalLoc"]:
+                return routeNam
 
                             
     def buildNewTrain(self, loc):
@@ -153,22 +157,27 @@ class locProc():
         for trackTots in genExp:
             if locs.locDat[loc]["trackTots"][trackTots] >= mVars.prms["trainSize"]*0.5:
                 trainObj = trainDB()
-                trainNum, consistNum = trainObj.newTrain()
-                newTrainNam = "train"+str(trainNum)
+                trnName, conName = trainObj.newTrain()
 
-                trainDB.trains[newTrainNam].update( {
+                trainDB.trains[trnName].update( {
                     "status": "building",
                     "origLoc": loc,
-                    "finalLoc": "",
+                    "finalLoc": trackTots,
                     "currentLoc": loc,
                     "numStops": 1,
-                    "stops": [trackTots]                   
+                    "stops": [trackTots]          
                         })
-                print("new train: ", newTrainNam, ": ", trainDB.trains)
-                self.ydTrains["buildTrain"].append(newTrainNam)
-                locs.locDat[loc]["trains"].append(newTrainNam)
+                trainDB.consists[conName].update({
+                    "stops": {trackTots:{"boxCars": 0, "tankCars": 0,"reefers": 0, "hoppers": 0, 
+                    "gons": 0, "flats": 0, "psgr": 0}  }
+                })
+                
+                print("new train: ", trnName, ": ", trainDB.trains[trnName])
+                print("new consist: ", conName, ":", trainDB.consists[conName])
+                self.ydTrains["buildTrain"].append(trnName)
+                locs.locDat[loc]["trains"].append(trnName)
 
-        
+    
     def add2Train(self, loc):
         from carProc import carProc
         carProcObj = carProc()
@@ -179,11 +188,12 @@ class locProc():
         
         consistNum = trainDB.trains[ydtrainNam]["consistNum"]
         consistNam = "consist"+str(consistNum)
-        self.thisConsist = trainDB.consists[consistNam]["stops"][trainDest]
-        thisTrack = locs.locDat[loc]["cars"][trainDest]
+        print("building train: ", ydtrainNam, "from consists (all): ", trainDB.consists)
+        self.bldConsist = trainDB.consists[consistNam]["stops"][trainDest]
+        thisTrack = locs.locDat[loc]["tracks"][trainDest]
         
         if mVars.prms["dbgYdProc"]: print("bldTrn: before next build step, consist : ", 
-                self.thisConsist,
+                self.bldConsist,
                 "\ntrack contents: ", thisTrack)
         
         carSel, typeCount = carProcObj.carTypeSel(thisTrack)
@@ -195,20 +205,19 @@ class locProc():
             if thisTrack[carClassType] >0:
                 thisTrack[carClassType] -=1
                 locs.locDat[loc]["trackTots"][trainDest] -=1
-                self.thisConsist[carClassType] +=1
+                self.bldConsist[carClassType] +=1
+                trainDB.trains[ydtrainNam]["numCars"] +=1
                 typeCount -=1
 
         try:
-            trainDB.consists[consistNum]["stops"][loc] = self.thisConsist
-            locs.locDat[loc]["cars"][trainDest] = thisTrack
+            trainDB.consists[consistNum]["stops"][loc] = self.bldConsist
+            locs.locDat[loc]["tracks"][trainDest] = thisTrack
         except:
             pass
         if mVars.prms["dbgYdProc"]: print("bldTrn: after build step, consist : ", 
-                self.thisConsist,
+                self.bldConsist,
                 "\ntrack contents: ", thisTrack)
             
-
-
     def classCars(self):
         pass
     def servIndus(self):
