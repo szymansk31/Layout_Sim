@@ -24,8 +24,11 @@ class geom():
                 if mVars.prms["debugGeom"]: print("in initRoutes; orig, dest: ", loc, ",", dest)
                 transTime = geometry[loc]["time2AdjLocs"][destIDX]
                 routeName = "route"+str(idx)
-                routes[routeName] = {"origin": loc, "dest": dest, "transTime": transTime}
-                if idx < 3:
+                if guiDict[loc]["x0"] > guiDict[dest]["x0"]: directn = "east"
+                else: directn = "west"
+                routes[routeName] = {"origin": loc, "dest": dest, "direction": directn, 
+                                     "transTime": transTime}
+                if routes[routeName]["direction"] == "east":
                     routes[routeName].update(self.routeLine(routes[routeName], routeName, guiDict))
                 if mVars.prms["debugGeom"]: print("\ninitRoutes: route[",routeName,"] = ", routes[routeName])
                 rtList = geometry[loc].get("routes")
@@ -37,14 +40,14 @@ class geom():
         if mVars.prms["debugGeom"]: print("\nroutes: ", routes)
         return routes
 
-    def routeLine(self, routeDict, rtNam, guiDict):
+    def trnsOnRoutes(self, routeDict, rtNam, guiDict):
         leftObj = guiDict[guiDict[rtNam]["leftObj"]]
         rtObj = guiDict[guiDict[rtNam]["rtObj"]]
         yLoc = (leftObj["y0"] + leftObj["y1"])*0.5
         height = leftObj["y1"] - leftObj["y0"]
         distance = rtObj["x0"] - leftObj["x1"]
         xTrnTxt = (leftObj["x1"] + rtObj["x0"])*0.5
-        routeDict = {
+        routeDictOut = {
             "x0": leftObj["x1"],
             "x1": rtObj["x0"],
             "y0": yLoc,
@@ -58,5 +61,30 @@ class geom():
             "yTrnCon": leftObj["y0"] - 5,
             "distPerTime": distance/routeDict["transTime"]
                     }
-        return routeDict
+        return routeDictOut
+
+    # routeLine draws lines to represent all routes between endpoints
+    # train gui data is initialized in trnsOnRoutes
+    def routeLine(self, routeDict, rtNam, guiDict):
+        leftObj = guiDict[guiDict[rtNam]["leftObj"]]
+        rtObj = guiDict[guiDict[rtNam]["rtObj"]]
+        yLoc = (leftObj["y0"] + leftObj["y1"])*0.5
+        height = leftObj["y1"] - leftObj["y0"]
+        distance = rtObj["x0"] - leftObj["x1"]
+        xTrnTxt = (leftObj["x1"] + rtObj["x0"])*0.5
+        routeDictOut = {
+            "x0": leftObj["x1"],
+            "x1": rtObj["x0"],
+            "y0": yLoc,
+            "y1": yLoc,
+            "xTrnInit": leftObj["x1"],
+            "yTrn": yLoc - height*0.25,
+            "trnWid": 20,
+            "trnHt": 10,
+            "xTrnTxt": xTrnTxt,
+            "yTrnTxt": leftObj["y0"] - 20,
+            "yTrnCon": leftObj["y0"] - 5,
+            "distPerTime": distance/routeDict["transTime"]
+                    }
+        return routeDictOut
 
