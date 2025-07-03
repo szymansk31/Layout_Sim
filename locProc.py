@@ -129,6 +129,7 @@ class locProc():
         if mVars.prms["dbgYdProc"]: print("bldTrn: number of cars available: ", numCarsAvail)
         # yard has no train undergoing build
         if not self.ydTrains["buildTrain"]:
+            
             self.buildNewTrain(loc)
             
             
@@ -142,7 +143,8 @@ class locProc():
                 # train has reached max size
                 trainDB.trains[ydtrainNam]["status"] = "ready2Leave"
                 trainDB.trains[ydtrainNam]["currentLoc"] = self.findRoutes(loc, ydtrainNam)
-            if mVars.prms["dbgYdProc"]: print("train",ydtrainNam," built: ",trainDB.trains[ydtrainNam])
+                if mVars.prms["dbgYdProc"]: print("train",ydtrainNam," built: "
+                                ,trainDB.trains[ydtrainNam])
 
     def findRoutes(self, loc, ydtrainNam):
         for routeNam in mVars.geometry[loc]["routes"]:
@@ -165,7 +167,8 @@ class locProc():
                     "finalLoc": trackTots,
                     "currentLoc": loc,
                     "numStops": 1,
-                    "stops": [trackTots]          
+                    "stops": [trackTots],
+                    "color": trainDB.colors()           
                         })
                 trainDB.consists[conName].update({
                     "stops": {trackTots:{"boxCars": 0, "tankCars": 0,"reefers": 0, "hoppers": 0, 
@@ -196,6 +199,7 @@ class locProc():
                 self.bldConsist,
                 "\ntrack contents: ", thisTrack)
         
+        if locs.locDat[loc]["trackTots"][trainDest]: return
         carSel, typeCount = carProcObj.carTypeSel(thisTrack)
         carClassType = carProcObj.randomCar(carSel)
         carsClassed = 0

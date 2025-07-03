@@ -14,13 +14,24 @@
     "x0": 900, "y0": 100, "x1": 1000, "y1": 160,
     "text": "Sw Area 1"
 },
-"route2": {
+"route1": {
     "type": "route", "leftObj": "yard2", "rtObj": "yard1",
+    "text": "Routes 1 and 3"
+},
+"route2": {
+    "type": "route", "leftObj": "yard1", "rtObj": "swArea1",
     "text": "Routes 2 and 4"
 },
-"route1": {
+"route3": {
+    "type": "route", "leftObj": "yard2", "rtObj": "yard1",
+    "text": ""
+},
+"route4": {
     "type": "route", "leftObj": "yard1", "rtObj": "swArea1",
-    "text": "Routes 1 and 3"
+    "text": ""
+},
+"trainData": {
+    "type": "train", "height": 10, "length": 20
 }
 
 }

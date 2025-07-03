@@ -13,8 +13,9 @@ def main_loop():
         print("\nmVars.time: ", mVars.time)
         for train in trainDB.trains:
             currentLoc = trainDB.trains[train]["currentLoc"]
+            status = trainDB.trains[train]["status"]
             if mVars.prms["dbgLoop"]: print ("Before train processing: train: ", 
-                train, "currentLoc: ", currentLoc)
+                train, "currentLoc: ", currentLoc, "status: ", status)
             trnProcObj.trainCalcs(trainDB.trains[train], train)
         count +=1
 
@@ -34,29 +35,6 @@ def main_loop():
             ydProcObj.yardCalcs(geometry, loc)
         mVars.time +=1
 
-class swAreaProc():
-    yardName = str
-    numTracks  = int
-    numDest = int
-    fracTrainBuild = int        #fraction of classified cars built into trains
-    rateClassification = int    #num cars classified/time
-    numAdjYards = int           #num adjacent yards
-    adjYardNames = []
-    time2AdjYards = []
-    trainOut = int
-    swAreaNames = []
-    
-    
-    def __init__(self):
-        pass
-    
-    def swAreaSetup(self):
-        print("\nsetting up switching area ", self.swAreaNames)
-        
-        
-    def swAreaCalcs(self):
-        self.trainOut = self.rateClassification*self.fracTrainBuild/mVars.trainSize
-    
             
 
 #########################################################
@@ -100,7 +78,7 @@ dispObj.drawLayout(gui.guiDict)
 idx = 0
 print("\n")
 for loc in geometry:
-    if mVars.prms["debugGeom"]: print("location: ", loc,": ", geometry[loc])
+    if mVars.prms["dbgGeom"]: print("location: ", loc,": ", geometry[loc])
     idx +=1
 
 #main loop:

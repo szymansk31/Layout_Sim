@@ -11,5 +11,6 @@
 "numStops": 0,
 "stops": [
     "swArea1", "swArea2"],
+"color": "blue",
 "locoType": "2-8-0"}
 }

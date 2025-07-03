@@ -5,10 +5,10 @@
     "numOperators": 5,
     "dbgPrmInit": 1,
     "dbgFileRd": 1,
-    "debugGeom" : 1,
+    "dbgGeom" : 1,
     "dbgTrnInit" : 1,
     "dbgLoop": 1,
-    "debugCarProc": 1,
+    "dbgCarProc": 1,
     "dbgTrnProc": 1,
     "dbgYdProc": 1
 }

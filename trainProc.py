@@ -12,7 +12,12 @@ class trainDB():
 
     trains = {}
     consists = {}
-    
+    trnHeight = 10
+    trnLength = 20
+    colorIDX = 0
+    colorList = ["red", "green", "yellow", "orange", "purple", "blue"]
+
+
     def __init__(self):
         #self.trainID = int
         self.train = {}
@@ -21,10 +26,21 @@ class trainDB():
         self.conName = ""
         pass
     
+    @classmethod
+    def colors(cls):
+        maxColorIDX = 5
+        cls.color = cls.colorList[cls.colorIDX]
+        cls.colorIDX +=1
+        if cls.colorIDX == maxColorIDX: cls.colorIDX = 0
+        print("color: ", cls.color)
+        return cls.color
+        
     def initTrain(self):
         files = readFiles()
         self.train = files.readFile("trainFile")
         self.trnNam(self.train)
+        self.train[self.trnName]["color"] = trainDB.colors()
+        print("color for init train: ", self.train[self.trnName]["color"])
 
         print("adding initial consist")
         self.initConsist(files, "consistFile")
@@ -49,7 +65,6 @@ class trainDB():
     def conNam(self, consist):
         self.conName = next(iter(consist))
         
-        
     def newTrain(self):
         newTrainNum = trainDB.numTrains+1
         newTrainNam = "train"+str(newTrainNum)
@@ -70,6 +85,7 @@ class trainDB():
             "numStops": 0,
             "stops": [
                 ],
+            "color": "",
             "locoType": "2-8-0"}
         })
         self.newConsist(newConsistNum, newTrainNum)
@@ -126,6 +142,7 @@ class trnProc:
                 transTime = mVars.routes[trainDict["currentLoc"]]["transTime"]
                 if mVars.prms["dbgTrnProc"]: print("trainCalcs: train: ", 
                     trainDict["trainNum"], "route: ", route, 
+                    ", origin: ", trainDict["origLoc"], ", dest:", trainDict["finalLoc"], 
                     ", transTime:", transTime, 
                     ", timeEnRoute: ", trainDict["timeEnRoute"], 
                     ", variance: ", variance)
@@ -164,21 +181,25 @@ class trnProc:
                     origLoc = trainDB.trains[train]["origLoc"]
                     route = mVars.routes[trainLoc]
                     yTrn = route["yTrn"]
-                    trnWd = route["trnWid"]
-                    trnHt = route["trnHt"]
+                    trnWd = trainDB.trnLength
+                    trnHt = trainDB.trnHeight
                     xTrnTxt = route["xTrnTxt"]
                     yTrnTxt = route["yTrnTxt"]
                     yTrnCon = route["yTrnCon"]
                     xInit = route["xTrnInit"]
-                    print("drawTrain: deltaT, distnce/time: ", self.deltaT, mVars.routes[trainLoc]["distPerTime"])
+                    print("drawTrain: deltaT, distance/time: ", self.deltaT, mVars.routes[trainLoc]["distPerTime"])
                     deltaX = int(self.deltaT*mVars.routes[trainLoc]["distPerTime"])
-                    self.xTrain += deltaX
+                    if route["direction"] == "east":
+                        self.xTrain += deltaX
+                    else: self.xTrain -= deltaX
+                    
                     print("drawTrain: coordinates: ", self.xTrain, yTrn, self.xTrain+trnWd, yTrn+trnHt)
                     if self.timeEnRoute_Old == 0:
-                        self.trainImage = gui.C.create_rectangle(xInit, yTrn, xInit+trnWd, yTrn+trnHt)
+                        self.trainImage = gui.C.create_rectangle(xInit, yTrn, xInit+trnWd, yTrn+trnHt, fill=trainDB.trains[train]["color"])
                     else:
                         print("moving train by: ", deltaX)
                         gui.C.move(self.trainImage, deltaX, 0)
+                        gui.C.create_text(xTrnTxt, yTrnTxt, text=train, anchor="nw", fill=trainDB.trains[train]["color"])
                         #trainImage = gui.C.create_rectangle(xTrn, yTrn, xTrn+trnWd, yTrn+trnHt)
                     #gui.C.pack()
 

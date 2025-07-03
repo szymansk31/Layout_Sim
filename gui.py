@@ -10,7 +10,7 @@ from layoutGeom import geom
 #=================================================
 class gui():
     editWindow = tk.Tk() 
-    C = Canvas(editWindow, height=800, width=1200, bg="yellow")
+    C = Canvas(editWindow, height=800, width=1200, bg="lightgray")
     objects = []
     guiDict = {}
     
@@ -45,7 +45,7 @@ class dispSim():
                         text=guiDict[item]["text"]
                     )
                 case "route":
-                    if routeCount < 2:
+                    #if routeCount < 2:
                     # lftObjNam = guiDict[item]["leftObj"]
                     # rtObjNam = guiDict[item]["rtObj"]
                         x0 = mVars.routes[item]["x0"]
@@ -64,5 +64,8 @@ class dispSim():
                         )
                         routeCount +=1
                 case "train":
+                    trainDB.trnHeight = guiDict[item]["height"]
+                    trainDB.trnLength = guiDict[item]["length"]
+
                     pass
                     
