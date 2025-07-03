@@ -25,9 +25,10 @@ def main_loop():
             if "route" not in currentLoc:
                 print("\nloc[",currentLoc,"]", geometry[currentLoc])
             count = 0
-        print("waiting....")
-        wait_button.wait_variable(var)
-        var.set(0)
+        if mVars.wait:
+            print("waiting....")
+            wait_button.wait_variable(var)
+            var.set(0)
         for loc in geometry:
             if mVars.prms["dbgLoop"]: print ("\nBefore loc processing: loop var: ", 
                 loc, "currentLoc: ", currentLoc)
@@ -35,6 +36,8 @@ def main_loop():
             ydProcObj.yardCalcs(geometry, loc)
         mVars.time +=1
 
+def clrWait():
+    mVars.wait = 0
             
 
 #########################################################
@@ -83,14 +86,18 @@ for loc in geometry:
 
 #main loop:
 var = tk.IntVar()
+mVars.wait = 1
 mainLoop = tk.Button(gui.C, text="Start Sim", 
         command=lambda: main_loop())
 wait_button = tk.Button(gui.C, text="Continue", 
         command=lambda: var.set(1))
+no_wait_button = tk.Button(gui.C, text="skip wait", 
+        command=lambda: clrWait())
 mainLoop.pack()
 #button1.configure(width = 10, activebackground = "#33B5E5", relief = FLAT)
 button_window = gui.C.create_window(10, 10, anchor='nw', window=mainLoop)
 button_window = gui.C.create_window(100, 10, anchor='nw', window=wait_button)
+button_window = gui.C.create_window(190, 10, anchor='nw', window=no_wait_button)
 
 #gui.editWindow.after(300, main_loop())
 
