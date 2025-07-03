@@ -3,5 +3,12 @@
     "timeStep": 1,
     "trainSize": 10,
     "numOperators": 5,
-    "trains": []
+    "dbgPrmInit": 1,
+    "dbgFileRd": 1,
+    "dbgGeom" : 1,
+    "dbgTrnInit" : 1,
+    "dbgLoop": 1,
+    "dbgCarProc": 1,
+    "dbgTrnProc": 1,
+    "dbgYdProc": 1
 }

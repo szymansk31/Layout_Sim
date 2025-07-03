@@ -1,13 +1,16 @@
 {
-"trainNum": 0,
+"train3": {
+"trainNum": 3,
 "consistNum": 0,
+"numCars": 0,
 "status": "enroute",
 "origLoc": "yard1",
-"finalLoc": "yard2",
+"finalLoc": "swArea1",
 "currentLoc": "route1",
 "timeEnRoute": 0,
 "numStops": 0,
 "stops": [
     "swArea1", "swArea2"],
-"locoType": "2-8-0"
+"color": "blue",
+"locoType": "2-8-0"}
 }

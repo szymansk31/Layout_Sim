@@ -6,11 +6,10 @@ class mVars:       #short for mainVars
     numOpBusy = 0
     prms = {}
     geometry = {}
-    trains = []
     routes = {}
-    locs = {}
     carsAtLocs = {}
     carTypes = ["boxCars", "tankCars", "reefers", "hoppers", "gons", "flats", "psgr"]
+    numCarTyp = len(carTypes)
     
     def __init__(self):
         pass
@@ -25,7 +24,7 @@ class mVars:       #short for mainVars
         except FileNotFoundError:
             print("\njson file does not exist; returning")
             return
-        print("paramDict: ", mVars.prms)
+        if mVars.prms["dbgPrmInit"]: print("paramDict: ", mVars.prms)
 
 
 #=================================================
