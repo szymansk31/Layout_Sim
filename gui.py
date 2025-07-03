@@ -13,6 +13,7 @@ class gui():
     C = Canvas(editWindow, height=800, width=1200, bg="lightgray")
     objects = []
     guiDict = {}
+    locTextID = {}
     
     def __init__(self):
         gui.editWindow.title("Layout Simulation")

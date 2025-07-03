@@ -5,6 +5,7 @@ from mainVars import mVars
 from trainProc import trainDB
 from layoutGeom import geom
 from gui import gui
+from layoutGeom import locGeom
  
 dbgLocal = 1      
 #=================================================
@@ -12,7 +13,7 @@ class locs():
     locDat = {}
 #=================================================
 class locProc():
-    firstPass = 1
+    firstPass = 0
     
     def __init__(self):
         self.thisLoc = {}
@@ -26,6 +27,8 @@ class locProc():
         self.localText = any
         from fileProc import readFiles
         files = readFiles()
+        locGeomObj = locGeom()
+        locGeomObj.initLocText()
         print("initializing location dicts: ")
         locs.locDat = files.readFile("locationFile")
     #classmethod:
@@ -83,20 +86,27 @@ class locProc():
                     if trainNam not in self.ydTrains["swTrain"]:
                         self.ydTrains["buildTrain"].append(trainNam)
 
+    def initLocDisp(self, loc):
+    
+    
+        pass
+    
     def dispLocDat(self, loc):
         idx = 0
         for track in locs.locDat[loc]["tracks"]:
             text = locs.locDat[loc]["tracks"][track]
             x = (gui.guiDict[loc]["x0"] + gui.guiDict[loc]["x1"])*0.5
             y = gui.guiDict[loc]["y0"] + 120 + 24*idx
-            if locProc.firstPass:
+            if locProc.firstPass <3:
                 gui.C.create_text(x, y, text=track, font=("Arial", 8))
-                self.localText = gui.C.create_text(x+5, y+12, text=text, font=("Arial", 8))
+                locGeom.locTextID[loc]["tracks"][track]["textObjID"] = \
+                    gui.C.create_text(x+5, y+12, text=text, font=("Arial", 8))
             else:
-                gui.C.delete(self.localText)
-                self.localText = gui.C.create_text(x+5, y+12, text=text, font=("Arial", 8))
+                gui.C.delete(locGeom.locTextID[loc]["tracks"][track]["textObjID"])
+                locGeom.locTextID[loc]["tracks"][track]["textObjID"] = \
+                    gui.C.create_text(x+5, y+12, text=text, font=("Arial", 8))
             idx +=1
-        locProc.firstPass = 0
+        locProc.firstPass +=1
         pass
         
     def brkDownTrain(self, loc):
@@ -179,7 +189,6 @@ class locProc():
 
                             
     def buildNewTrain(self, loc):
-        from carProc import carProc
         genExp = (trackTot for trackTot in locs.locDat[loc]["trackTots"] if "indust" not in trackTot)
         for trackTots in genExp:
             if locs.locDat[loc]["trackTots"][trackTots] >= mVars.prms["trainSize"]*0.5:

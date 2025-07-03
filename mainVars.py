@@ -50,25 +50,6 @@ class carHdr:
     def defCarDict(self):
         carDict = {
             self.car.cartype : self.carType,
-            
-            
-            
+             
         }
         
-#=================================================
-class dictProc():
-    shade = 0
-    def __init__(self):
-        pass
-            
-    def add2MainDict(self):
-        mainDict[car.carType][car.carID] = {
-                "RR" : car.RR,
-                "carDesc" : car.desc,
-                "carNum" : car.carNum,
-                'destIDX' : 0,
-                'destSet' : [" ", " "," ", " "," ", " "," ", " "," "]}
-
-    def mainSav(self, destIDX, destNam):
-        mainDict[car.carType][car.carID]["destIDX"] +=1
-        mainDict[car.carType][car.carID]["destSet"][destIDX] = destNam

@@ -8,7 +8,7 @@ class carProc():
     def __init__(self):
         pass
     
-    def readCarInitInfo(self, files):
+    def carInitInfo(self, files):
         print("\nReading initial car info from file: ", files.carDictFile)
         try: 
             jsonFile = open (files.carDictFile, "r")
@@ -20,7 +20,7 @@ class carProc():
         #print("carDict: ", carDict)
         return carDict
     
-    def procCarFileInfo(self, carDict):
+    def procCarInfo(self, carDict):
         for loc in mVars.geometry:
             for carType in mVars.carTypes:
                 for nextLoc in mVars.geometry:      #nextLoc is a new name for a second loc var

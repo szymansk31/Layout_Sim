@@ -11,6 +11,7 @@ class fileNames:
             "carFile": "initCarDict.txt",
             "consistFile": "consist.txt",
             "bare_consist_file": "bare_consist.txt",
+            "locTextFile": "locTextDat.txt",
             "guiFile": "guiInfo.txt"
             }
 

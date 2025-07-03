@@ -51,21 +51,22 @@ files = readFiles()
 from mainVars import mVars
 mVars.prms = files.readFile("paramFile")
 
-from layoutGeom import geom
+from layoutGeom import geom, routeGeom
 from gui import gui, dispSim
 layoutObj = geom()
+routeGeomObj = routeGeom()
 geometry = mVars.geometry = files.readFile("layoutGeomFile")
 layoutObj.locListInit(geometry)
 guiObj = gui()
 gui.guiDict = files.readFile("guiFile")
-mVars.routes = layoutObj.initRoutes(geometry, gui.guiDict)
+mVars.routes = routeGeomObj.initRoutes(geometry, gui.guiDict)
 
 
 #setup initial car distribution
 from carProc import carProc
 carProcObj = carProc()
 carDict = files.readFile("carFile")
-carProcObj.procCarFileInfo(carDict)
+carProcObj.procCarInfo(carDict)
 
 from locProc import locProc
 ydProcObj = locProc()

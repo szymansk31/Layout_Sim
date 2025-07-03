@@ -16,6 +16,10 @@ class geom():
             geom.locList.append(loc)
         if mVars.prms["dbgGeom"]: print("locList: ", geom.locList)
     
+class routeGeom():
+    def __init__(self):
+        pass
+    
     def initRoutes(self, geometry, guiDict):
         idx = 1
         routes = {}
@@ -85,4 +89,17 @@ class geom():
             "y1": yLoc,
                     }
         return routeDictOut
+
+#=================================================
+class locGeom():
+    locTextID = any
+    
+    def __init__(self):
+        pass
+        
+    
+    def initLocText(self):
+        from fileProc import readFiles
+        files = readFiles()
+        locGeom.locTextID = files.readFile("locTextFile")
 
