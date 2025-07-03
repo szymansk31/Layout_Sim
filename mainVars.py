@@ -8,7 +8,7 @@ class mVars:       #short for mainVars
     geometry = {}
     routes = {}
     carsAtLocs = {}
-    carTypes = ["boxCars", "tankCars", "reefers", "hoppers", "gons", "flats", "psgr"]
+    carTypes = ["box", "tank", "rfr", "hop", "gons", "flats", "psgr"]
     numCarTyp = len(carTypes)
     
     def __init__(self):
