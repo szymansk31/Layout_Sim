@@ -15,19 +15,19 @@
     "text": "Sw Area 1"
 },
 "route1": {
-    "type": "route", "leftObj": "yard2", "rtObj": "yard1",
+    "type": "route", "leftObj": "yard1", "rtObj": "swArea1",
     "text": "Routes 1 and 3"
 },
 "route2": {
-    "type": "route", "leftObj": "yard1", "rtObj": "swArea1",
+    "type": "route", "leftObj": "yard2", "rtObj": "yard1",
     "text": "Routes 2 and 4"
 },
 "route3": {
-    "type": "route", "leftObj": "yard2", "rtObj": "yard1",
+    "type": "route", "leftObj": "yard1", "rtObj": "swArea1",
     "text": ""
 },
 "route4": {
-    "type": "route", "leftObj": "yard1", "rtObj": "swArea1",
+    "type": "route", "leftObj": "yard2", "rtObj": "yard1",
     "text": ""
 },
 "trainData": {

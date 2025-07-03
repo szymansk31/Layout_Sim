@@ -25,11 +25,11 @@ def main_loop():
             if "route" not in currentLoc:
                 print("\nloc[",currentLoc,"]", geometry[currentLoc])
             count = 0
-        #print("waiting....")
-        #wait_button.wait_variable(var)
-        #var.set(0)
+        print("waiting....")
+        wait_button.wait_variable(var)
+        var.set(0)
         for loc in geometry:
-            if mVars.prms["dbgLoop"]: print ("\nBefore loc processing: loop var loc: ", 
+            if mVars.prms["dbgLoop"]: print ("\nBefore loc processing: loop var: ", 
                 loc, "currentLoc: ", currentLoc)
 
             ydProcObj.yardCalcs(geometry, loc)

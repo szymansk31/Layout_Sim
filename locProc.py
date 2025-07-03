@@ -4,6 +4,7 @@ import random
 from mainVars import mVars
 from trainProc import trainDB
 from layoutGeom import geom
+from gui import gui
  
 dbgLocal = 1      
 #=================================================
@@ -11,6 +12,7 @@ class locs():
     locDat = {}
 #=================================================
 class locProc():
+    firstPass = 1
     
     def __init__(self):
         self.thisLoc = {}
@@ -21,6 +23,7 @@ class locProc():
         self.weights = [0.5, 0, 0.5, 0, 0, 0]
         self.ydTrains = {"brkDnTrn": [], "swTrain": [], "bldTrn": []}
         self.thisLocDests = []
+        self.localText = any
         from fileProc import readFiles
         files = readFiles()
         print("initializing location dicts: ")
@@ -41,6 +44,7 @@ class locProc():
         self.analyzeTrains(loc)
         if mVars.prms["dbgYdProc"]: print("trains analyzed: ydTrains: ", self.ydTrains)
 
+        self.dispLocDat(loc)
         choice = random.choices(self.actionList, weights=self.weights, k=1)
         choice = ''.join(choice)
         if mVars.prms["dbgYdProc"]: print("\nchoice: ", choice)
@@ -79,6 +83,21 @@ class locProc():
                     if trainNam not in self.ydTrains["swTrain"]:
                         self.ydTrains["buildTrain"].append(trainNam)
 
+    def dispLocDat(self, loc):
+        idx = 0
+        for track in locs.locDat[loc]["tracks"]:
+            text = locs.locDat[loc]["tracks"][track]
+            x = (gui.guiDict[loc]["x0"] + gui.guiDict[loc]["x1"])*0.5
+            y = gui.guiDict[loc]["y0"] + 120 + 24*idx
+            if locProc.firstPass:
+                gui.C.create_text(x, y, text=track, font=("Arial", 8))
+                self.localText = gui.C.create_text(x+5, y+12, text=text, font=("Arial", 8))
+            else:
+                gui.C.delete(self.localText)
+                self.localText = gui.C.create_text(x+5, y+12, text=text, font=("Arial", 8))
+            idx +=1
+        locProc.firstPass = 0
+        pass
         
     def brkDownTrain(self, loc):
         from carProc import carProc
@@ -110,23 +129,24 @@ class locProc():
             #if ydtrainNam in self.ydTrains["brkDnTrn"]: print("found ydtrainNam")
             if typeCount == 0:
                 #remove train name from ydTrains and locs.locData
-                index = self.ydTrains["brkDnTrn"].index(ydtrainNam)
-                self.ydTrains["brkDnTrn"].pop(index)
-                if dbgLocal: print("after removal: ydTrains: ", self.ydTrains)
-                
-                index = locs.locDat[loc]["trains"].index(ydtrainNam)
-                locs.locDat[loc]["trains"].pop(index)
-
+                self.rmTrnFromLoc("brkDnTrn", loc, ydtrainNam)
         try:
             trainDB.consists[consistNum]["stops"][loc] = self.thisConsist
         except:
             pass
 
+    def rmTrnFromLoc(self, action, loc, ydtrainNam):
+        index = self.ydTrains[action].index(ydtrainNam)
+        self.ydTrains[action].pop(index)
+        if dbgLocal: print("after removal: ydTrains: ", self.ydTrains)
         
+        index = locs.locDat[loc]["trains"].index(ydtrainNam)
+        locs.locDat[loc]["trains"].pop(index)
+
     def buildTrain(self, loc):
         numCarsAvail = 0
         
-        if mVars.prms["dbgYdProc"]: print("bldTrn: number of cars available: ", numCarsAvail)
+        #if mVars.prms["dbgYdProc"]: print("bldTrn: number of cars available: ", numCarsAvail)
         # yard has no train undergoing build
         if not self.ydTrains["buildTrain"]:
             
@@ -142,9 +162,14 @@ class locProc():
             if trainDB.trains[ydtrainNam]["numCars"] >= mVars.prms["trainSize"]:
                 # train has reached max size
                 trainDB.trains[ydtrainNam]["status"] = "ready2Leave"
-                trainDB.trains[ydtrainNam]["currentLoc"] = self.findRoutes(loc, ydtrainNam)
+                route4newTrn = self.findRoutes(loc, ydtrainNam)
+                trainDB.trains[ydtrainNam]["currentLoc"] = route4newTrn
+                mVars.routes[route4newTrn]["trains"].append(ydtrainNam)
                 if mVars.prms["dbgYdProc"]: print("train",ydtrainNam," built: "
-                                ,trainDB.trains[ydtrainNam])
+                                ,trainDB.trains[ydtrainNam],
+                                ", route: ", mVars.routes[route4newTrn])
+                self.rmTrnFromLoc("buildTrain", loc, ydtrainNam)
+
 
     def findRoutes(self, loc, ydtrainNam):
         for routeNam in mVars.geometry[loc]["routes"]:
@@ -171,7 +196,7 @@ class locProc():
                     "color": trainDB.colors()           
                         })
                 trainDB.consists[conName].update({
-                    "stops": {trackTots:{"boxCars": 0, "tankCars": 0,"reefers": 0, "hoppers": 0, 
+                    "stops": {trackTots:{"box": 0, "tank": 0,"rfr": 0, "hop": 0, 
                     "gons": 0, "flats": 0, "psgr": 0}  }
                 })
                 
@@ -199,7 +224,7 @@ class locProc():
                 self.bldConsist,
                 "\ntrack contents: ", thisTrack)
         
-        if locs.locDat[loc]["trackTots"][trainDest]: return
+        if locs.locDat[loc]["trackTots"][trainDest] == 0: return
         carSel, typeCount = carProcObj.carTypeSel(thisTrack)
         carClassType = carProcObj.randomCar(carSel)
         carsClassed = 0
