@@ -18,13 +18,6 @@ def main_loop():
                 train, "currentLoc: ", currentLoc, "status: ", status)
             trnProcObj.trainCalcs(trainDB.trains[train], train)
         count +=1
-
-        if count == maxCount:
-            if mVars.prms["dbgLoop"]: print("trainDict[",train,"] = ", trainDB.trains[train])
-            currentLoc = trainDB.trains[train]["currentLoc"]
-            if "route" not in currentLoc:
-                print("\nloc[",currentLoc,"]", geometry[currentLoc])
-            count = 0
         if mVars.wait:
             print("waiting....")
             wait_button.wait_variable(var)

@@ -34,7 +34,7 @@ class routeGeom():
                 else: directn = "west"
                 
                 routes[routeName] = {"origin": loc, "dest": dest, "direction": directn, 
-                                     "transTime": transTime, "trains":[]}
+                                     "transTime": transTime, "trnLabelTag": routeName+"trnLblTag", "trains":[]}
                 # route lines are drawn west-to-east; train locs follow
                 #if routes[routeName]["direction"] == "east":
                 routes[routeName].update(self.routeLine(routes[routeName], routeName, guiDict))

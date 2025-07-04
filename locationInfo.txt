@@ -2,11 +2,11 @@
 "yard1": {
     "trackTots": {"swArea1": 0, "yard2": 0, "industries": 0},
     "tracks": {
-        "swArea1"   :{"box": 0, "tank": 0,"rfr": 0, "hop": 0, 
+        "swArea1"   :{"box": 4, "tank": 2, "rfr": 3, "hop": 8, 
         "gons": 0, "flats": 0, "psgr": 0},
-        "yard2"    :{"box": 0, "tank": 0,"rfr": 0, "hop": 0, 
-        "gons": 0, "flats": 0, "psgr": 0},
-        "industries"   :{"box": 0, "tank": 0,"rfr": 0, "hop": 0, 
+        "yard2"    :{"box": 3, "tank": 0, "rfr": 1, "hop": 0, 
+        "gons": 4, "flats": 3, "psgr": 0},
+        "industries"   :{"box": 0, "tank": 0, "rfr": 0, "hop": 0, 
         "gons": 0, "flats": 0, "psgr": 0}
     },
     "trains": []
@@ -14,11 +14,11 @@
 "swArea1": {
     "trackTots": {"yard1": 16, "yard2": 0, "industries": 0},
     "tracks": {
-        "yard1"   :{"box": 2, "tank": 2,"rfr": 3, "hop": 3, 
+        "yard1"   :{"box": 2, "tank": 2, "rfr": 3, "hop": 3, 
         "gons": 2, "flats": 4, "psgr": 0},
-        "yard2"    :{"box": 0, "tank": 0,"rfr": 0, "hop": 0, 
+        "yard2"    :{"box": 0, "tank": 0, "rfr": 0, "hop": 0, 
         "gons": 0, "flats": 0, "psgr": 0},
-        "industries"   :{"box": 0, "tank": 0,"rfr": 0, "hop": 0, 
+        "industries"   :{"box": 0, "tank": 0, "rfr": 0, "hop": 0, 
         "gons": 0, "flats": 0, "psgr": 0}
     },
     "trains": []
@@ -26,11 +26,11 @@
 "yard2": {
     "trackTots": {"swArea1": 0, "yard1": 0, "industries": 0},
     "tracks": {
-        "swArea1"   :{"box": 0, "tank": 0,"rfr": 0, "hop": 0, 
+        "swArea1"   :{"box": 0, "tank": 0, "rfr": 0, "hop": 0, 
         "gons": 0, "flats": 0, "psgr": 0},
-        "yard1"    :{"box": 0, "tank": 0,"rfr": 0, "hop": 0, 
-        "gons": 0, "flats": 0, "psgr": 0},
-        "industries"   :{"box": 0, "tank": 0,"rfr": 0, "hop": 0, 
+        "yard1"    :{"box": 3, "tank": 2, "rfr": 5, "hop": 5, 
+        "gons": 1, "flats": 3, "psgr": 0},
+        "industries"   :{"box": 0, "tank": 0, "rfr": 0, "hop": 0, 
         "gons": 0, "flats": 0, "psgr": 0}
     },
     "trains": []

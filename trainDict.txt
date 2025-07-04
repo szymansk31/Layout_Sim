@@ -11,9 +11,10 @@
 "timeEnRoute": 0,
 "timeEnRoute_Old": 0,
 "deltaT": 0,
+"objID": 0,
 "numStops": 0,
 "stops": [
-    "swArea1", "swArea2"],
+    "swArea1"],
 "color": "blue",
 "locoType": "2-8-0"}
 }

@@ -1,5 +1,6 @@
 import numpy as np
 from time import sleep
+import tkinter as tk
 from mainVars import mVars
 from fileProc import readFiles
 np.set_printoptions(precision=2, suppress=True) 
@@ -128,6 +129,9 @@ class trnProc:
         self.timeEnRoute_Old = 0
         self.trainImage = any
         self.deltaT = 0.0
+        from gui import gui, dispSim
+        self.dispObj = dispSim()
+
 
 
     def trainCalcs(self, trainDict, trnName):
@@ -153,6 +157,11 @@ class trnProc:
                     ", variance: ", variance)
                 self.drawTrain()
                 if trainDict["timeEnRoute"] >= transTime:
+                    #remove train from that route
+                    index = mVars.routes[routeNam]["trains"].index(trnName)
+                    mVars.routes[routeNam]["trains"].pop(index)
+                    gui.C.delete(routeStem["trnLabelTag"])
+        
                     trainDict["currentLoc"] = routeStem["dest"]
                     locs.locDat[trainDict["currentLoc"]]["trains"].append(trnName)
                     if trainDict["currentLoc"] == trainDict["finalLoc"]:
@@ -160,6 +169,7 @@ class trnProc:
                     else: 
                         trainDict["status"] = "dropPickup"
                     trainDict["timeEnRoute"] = 0
+                    print("train: ", trnName, "trainDict: ", trainDict)
                     mVars.numOpBusy -=1
                     #trainObj.initTrain()
                     
@@ -175,10 +185,11 @@ class trnProc:
                 pass
             case "ready2Leave":
                 trainDict["status"] = "enroute"
+                self.drawTrain()
                 pass
             
     def drawTrain(self):
-        from gui import gui
+        from gui import gui, dispSim
         for train in trainDB.trains:
             trainDict = trainDB.trains[train]
             trainLoc = trainDict["currentLoc"]
@@ -200,13 +211,20 @@ class trnProc:
                     deltaX = int(trainDict["deltaT"]*mVars.routes[trainLoc]["distPerTime"])
                     if route["direction"] == "west": deltaX = -deltaX
                     
-                    print("drawTrain: coordinates: ", xInit, yTrn, xInit+trnWd, yTrn+trnHt)
+                    print("drawTrain: coordinates: ", trainDict["xLoc"], yTrn, trainDict["xLoc"]+trnWd, yTrn+trnHt)
                     if trainDict["timeEnRoute_Old"] == 0:
-                        self.trainImage = gui.C.create_rectangle(xInit, yTrn, xInit+trnWd, yTrn+trnHt, fill=trainDict["color"])
+                        trainDict["xLoc"] = xInit
+                        trainDict["objID"] = gui.C.create_rectangle(trainDict["xLoc"], yTrn, trainDict["xLoc"]+trnWd, yTrn+trnHt, fill=trainDict["color"])
+                        gui.C.create_text(xTrnTxt, yTrnTxt, text=trnLabels, anchor="nw", fill=trainDict["color"], tags=route["trnLabelTag"])
                     else:
+                        
+                        trainDict["xLoc"] = trainDict["xLoc"] + deltaX
                         print("moving train by: ", deltaX)
-                        gui.C.move(self.trainImage, deltaX, 0)
-                        gui.C.create_text(xTrnTxt, yTrnTxt, text=trnLabels, anchor="nw", fill=trainDict["color"])
-                        #trainImage = gui.C.create_rectangle(xTrn, yTrn, xTrn+trnWd, yTrn+trnHt)
-                    #gui.C.pack()
+                        gui.C.move(trainDict["objID"], deltaX, 0)
+                        gui.C.delete(route["trnLabelTag"])
+                        gui.C.create_text(xTrnTxt, yTrnTxt, text=trnLabels, anchor="nw", fill=trainDict["color"], tags=route["trnLabelTag"])
+                    gui.C.update()
+                case trainLoc if "route" not in trainLoc:
+                    pass
+                                
 

@@ -140,6 +140,8 @@ class locProc():
             if typeCount == 0:
                 #remove train name from ydTrains and locs.locData
                 self.rmTrnFromLoc("brkDnTrn", loc, ydtrainNam)
+                trainDB.trains.pop(ydtrainNam)
+
         try:
             trainDB.consists[consistNum]["stops"][loc] = self.thisConsist
         except:
@@ -152,7 +154,7 @@ class locProc():
         
         index = locs.locDat[loc]["trains"].index(ydtrainNam)
         locs.locDat[loc]["trains"].pop(index)
-
+        
     def buildTrain(self, loc):
         numCarsAvail = 0
         
@@ -169,7 +171,7 @@ class locProc():
             self.add2Train(loc)  
             ydtrainNam =  ''.join(self.ydTrains["buildTrain"])
 
-            if trainDB.trains[ydtrainNam]["numCars"] >= mVars.prms["trainSize"]:
+            if trainDB.trains[ydtrainNam]["numCars"] >= mVars.prms["trainSize"]*0.7:
                 # train has reached max size
                 trainDB.trains[ydtrainNam]["status"] = "ready2Leave"
                 route4newTrn = self.findRoutes(loc, ydtrainNam)
@@ -225,7 +227,8 @@ class locProc():
         
         consistNum = trainDB.trains[ydtrainNam]["consistNum"]
         consistNam = "consist"+str(consistNum)
-        print("building train: ", ydtrainNam, "from consists (all): ", trainDB.consists)
+        numCars = trainDB.trains[ydtrainNam]["numCars"]
+        print("building train: ", ydtrainNam, "numCars: ", numCars , ", consist: ", trainDB.consists[consistNam], ", destination: ", trainDest)
         self.bldConsist = trainDB.consists[consistNam]["stops"][trainDest]
         thisTrack = locs.locDat[loc]["tracks"][trainDest]
         

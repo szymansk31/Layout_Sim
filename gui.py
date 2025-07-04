@@ -21,10 +21,13 @@ class gui():
         gui.editWindow.geometry( "1200x500" ) 
         gui.C.pack()
                 
-    
+
 #=================================================
 class dispSim():
+    #trnTxtWidget = tk.Text()
     def __init__(self):
+        self.trnTxtFrame = tk.Frame()
+        self.trnTxtWidget = tk.Text()
         pass
 
     def drawLayout(self, guiDict):
@@ -49,24 +52,39 @@ class dispSim():
                     #if routeCount < 2:
                     # lftObjNam = guiDict[item]["leftObj"]
                     # rtObjNam = guiDict[item]["rtObj"]
-                        x0 = mVars.routes[item]["x0"]
-                        x1 = mVars.routes[item]["x1"]
-                        y0 = mVars.routes[item]["y0"]
-                        y1 = mVars.routes[item]["y1"]
-                        yLoc = (y0 + y1)/2
-                        xLocTxt = (x0 + x1)/2
-                        tmpObj = gui.C.create_line(
-                            x0, yLoc, x1, yLoc
-                        )
-                        gui.objects.append(tmpObj)
-                        gui.C.create_text(
-                            xLocTxt, yLoc+10,
-                            text=guiDict[item]["text"]
-                        )
-                        routeCount +=1
+                    route = mVars.routes[item]
+                    x0 = route["x0"]
+                    x1 = route["x1"]
+                    y0 = route["y0"]
+                    y1 = route["y1"]
+                    yLoc = (y0 + y1)/2
+                    xLocTxt = (x0 + x1)/2
+                    tmpObj = gui.C.create_line(
+                        x0, yLoc, x1, yLoc
+                    )
+                    gui.objects.append(tmpObj)
+                    gui.C.create_text(
+                        xLocTxt, yLoc+10,
+                        text=guiDict[item]["text"]
+                    )
+                    #self.initTrnTxtFrame(route)
+                    routeCount +=1
+
                 case "train":
                     trainDB.trnHeight = guiDict[item]["height"]
                     trainDB.trnLength = guiDict[item]["length"]
 
                     pass
-                    
+        
+    def initTrnTxtFrame(self, route):
+        self.trnTxtWidget = tk.Text(gui.C, width=30, height=10, font=("Arial", 8), wrap="word")
+        self.trnTxtFrame = gui.C.create_window(route["xTrnTxt"], route["yTrnTxt"], 
+            window=self.trnTxtWidget, width=50, height=20)
+        self.trnTxtWidget.insert(tk.END, "train names go here")
+        return 
+        #gui.trnTxtFrame.grid(row=2, column=2)
+        
+    def writeTrnTxt(self, text):
+        print("in writeTrnTxt: text:", text)
+        self.trnTxtWidget.insert(tk.END, text)
+
