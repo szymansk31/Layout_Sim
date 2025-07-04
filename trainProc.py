@@ -8,7 +8,7 @@ np.set_printoptions(precision=2, suppress=True)
 
 #=================================================
 class trainDB():
-    numTrains = 0
+    numTrains = 1
     numConsists = 10
 
     trains = {}
@@ -90,6 +90,8 @@ class trainDB():
             "timeEnRoute_Old": 0,
             "deltaT": 0,
             "numStops": 0,
+            "objID": 0,
+            "firstDisp": 1,
             "stops": [
                 ],
             "color": "",

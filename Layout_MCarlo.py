@@ -63,6 +63,8 @@ carProcObj.procCarInfo(carDict)
 
 from locProc import locProc
 ydProcObj = locProc()
+ydProcObj.initLocDicts()
+
 from trainProc import trnProc, trainDB
 trnProcObj = trnProc()
 trains = trainDB()

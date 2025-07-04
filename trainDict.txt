@@ -1,7 +1,7 @@
 {
-"train3": {
-"trainNum": 3,
-"consistNum": 0,
+"train1": {
+"trainNum": 1,
+"consistNum": 10,
 "numCars": 0,
 "status": "enroute",
 "origLoc": "yard1",
@@ -12,6 +12,7 @@
 "timeEnRoute_Old": 0,
 "deltaT": 0,
 "objID": 0,
+"firstDisp": 1,
 "numStops": 0,
 "stops": [
     "swArea1"],
