@@ -11,6 +11,10 @@ def main_loop():
     print("mVars.time: ", mVars.time, "maxtime: ", mVars.prms["maxTime"])
     while mVars.time < mVars.prms["maxTime"]:
         print("\nmVars.time: ", mVars.time)
+        if mVars.wait:
+            print("waiting....")
+            wait_button.wait_variable(var)
+            var.set(0)
         for train in trainDB.trains:
             currentLoc = trainDB.trains[train]["currentLoc"]
             status = trainDB.trains[train]["status"]
@@ -18,10 +22,6 @@ def main_loop():
                 train, "currentLoc: ", currentLoc, "status: ", status)
             trnProcObj.trainCalcs(trainDB.trains[train], train)
         count +=1
-        if mVars.wait:
-            print("waiting....")
-            wait_button.wait_variable(var)
-            var.set(0)
         for loc in geometry:
             if mVars.prms["dbgLoop"]: print ("\nBefore loc processing: loop var: ", 
                 loc, "currentLoc: ", currentLoc)

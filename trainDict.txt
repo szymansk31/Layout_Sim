@@ -13,6 +13,7 @@
 "deltaT": 0,
 "objID": 0,
 "firstDisp": 1,
+"yTrnTxt": 0,
 "numStops": 0,
 "stops": [
     "swArea1"],

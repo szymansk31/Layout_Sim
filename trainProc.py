@@ -89,9 +89,9 @@ class trainDB():
             "timeEnRoute": 0,
             "timeEnRoute_Old": 0,
             "deltaT": 0,
-            "numStops": 0,
             "objID": 0,
             "firstDisp": 1,
+            "numStops": 0,
             "stops": [
                 ],
             "color": "",

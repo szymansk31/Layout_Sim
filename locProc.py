@@ -41,10 +41,10 @@ class locProc():
     def countCars(self, loc):
         locDictStem = locs.locDat[loc]
         for dest in locDictStem["trackTots"]:
-            for destTrack in locDictStem["tracks"]:
-                for carType in locDictStem["tracks"][destTrack]:
-                    locDictStem["trackTots"][dest] = locDictStem["trackTots"][dest]\
-                        + locDictStem["tracks"][destTrack][carType]
+            for carType in locDictStem["tracks"][dest]:
+                locDictStem["trackTots"][dest] = locDictStem["trackTots"][dest]\
+                    + locDictStem["tracks"][dest][carType]
+                print("countCars: ", locDictStem)
 
     
     def randomTrack(self):
@@ -127,10 +127,12 @@ class locProc():
             consistNam = "consist"+str(consistNum)
             text = trainDB.consists[consistNam]["stops"]
             x = (gui.guiDict[loc]["x0"] + gui.guiDict[loc]["x1"])*0.5
-            y = gui.guiDict[loc]["y0"] + 120+96 + 24*idx
             if trainDB.trains[train]["firstDisp"]:
+                y = gui.guiDict[loc]["y0"] + 120+96 + 24*idx
                 gui.C.create_text(x, y, text=train, font=("Arial", 8))
+                trainDB.trains[train]["yTrnTxt"] = y
                 trainDB.trains[train]["firstDisp"] = 0
+            y = trainDB.trains[train]["yTrnTxt"]
             gui.C.delete(locGeom.locTextID[loc]["locTrnTxtID"])
             locGeom.locTextID[loc]["locTrnTxtID"] = \
                     gui.C.create_text(x+5, y+12, text=text, font=("Arial", 8))
