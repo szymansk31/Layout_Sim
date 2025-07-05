@@ -41,10 +41,11 @@ class locProc():
     def countCars(self, loc):
         locDictStem = locs.locDat[loc]
         for dest in locDictStem["trackTots"]:
+            #print("\n Location: ", loc, "destination: ", dest)
             for carType in locDictStem["tracks"][dest]:
                 locDictStem["trackTots"][dest] = locDictStem["trackTots"][dest]\
                     + locDictStem["tracks"][dest][carType]
-                print("countCars: ", locDictStem)
+                #print("countCars: ", locDictStem)
 
     
     def randomTrack(self):
@@ -253,22 +254,23 @@ class locProc():
         from carProc import carProc
         carProcObj = carProc()
         rate = mVars.geometry[loc]["classRate"]
-
         ydtrainNam =  ''.join(self.ydTrains["buildTrain"])
-        trainDest = trainDB.trains[ydtrainNam]["finalLoc"]
+        locStem = locs.locDat[loc]
+        trainStem = trainDB.trains[ydtrainNam]
         
-        consistNum = trainDB.trains[ydtrainNam]["consistNum"]
+        trainDest = trainStem["finalLoc"]
+        consistNum = trainStem["consistNum"]
         consistNam = "consist"+str(consistNum)
-        numCars = trainDB.trains[ydtrainNam]["numCars"]
+        numCars = trainStem["numCars"]
         print("building train: ", ydtrainNam, "numCars: ", numCars , ", consist: ", trainDB.consists[consistNam], ", destination: ", trainDest)
         self.bldConsist = trainDB.consists[consistNam]["stops"][trainDest]
-        thisTrack = locs.locDat[loc]["tracks"][trainDest]
+        thisTrack = locStem["tracks"][trainDest]
         
         if mVars.prms["dbgYdProc"]: print("bldTrn: before next build step, consist : ", 
                 self.bldConsist,
                 "\ntrack contents: ", thisTrack)
         
-        if locs.locDat[loc]["trackTots"][trainDest] == 0: return
+        if locStem["trackTots"][trainDest] == 0: return
         carSel, typeCount = carProcObj.carTypeSel(thisTrack)
         carClassType = carProcObj.randomCar(carSel)
         carsClassed = 0
@@ -277,14 +279,14 @@ class locProc():
             carsClassed +=1
             if thisTrack[carClassType] >0:
                 thisTrack[carClassType] -=1
-                locs.locDat[loc]["trackTots"][trainDest] -=1
+                locStem["trackTots"][trainDest] -=1
                 self.bldConsist[carClassType] +=1
-                trainDB.trains[ydtrainNam]["numCars"] +=1
+                trainStem["numCars"] +=1
                 typeCount -=1
 
         try:
             trainDB.consists[consistNum]["stops"][loc] = self.bldConsist
-            locs.locDat[loc]["tracks"][trainDest] = thisTrack
+            locStem["tracks"][trainDest] = thisTrack
         except:
             pass
         if mVars.prms["dbgYdProc"]: print("bldTrn: after build step, consist : ", 

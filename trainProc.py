@@ -8,7 +8,7 @@ np.set_printoptions(precision=2, suppress=True)
 
 #=================================================
 class trainDB():
-    numTrains = 1
+    numTrains = 0
     numConsists = 10
 
     trains = {}
@@ -25,6 +25,8 @@ class trainDB():
         self.consist = {}
         self.trnName = ""
         self.conName = ""
+        self.files = readFiles()
+
         pass
     
     @classmethod
@@ -37,14 +39,13 @@ class trainDB():
         return cls.color
         
     def initTrain(self):
-        files = readFiles()
-        self.train = files.readFile("trainFile")
+        self.train = self.files.readFile("trainFile")
         self.dict2TrnNam(self.train)
         self.train[self.trnName]["color"] = trainDB.colors()
         print("color for init train: ", self.train[self.trnName]["color"])
 
         print("adding initial consist")
-        self.initConsist(files, "consistFile")
+        self.initConsist("consistFile")
         self.conName
         tmpLoc = self.train[self.trnName]["currentLoc"]
         if "route" in tmpLoc:
@@ -55,13 +56,13 @@ class trainDB():
         trainDB.trains.update(self.train)
         return 
 
-    def initConsist(self, files, fkey):
-        self.consist = files.readFile(fkey)
+    def initConsist(self, fkey):
+        self.consist = self.files.readFile(fkey)
         self.dict2ConNam(self.consist)
         print("\ncreating consist ", self.conName)
         self.consist[self.conName]["consistNum"] = trainDB.numConsists
-        trainDB.numConsists +=1
-        if mVars.prms["dbgTrnInit"]: print("consistDict: ", self.consist)
+        #trainDB.numConsists +=1
+        #if mVars.prms["dbgTrnInit"]: print("consistDict: ", self.consist)
         return
     
     def dict2TrnNam(self, train):
@@ -70,33 +71,20 @@ class trainDB():
         self.conName = next(iter(consist))
         
     def newTrain(self):
+        newTrain = {}
         newTrainNum = trainDB.numTrains+1
         newTrainNam = "train"+str(newTrainNum)
         newConsistNum = trainDB.numConsists+1 
         newConsistNam = "consist"+str(newConsistNum)
+        tmpTrain = self.files.readFile("trainFile")
         
-        trainDB.trains.update(
-        {
-        newTrainNam: {
-            "trainNum": newTrainNum,
-            "consistNum": newConsistNum,
-            "numCars": 0,
-            "status": "",
-            "origLoc": "",
-            "finalLoc": "",
-            "currentLoc": "",
-            "xLoc": 0,
-            "timeEnRoute": 0,
-            "timeEnRoute_Old": 0,
-            "deltaT": 0,
-            "objID": 0,
-            "firstDisp": 1,
-            "numStops": 0,
-            "stops": [
-                ],
-            "color": "",
-            "locoType": "2-8-0"}
-        })
+        newTrain[newTrainNam] = tmpTrain.pop("trnProtype")
+        newTrain[newTrainNam]["trainNum"] = newTrainNum
+        newTrain[newTrainNam]["consistNum"] = newConsistNum
+    
+        print("newTrain: dict: ", newTrain)
+        trainDB.trains.update(newTrain)
+        
         self.newConsist(newConsistNum, newTrainNum)
         trainDB.numTrains +=1
         trainDB.numConsists +=1

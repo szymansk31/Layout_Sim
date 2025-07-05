@@ -12,7 +12,7 @@
     "trains": []
 },
 "swArea1": {
-    "trackTots": {"yard1": 16, "yard2": 0, "industries": 0},
+    "trackTots": {"yard1": 0, "yard2": 0, "industries": 0},
     "tracks": {
         "yard1"   :{"box": 2, "tank": 2, "rfr": 3, "hop": 3, 
         "gons": 2, "flats": 4, "psgr": 0},

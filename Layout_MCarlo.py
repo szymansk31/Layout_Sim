@@ -23,8 +23,8 @@ def main_loop():
             trnProcObj.trainCalcs(trainDB.trains[train], train)
         count +=1
         for loc in geometry:
-            if mVars.prms["dbgLoop"]: print ("\nBefore loc processing: loop var: ", 
-                loc, "currentLoc: ", currentLoc)
+            if mVars.prms["dbgLoop"]: print ("\nAbout to process: ", 
+                loc)
 
             ydProcObj.yardCalcs(geometry, loc)
         mVars.time +=1
@@ -68,7 +68,7 @@ ydProcObj.initLocDicts()
 from trainProc import trnProc, trainDB
 trnProcObj = trnProc()
 trains = trainDB()
-trains.initTrain()
+trains.newTrain()
 
 # from gui.py
 dispObj = dispSim()

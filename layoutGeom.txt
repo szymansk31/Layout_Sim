@@ -3,7 +3,7 @@
     "numTracks": 5,
     "numAdjLocs": 2,
     "adjLocNames": ["swArea1", "yard2"],
-    "time2AdjLocs": [10, 20],
+    "time2AdjLocs": [10, 10],
     "fracTrainBuild": 0.50,
     "classRate": 2,
     "routes": []
@@ -21,7 +21,7 @@
     "numTracks": 10,
     "numAdjLocs": 1,
     "adjLocNames": ["yard1"],
-    "time2AdjLocs": [20],
+    "time2AdjLocs": [10],
     "fracTrainBuild": 0.50,
     "classRate": 2,    
     "routes": []
