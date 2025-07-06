@@ -13,10 +13,7 @@
 "timeEnRoute_Old": 0,
 "deltaT": 0,
 "objID": 0,
-"firstDisp": 1,
-"trnLabelID": 0,
 "yTrnTxt": 0,
-"locTrnTxtID": 0,
 "numStops": 0,
 "stops": [
     "swArea1"],

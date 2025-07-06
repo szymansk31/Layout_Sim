@@ -122,29 +122,29 @@ class locProc():
     
     def dispTrnInLoc(self, loc):
         locStem = locs.locDat[loc]
+        trainStem = trainDB.trains
         text = ""
-        for train in locStem["trains"]:
-            trainStem = trainDB.trains[train]
-            consistNum = trainStem["consistNum"]
-            consistNam = "consist"+str(consistNum)
-            for action in self.ydTrains:
-                if train in self.ydTrains[action]:
-                    text += train + ": " + action + "\n"
-            #text += train+"\n"
-            text += str(trainDB.consists[consistNam]["stops"]) 
-            text += "\n"
-            print("ydtrains: ", self.ydTrains, " text: ", text)
-        x = (gui.guiDict[loc]["x0"] + gui.guiDict[loc]["x1"])*0.5
-        try:
-            if trainStem["firstDisp"]:
+        if not locStem["trains"]:
+            for train in locStem["trains"]:
+                consistNum = trainStem[train]["consistNum"]
+                consistNam = "consist"+str(consistNum)
+                for action in self.ydTrains:
+                    if train in self.ydTrains[action]:
+                        text += train + ": " + action + "\n"
+                #text += train+"\n"
+                text += str(trainDB.consists[consistNam]["stops"]) 
+                text += "\n"
+                print("ydtrains: ", self.ydTrains, " text: ", text)
+            x = (gui.guiDict[loc]["x0"] + gui.guiDict[loc]["x1"])*0.5
+            if locStem["firstDisp"]:
                 y = gui.guiDict[loc]["y0"] + 250
-                trainStem["locTrnTxtID"] = \
+                locStem["locTrnTxtID"] = \
                     gui.C.create_text(x, y, text=text, font=("Arial", 8))
-                trainStem["firstDisp"] = 0
+                locStem["firstDisp"] = 0
                 #trainStem["locTrnTxtID"] = \
                 #    gui.C.create_text(x+5, y+12, text=text, font=("Arial", 8))
-        except:
-            gui.C.itemconfigure(trainStem["locTrnTxtID"], text=text, font=("Arial", 8))
+            else:
+                gui.C.itemconfigure(locStem["locTrnTxtID"], text=text, font=("Arial", 8))
             
         
     def brkDownTrain(self, loc):

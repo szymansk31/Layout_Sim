@@ -176,8 +176,9 @@ class trnProc:
                 pass
             case "ready2Leave":
                 trainDict["status"] = "enroute"
-                gui.C.delete(trainDict["trnLabelID"])
-                gui.C.delete(trainDict["locTrnTxtID"])                
+                loc = trainDict["currentLoc"]
+                gui.C.delete(locs.locDat[loc]["trnLabelID"])
+                gui.C.delete(locs.locDat[loc]["locTrnTxtID"])                
                 self.drawTrain(trnName)
                 pass
             
