@@ -9,7 +9,7 @@
         "industries"   :{"box": 0, "tank": 0, "rfr": 0, "hop": 0, 
         "gons": 0, "flats": 0, "psgr": 0}
     },
-    "firstDisp": 0,
+    "firstDisp": 1,
     "trnLabelID": 0,
     "locTrnTxtID": 0,
     "trains": []
@@ -22,7 +22,7 @@
         "industries"   :{"box": 0, "tank": 0, "rfr": 0, "hop": 0, 
         "gons": 0, "flats": 0, "psgr": 0}
     },
-    "firstDisp": 0,
+    "firstDisp": 1,
     "trnLabelID": 0,
     "locTrnTxtID": 0,
     "trains": []
@@ -35,7 +35,7 @@
         "industries"   :{"box": 0, "tank": 0, "rfr": 0, "hop": 0, 
         "gons": 0, "flats": 0, "psgr": 0}
     },
-    "firstDisp": 0,
+    "firstDisp": 1,
     "trnLabelID": 0,
     "locTrnTxtID": 0,
     "trains": []
