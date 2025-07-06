@@ -7,14 +7,13 @@ from layoutGeom import geom
 from gui import gui
 from layoutGeom import locGeom
  
-dbgLocal = 1      
+dbgLocal = 1     
 #=================================================
 class locs():
     locDat = {}
 #=================================================
 class locProc():
     firstPass = 0
-    trnDispCnt = 0
     
     def __init__(self):
         self.thisLoc = {}
@@ -70,10 +69,10 @@ class locProc():
             case "brkDnTrn":
                 self.brkDownTrain(loc)
                 if mVars.prms["dbgYdProc"]: 
-                    if dbgLocal: print("after brkDnTrn: consist: ", 
-                    self.thisConsist)
-                    if dbgLocal: print("this location trackTots: ", locs.locDat[loc]["trackTots"])
-                pass
+                    #if dbgLocal: print("after brkDnTrn: consist: ", 
+                    #self.thisConsist)
+                    #if dbgLocal: print("this location trackTots: ", locs.locDat[loc]["trackTots"])
+                    pass
             case "swTrain":
                 pass
             case "bldTrn":
@@ -122,27 +121,31 @@ class locProc():
         pass
     
     def dispTrnInLoc(self, loc):
-        idx = 0
         locStem = locs.locDat[loc]
+        text = ""
         for train in locStem["trains"]:
             trainStem = trainDB.trains[train]
             consistNum = trainStem["consistNum"]
             consistNam = "consist"+str(consistNum)
-            text = trainDB.consists[consistNam]["stops"]
-            x = (gui.guiDict[loc]["x0"] + gui.guiDict[loc]["x1"])*0.5
+            for action in self.ydTrains:
+                if train in self.ydTrains[action]:
+                    text += train + ": " + action + "\n"
+            #text += train+"\n"
+            text += str(trainDB.consists[consistNam]["stops"]) 
+            text += "\n"
+            print("ydtrains: ", self.ydTrains, " text: ", text)
+        x = (gui.guiDict[loc]["x0"] + gui.guiDict[loc]["x1"])*0.5
+        try:
             if trainStem["firstDisp"]:
-                y = gui.guiDict[loc]["y0"] + 120+96 + 24*idx
-                trainStem["trnLabelID"] = \
-                    gui.C.create_text(x, y, text=train, font=("Arial", 8))
-                trainStem["yTrnTxt"] = y
+                y = gui.guiDict[loc]["y0"] + 250
+                trainStem["locTrnTxtID"] = \
+                    gui.C.create_text(x, y, text=text, font=("Arial", 8))
                 trainStem["firstDisp"] = 0
-            y = trainStem["yTrnTxt"]
-            gui.C.delete(trainStem["locTrnTxtID"])
-            trainStem["locTrnTxtID"] = \
-                    gui.C.create_text(x+5, y+12, text=text, font=("Arial", 8))
-            idx +=1
-        locProc.trnDispCnt +=1
-        pass
+                #trainStem["locTrnTxtID"] = \
+                #    gui.C.create_text(x+5, y+12, text=text, font=("Arial", 8))
+        except:
+            gui.C.itemconfigure(trainStem["locTrnTxtID"], text=text, font=("Arial", 8))
+            
         
     def brkDownTrain(self, loc):
         from carProc import carProc
@@ -193,7 +196,6 @@ class locProc():
         
     def buildTrain(self, loc):
         numCarsAvail = 0
-        
         #if mVars.prms["dbgYdProc"]: print("bldTrn: number of cars available: ", numCarsAvail)
         # yard has no train undergoing build
         if not self.ydTrains["buildTrain"]:
@@ -206,23 +208,37 @@ class locProc():
         else:         
             self.add2Train(loc)  
             ydtrainNam =  ''.join(self.ydTrains["buildTrain"])
+            trainStem = trainDB.trains[ydtrainNam]
 
-            if trainDB.trains[ydtrainNam]["numCars"] >= mVars.prms["trainSize"]*0.7:
+            if trainStem["numCars"] >= mVars.prms["trainSize"]*0.7:
                 # train has reached max size
-                trainDB.trains[ydtrainNam]["status"] = "ready2Leave"
+                trainStem["status"] = "ready2Leave"
                 route4newTrn = self.findRoutes(loc, ydtrainNam)
-                trainDB.trains[ydtrainNam]["currentLoc"] = route4newTrn
+                trainStem["currentLoc"] = route4newTrn
+                dest = trainDB.trains[ydtrainNam]["finalLoc"]
+    
                 mVars.routes[route4newTrn]["trains"].append(ydtrainNam)
+                if loc == mVars.routes[route4newTrn]["leftObj"]: 
+                    trainStem["direction"] = "east"
+                    mVars.routes[route4newTrn]["xTrnInit"] = gui.guiDict[loc]["x1"]
+                else: 
+                    trainStem["direction"] = "west"
+                    mVars.routes[route4newTrn]["xTrnInit"] = gui.guiDict[loc]["x0"] - trainDB.trnLength
+
                 if mVars.prms["dbgYdProc"]: print("train",ydtrainNam," built: "
-                                ,trainDB.trains[ydtrainNam],
+                                ,trainStem,
                                 ", route: ", mVars.routes[route4newTrn])
                 self.rmTrnFromLoc("buildTrain", loc, ydtrainNam)
 
 
     def findRoutes(self, loc, ydtrainNam):
-        for routeNam in mVars.geometry[loc]["routes"]:
-            if mVars.routes[routeNam]["origin"] == loc and \
-                mVars.routes[routeNam]["dest"] == trainDB.trains[ydtrainNam]["finalLoc"]:
+        for routeNam in mVars.routes:
+            loc = ''.join(loc)
+            dest = ''.join(trainDB.trains[ydtrainNam]["finalLoc"])
+            if dbgLocal: print("routNam: ", routeNam, " loc: ", loc, 
+                " finalLoc: ", dest, "route: ", mVars.routes[routeNam])
+            if (loc in mVars.routes[routeNam].values()) and \
+                (dest in mVars.routes[routeNam].values()):
                 return routeNam
 
                             

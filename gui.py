@@ -10,7 +10,7 @@ from layoutGeom import geom
 #=================================================
 class gui():
     editWindow = tk.Tk() 
-    C = Canvas(editWindow, height=800, width=1200, bg="lightgray")
+    C = Canvas(editWindow, height=500, width=1600, bg="lightgray")
     objects = []
     guiDict = {}
     locTextID = {}
@@ -18,7 +18,7 @@ class gui():
     def __init__(self):
         gui.editWindow.title("Layout Simulation")
         # Adjust size 
-        gui.editWindow.geometry( "1200x500" ) 
+        gui.editWindow.geometry( "1600x500" ) 
         gui.C.pack()
                 
 

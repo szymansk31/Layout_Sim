@@ -23,6 +23,7 @@ class routeGeom():
     def initRoutes(self, geometry, guiDict):
         idx = 1
         routes = {}
+        from gui import gui
         for loc in geometry:
             destIDX = 0
             for dest in geometry[loc]["adjLocNames"]:
@@ -30,13 +31,16 @@ class routeGeom():
                 transTime = geometry[loc]["time2AdjLocs"][destIDX]
                 routeName = "route"+str(idx)
                 
-                if guiDict[dest]["x0"] > guiDict[loc]["x0"]: directn = "east"
-                else: directn = "west"
-                
-                routes[routeName] = {"origin": loc, "dest": dest, "direction": directn, 
-                                     "transTime": transTime, "trnLabelTag": routeName+"trnLblTag", "trains":[]}
+                if gui.guiDict[loc]["x0"] > gui.guiDict[dest]["x0"]: 
+                    rtObj = loc
+                    leftObj = dest
+                else: 
+                    rtObj = dest
+                    leftObj = loc
+                routes[routeName] = {"leftObj": leftObj, "rtObj": rtObj, 
+                                        "transTime": transTime, "trnLabelTag": routeName+"trnLblTag", "trains":[]}
                 # route lines are drawn west-to-east; train locs follow
-                #if routes[routeName]["direction"] == "east":
+
                 routes[routeName].update(self.routeLine(routes[routeName], routeName, guiDict))
                 routes[routeName].update(self.trnsOnRoutes(routes[routeName], routeName, guiDict))
 
@@ -60,13 +64,8 @@ class routeGeom():
     
         if mVars.prms["dbgGeom"]: print("trnsOnRoutes: trnLength: ", 
                 trainDB.trnLength, "rtObj[x0]", rtObj["x0"])
-        if routeDict["direction"] == "east":
-            xTrnInit = leftObj["x1"]
-        else:
-            xTrnInit = rtObj["x0"] - trainDB.trnLength
-            
+
         routeDictOut = {
-            "xTrnInit": xTrnInit,
             "yTrn": yLoc - height*0.25,
             "xTrnTxt": xTrnTxt,
             "yTrnTxt": leftObj["y0"] - 20,

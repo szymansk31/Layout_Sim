@@ -140,7 +140,7 @@ class trnProc:
                 if mVars.prms["dbgTrnProc"]: print("trainCalcs: train: ", 
                     trainDict["trainNum"], "route: ", routeNam, 
                     ", origin: ", trainDict["origLoc"], ", dest:", trainDict["finalLoc"], 
-                    ", direction: ", routeStem["direction"], ", transTime:", transTime, 
+                    ", direction: ", trainDict["direction"], ", transTime:", transTime, 
                     ", timeEnRoute: ", trainDict["timeEnRoute"], 
                     ", variance: ", variance)
                 self.drawTrain(trnName)
@@ -153,7 +153,7 @@ class trnProc:
                     routeStem["trains"].pop(index)
                     gui.C.delete(routeStem["trnLabelTag"])
         
-                    trainDict["currentLoc"] = routeStem["dest"]
+                    trainDict["currentLoc"] = trainDict["finalLoc"]
                     locs.locDat[trainDict["currentLoc"]]["trains"].append(trnName)
                     if trainDict["currentLoc"] == trainDict["finalLoc"]:
                         trainDict["status"] = "terminate"
@@ -193,13 +193,6 @@ class trnProc:
                 print("draw train: ", train, "route: ", trainLoc, route)
                 trnLabels = ""
                 trnLabels = ' '.join(mVars.routes[trainLoc]["trains"])
-                match trainLoc:
-                    case trainLoc if "1" in trainLoc:
-                        trnLabels += ' '
-                        trnLabels += ' '.join(mVars.routes["route3"]["trains"])
-                    case trainLoc if "2" in trainLoc:
-                        trnLabels += ' '
-                        trnLabels += ' '.join(mVars.routes["route4"]["trains"])
 
                 #for trainLbl in mVars.routes[trainLoc]["trains"]:
                 #    trnLabels = trnLabels+"   "+trainLbl
@@ -216,13 +209,13 @@ class trnProc:
                 print("draw train: ", train, ", timeEnRoute: ", timeEnRoute, " deltaT, distance/time: ", trainDict["deltaT"], 
                         mVars.routes[trainLoc]["distPerTime"])
                 deltaX = int(trainDict["deltaT"]*mVars.routes[trainLoc]["distPerTime"])
-                if route["direction"] == "west": deltaX = -deltaX
+                if trainDict["direction"] == "west": deltaX = -deltaX
                 
                 print("draw train: ", train, ", coordinates: ", trainDict["xLoc"], yTrn, trainDict["xLoc"]+trnWd, yTrn+trnHt)
                 if trainDict["timeEnRoute_Old"] == 0:
                     trainDict["xLoc"] = xInit
                     trainDict["objID"] = gui.C.create_rectangle(trainDict["xLoc"], yTrn, trainDict["xLoc"]+trnWd, yTrn+trnHt, fill=trainDict["color"])
-                    gui.C.delete(route["trnLabelTag"])
+                    #gui.C.delete(route["trnLabelTag"])
                     gui.C.create_text(xTrnTxt, yTrnTxt, text=trnLabels, 
                         anchor="nw", fill=trainDict["color"], tags=route["trnLabelTag"])
                 else:

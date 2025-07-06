@@ -2,11 +2,12 @@
 "trnProtype": {
 "trainNum": 1,
 "consistNum": 10,
-"numCars": 9,
+"numCars": 0,
 "status": "enroute",
 "origLoc": "yard1",
 "finalLoc": "swArea1",
 "currentLoc": "route1",
+"direction": "",
 "xLoc": 0,
 "timeEnRoute": 0,
 "timeEnRoute_Old": 0,
