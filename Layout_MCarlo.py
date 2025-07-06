@@ -68,7 +68,8 @@ ydProcObj.initLocDicts()
 from trainProc import trnProc, trainDB
 trnProcObj = trnProc()
 trains = trainDB()
-trains.newTrain()
+#newTrainNam, newConsistNamtrains = trains.newTrain()
+#mVars.routes["route1"]["trains"].append(newTrainNam)
 
 # from gui.py
 dispObj = dispSim()

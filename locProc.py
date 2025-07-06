@@ -123,19 +123,22 @@ class locProc():
     
     def dispTrnInLoc(self, loc):
         idx = 0
-        for train in locs.locDat[loc]["trains"]:
-            consistNum = trainDB.trains[train]["consistNum"]
+        locStem = locs.locDat[loc]
+        for train in locStem["trains"]:
+            trainStem = trainDB.trains[train]
+            consistNum = trainStem["consistNum"]
             consistNam = "consist"+str(consistNum)
             text = trainDB.consists[consistNam]["stops"]
             x = (gui.guiDict[loc]["x0"] + gui.guiDict[loc]["x1"])*0.5
-            if trainDB.trains[train]["firstDisp"]:
+            if trainStem["firstDisp"]:
                 y = gui.guiDict[loc]["y0"] + 120+96 + 24*idx
-                gui.C.create_text(x, y, text=train, font=("Arial", 8))
-                trainDB.trains[train]["yTrnTxt"] = y
-                trainDB.trains[train]["firstDisp"] = 0
-            y = trainDB.trains[train]["yTrnTxt"]
-            gui.C.delete(locGeom.locTextID[loc]["locTrnTxtID"])
-            locGeom.locTextID[loc]["locTrnTxtID"] = \
+                trainStem["trnLabelID"] = \
+                    gui.C.create_text(x, y, text=train, font=("Arial", 8))
+                trainStem["yTrnTxt"] = y
+                trainStem["firstDisp"] = 0
+            y = trainStem["yTrnTxt"]
+            gui.C.delete(trainStem["locTrnTxtID"])
+            trainStem["locTrnTxtID"] = \
                     gui.C.create_text(x+5, y+12, text=text, font=("Arial", 8))
             idx +=1
         locProc.trnDispCnt +=1
@@ -148,6 +151,7 @@ class locProc():
         for ydtrainNam in self.ydTrains["brkDnTrn"]:
             consistNum = trainDB.trains[ydtrainNam]["consistNum"]
             consistNam = "consist"+str(consistNum)
+            if mVars.prms["dbgYdProc"]: print("brkDownTrain: ", ydtrainNam, "consist: ", trainDB.consists[consistNam])
             self.thisConsist = trainDB.consists[consistNam]["stops"][loc]
             if mVars.prms["dbgYdProc"]: print("consist core: ", self.thisConsist)
             

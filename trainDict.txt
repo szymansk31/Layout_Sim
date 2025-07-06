@@ -2,7 +2,7 @@
 "trnProtype": {
 "trainNum": 1,
 "consistNum": 10,
-"numCars": 0,
+"numCars": 9,
 "status": "enroute",
 "origLoc": "yard1",
 "finalLoc": "swArea1",
@@ -15,6 +15,7 @@
 "firstDisp": 1,
 "trnLabelID": 0,
 "yTrnTxt": 0,
+"locTrnTxtID": 0,
 "numStops": 0,
 "stops": [
     "swArea1"],
