@@ -28,12 +28,6 @@
             "x0": 0,
             "y0": 0
         },
-        "yard2": {
-            "textObjID": 0,
-            "locTrnTxtID": 0,
-            "x0": 0,
-            "y0": 0
-        },
         "industries": {
             "textObjID": 0,
             "locTrnTxtID": 0,
@@ -45,12 +39,6 @@
 },
 "yard2": {
     "tracks": {
-        "swArea1": {
-            "textObjID": 0,
-            "locTrnTxtID": 0,
-            "x0": 0,
-            "y0": 0
-        },
         "yard1": {
             "textObjID": 0,
             "locTrnTxtID": 0,

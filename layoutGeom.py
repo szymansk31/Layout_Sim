@@ -89,16 +89,4 @@ class routeGeom():
                     }
         return routeDictOut
 
-#=================================================
-class locGeom():
-    locTextID = any
-    
-    def __init__(self):
-        pass
-        
-    
-    def initLocText(self):
-        from fileProc import readFiles
-        files = readFiles()
-        locGeom.locTextID = files.readFile("locTextFile")
 

@@ -1,19 +1,16 @@
-import numpy as np
-import json
 import random
+import numpy as np
 from mainVars import mVars
 from trainProc import trainDB
-from layoutGeom import geom
+from shared import locs
 from gui import gui
-from layoutGeom import locGeom
- 
+from display import dispObj
+np.set_printoptions(precision=2, suppress=True) 
+
 dbgLocal = 1     
 #=================================================
-class locs():
-    locDat = {}
-#=================================================
 class locProc():
-    firstPass = 0
+    locs = locs()
     
     def __init__(self):
         self.thisLoc = {}
@@ -21,12 +18,11 @@ class locProc():
         self.bldConsist = {}
         self.actionList = ["brkDnTrn", "swTrain", "bldTrn", "classCars", "servIndus", "misc"]
         #self.weights = [0.18, 0.18, 0.18, 0.18, 0.18, 0.1]
-        self.weights = [0.5, 0, 0.5, 0, 0, 0]
+        self.weights = [0.45, 0, 0.45, 0, 0, 0.1]
         self.ydTrains = {"brkDnTrn": [], "swTrain": [], "bldTrn": []}
         self.thisLocDests = []
-        self.localText = any
-        locGeomObj = locGeom()
-        locGeomObj.initLocText()
+        
+        
     #classmethod:
     
     def initLocDicts(self):
@@ -51,8 +47,11 @@ class locProc():
         return ''.join(random.choice(self.thisLocDests))
 
     def yardCalcs(self, thisloc, loc):
+        disp = dispObj()
+
         self.thisLoc = thisloc
         self.thisLocDests = []
+
         if mVars.prms["dbgYdProc"]: print("entering yardCalcs: locdat: "
                     , locs.locDat[loc])
         for dest in locs.locDat[loc]["trackTots"]:
@@ -61,10 +60,11 @@ class locProc():
         self.analyzeTrains(loc)
         if mVars.prms["dbgYdProc"]: print("trains analyzed: ydTrains: ", self.ydTrains)
 
-        self.dispLocDat(loc)
+        disp.dispLocDat(loc)
         choice = random.choices(self.actionList, weights=self.weights, k=1)
         choice = ''.join(choice)
         if mVars.prms["dbgYdProc"]: print("\nchoice: ", choice)
+
         match choice:
             case "brkDnTrn":
                 self.brkDownTrain(loc)
@@ -83,8 +83,12 @@ class locProc():
             case "servIndus":
                 pass
             case "misc":
-                pass
-        self.dispTrnInLoc(loc)
+                waitIdx = 0
+                while waitIdx < mVars.waitTime:
+                    waitIdx +=1
+                    pass
+
+        disp.dispTrnInLoc(loc, self.ydTrains)
             
     def analyzeTrains(self, loc):
         self.ydTrains = {"brkDnTrn": [], "swTrain": [], "buildTrain": []}
@@ -101,50 +105,6 @@ class locProc():
                     if trainNam not in self.ydTrains["swTrain"]:
                         self.ydTrains["buildTrain"].append(trainNam)
 
-    
-    def dispLocDat(self, loc):
-        idx = 0
-        for track in locs.locDat[loc]["tracks"]:
-            text = locs.locDat[loc]["tracks"][track]
-            x = (gui.guiDict[loc]["x0"] + gui.guiDict[loc]["x1"])*0.5
-            y = gui.guiDict[loc]["y0"] + 120 + 24*idx
-            if locProc.firstPass <3:
-                gui.C.create_text(x, y, text=track, font=("Arial", 8))
-                locGeom.locTextID[loc]["tracks"][track]["textObjID"] = \
-                    gui.C.create_text(x+5, y+12, text=text, font=("Arial", 8))
-            else:
-                gui.C.delete(locGeom.locTextID[loc]["tracks"][track]["textObjID"])
-                locGeom.locTextID[loc]["tracks"][track]["textObjID"] = \
-                    gui.C.create_text(x+5, y+12, text=text, font=("Arial", 8))
-            idx +=1
-        locProc.firstPass +=1
-        pass
-    
-    def dispTrnInLoc(self, loc):
-        locStem = locs.locDat[loc]
-        trainStem = trainDB.trains
-        text = loc + "\n"
-        #if not locStem["trains"]:
-        for train in locStem["trains"]:
-            consistNum = trainStem[train]["consistNum"]
-            consistNam = "consist"+str(consistNum)
-            for action in self.ydTrains:
-                if train in self.ydTrains[action]:
-                    text += train + ": " + action + "\n"
-            #text += train+"\n"
-            text += str(trainDB.consists[consistNam]["stops"]) 
-            text += "\n"
-            print("ydtrains: ", self.ydTrains, " text: ", text)
-        x = (gui.guiDict[loc]["x0"] + gui.guiDict[loc]["x1"])*0.5
-        if locStem["firstDisp"]:
-            y = gui.guiDict[loc]["y0"] + 250
-            locStem["locTrnTxtID"] = \
-                gui.C.create_text(x, y, text=text, font=("Arial", 8))
-            locStem["firstDisp"] = 0
-        #print("dispTrnInLoc: locStem[firstDisp, txtID]", locStem["firstDisp"], 
-        #      locStem["locTrnTxtID"], " text: ", text)
-        gui.C.itemconfigure(locStem["locTrnTxtID"], text=text, font=("Arial", 8))
-            
         
     def brkDownTrain(self, loc):
         from carProc import carProc
@@ -294,7 +254,7 @@ class locProc():
         carClassType = carProcObj.randomCar(carSel)
         carsClassed = 0
         while ((carsClassed < rate) and (typeCount > 0)):
-            #trainDB.trains[]
+
             carsClassed +=1
             if thisTrack[carClassType] >0:
                 thisTrack[carClassType] -=1

@@ -1,11 +1,7 @@
 
-import numpy as np
 import tkinter as tk
-from tkinter import ttk
 from tkinter import Canvas
 from mainVars import mVars
-from trainProc import trainDB
-from layoutGeom import geom
          
 #=================================================
 class gui():
@@ -71,8 +67,8 @@ class dispSim():
                     routeCount +=1
 
                 case "train":
-                    trainDB.trnHeight = guiDict[item]["height"]
-                    trainDB.trnLength = guiDict[item]["length"]
+                    #trainDB.trnHeight = guiDict[item]["height"]
+                    #trainDB.trnLength = guiDict[item]["length"]
 
                     pass
         
