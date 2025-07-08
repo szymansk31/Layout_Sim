@@ -16,10 +16,10 @@ class locProc():
         self.thisLoc = {}
         self.thisConsist = {}
         self.bldConsist = {}
-        self.actionList = ["brkDnTrn", "swTrain", "bldTrn", "classCars", "servIndus", "misc"]
+        self.actionList = ["brkDnTrn", "swTrain", "buildTrain", "classCars", "servIndus", "misc"]
         #self.weights = [0.18, 0.18, 0.18, 0.18, 0.18, 0.1]
         self.weights = [0.45, 0, 0.45, 0, 0, 0.1]
-        self.ydTrains = {"brkDnTrn": [], "swTrain": [], "bldTrn": []}
+        self.ydTrains = {"brkDnTrn": [], "swTrain": [], "buildTrain": []}
         self.thisLocDests = []
         
         
@@ -74,8 +74,9 @@ class locProc():
                     #if dbgLocal: print("this location trackTots: ", locs.locDat[loc]["trackTots"])
                     pass
             case "swTrain":
+                self.swTrain(loc)
                 pass
-            case "bldTrn":
+            case "buildTrain":
                 self.buildTrain(loc)
                 pass
             case "classCars":
@@ -155,15 +156,16 @@ class locProc():
         
     def buildTrain(self, loc):
         numCarsAvail = 0
-        #if mVars.prms["dbgYdProc"]: print("bldTrn: number of cars available: ", numCarsAvail)
+        #if mVars.prms["dbgYdProc"]: print("buildTrain: number of cars available: ", numCarsAvail)
+        
         # yard has no train undergoing build
         if not self.ydTrains["buildTrain"]:
             
             self.buildNewTrain(loc)
             
             
-        # yard has train building; add cars to it
-        # single train is max number building in a yard
+        # yard has a train already building; add cars to it
+        # single train is allowed to build in a yard
         else:         
             self.add2Train(loc)  
             ydtrainNam =  ''.join(self.ydTrains["buildTrain"])
@@ -173,17 +175,21 @@ class locProc():
                 # train has reached max size
                 trainStem["status"] = "ready2Leave"
                 route4newTrn = self.findRoutes(loc, ydtrainNam)
-                trainStem["currentLoc"] = route4newTrn
                 dest = trainDB.trains[ydtrainNam]["finalLoc"]
-    
+
+                leftObj = mVars.routes[route4newTrn]["leftObj"]
+                rtObj = mVars.routes[route4newTrn]["rtObj"]
                 mVars.routes[route4newTrn]["trains"].append(ydtrainNam)
-                if loc == mVars.routes[route4newTrn]["leftObj"]: 
+                if loc == leftObj.strip(): 
                     trainStem["direction"] = "east"
                     mVars.routes[route4newTrn]["xTrnInit"] = gui.guiDict[loc]["x1"]
-                else: 
+                elif loc == rtObj.strip():
                     trainStem["direction"] = "west"
                     mVars.routes[route4newTrn]["xTrnInit"] = gui.guiDict[loc]["x0"] - trainDB.trnLength
+                else: print("built train", ydtrainNam,  "leftObj: ", leftObj, "rtObj: "
+                            , rtObj,"loc: ", loc, "direction: ", trainStem["direction"])
 
+                trainStem["currentLoc"] = route4newTrn
                 if mVars.prms["dbgYdProc"]: print("train",ydtrainNam," built: "
                                 ,trainStem,
                                 ", route: ", mVars.routes[route4newTrn])
@@ -245,7 +251,7 @@ class locProc():
         self.bldConsist = trainDB.consists[consistNam]["stops"][trainDest]
         thisTrack = locStem["tracks"][trainDest]
         
-        if mVars.prms["dbgYdProc"]: print("bldTrn: before next build step, consist : ", 
+        if mVars.prms["dbgYdProc"]: print("buildTrain: before next build step, consist : ", 
                 self.bldConsist,
                 "\ntrack contents: ", thisTrack)
         
@@ -268,7 +274,7 @@ class locProc():
             locStem["tracks"][trainDest] = thisTrack
         except:
             pass
-        if mVars.prms["dbgYdProc"]: print("bldTrn: after build step, consist : ", 
+        if mVars.prms["dbgYdProc"]: print("buildTrain: after build step, consist : ", 
                 self.bldConsist,
                 "\ntrack contents: ", thisTrack)
             

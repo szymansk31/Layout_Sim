@@ -13,6 +13,7 @@
     "firstDispTrn": 1,
     "locObjID": 0,
     "locTrnTxtID": 0,
+    "locTrnRectID": 0,
     "trains": []
 },
 "swArea1": {
@@ -27,6 +28,7 @@
     "firstDispTrn": 1,
     "locObjID": 0,
     "locTrnTxtID": 0,
+    "locTrnRectID": 0,
     "trains": []
 },
 "yard2": {
@@ -41,6 +43,7 @@
     "firstDispTrn": 1,
     "locObjID": 0,
     "locTrnTxtID": 0,
+    "locTrnRectID": 0,
     "trains": []
 }
 }

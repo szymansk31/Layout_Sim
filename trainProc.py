@@ -16,7 +16,8 @@ class trainDB():
     trnHeight = 10
     trnLength = 20
     colorIDX = 0
-    colorList = ["red", "green", "yellow", "orange", "purple", "blue"]
+    colorList = ["red", "green", "yellow", "orange", "purple", "blue", "deep pink",
+                 "lawn green", "goldenrod", "OrangeRed2", "magenta2", "RoyalBlue1"]
 
 
     def __init__(self):
@@ -31,7 +32,7 @@ class trainDB():
     
     @classmethod
     def colors(cls):
-        maxColorIDX = 5
+        maxColorIDX = 12
         cls.color = cls.colorList[cls.colorIDX]
         cls.colorIDX +=1
         if cls.colorIDX == maxColorIDX: cls.colorIDX = 0
@@ -56,6 +57,7 @@ class trainDB():
         newTrain[newTrainNam]["trainNum"] = newTrainNum
         newTrain[newTrainNam]["consistNum"] = newConsistNum
         newTrain[newTrainNam]["trnObjTag"] = newTrainNam+"ObjTag"
+        newTrain[newTrainNam]["trnLabelTag"] = newTrainNam+"LabelTag"
     
         print("newTrain: dict: ", newTrain)
         trainDB.trains.update(newTrain)
@@ -122,22 +124,24 @@ class trnProc:
                     ", variance: ", variance)
                 disp.drawTrain(trnName)
                 if trainDict["timeEnRoute"] >= transTime:
-                    #remove train from that route
+                    #if trainDict["currentLoc"] == trainDict["finalLoc"]:
+                        #trainDict["status"] = "dropPickup"
+                    trainDict["status"] = "terminate"
+                    trainDict["timeEnRoute"] = 0
+                    trainDict["currentLoc"] = trainDict["finalLoc"]
+                    disp.drawTrain(trnName)
+                    locs.locDat[trainDict["currentLoc"]]["trains"].append(trnName)
+                    
+                    print("train entering terminal: ", trnName, "trainDict: ", trainDict)
                     try:
                         index = routeStem["trains"].index(trnName)
                     except:
                         pass
+                    
+                    #remove train from that route
                     routeStem["trains"].pop(index)
-                    gui.C.delete(routeStem["trnLabelTag"])
-        
-                    trainDict["currentLoc"] = trainDict["finalLoc"]
-                    locs.locDat[trainDict["currentLoc"]]["trains"].append(trnName)
-                    if trainDict["currentLoc"] == trainDict["finalLoc"]:
-                        trainDict["status"] = "terminate"
-                    else: 
-                        trainDict["status"] = "dropPickup"
-                    trainDict["timeEnRoute"] = 0
-                    print("train: ", trnName, "trainDict: ", trainDict)
+                    #gui.C.delete(routeStem["trnLabelTag"])
+    
                     mVars.numOpBusy -=1
                     #trainObj.initTrain()
                     
@@ -155,5 +159,6 @@ class trnProc:
                 trainDict["status"] = "enroute"
                 disp.drawTrain(trnName)
                 pass
+            
             
 

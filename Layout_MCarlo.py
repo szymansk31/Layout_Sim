@@ -17,9 +17,14 @@ def main_loop():
             var.set(0)
         for train in trainDB.trains:
             currentLoc = trainDB.trains[train]["currentLoc"]
+            finalLoc = trainDB.trains[train]["finalLoc"]
+            origLoc = trainDB.trains[train]["origLoc"]
             status = trainDB.trains[train]["status"]
+            direction = trainDB.trains[train]["direction"]
             if mVars.prms["dbgLoop"]: print ("Before train processing: train: ", 
-                train, "currentLoc: ", currentLoc, "status: ", status)
+                train, "currentLoc: ", currentLoc, ", origLoc: ", origLoc, 
+                ", finalLoc: ", finalLoc, ", direction: ", direction,
+                "status: ", status)
             trnProcObj.trainCalcs(trainDB.trains[train], train)
         count +=1
         for loc in geometry:

@@ -9,6 +9,7 @@
 "currentLoc": "route1",
 "direction": "",
 "xLoc": 0,
+"firstDispTrn": 1,
 "timeEnRoute": 0,
 "timeEnRoute_Old": 0,
 "deltaT": 0,
