@@ -16,7 +16,7 @@ class trainDB():
     trnHeight = 10
     trnLength = 20
     colorIDX = 0
-    colorList = ["red", "green", "yellow", "orange", "purple", "blue", "deep pink",
+    colorList = ["red", "green", "yellow", "orange", "purple1", "dodger blue", "deep pink",
                  "lawn green", "goldenrod", "OrangeRed2", "magenta2", "RoyalBlue1"]
 
 

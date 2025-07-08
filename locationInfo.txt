@@ -10,10 +10,10 @@
         "gons": 0, "flats": 0, "psgr": 0}
     },
     "firstDispLoc": 1,
-    "firstDispTrn": 1,
+    "firstDispTrnTxt": 1,
     "locObjID": 0,
     "locTrnTxtID": 0,
-    "locTrnRectID": 0,
+    "locTrnRectID": "yd1TrnRectID",
     "trains": []
 },
 "swArea1": {
@@ -25,10 +25,10 @@
         "gons": 0, "flats": 0, "psgr": 0}
     },
     "firstDispLoc": 1,
-    "firstDispTrn": 1,
+    "firstDispTrnTxt": 1,
     "locObjID": 0,
     "locTrnTxtID": 0,
-    "locTrnRectID": 0,
+    "locTrnRectID": "sw1TrnRectID",
     "trains": []
 },
 "yard2": {
@@ -40,10 +40,10 @@
         "gons": 0, "flats": 0, "psgr": 0}
     },
     "firstDispLoc": 1,
-    "firstDispTrn": 1,
+    "firstDispTrnTxt": 1,
     "locObjID": 0,
     "locTrnTxtID": 0,
-    "locTrnRectID": 0,
+    "locTrnRectID": "yd2TrnRectID",
     "trains": []
 }
 }

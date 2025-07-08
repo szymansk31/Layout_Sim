@@ -182,10 +182,10 @@ class locProc():
                 mVars.routes[route4newTrn]["trains"].append(ydtrainNam)
                 if loc == leftObj.strip(): 
                     trainStem["direction"] = "east"
-                    mVars.routes[route4newTrn]["xTrnInit"] = gui.guiDict[loc]["x1"]
+                    trainStem["xTrnInit"] = gui.guiDict[loc]["x1"]
                 elif loc == rtObj.strip():
                     trainStem["direction"] = "west"
-                    mVars.routes[route4newTrn]["xTrnInit"] = gui.guiDict[loc]["x0"] - trainDB.trnLength
+                    trainStem["xTrnInit"] = gui.guiDict[loc]["x0"] - trainDB.trnLength
                 else: print("built train", ydtrainNam,  "leftObj: ", leftObj, "rtObj: "
                             , rtObj,"loc: ", loc, "direction: ", trainStem["direction"])
 

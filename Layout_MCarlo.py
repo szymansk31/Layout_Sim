@@ -98,8 +98,8 @@ no_wait_button = tk.Button(gui.C, text="skip wait",
 mainLoop.pack()
 #button1.configure(width = 10, activebackground = "#33B5E5", relief = FLAT)
 button_window = gui.C.create_window(10, 10, anchor='nw', window=mainLoop)
-button_window = gui.C.create_window(100, 10, anchor='nw', window=wait_button)
-button_window = gui.C.create_window(190, 10, anchor='nw', window=no_wait_button)
+button_window = gui.C.create_window(10, 60, anchor='nw', window=wait_button)
+button_window = gui.C.create_window(10, 110, anchor='nw', window=no_wait_button)
 
 #gui.editWindow.after(300, main_loop())
 

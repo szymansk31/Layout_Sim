@@ -1,6 +1,7 @@
 from shared import locs
 from mainVars import mVars
 from gui import gui
+from enum import Enum
 
 
 class dispObj():
@@ -31,6 +32,7 @@ class dispObj():
         locStem = locs.locDat[loc]
         trainStem = trainDB.trains
         text = loc + "\n"
+        numTrns = 0
         #if not locStem["trains"]:
         for train in locStem["trains"]:
 
@@ -42,46 +44,59 @@ class dispObj():
             #text += train+"\n"
             text += str(trainDB.consists[consistNam]["stops"]) 
             text += "\n"
+            numTrns +=1
         print("dispTrnInLoc: ydTrains: ", ydTrains, " text: ", text)
         x = (gui.guiDict[loc]["x0"] + gui.guiDict[loc]["x1"])*0.5
         y = gui.guiDict[loc]["y0"] + 250
-        if locStem["firstDispTrn"]:
+        if locStem["firstDispTrnTxt"]:
             locStem["locTrnTxtID"] = gui.C.create_text(x, y, text=text, width=380 , font=("Arial", 8))
-            locStem["firstDispTrn"] = 0
             
         gui.C.itemconfigure(locStem["locTrnTxtID"], text=text, font=("Arial", 8))
-        self.dispTrnRecs(locStem, loc, ydTrains)
-     
-    def dispTrnRecs(self, locStem, loc, ydtrains):
+        self.dispTrnRecs(locStem, loc, ydTrains, numTrns)
+        
+    def dispTrnRecs(self, locStem, loc, ydtrains, numTrns):
         from trainProc import trainDB
-        numTrns = 0
-        trnListBrkDwn = []
-        trnListBuild = []
-        for train in ydtrains["brkDnTrn"]: trnListBrkDwn.append(train)
-        for train in ydtrains["buildTrain"]: trnListBuild.append(train)
+        
+        dispList = {
+            "actions": {
+            "brkDnTrn": {"trains": [], 
+                "y": gui.guiDict[loc]["y0"] - 30,},
+            "buildTrain": {"trains": [],
+                "y": gui.guiDict[loc]["y0"] - 55}},
+            
+            "allTrains": {"trains": [], "y": 0,}
+            
+            }
+        for action in dispList["actions"]:
+            for train in ydtrains[action]:
+                dispList["actions"][action]["trains"].append(train)
+                dispList["allTrains"]["trains"].append(train)
+            
         trainStem = trainDB.trains
-        gui.C.delete(locStem["locTrnRectID"])
         trnLen = gui.guiDict["trainData"]["length"]
         trnHt = gui.guiDict["trainData"]["height"]
 
         totXWidth = numTrns*trnLen
         xtrn = (gui.guiDict[loc]["x0"] + gui.guiDict[loc]["x1"])*0.5 - totXWidth*0.5
-        yTrnBrkDwn = gui.guiDict[loc]["y0"] - 50
-        yTrnBuild = gui.guiDict[loc]["y0"] - 75
 
-        idx = 0
-        for train in trnListBrkDwn:
-            #gui.C.delete(trainStem[train]["trnObjTag"])
-            locStem["locTrnRectID"] = gui.C.create_rectangle(xtrn+20*idx, yTrnBrkDwn, xtrn+trnLen, 
-                yTrnBrkDwn+trnHt, fill=trainStem[train]["color"])
-            idx +=1
-        idx = 0
-        for train in trnListBuild:
-            #gui.C.delete(trainStem[train]["trnObjTag"])
-            locStem["locTrnRectID"] = gui.C.create_rectangle(xtrn+20*idx, yTrnBuild, xtrn+trnLen, 
-                yTrnBuild+trnHt, fill=trainStem[train]["color"])
-            idx +=1
-                        
+        gui.C.delete(locStem["locTrnRectID"])
+        for action in dispList["actions"]:
+            idx = 0
+            actionStem = dispList["actions"][action]
+            y = actionStem["y"]
+            if locStem["firstDispTrnTxt"]:
+                gui.C.create_text(xtrn-50, y+6, text=action, 
+                        font=("Arial", 8))
+            for train in actionStem["trains"]:
+                trainNum = train[5:]
+                gui.C.delete(trainStem[train]["trnObjTag"])
+                gui.C.create_rectangle(xtrn+20*idx, y, xtrn+20*idx+trnLen, 
+                    y+trnHt, fill=trainStem[train]["color"], 
+                    tags=locStem["locTrnRectID"])
+                gui.C.create_text(xtrn+10+20*idx, y+6, text=trainNum , 
+                    font=("Arial", 8), tags=locStem["locTrnRectID"])
+                idx +=1
+        locStem["firstDispTrnTxt"] = 0
 
             
     def drawTrain(self, train):
@@ -112,9 +127,14 @@ class dispObj():
                 if trainStem["direction"] == "west": deltaX = -deltaX
                 
                 if trainStem["firstDispTrn"] == 1:
-                    trainStem["xLoc"] = routeStem["xTrnInit"]
+                    trainStem["xLoc"] = trainStem["xTrnInit"]
+                    trainNum = train[5:]
+
                     gui.C.create_rectangle(trainStem["xLoc"], yTrn, trainStem["xLoc"]+trnLen, 
                         yTrn+trnHt, fill=trainStem["color"], tags=trainStem["trnObjTag"])
+                    gui.C.create_text(trainStem["xLoc"]+10, yTrn+6, text=trainNum , 
+                        font=("Arial", 8), tags=trainStem["trnObjTag"])
+
                     #print("train Rect obj: ", trainStem["trnObjTag"])
                     gui.C.create_text(xTrnTxt, yTrnTxt, text=trnLabels, 
                         anchor="nw", fill=trainStem["color"], tags=routeStem["trnLabelTag"])
@@ -124,7 +144,7 @@ class dispObj():
                     trainStem["xLoc"] = trainStem["xLoc"] + deltaX
                     print("moving train by: ", deltaX)
                     print("train Rect obj: ", trainStem["trnObjTag"])
-
+                    
                     gui.C.move(trainStem["trnObjTag"], deltaX, 0)
                     gui.C.itemconfigure(routeStem["trnLabelTag"], text=trnLabels, 
                         anchor="nw", fill=trainStem["color"])
