@@ -4,11 +4,7 @@
 "trainNum": 0,
 "stops": {
     "swArea1"   :{"box": 3, "tank": 2,"rfr": 0, "hop": 3, 
-        "gons": 0, "flats": 1, "psgr": 0},
-    "swArea2"   :{"box": 0, "tank": 0,"rfr": 0, "hop": 0, 
-        "gons": 0, "flats": 0, "psgr": 0},
-    "yard2"    :{"box": 0, "tank": 0,"rfr": 0, "hop": 0, 
-        "gons": 0, "flats": 0, "psgr": 0}
+        "gons": 0, "flats": 1, "psgr": 0}
 },
 "numBox": 0,
 "numTank": 0,

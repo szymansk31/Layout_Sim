@@ -1,41 +1,57 @@
-import numpy as np
-import json
 import random
+import numpy as np
 from mainVars import mVars
 from trainProc import trainDB
-from layoutGeom import geom
+from shared import locs
 from gui import gui
- 
-dbgLocal = 1      
-#=================================================
-class locs():
-    locDat = {}
+from display import dispObj
+np.set_printoptions(precision=2, suppress=True) 
+
+dbgLocal = 1     
 #=================================================
 class locProc():
-    firstPass = 1
+    locs = locs()
     
     def __init__(self):
         self.thisLoc = {}
         self.thisConsist = {}
         self.bldConsist = {}
-        self.actionList = ["brkDnTrn", "swTrain", "bldTrn", "classCars", "servIndus", "misc"]
+        self.actionList = ["brkDnTrn", "swTrain", "buildTrain", "classCars", "servIndus", "misc"]
         #self.weights = [0.18, 0.18, 0.18, 0.18, 0.18, 0.1]
-        self.weights = [0.5, 0, 0.5, 0, 0, 0]
-        self.ydTrains = {"brkDnTrn": [], "swTrain": [], "bldTrn": []}
+        self.weights = [0.45, 0, 0.45, 0, 0, 0.1]
+        self.ydTrains = {"brkDnTrn": [], "swTrain": [], "buildTrain": []}
         self.thisLocDests = []
-        self.localText = any
+        
+        
+    #classmethod:
+    
+    def initLocDicts(self):
         from fileProc import readFiles
         files = readFiles()
         print("initializing location dicts: ")
         locs.locDat = files.readFile("locationFile")
-    #classmethod:
+        for loc in locs.locDat:
+            self.countCars(loc)
+        
+    def countCars(self, loc):
+        locDictStem = locs.locDat[loc]
+        for dest in locDictStem["trackTots"]:
+            #print("\n Location: ", loc, "destination: ", dest)
+            for carType in locDictStem["tracks"][dest]:
+                locDictStem["trackTots"][dest] = locDictStem["trackTots"][dest]\
+                    + locDictStem["tracks"][dest][carType]
+                #print("countCars: ", locDictStem)
+
     
     def randomTrack(self):
         return ''.join(random.choice(self.thisLocDests))
 
     def yardCalcs(self, thisloc, loc):
+        disp = dispObj()
+
         self.thisLoc = thisloc
         self.thisLocDests = []
+
         if mVars.prms["dbgYdProc"]: print("entering yardCalcs: locdat: "
                     , locs.locDat[loc])
         for dest in locs.locDat[loc]["trackTots"]:
@@ -44,21 +60,23 @@ class locProc():
         self.analyzeTrains(loc)
         if mVars.prms["dbgYdProc"]: print("trains analyzed: ydTrains: ", self.ydTrains)
 
-        self.dispLocDat(loc)
+        disp.dispLocDat(loc)
         choice = random.choices(self.actionList, weights=self.weights, k=1)
         choice = ''.join(choice)
         if mVars.prms["dbgYdProc"]: print("\nchoice: ", choice)
+
         match choice:
             case "brkDnTrn":
                 self.brkDownTrain(loc)
                 if mVars.prms["dbgYdProc"]: 
-                    if dbgLocal: print("after brkDnTrn: consist: ", 
-                    self.thisConsist)
-                    if dbgLocal: print("this location trackTots: ", locs.locDat[loc]["trackTots"])
-                pass
+                    #if dbgLocal: print("after brkDnTrn: consist: ", 
+                    #self.thisConsist)
+                    #if dbgLocal: print("this location trackTots: ", locs.locDat[loc]["trackTots"])
+                    pass
             case "swTrain":
+                self.swTrain(loc)
                 pass
-            case "bldTrn":
+            case "buildTrain":
                 self.buildTrain(loc)
                 pass
             case "classCars":
@@ -66,7 +84,12 @@ class locProc():
             case "servIndus":
                 pass
             case "misc":
-                pass
+                waitIdx = 0
+                while waitIdx < mVars.waitTime:
+                    waitIdx +=1
+                    pass
+
+        disp.dispTrnInLoc(loc, self.ydTrains)
             
     def analyzeTrains(self, loc):
         self.ydTrains = {"brkDnTrn": [], "swTrain": [], "buildTrain": []}
@@ -83,21 +106,6 @@ class locProc():
                     if trainNam not in self.ydTrains["swTrain"]:
                         self.ydTrains["buildTrain"].append(trainNam)
 
-    def dispLocDat(self, loc):
-        idx = 0
-        for track in locs.locDat[loc]["tracks"]:
-            text = locs.locDat[loc]["tracks"][track]
-            x = (gui.guiDict[loc]["x0"] + gui.guiDict[loc]["x1"])*0.5
-            y = gui.guiDict[loc]["y0"] + 120 + 24*idx
-            if locProc.firstPass:
-                gui.C.create_text(x, y, text=track, font=("Arial", 8))
-                self.localText = gui.C.create_text(x+5, y+12, text=text, font=("Arial", 8))
-            else:
-                gui.C.delete(self.localText)
-                self.localText = gui.C.create_text(x+5, y+12, text=text, font=("Arial", 8))
-            idx +=1
-        locProc.firstPass = 0
-        pass
         
     def brkDownTrain(self, loc):
         from carProc import carProc
@@ -106,6 +114,7 @@ class locProc():
         for ydtrainNam in self.ydTrains["brkDnTrn"]:
             consistNum = trainDB.trains[ydtrainNam]["consistNum"]
             consistNam = "consist"+str(consistNum)
+            if mVars.prms["dbgYdProc"]: print("brkDownTrain: ", ydtrainNam, "consist: ", trainDB.consists[consistNam])
             self.thisConsist = trainDB.consists[consistNam]["stops"][loc]
             if mVars.prms["dbgYdProc"]: print("consist core: ", self.thisConsist)
             
@@ -130,6 +139,8 @@ class locProc():
             if typeCount == 0:
                 #remove train name from ydTrains and locs.locData
                 self.rmTrnFromLoc("brkDnTrn", loc, ydtrainNam)
+                trainDB.trains.pop(ydtrainNam)
+
         try:
             trainDB.consists[consistNum]["stops"][loc] = self.thisConsist
         except:
@@ -142,44 +153,61 @@ class locProc():
         
         index = locs.locDat[loc]["trains"].index(ydtrainNam)
         locs.locDat[loc]["trains"].pop(index)
-
+        
     def buildTrain(self, loc):
         numCarsAvail = 0
+        #if mVars.prms["dbgYdProc"]: print("buildTrain: number of cars available: ", numCarsAvail)
         
-        #if mVars.prms["dbgYdProc"]: print("bldTrn: number of cars available: ", numCarsAvail)
         # yard has no train undergoing build
         if not self.ydTrains["buildTrain"]:
             
             self.buildNewTrain(loc)
             
             
-        # yard has train building; add cars to it
-        # single train is max number building in a yard
+        # yard has a train already building; add cars to it
+        # single train is allowed to build in a yard
         else:         
             self.add2Train(loc)  
             ydtrainNam =  ''.join(self.ydTrains["buildTrain"])
+            trainStem = trainDB.trains[ydtrainNam]
 
-            if trainDB.trains[ydtrainNam]["numCars"] >= mVars.prms["trainSize"]:
+            if trainStem["numCars"] >= mVars.prms["trainSize"]*0.7:
                 # train has reached max size
-                trainDB.trains[ydtrainNam]["status"] = "ready2Leave"
+                trainStem["status"] = "ready2Leave"
                 route4newTrn = self.findRoutes(loc, ydtrainNam)
-                trainDB.trains[ydtrainNam]["currentLoc"] = route4newTrn
+                dest = trainDB.trains[ydtrainNam]["finalLoc"]
+
+                leftObj = mVars.routes[route4newTrn]["leftObj"]
+                rtObj = mVars.routes[route4newTrn]["rtObj"]
                 mVars.routes[route4newTrn]["trains"].append(ydtrainNam)
+                if loc == leftObj.strip(): 
+                    trainStem["direction"] = "east"
+                    trainStem["xTrnInit"] = gui.guiDict[loc]["x1"]
+                elif loc == rtObj.strip():
+                    trainStem["direction"] = "west"
+                    trainStem["xTrnInit"] = gui.guiDict[loc]["x0"] - trainDB.trnLength
+                else: print("built train", ydtrainNam,  "leftObj: ", leftObj, "rtObj: "
+                            , rtObj,"loc: ", loc, "direction: ", trainStem["direction"])
+
+                trainStem["currentLoc"] = route4newTrn
                 if mVars.prms["dbgYdProc"]: print("train",ydtrainNam," built: "
-                                ,trainDB.trains[ydtrainNam],
+                                ,trainStem,
                                 ", route: ", mVars.routes[route4newTrn])
                 self.rmTrnFromLoc("buildTrain", loc, ydtrainNam)
 
 
     def findRoutes(self, loc, ydtrainNam):
-        for routeNam in mVars.geometry[loc]["routes"]:
-            if mVars.routes[routeNam]["origin"] == loc and \
-                mVars.routes[routeNam]["dest"] == trainDB.trains[ydtrainNam]["finalLoc"]:
+        for routeNam in mVars.routes:
+            loc = ''.join(loc)
+            dest = ''.join(trainDB.trains[ydtrainNam]["finalLoc"])
+            if dbgLocal: print("routNam: ", routeNam, " loc: ", loc, 
+                " finalLoc: ", dest, "route: ", mVars.routes[routeNam])
+            if (loc in mVars.routes[routeNam].values()) and \
+                (dest in mVars.routes[routeNam].values()):
                 return routeNam
 
                             
     def buildNewTrain(self, loc):
-        from carProc import carProc
         genExp = (trackTot for trackTot in locs.locDat[loc]["trackTots"] if "indust" not in trackTot)
         for trackTots in genExp:
             if locs.locDat[loc]["trackTots"][trackTots] >= mVars.prms["trainSize"]*0.5:
@@ -204,46 +232,49 @@ class locProc():
                 print("new consist: ", conName, ":", trainDB.consists[conName])
                 self.ydTrains["buildTrain"].append(trnName)
                 locs.locDat[loc]["trains"].append(trnName)
+                return
 
     
     def add2Train(self, loc):
         from carProc import carProc
         carProcObj = carProc()
         rate = mVars.geometry[loc]["classRate"]
-
         ydtrainNam =  ''.join(self.ydTrains["buildTrain"])
-        trainDest = trainDB.trains[ydtrainNam]["finalLoc"]
+        locStem = locs.locDat[loc]
+        trainStem = trainDB.trains[ydtrainNam]
         
-        consistNum = trainDB.trains[ydtrainNam]["consistNum"]
+        trainDest = trainStem["finalLoc"]
+        consistNum = trainStem["consistNum"]
         consistNam = "consist"+str(consistNum)
-        print("building train: ", ydtrainNam, "from consists (all): ", trainDB.consists)
+        numCars = trainStem["numCars"]
+        print("building train: ", ydtrainNam, "numCars: ", numCars , ", consist: ", trainDB.consists[consistNam], ", destination: ", trainDest)
         self.bldConsist = trainDB.consists[consistNam]["stops"][trainDest]
-        thisTrack = locs.locDat[loc]["tracks"][trainDest]
+        thisTrack = locStem["tracks"][trainDest]
         
-        if mVars.prms["dbgYdProc"]: print("bldTrn: before next build step, consist : ", 
+        if mVars.prms["dbgYdProc"]: print("buildTrain: before next build step, consist : ", 
                 self.bldConsist,
                 "\ntrack contents: ", thisTrack)
         
-        if locs.locDat[loc]["trackTots"][trainDest] == 0: return
+        if locStem["trackTots"][trainDest] == 0: return
         carSel, typeCount = carProcObj.carTypeSel(thisTrack)
         carClassType = carProcObj.randomCar(carSel)
         carsClassed = 0
         while ((carsClassed < rate) and (typeCount > 0)):
-            #trainDB.trains[]
+
             carsClassed +=1
             if thisTrack[carClassType] >0:
                 thisTrack[carClassType] -=1
-                locs.locDat[loc]["trackTots"][trainDest] -=1
+                locStem["trackTots"][trainDest] -=1
                 self.bldConsist[carClassType] +=1
-                trainDB.trains[ydtrainNam]["numCars"] +=1
+                trainStem["numCars"] +=1
                 typeCount -=1
 
         try:
             trainDB.consists[consistNum]["stops"][loc] = self.bldConsist
-            locs.locDat[loc]["tracks"][trainDest] = thisTrack
+            locStem["tracks"][trainDest] = thisTrack
         except:
             pass
-        if mVars.prms["dbgYdProc"]: print("bldTrn: after build step, consist : ", 
+        if mVars.prms["dbgYdProc"]: print("buildTrain: after build step, consist : ", 
                 self.bldConsist,
                 "\ntrack contents: ", thisTrack)
             
