@@ -38,7 +38,7 @@ class routeGeom():
                     rtObj = dest
                     leftObj = loc
                 routes[routeName] = {"leftObj": leftObj, "rtObj": rtObj, 
-                                        "transTime": transTime, "trnLabelTag": routeName+"trnLblTag", "trains":[]}
+                        "transTime": transTime, "trnLabelTag": routeName+"trnLblTag", "trains":[]}
                 # route lines are drawn west-to-east; train locs follow
 
                 routes[routeName].update(self.routeLine(routes[routeName], routeName, guiDict))

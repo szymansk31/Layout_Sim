@@ -1,5 +1,6 @@
 {
 "yard1": {
+    "type":"yard",
     "trackTots": {"swArea1": 0, "yard2": 0, "industries": 0},
     "tracks": {
         "swArea1"   :{"box": 4, "tank": 2, "rfr": 3, "hop": 8, 
@@ -17,6 +18,7 @@
     "trains": []
 },
 "swArea1": {
+    "type":"yard",
     "trackTots": {"yard1": 0, "industries": 0},
     "tracks": {
         "yard1"   :{"box": 2, "tank": 2, "rfr": 3, "hop": 3, 
@@ -32,6 +34,7 @@
     "trains": []
 },
 "yard2": {
+    "type":"yard",
     "trackTots": {"yard1": 0, "industries": 0},
     "tracks": {
         "yard1"    :{"box": 3, "tank": 2, "rfr": 5, "hop": 5, 

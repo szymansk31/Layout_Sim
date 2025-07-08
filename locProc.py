@@ -46,49 +46,53 @@ class locProc():
     def randomTrack(self):
         return ''.join(random.choice(self.thisLocDests))
 
-    def yardCalcs(self, thisloc, loc):
+    def LocCalcs(self, thisloc, loc):
         disp = dispObj()
 
         self.thisLoc = thisloc
         self.thisLocDests = []
-
         if mVars.prms["dbgYdProc"]: print("entering yardCalcs: locdat: "
                     , locs.locDat[loc])
         for dest in locs.locDat[loc]["trackTots"]:
             self.thisLocDests.append(dest)
-        #if mVars.prms["\ndbgYdProc"]: print("yardCalcs: thisLoc ", thisloc)
-        self.analyzeTrains(loc)
-        if mVars.prms["dbgYdProc"]: print("trains analyzed: ydTrains: ", self.ydTrains)
 
-        disp.dispLocDat(loc)
-        choice = random.choices(self.actionList, weights=self.weights, k=1)
-        choice = ''.join(choice)
-        if mVars.prms["dbgYdProc"]: print("\nchoice: ", choice)
+        match thisloc[loc]["type"]:
+            case "yard":
+                #if mVars.prms["\ndbgYdProc"]: print("yardCalcs: thisLoc ", thisloc)
+                self.analyzeTrains(loc)
+                if mVars.prms["dbgYdProc"]: print("trains analyzed: ydTrains: ", self.ydTrains)
 
-        match choice:
-            case "brkDnTrn":
-                self.brkDownTrain(loc)
-                if mVars.prms["dbgYdProc"]: 
-                    #if dbgLocal: print("after brkDnTrn: consist: ", 
-                    #self.thisConsist)
-                    #if dbgLocal: print("this location trackTots: ", locs.locDat[loc]["trackTots"])
-                    pass
-            case "swTrain":
-                self.swTrain(loc)
-                pass
-            case "buildTrain":
-                self.buildTrain(loc)
-                pass
-            case "classCars":
-                pass
-            case "servIndus":
-                pass
-            case "misc":
-                waitIdx = 0
-                while waitIdx < mVars.waitTime:
-                    waitIdx +=1
-                    pass
+                disp.dispLocDat(loc)
+                choice = random.choices(self.actionList, weights=self.weights, k=1)
+                choice = ''.join(choice)
+                if mVars.prms["dbgYdProc"]: print("\nchoice: ", choice)
 
+                match choice:
+                    case "brkDnTrn":
+                        self.brkDownTrain(loc)
+                        if mVars.prms["dbgYdProc"]: 
+                            #if dbgLocal: print("after brkDnTrn: consist: ", 
+                            #self.thisConsist)
+                            #if dbgLocal: print("this location trackTots: ", locs.locDat[loc]["trackTots"])
+                            pass
+                    case "swTrain":
+                        self.swTrain(loc)
+                        pass
+                    case "buildTrain":
+                        self.buildTrain(loc)
+                        pass
+                    case "classCars":
+                        pass
+                    case "servIndus":
+                        pass
+                    case "misc":
+                        waitIdx = 0
+                        while waitIdx < mVars.waitTime:
+                            waitIdx +=1
+                            pass
+            case "swArea":
+                pass
+            
         disp.dispTrnInLoc(loc, self.ydTrains)
             
     def analyzeTrains(self, loc):

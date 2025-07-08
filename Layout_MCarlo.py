@@ -2,6 +2,7 @@
 import numpy as np
 import tkinter as tk
 from tkinter import ttk
+from shared import locs
          
 #=================================================
 def main_loop():
@@ -27,11 +28,11 @@ def main_loop():
                 "status: ", status)
             trnProcObj.trainCalcs(trainDB.trains[train], train)
         count +=1
-        for loc in geometry:
+        for loc in locs.locDat:
             if mVars.prms["dbgLoop"]: print ("\nAbout to process: ", 
                 loc)
 
-            ydProcObj.yardCalcs(geometry, loc)
+            locProcObj.LocCalcs(locs.locDat, loc)
         mVars.time +=1
 
 def clrWait():
@@ -67,8 +68,8 @@ carDict = files.readFile("carFile")
 carProcObj.procCarInfo(carDict)
 
 from locProc import locProc
-ydProcObj = locProc()
-ydProcObj.initLocDicts()
+locProcObj = locProc()
+locProcObj.initLocDicts()
 
 from trainProc import trnProc, trainDB
 trnProcObj = trnProc()

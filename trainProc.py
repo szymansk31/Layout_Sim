@@ -3,6 +3,7 @@ import tkinter as tk
 from mainVars import mVars
 from fileProc import readFiles
 from display import dispObj
+from shared import locs
 np.set_printoptions(precision=2, suppress=True) 
 
 
@@ -96,14 +97,9 @@ class trnProc:
         self.timeEnRoute_Old = 0
         self.trainImage = any
         self.deltaT = 0.0
-        from gui import gui, dispSim
-        self.dispObj = dispSim()
-
-
+        self.trnActionList = [""]
 
     def trainCalcs(self, trainDict, trnName):
-        from locProc import locs
-        from gui import gui
         disp = dispObj()
 
         match trainDict["status"]:
@@ -124,26 +120,7 @@ class trnProc:
                     ", variance: ", variance)
                 disp.drawTrain(trnName)
                 if trainDict["timeEnRoute"] >= transTime:
-                    #if trainDict["currentLoc"] == trainDict["finalLoc"]:
-                        #trainDict["status"] = "dropPickup"
-                    trainDict["status"] = "terminate"
-                    trainDict["timeEnRoute"] = 0
-                    trainDict["currentLoc"] = trainDict["finalLoc"]
-                    disp.drawTrain(trnName)
-                    locs.locDat[trainDict["currentLoc"]]["trains"].append(trnName)
-                    
-                    print("train entering terminal: ", trnName, "trainDict: ", trainDict)
-                    try:
-                        index = routeStem["trains"].index(trnName)
-                    except:
-                        pass
-                    
-                    #remove train from that route
-                    routeStem["trains"].pop(index)
-                    #gui.C.delete(routeStem["trnLabelTag"])
-    
-                    mVars.numOpBusy -=1
-                    #trainObj.initTrain()
+                    self.procTrnStop(trainDict, trnName)
                     
             case "building":
                 pass
@@ -160,5 +137,30 @@ class trnProc:
                 disp.drawTrain(trnName)
                 pass
             
-            
+    def procTrnStop(trainDict, trnName):
+        disp = dispObj()
+        #if trainDict["currentLoc"] == trainDict["finalLoc"]:
+        #trainDict["status"] = "dropPickup"
+        routeNam = trainDict["currentLoc"]
+        routeStem = mVars.routes[routeNam]
+
+        trainDict["status"] = "terminate"
+        trainDict["timeEnRoute"] = 0
+        trainDict["currentLoc"] = trainDict["finalLoc"]
+        disp.drawTrain(trnName)
+        locs.locDat[trainDict["currentLoc"]]["trains"].append(trnName)
+        
+        print("train entering terminal: ", trnName, "trainDict: ", trainDict)
+        try:
+            index = routeStem["trains"].index(trnName)
+        except:
+            pass
+        
+        #remove train from that route
+        routeStem["trains"].pop(index)
+        #gui.C.delete(routeStem["trnLabelTag"])
+
+        mVars.numOpBusy -=1
+        #trainObj.initTrain()
+
 
