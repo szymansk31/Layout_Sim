@@ -19,6 +19,7 @@
 "trnObjTag": "",
 "yTrnTxt": 0,
 "numStops": 0,
+"currentStop": "",
 "stops": 
     {"swArea1":{"action": "terminate"}},
 "color": "blue"

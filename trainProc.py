@@ -3,7 +3,7 @@ import tkinter as tk
 from mainVars import mVars
 from fileProc import readFiles
 from display import dispObj
-from stateVars import locs, trainDB
+from stateVars import locs, trainDB, routeCls
 np.set_printoptions(precision=2, suppress=True) 
 
 
@@ -104,11 +104,11 @@ class trnProc:
                 variance = np.random.normal(loc=0, scale=0.25, size=1)
                 trainDict["timeEnRoute_Old"] = trainDict["timeEnRoute"]
                 routeNam = trainDict["currentLoc"]
-                routeStem = mVars.routes[routeNam]
+                routeStem = routeCls.routes[routeNam]
                 trainDict["deltaT"] = mVars.prms["timeStep"] + variance
                 
                 trainDict["timeEnRoute"] = trainDict["timeEnRoute_Old"] + trainDict["deltaT"]
-                transTime = mVars.routes[trainDict["currentLoc"]]["transTime"]
+                transTime = routeCls.routes[trainDict["currentLoc"]]["transTime"]
                 if mVars.prms["dbgTrnProc"]: print("trainCalcs: train: ", 
                     trainDict["trainNum"], "route: ", routeNam, 
                     ", origin: ", trainDict["origLoc"], ", dest:", trainDict["finalLoc"], 
@@ -139,8 +139,9 @@ class trnProc:
     def procTrnStop(self, trainDict, trnName):
         disp = dispObj()
         routeNam = trainDict["currentLoc"]
-        routeStem = mVars.routes[routeNam]
+        routeStem = routeCls.routes[routeNam]
         stopLoc = trainDict["nextLoc"]
+        getNextLoc(trainDict)
         trainDict["currentLoc"] = stopLoc
         print("train ", trnName, "entering terminal: ", stopLoc, "trainDict: ", trainDict)
         
@@ -183,4 +184,8 @@ class trnProc:
         mVars.numOpBusy -=1
         #trainObj.initTrain()
 
+    def getNextLoc(seld, trainDict):
+        stuff = trainDict["stops"].items()
+        for stop in trainDict["stops"]:
+            if stop == trainDict["currentLoc"]:
 

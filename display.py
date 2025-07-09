@@ -1,7 +1,7 @@
-from stateVars import locs
+
 from mainVars import mVars
 from gui import gui
-from stateVars import trainDB
+from stateVars import locs, trainDB, routeCls
 
 
 class dispObj():
@@ -106,7 +106,7 @@ class dispObj():
         trnHt = gui.guiDict["trainData"]["height"]
         match trainLoc:
             case trainLoc if "route" in trainLoc:
-                routeStem = mVars.routes[trainLoc]
+                routeStem = routeCls.routes[trainLoc]
                 yTrn = routeStem["yTrn"]
                 xTrnTxt = routeStem["xTrnTxt"]
                 yTrnTxt = routeStem["yTrnTxt"]

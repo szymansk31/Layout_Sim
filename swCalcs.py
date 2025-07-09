@@ -2,7 +2,8 @@ import random
 import numpy as np
 from mainVars import mVars
 from trainProc import trainParams
-from stateVars import locs, trainDB
+from locProc import locs, locProc
+from stateVars import locs, trainDB, routeCls
 from gui import gui
 np.set_printoptions(precision=2, suppress=True) 
 
@@ -10,24 +11,43 @@ dbgLocal = 1
 class swArea():
     
     def __init__(self):
+        self.thisConsist = {}
         pass
   
-    def switchArea(self, thisLoc, loc):
-        # no random action choice needed; there is
-        # a road crew for each train to do the work
+    def switchArea(self, thisLoc, loc, ydTrainsIn):
+        self.ydTrains = ydTrainsIn
+        
+        for action in ydTrainsIn:
+            match action:
+                case "continue":
+                    locProc.startTrain(loc, ydtrainNam)
+                    pass
+                case "swTrain":
+                    self.swTrain(loc)
+                    pass
+                case "buildTrain":
+                    self.buildTrain(loc)
+                    pass
+                case "servIndus":
+                    pass
+                case "misc":
+                    waitIdx = 0
+                    while waitIdx < mVars.waitTime:
+                        waitIdx +=1
+                        pass
 
         from carProc import carProc
         carProcObj = carProc()
         rate = mVars.geometry[loc]["classRate"]
-        for ydtrainNam in self.ydTrains["brkDnTrn"]:
+        for ydtrainNam in self.ydTrains["roadCrewSw"]:
             consistNum = trainDB.trains[ydtrainNam]["consistNum"]
             consistNam = "consist"+str(consistNum)
-            if mVars.prms["dbgYdProc"]: print("brkDownTrain: ", ydtrainNam, "consist: ", trainDB.consists[consistNam])
+            if mVars.prms["dbgYdProc"]: print("swArea: ", ydtrainNam, "consist: ", trainDB.consists[consistNam])
             self.thisConsist = trainDB.consists[consistNam]["stops"][loc]
             if mVars.prms["dbgYdProc"]: print("consist core: ", self.thisConsist)
             
             carSel, typeCount = carProcObj.carTypeSel(self.thisConsist)
-            if dbgLocal: print("brkDnTrn: carSel: ", carSel)
+            if dbgLocal: print("swArea: carSel: ", carSel)
             #if typeCount <= 0: return
 
             idx = 0
@@ -85,9 +105,9 @@ class swArea():
                 route4newTrn = self.findRoutes(loc, ydtrainNam)
                 dest = trainDB.trains[ydtrainNam]["nextLoc"]
 
-                leftObj = mVars.routes[route4newTrn]["leftObj"]
-                rtObj = mVars.routes[route4newTrn]["rtObj"]
-                mVars.routes[route4newTrn]["trains"].append(ydtrainNam)
+                leftObj = routeCls.routes[route4newTrn]["leftObj"]
+                rtObj = routeCls.routes[route4newTrn]["rtObj"]
+                routeCls.routes[route4newTrn]["trains"].append(ydtrainNam)
                 if loc == leftObj.strip(): 
                     trainStem["direction"] = "east"
                     trainStem["xTrnInit"] = gui.guiDict[loc]["x1"]
@@ -100,19 +120,9 @@ class swArea():
                 trainStem["currentLoc"] = route4newTrn
                 if mVars.prms["dbgYdProc"]: print("train",ydtrainNam," built: "
                                 ,trainStem,
-                                ", route: ", mVars.routes[route4newTrn])
+                                ", route: ", routeCls.routes[route4newTrn])
                 self.rmTrnFromLoc("buildTrain", loc, ydtrainNam)
 
-
-    def findRoutes(self, loc, ydtrainNam):
-        for routeNam in mVars.routes:
-            loc = ''.join(loc)
-            dest = ''.join(trainDB.trains[ydtrainNam]["nextLoc"])
-            if dbgLocal: print("routNam: ", routeNam, " loc: ", loc, 
-                " nextLoc: ", dest, "route: ", mVars.routes[routeNam])
-            if (loc in mVars.routes[routeNam].values()) and \
-                (dest in mVars.routes[routeNam].values()):
-                return routeNam
 
                             
     def buildNewTrain(self, loc):

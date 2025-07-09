@@ -10,7 +10,7 @@ def initTrain(self):
     self.conName
     tmpLoc = self.train[self.trnName]["currentLoc"]
     if "route" in tmpLoc:
-        mVars.routes[tmpLoc]["trains"].append(self.trnName)
+        routeCls.routes[tmpLoc]["trains"].append(self.trnName)
     self.consist[self.conName]["trainNum"] = self.train[self.trnName]["trainNum"]
     trainDB.consists.update(self.consist)
     self.train[self.trnName]["consistNum"] = self.consist[self.conName]["consistNum"]

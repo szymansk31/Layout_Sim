@@ -2,12 +2,12 @@
 import numpy as np
 import tkinter as tk
 from tkinter import ttk
-from stateVars import locs
+from stateVars import locs, trainDB, routeCls
+from trainProc import trainParams, trnProc
+trnProcObj = trnProc()
          
 #=================================================
 def main_loop():
-    count = 0
-    maxCount = 7
 
     print("mVars.time: ", mVars.time, "maxtime: ", mVars.prms["maxTime"])
     while mVars.time < mVars.prms["maxTime"]:
@@ -17,23 +17,27 @@ def main_loop():
             wait_button.wait_variable(var)
             var.set(0)
         for train in trainDB.trains:
-            currentLoc = trainDB.trains[train]["currentLoc"]
-            finalLoc = trainDB.trains[train]["finalLoc"]
-            origLoc = trainDB.trains[train]["origLoc"]
-            status = trainDB.trains[train]["status"]
-            direction = trainDB.trains[train]["direction"]
-            if mVars.prms["dbgLoop"]: print ("Before train processing: train: ", 
-                train, "currentLoc: ", currentLoc, ", origLoc: ", origLoc, 
-                ", finalLoc: ", finalLoc, ", direction: ", direction,
-                "status: ", status)
+            printTrainInfo(train)
             trnProcObj.trainCalcs(trainDB.trains[train], train)
-        count +=1
+
         for loc in locs.locDat:
             if mVars.prms["dbgLoop"]: print ("\nAbout to process: ", 
                 loc)
 
             locProcObj.LocCalcs(locs.locDat, loc)
         mVars.time +=1
+
+def printTrainInfo(train):
+    trainStem = trainDB.trains[train]
+    currentLoc = ["currentLoc"]
+    finalLoc = trainStem["finalLoc"]
+    origLoc = trainStem["origLoc"]
+    status = trainStem["status"]
+    direction = trainStem["direction"]
+    if mVars.prms["dbgLoop"]: print ("Before train processing: train: ", 
+        train, "currentLoc: ", currentLoc, ", origLoc: ", origLoc, 
+        ", finalLoc: ", finalLoc, ", direction: ", direction,
+        "status: ", status)
 
 def clrWait():
     mVars.wait = 0
@@ -58,7 +62,7 @@ geometry = mVars.geometry = files.readFile("layoutGeomFile")
 layoutObj.locListInit(geometry)
 guiObj = gui()
 gui.guiDict = files.readFile("guiFile")
-mVars.routes = routeGeomObj.initRoutes(geometry, gui.guiDict)
+routeCls.routes = routeGeomObj.initRoutes(geometry, gui.guiDict)
 
 
 #setup initial car distribution
@@ -71,11 +75,9 @@ from locProc import locProc
 locProcObj = locProc()
 locProcObj.initLocDicts()
 
-from trainProc import trnProc, trainDB
-trnProcObj = trnProc()
-trains = trainDB()
+trainObj = trainDB()
 #newTrainNam, newConsistNamtrains = trains.newTrain()
-#mVars.routes["route1"]["trains"].append(newTrainNam)
+#routeCls.routes["route1"]["trains"].append(newTrainNam)
 
 # from gui.py
 dispObj = dispSim()

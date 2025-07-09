@@ -1,7 +1,7 @@
 
 import tkinter as tk
 from tkinter import Canvas
-from mainVars import mVars
+from stateVars import routeCls
          
 #=================================================
 class gui():
@@ -48,7 +48,7 @@ class dispSim():
                     #if routeCount < 2:
                     # lftObjNam = guiDict[item]["leftObj"]
                     # rtObjNam = guiDict[item]["rtObj"]
-                    route = mVars.routes[item]
+                    route = routeCls.routes[item]
                     x0 = route["x0"]
                     x1 = route["x1"]
                     y0 = route["y0"]

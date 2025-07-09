@@ -10,3 +10,6 @@ class trainDB():
     trains = {}
     consists = {}
 
+class routeCls():
+    routes = {}
+    
