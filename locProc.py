@@ -1,8 +1,8 @@
 import random
 import numpy as np
 from mainVars import mVars
-from trainProc import trainDB
-from shared import locs
+from trainProc import trainParams
+from stateVars import locs, trainDB
 from gui import gui
 from display import dispObj
 np.set_printoptions(precision=2, suppress=True) 
@@ -179,7 +179,7 @@ class locProc():
                 # train has reached max size
                 trainStem["status"] = "ready2Leave"
                 route4newTrn = self.findRoutes(loc, ydtrainNam)
-                dest = trainDB.trains[ydtrainNam]["finalLoc"]
+                dest = trainDB.trains[ydtrainNam]["nextLoc"]
 
                 leftObj = mVars.routes[route4newTrn]["leftObj"]
                 rtObj = mVars.routes[route4newTrn]["rtObj"]
@@ -189,7 +189,7 @@ class locProc():
                     trainStem["xTrnInit"] = gui.guiDict[loc]["x1"]
                 elif loc == rtObj.strip():
                     trainStem["direction"] = "west"
-                    trainStem["xTrnInit"] = gui.guiDict[loc]["x0"] - trainDB.trnLength
+                    trainStem["xTrnInit"] = gui.guiDict[loc]["x0"] - trainParams.trnLength
                 else: print("built train", ydtrainNam,  "leftObj: ", leftObj, "rtObj: "
                             , rtObj,"loc: ", loc, "direction: ", trainStem["direction"])
 
@@ -203,9 +203,9 @@ class locProc():
     def findRoutes(self, loc, ydtrainNam):
         for routeNam in mVars.routes:
             loc = ''.join(loc)
-            dest = ''.join(trainDB.trains[ydtrainNam]["finalLoc"])
+            dest = ''.join(trainDB.trains[ydtrainNam]["nextLoc"])
             if dbgLocal: print("routNam: ", routeNam, " loc: ", loc, 
-                " finalLoc: ", dest, "route: ", mVars.routes[routeNam])
+                " nextLoc: ", dest, "route: ", mVars.routes[routeNam])
             if (loc in mVars.routes[routeNam].values()) and \
                 (dest in mVars.routes[routeNam].values()):
                 return routeNam
@@ -215,17 +215,17 @@ class locProc():
         genExp = (trackTot for trackTot in locs.locDat[loc]["trackTots"] if "indust" not in trackTot)
         for trackTots in genExp:
             if locs.locDat[loc]["trackTots"][trackTots] >= mVars.prms["trainSize"]*0.5:
-                trainObj = trainDB()
+                trainObj = trainParams()
                 trnName, conName = trainObj.newTrain()
 
                 trainDB.trains[trnName].update( {
                     "status": "building",
                     "origLoc": loc,
-                    "finalLoc": trackTots,
+                    "nextLoc": trackTots,
                     "currentLoc": loc,
                     "numStops": 1,
-                    "stops": [trackTots],
-                    "color": trainDB.colors()           
+                    "stops": {trackTots: {"action": "terminate"}},
+                    "color": trainParams.colors()           
                         })
                 trainDB.consists[conName].update({
                     "stops": {trackTots:{"box": 0, "tank": 0,"rfr": 0, "hop": 0, 
@@ -247,7 +247,7 @@ class locProc():
         locStem = locs.locDat[loc]
         trainStem = trainDB.trains[ydtrainNam]
         
-        trainDest = trainStem["finalLoc"]
+        trainDest = trainStem["nextLoc"]
         consistNum = trainStem["consistNum"]
         consistNam = "consist"+str(consistNum)
         numCars = trainStem["numCars"]

@@ -3,17 +3,12 @@ import tkinter as tk
 from mainVars import mVars
 from fileProc import readFiles
 from display import dispObj
-from shared import locs
+from stateVars import locs, trainDB
 np.set_printoptions(precision=2, suppress=True) 
 
 
 #=================================================
-class trainDB():
-    numTrains = 0
-    numConsists = 10
-
-    trains = {}
-    consists = {}
+class trainParams():
     trnHeight = 10
     trnLength = 20
     colorIDX = 0
@@ -40,7 +35,7 @@ class trainDB():
         print("color: ", cls.color)
         return cls.color
         
-    
+
     def dict2TrnNam(self, train):
         self.trnName = next(iter(train))
     def dict2ConNam(self, consist):
@@ -137,20 +132,26 @@ class trnProc:
                 disp.drawTrain(trnName)
                 pass
             
-    def procTrnStop(trainDict, trnName):
+    def procTrnStop(self, trainDict, trnName):
         disp = dispObj()
-        #if trainDict["currentLoc"] == trainDict["finalLoc"]:
-        #trainDict["status"] = "dropPickup"
         routeNam = trainDict["currentLoc"]
         routeStem = mVars.routes[routeNam]
+        stopLoc = trainDict["nextLoc"]
+        trainDict["currentLoc"] = stopLoc
+        print("train ", trnName, "entering terminal: ", stopLoc, "trainDict: ", trainDict)
+        
+        
+        match trainDict["stops"][stopLoc]["action"]:
+            case "terminate":
+                trainDict["status"] = "terminate"
+                trainDict["timeEnRoute"] = 0
 
-        trainDict["status"] = "terminate"
-        trainDict["timeEnRoute"] = 0
-        trainDict["currentLoc"] = trainDict["finalLoc"]
+                
+        #trainDict["status"] = "dropPickup"
+
         disp.drawTrain(trnName)
         locs.locDat[trainDict["currentLoc"]]["trains"].append(trnName)
         
-        print("train entering terminal: ", trnName, "trainDict: ", trainDict)
         try:
             index = routeStem["trains"].index(trnName)
         except:

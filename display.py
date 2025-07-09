@@ -1,7 +1,7 @@
-from shared import locs
+from stateVars import locs
 from mainVars import mVars
 from gui import gui
-from enum import Enum
+from stateVars import trainDB
 
 
 class dispObj():
@@ -28,7 +28,6 @@ class dispObj():
         pass
 
     def dispTrnInLoc(self, loc, ydTrains):
-        from trainProc import trainDB
         locStem = locs.locDat[loc]
         trainStem = trainDB.trains
         text = loc + "\n"
@@ -55,7 +54,6 @@ class dispObj():
         self.dispTrnRecs(locStem, loc, ydTrains, numTrns)
         
     def dispTrnRecs(self, locStem, loc, ydtrains, numTrns):
-        from trainProc import trainDB
         
         dispList = {
             "actions": {
@@ -100,8 +98,6 @@ class dispObj():
 
             
     def drawTrain(self, train):
-        from trainProc import trainDB
-        from gui import gui
 
         trainStem = trainDB.trains[train]
         trainLoc = trainStem["currentLoc"]

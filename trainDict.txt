@@ -7,6 +7,7 @@
 "origLoc": "yard1",
 "finalLoc": "swArea1",
 "currentLoc": "route1",
+"nextLoc": "swArea1",
 "direction": "",
 "xTrnInit": 0,
 "xLoc": 0,
@@ -17,8 +18,8 @@
 "trnObjTag": "",
 "yTrnTxt": 0,
 "numStops": 0,
-"stops": [
-    {"swArea1":{"action": "switch"}}],
+"stops": 
+    {"swArea1":{"action": "terminate"}},
 "color": "blue"
 }
 }

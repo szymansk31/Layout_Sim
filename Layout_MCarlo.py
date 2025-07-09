@@ -2,7 +2,7 @@
 import numpy as np
 import tkinter as tk
 from tkinter import ttk
-from shared import locs
+from stateVars import locs
          
 #=================================================
 def main_loop():
@@ -92,7 +92,7 @@ var = tk.IntVar()
 mVars.wait = 1
 mainLoop = tk.Button(gui.C, text="Start Sim", 
         command=lambda: main_loop())
-wait_button = tk.Button(gui.C, text="Continue", 
+wait_button = tk.Button(gui.C, text="Step", 
         command=lambda: var.set(1))
 no_wait_button = tk.Button(gui.C, text="skip wait", 
         command=lambda: clrWait())
