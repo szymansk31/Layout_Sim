@@ -132,8 +132,8 @@ class dispObj():
                         font=("Arial", 8), tags=trainStem["trnObjTag"])
 
                     #print("train Rect obj: ", trainStem["trnObjTag"])
-                    gui.C.create_text(xTrnTxt, yTrnTxt, text=trnLabels, 
-                        anchor="nw", fill=trainStem["color"], tags=routeStem["trnLabelTag"])
+                    #gui.C.create_text(xTrnTxt, yTrnTxt, text=trnLabels, 
+                    #    anchor="nw", fill=trainStem["color"], tags=routeStem["trnLabelTag"])
                     trainStem["firstDispTrn"] = 0
                     
                 else:
@@ -142,8 +142,8 @@ class dispObj():
                     print("train Rect obj: ", trainStem["trnObjTag"])
                     
                     gui.C.move(trainStem["trnObjTag"], deltaX, 0)
-                    gui.C.itemconfigure(routeStem["trnLabelTag"], text=trnLabels, 
-                        anchor="nw", fill=trainStem["color"])
+                    #gui.C.itemconfigure(routeStem["trnLabelTag"], text=trnLabels, 
+                    #    anchor="nw", fill=trainStem["color"])
                     
                 print("draw train: ", train, ", coordinates after move: ", trainStem["xLoc"], yTrn, trainStem["xLoc"]+trnLen, yTrn+trnHt)
                 print("distance via timeEnRoute: ", timeEnRoute*velocity)

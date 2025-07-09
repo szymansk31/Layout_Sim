@@ -4,8 +4,8 @@ class locs():
     
 #=================================================
 class trainDB():
-    numTrains = 0
-    numConsists = 10
+    numTrains = 5
+    numConsists = 15
 
     trains = {}
     consists = {}

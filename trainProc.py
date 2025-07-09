@@ -160,6 +160,8 @@ class trnProc:
                 pass
             case "dropPickup":
                 # no industry switching done, just car exchange
+                # switching typically done by yard crew at yards,
+                # train crew at other locations
                 trainDict["status"] = "dropPickup"
                 pass
             case "continue":
