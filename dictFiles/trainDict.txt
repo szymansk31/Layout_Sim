@@ -9,6 +9,7 @@
 "currentLoc": "route1",
 "nextLoc": "swArea1",
 "direction": "",
+"startTime": 0, 
 "xTrnInit": 0,
 "xLoc": 0,
 "firstDispTrn": 1,

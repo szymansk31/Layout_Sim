@@ -11,7 +11,7 @@ class mVars:       #short for mainVars
     carTypes = ["box", "tank", "rfr", "hop", "gons", "flats", "psgr"]
     numCarTyp = len(carTypes)
     wait = 1
-    waitTime = 100
+    waitTime = 10
     
     def __init__(self):
         pass

@@ -14,6 +14,8 @@ class trainParams():
     colorIDX = 0
     colorList = ["red", "green", "yellow", "orange", "purple1", "dodger blue", "deep pink",
                  "lawn green", "goldenrod", "OrangeRed2", "magenta2", "RoyalBlue1"]
+    trnStatusList = ["enRoute", "building", "terminate", "switch", "turn", 
+                     "dropPickup", "continue", "misc"]
 
 
     def __init__(self):
@@ -117,19 +119,21 @@ class trnProc:
                 if trainDict["timeEnRoute"] >= transTime:
                     self.procTrnStop(trainDict, trnName)
                     
-            case "building":
-                pass
-            case "terminate":
-                pass
-            case "dropPickup":
-                if "sw" in trainDict["currentLoc"]:   
-                    pass
-                else: 
-                    pass
-                pass
             case "ready2Leave":
                 trainDict["status"] = "enroute"
                 disp.drawTrain(trnName)
+                pass
+            case "building":
+                #procssing done in locProc
+                pass
+        # the following are status states for a train
+        # they are also actions that a train can undergo in a 
+        # location/terminal/destination
+            case "terminate" | "continue":
+                #procssing done in locProc
+                pass
+            case "switch" | "turn" | "dropPickup":
+                #procssing done in locProc
                 pass
             
     def procTrnStop(self, trainDict, trnName):
@@ -140,14 +144,27 @@ class trnProc:
         trainDict["currentLoc"] = stopLoc
         print("train ", trnName, "entering terminal: ", stopLoc, "trainDict: ", trainDict)
         
-        
+        #actions are executed in terminals/yards/switch areas
+        #locProc takes care of these processes
         match trainDict["stops"][stopLoc]["action"]:
             case "terminate":
                 trainDict["status"] = "terminate"
                 trainDict["timeEnRoute"] = 0
-
-                
-        #trainDict["status"] = "dropPickup"
+                pass
+            case "switch" | "turn": 
+                # switch town with road train
+                trainDict["status"] = "switch"
+                # turn has the same processing as switch,
+                # except train returns to origin
+                # after switching location
+                pass
+            case "dropPickup":
+                # no industry switching done, just car exchange
+                trainDict["status"] = "dropPickup"
+                pass
+            case "continue":
+                #no action at this stop - continue to nextLoc
+                trainDict["status"] = "continue"
 
         disp.drawTrain(trnName)
         locs.locDat[trainDict["currentLoc"]]["trains"].append(trnName)

@@ -16,9 +16,9 @@ class locProc():
         self.thisLoc = {}
         self.thisConsist = {}
         self.bldConsist = {}
-        self.actionList = ["brkDnTrn", "swTrain", "buildTrain", "classCars", "servIndus", "misc"]
-        #self.weights = [0.18, 0.18, 0.18, 0.18, 0.18, 0.1]
-        self.weights = [0.45, 0, 0.45, 0, 0, 0.1]
+        self.actionList = ["brkDnTrn", "swTrain", "buildTrain", "servIndus", "misc"]
+        #self.weights = [0.18, 0.18, 0.18, 0.18, 0.1]
+        self.weights = [0.45, 0, 0.45, 0, 0.1]
         self.ydTrains = {"brkDnTrn": [], "swTrain": [], "buildTrain": []}
         self.thisLocDests = []
         
@@ -81,8 +81,6 @@ class locProc():
                     case "buildTrain":
                         self.buildTrain(loc)
                         pass
-                    case "classCars":
-                        pass
                     case "servIndus":
                         pass
                     case "misc":
@@ -91,6 +89,7 @@ class locProc():
                             waitIdx +=1
                             pass
             case "swArea":
+                #switchArea()
                 pass
             
         disp.dispTrnInLoc(loc, self.ydTrains)
@@ -98,19 +97,28 @@ class locProc():
     def analyzeTrains(self, loc):
         self.ydTrains = {"brkDnTrn": [], "swTrain": [], "buildTrain": []}
 
+        # train status leads to actions by the yard crew or
+        # by the train crew.  Train actions are the same name as
+        # the corresponding train status string
         for trainNam in locs.locDat[loc]["trains"]:
             match trainDB.trains[trainNam]["status"]:
                 case "terminate":
                     if trainNam not in self.ydTrains["brkDnTrn"]:
                         self.ydTrains["brkDnTrn"].append(trainNam)
                 case "dropPickup":
+                    # in a yard this action is often undertaken by 
+                    # the yard crew; hence a yard action
                     if trainNam not in self.ydTrains["swTrain"]:
                         self.ydTrains["swTrain"].append(trainNam)
                 case "building":
                     if trainNam not in self.ydTrains["swTrain"]:
                         self.ydTrains["buildTrain"].append(trainNam)
+                case "switch" | "turn":
+                    # code is in locProc but actions are undertaken by
+                    # the virtual train crew
+                    pass
 
-        
+ 
     def brkDownTrain(self, loc):
         from carProc import carProc
         carProcObj = carProc()
