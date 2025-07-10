@@ -107,24 +107,30 @@ class locProc():
     def startTrain(self, loc, ydtrains, ydtrainNam):
         # setup train
         trainStem = trainDB.trains[ydtrainNam]
-        trainStem["status"] = "ready2Leave"
-        # setup new route
-        route4newTrn = self.findRoutes(loc, ydtrainNam)
         dest = trainDB.trains[ydtrainNam]["nextLoc"]
+        match dest:
+            case dest if dest != "none":
+                trainStem["status"] = "ready2Leave"
+                # setup new route
+                route4newTrn = self.findRoutes(loc, ydtrainNam)
 
-        leftObj = routeCls.routes[route4newTrn]["leftObj"]
-        rtObj = routeCls.routes[route4newTrn]["rtObj"]
-        routeCls.routes[route4newTrn]["trains"].append(ydtrainNam)
-        if loc == leftObj.strip(): 
-            trainStem["direction"] = "east"
-            trainStem["xTrnInit"] = gui.guiDict[loc]["x1"]
-        elif loc == rtObj.strip():
-            trainStem["direction"] = "west"
-            trainStem["xTrnInit"] = gui.guiDict[loc]["x0"] - trainParams.trnLength
-        else: print("built train", ydtrainNam,  "leftObj: ", leftObj, "rtObj: "
-                    , rtObj,"loc: ", loc, "direction: ", trainStem["direction"])
+                leftObj = routeCls.routes[route4newTrn]["leftObj"]
+                rtObj = routeCls.routes[route4newTrn]["rtObj"]
+                routeCls.routes[route4newTrn]["trains"].append(ydtrainNam)
+                if loc == leftObj.strip(): 
+                    trainStem["direction"] = "east"
+                    trainStem["xTrnInit"] = gui.guiDict[loc]["x1"]
+                elif loc == rtObj.strip():
+                    trainStem["direction"] = "west"
+                    trainStem["xTrnInit"] = gui.guiDict[loc]["x0"] - trainParams.trnLength
+                else: print("built train", ydtrainNam,  "leftObj: ", leftObj, "rtObj: "
+                            , rtObj,"loc: ", loc, "direction: ", trainStem["direction"])
 
-        trainStem["currentLoc"] = route4newTrn
+                trainStem["currentLoc"] = route4newTrn
+                
+            case "none":
+                trainStem["status"] = "stop"
+                
         if mVars.prms["dbgYdProc"]: print("train",ydtrainNam," built: "
             ,trainStem, ", route: ", routeCls.routes[route4newTrn])
         self.rmTrnFromLoc("buildTrain", loc, ydtrains, ydtrainNam)
@@ -133,9 +139,9 @@ class locProc():
         print("rmTrnFromLoc: ydtrains: ", ydtrains)
         index = ydtrains[action].index(ydtrainNam)
         ydtrains[action].pop(index)
-        if dbgLocal: print("after removal: ydTrains: ", ydtrains)
+        if dbgLocal: print("after removal: ydTrains: ", ydtrains, 
+                "\n trains[ydtrainNam]: ", trainDB.trains[ydtrainNam])
         
-        trainDB.trains[ydtrainNam]["stops"].pop(loc)
         index = locs.locDat[loc]["trains"].index(ydtrainNam)
         locs.locDat[loc]["trains"].pop(index)
         

@@ -109,12 +109,8 @@ class trnProc:
                 
                 trainDict["timeEnRoute"] = trainDict["timeEnRoute_Old"] + trainDict["deltaT"]
                 transTime = routeCls.routes[trainDict["currentLoc"]]["transTime"]
-                if mVars.prms["dbgTrnProc"]: print("trainCalcs: train: ", 
-                    trainDict["trainNum"], "route: ", routeNam, 
-                    ", origin: ", trainDict["origLoc"], ", dest:", trainDict["finalLoc"], 
-                    ", direction: ", trainDict["direction"], ", transTime:", transTime, 
-                    ", timeEnRoute: ", trainDict["timeEnRoute"], 
-                    ", variance: ", variance)
+                if mVars.prms["dbgTrnProc"]: self.printTrnEnRoute(trainDict, routeNam, transTime, variance)
+                
                 disp.drawTrain(trnName)
                 if trainDict["timeEnRoute"] >= transTime:
                     self.procTrnStop(trainDict, trnName)
@@ -135,13 +131,24 @@ class trnProc:
             case "switch" | "turn" | "dropPickup":
                 #procssing done in locProc
                 pass
+            case "stop":
+                pass
+         
+    def printTrnEnRoute(self, trainDict, routeNam, transTime, variance):
+        if mVars.prms["dbgTrnProc"]: print("trainCalcs: train: ", 
+        trainDict["trainNum"], "route: ", routeNam, 
+        ", origin: ", trainDict["origLoc"], ", dest:", trainDict["finalLoc"], 
+        ", direction: ", trainDict["direction"], ", transTime:", transTime, 
+        ", timeEnRoute: ", trainDict["timeEnRoute"], 
+        ", variance: ", variance)
+
             
     def procTrnStop(self, trainDict, trnName):
         disp = dispObj()
         routeNam = trainDict["currentLoc"]
         routeStem = routeCls.routes[routeNam]
+
         stopLoc = trainDict["nextLoc"]
-        self.getNextLoc(trainDict)
         trainDict["currentLoc"] = stopLoc
         print("train ", trnName, "entering terminal: ", stopLoc, "trainDict: ", trainDict)
         
@@ -155,6 +162,8 @@ class trnProc:
             case "switch" | "turn": 
                 # switch town with road train
                 trainDict["status"] = "switch"
+                self.getNextLoc(stopLoc, trainDict)
+
                 # turn has the same processing as switch,
                 # except train returns to origin after switching location
                 pass
@@ -163,10 +172,12 @@ class trnProc:
                 # switching typically done by yard crew at yards,
                 # train crew at other locations
                 trainDict["status"] = "dropPickup"
+                self.getNextLoc(stopLoc, trainDict)
                 pass
             case "continue":
                 #no action at this stop - continue to nextLoc
                 trainDict["status"] = "continue"
+                self.getNextLoc(stopLoc, trainDict)
 
         disp.drawTrain(trnName)
         locs.locDat[trainDict["currentLoc"]]["trains"].append(trnName)
@@ -181,15 +192,22 @@ class trnProc:
         mVars.numOpBusy -=1
 
     def getNextLoc(self, stopLoc, trainDict):
-        print("getNextLoc: stops: ", trainDict["stops"])
-        stopVals = trainDict["stops"].values()
-        index = stopVals.index(stopLoc)     # stop just completed processing
-        trainDict["nextLoc"] = stopVals[index+1]    # next location loaded
+        #print("getNextLoc: stops: ", trainDict["stops"])
+        #stopVals = trainDict["stops"].values()
+        #index = stopVals.index(stopLoc)     # stop just completed processing
+        #trainDict["nextLoc"] = stopVals[index+1]    # next location loaded
         
         print("getNextLoc: trainDict: ", trainDict)
-        
+
+        idx = 0
         for stop, obj in trainDict["stops"].items():
-            if stop == trainDict["currentLoc"]:
-                
-                pass
+            if (stop == stopLoc):
+                if (idx < len(stop)):
+                    trainDict["nextLoc"] = stop[idx+1]
+                else: 
+                    print("no more locations")
+                    trainDict["nextLoc"] = "none"
+            idx +=1    
+            pass
+        return 
             

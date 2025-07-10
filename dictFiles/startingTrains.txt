@@ -1,15 +1,15 @@
 {
-"trnProtype": {
+"train1": {
 "trainNum": 1,
 "consistNum": 10,
-"numCars": 0,
+"numCars": 12,
 "status": "enroute",
-"origLoc": "yard1",
+"origLoc": "yard2",
 "finalLoc": "swArea1",
-"currentLoc": "route1",
-"nextLoc": "swArea1",
-"direction": "",
-"startTime": 0, 
+"currentLoc": "route2",
+"nextLoc": "yard1",
+"direction": "east",
+"startTime": 2, 
 "xTrnInit": 0,
 "xLoc": 0,
 "firstDispTrn": 1,

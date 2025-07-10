@@ -14,7 +14,7 @@ class ydCalcs():
         self.actionList = ["brkDnTrn", "swTrain", "buildTrain", "servIndus", "misc"]
         #self.weights = [0.18, 0.18, 0.18, 0.18, 0.1]
         self.weights = [0.45, 0, 0.45, 0, 0.1]
-        self.ydTrains = {"brkDnTrn": [], "swTrain": [], "buildTrain": []}
+        self.ydtrains = {"brkDnTrn": [], "swTrain": [], "buildTrain": []}
         from locProc import locProc
         self.locProcObj = locProc()
 
@@ -23,7 +23,7 @@ class ydCalcs():
 
 
     def yardMaster(self, thisLoc, loc, ydTrainsIn):
-        self.ydTrains = ydTrainsIn
+        self.ydtrains = ydTrainsIn
         choice = random.choices(self.actionList, weights=self.weights, k=1)
         choice = ''.join(choice)
         if mVars.prms["dbgYdProc"]: print("\nchoice: ", choice)
@@ -56,7 +56,7 @@ class ydCalcs():
         rate = mVars.geometry[loc]["classRate"]
         self.thisLocDests = self.locProcObj.locDests(loc)
 
-        for ydtrainNam in self.ydTrains["brkDnTrn"]:
+        for ydtrainNam in self.ydtrains["brkDnTrn"]:
             consistNum = trainDB.trains[ydtrainNam]["consistNum"]
             consistNam = "consist"+str(consistNum)
             if mVars.prms["dbgYdProc"]: print("brkDownTrain: ", ydtrainNam, "consist: ", trainDB.consists[consistNam])
@@ -80,10 +80,10 @@ class ydCalcs():
                     typeCount -=1
             
             if dbgLocal: print("brkDownTrain: after while loop: typeCount = ", typeCount, ", ydTrainNam = ", ydtrainNam)
-            #if ydtrainNam in self.ydTrains["brkDnTrn"]: print("found ydtrainNam")
+            #if ydtrainNam in self.ydtrains["brkDnTrn"]: print("found ydtrainNam")
             if typeCount == 0:
                 #remove train name from ydTrains and locs.locData
-                self.locProcObj.rmTrnFromLoc("brkDnTrn", loc, ydtrainNam)
+                self.locProcObj.rmTrnFromLoc("brkDnTrn", loc, self.ydtrains, ydtrainNam)
                 trainDB.trains.pop(ydtrainNam)
 
         try:
@@ -96,7 +96,7 @@ class ydCalcs():
         #if mVars.prms["dbgYdProc"]: print("buildTrain: number of cars available: ", numCarsAvail)
         
         # yard has no train undergoing build
-        if not self.ydTrains["buildTrain"]:
+        if not self.ydtrains["buildTrain"]:
             
             self.buildNewTrain(loc)
             
@@ -105,12 +105,12 @@ class ydCalcs():
         # single train is allowed to build in a yard
         else:         
             self.add2Train(loc)  
-            ydtrainNam =  ''.join(self.ydTrains["buildTrain"])
+            ydtrainNam =  ''.join(self.ydtrains["buildTrain"])
             trainStem = trainDB.trains[ydtrainNam]
 
             if trainStem["numCars"] >= mVars.prms["trainSize"]*0.7:
                 # train has reached max size
-                self.locProcObj.startTrain(loc, self.ydTrains, ydtrainNam)
+                self.locProcObj.startTrain(loc, self.ydtrains, ydtrainNam)
 
 
     def findRoutes(self, loc, ydtrainNam):
@@ -147,7 +147,7 @@ class ydCalcs():
                 
                 print("new train: ", trnName, ": ", trainDB.trains[trnName])
                 print("new consist: ", conName, ":", trainDB.consists[conName])
-                self.ydTrains["buildTrain"].append(trnName)
+                self.ydtrains["buildTrain"].append(trnName)
                 locs.locDat[loc]["trains"].append(trnName)
                 return
 
@@ -156,7 +156,7 @@ class ydCalcs():
         from carProc import carProc
         carProcObj = carProc()
         rate = mVars.geometry[loc]["classRate"]
-        ydtrainNam =  ''.join(self.ydTrains["buildTrain"])
+        ydtrainNam =  ''.join(self.ydtrains["buildTrain"])
         locStem = locs.locDat[loc]
         trainStem = trainDB.trains[ydtrainNam]
         
