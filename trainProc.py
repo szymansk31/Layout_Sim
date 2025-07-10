@@ -56,6 +56,7 @@ class trainParams():
         newTrain[newTrainNam]["consistNum"] = newConsistNum
         newTrain[newTrainNam]["trnObjTag"] = newTrainNam+"ObjTag"
         newTrain[newTrainNam]["trnLabelTag"] = newTrainNam+"LabelTag"
+        newTrain[newTrainNam]["startTime"] = mVars.time
     
         print("newTrain: dict: ", newTrain)
         trainDB.trains.update(newTrain)

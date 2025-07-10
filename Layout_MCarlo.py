@@ -18,7 +18,8 @@ def main_loop():
             var.set(0)
         for train in trainDB.trains:
             printTrainInfo(train)
-            trnProcObj.trainCalcs(trainDB.trains[train], train)
+            if mVars.time > trainDB.trains[train]["startTime"]:
+                trnProcObj.trainCalcs(trainDB.trains[train], train)
 
         for loc in locs.locDat:
             if mVars.prms["dbgLoop"]: print ("\nAbout to process: ", 

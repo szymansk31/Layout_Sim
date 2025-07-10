@@ -1,10 +1,12 @@
 {
-"consist10": {
-"consistNum": 10,
-"trainNum": 0,
+"consist1": {
+"consistNum": 1,
+"trainNum": 1,
 "stops": {
-    "trackTots": {"box": 3, "tank": 2,"rfr": 0, "hop": 3, 
+    "yard1": {"box": 3, "tank": 2,"rfr": 0, "hop": 1, 
         "gons": 0, "flats": 1, "psgr": 0}
+    "swArea1": {"box": 2, "tank": 1,"rfr": 3, "hop": 0, 
+        "gons": 0, "flats": 0, "psgr": 0}
 },
 "numBox": 0,
 "numTank": 0,

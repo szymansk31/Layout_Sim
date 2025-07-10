@@ -15,7 +15,6 @@
 "timeEnRoute_Old": 0,
 "deltaT": 0,
 "trnObjTag": "",
-"yTrnTxt": 0,
 "numStops": 0,
 "stops": [
     "swArea1"],
