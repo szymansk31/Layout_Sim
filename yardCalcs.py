@@ -3,7 +3,6 @@ import numpy as np
 from mainVars import mVars
 from trainProc import trainParams
 from stateVars import locs, trainDB, routeCls
-from locProc import locProc
 from gui import gui
 np.set_printoptions(precision=2, suppress=True) 
 
@@ -84,7 +83,7 @@ class ydCalcs():
             #if ydtrainNam in self.ydTrains["brkDnTrn"]: print("found ydtrainNam")
             if typeCount == 0:
                 #remove train name from ydTrains and locs.locData
-                locProc.rmTrnFromLoc("brkDnTrn", loc, ydtrainNam)
+                self.locProcObj.rmTrnFromLoc("brkDnTrn", loc, ydtrainNam)
                 trainDB.trains.pop(ydtrainNam)
 
         try:
@@ -111,7 +110,7 @@ class ydCalcs():
 
             if trainStem["numCars"] >= mVars.prms["trainSize"]*0.7:
                 # train has reached max size
-                locProc.startTrain(loc, ydtrainNam)
+                self.locProcObj.startTrain(loc, self.ydTrains, ydtrainNam)
 
 
     def findRoutes(self, loc, ydtrainNam):

@@ -2,7 +2,7 @@ import random
 import numpy as np
 from mainVars import mVars
 from trainProc import trainParams
-from locProc import locs, locProc
+from locProc import locs
 from stateVars import locs, trainDB, routeCls
 from gui import gui
 np.set_printoptions(precision=2, suppress=True) 
@@ -12,6 +12,8 @@ class swArea():
     
     def __init__(self):
         self.thisConsist = {}
+        from locProc import locProc
+        self.locProcObj = locProc()
         pass
   
     def switchArea(self, thisLoc, loc, ydTrainsIn):
@@ -20,7 +22,7 @@ class swArea():
         for action in ydTrainsIn:
             match action:
                 case "continue":
-                    locProc.startTrain(loc, ydtrainNam)
+                    self.locProcObj.startTrain(loc, ydtrainNam)
                     pass
                 case "swTrain":
                     self.swTrain(loc)
@@ -74,14 +76,6 @@ class swArea():
         except:
             pass
 
-    def rmTrnFromLoc(self, action, loc, ydtrainNam):
-        index = self.ydTrains[action].index(ydtrainNam)
-        self.ydTrains[action].pop(index)
-        if dbgLocal: print("after removal: ydTrains: ", self.ydTrains)
-        
-        index = locs.locDat[loc]["trains"].index(ydtrainNam)
-        locs.locDat[loc]["trains"].pop(index)
-        
     def buildTrain(self, loc):
         numCarsAvail = 0
         #if mVars.prms["dbgYdProc"]: print("buildTrain: number of cars available: ", numCarsAvail)

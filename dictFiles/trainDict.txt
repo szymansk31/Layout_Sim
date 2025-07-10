@@ -21,7 +21,7 @@
 "numStops": 0,
 "currentStop": "",
 "stops": 
-    {"swArea1":{"action": "terminate"}},
+    [{"stopLoc": "swArea1", "action": "terminate"}],
 "color": "blue"
 }
 }

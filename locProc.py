@@ -17,6 +17,7 @@ class locProc():
     
     def __init__(self):
         self.ydTrains = {}
+        #self.locProcObj = locProc()
         
     #classmethod:
     
@@ -103,12 +104,12 @@ class locProc():
                 (dest in routeCls.routes[routeNam].values()):
                 return routeNam
 
-    def startTrain(self, loc, ydtrainNam):
+    def startTrain(self, loc, ydtrains, ydtrainNam):
         # setup train
         trainStem = trainDB.trains[ydtrainNam]
         trainStem["status"] = "ready2Leave"
         # setup new route
-        route4newTrn = locProc.findRoutes(loc, ydtrainNam)
+        route4newTrn = self.findRoutes(loc, ydtrainNam)
         dest = trainDB.trains[ydtrainNam]["nextLoc"]
 
         leftObj = routeCls.routes[route4newTrn]["leftObj"]
@@ -126,13 +127,15 @@ class locProc():
         trainStem["currentLoc"] = route4newTrn
         if mVars.prms["dbgYdProc"]: print("train",ydtrainNam," built: "
             ,trainStem, ", route: ", routeCls.routes[route4newTrn])
-        self.rmTrnFromLoc("buildTrain", loc, ydtrainNam)
+        self.rmTrnFromLoc("buildTrain", loc, ydtrains, ydtrainNam)
 
-    def rmTrnFromLoc(self, action, loc, ydtrainNam):
-        index = self.ydTrains[action].index(ydtrainNam)
-        self.ydTrains[action].pop(index)
-        if dbgLocal: print("after removal: ydTrains: ", self.ydTrains)
+    def rmTrnFromLoc(self, action, loc, ydtrains, ydtrainNam):
+        print("rmTrnFromLoc: ydtrains: ", ydtrains)
+        index = ydtrains[action].index(ydtrainNam)
+        ydtrains[action].pop(index)
+        if dbgLocal: print("after removal: ydTrains: ", ydtrains)
         
+        trainDB.trains[ydtrainNam]["stops"].pop(loc)
         index = locs.locDat[loc]["trains"].index(ydtrainNam)
         locs.locDat[loc]["trains"].pop(index)
         

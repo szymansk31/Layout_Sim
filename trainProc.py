@@ -141,7 +141,7 @@ class trnProc:
         routeNam = trainDict["currentLoc"]
         routeStem = routeCls.routes[routeNam]
         stopLoc = trainDict["nextLoc"]
-        getNextLoc(trainDict)
+        self.getNextLoc(trainDict)
         trainDict["currentLoc"] = stopLoc
         print("train ", trnName, "entering terminal: ", stopLoc, "trainDict: ", trainDict)
         
@@ -156,8 +156,7 @@ class trnProc:
                 # switch town with road train
                 trainDict["status"] = "switch"
                 # turn has the same processing as switch,
-                # except train returns to origin
-                # after switching location
+                # except train returns to origin after switching location
                 pass
             case "dropPickup":
                 # no industry switching done, just car exchange
@@ -171,7 +170,6 @@ class trnProc:
 
         disp.drawTrain(trnName)
         locs.locDat[trainDict["currentLoc"]]["trains"].append(trnName)
-        
         try:
             index = routeStem["trains"].index(trnName)
         except:
@@ -180,12 +178,18 @@ class trnProc:
         #remove train from that route
         routeStem["trains"].pop(index)
         #gui.C.delete(routeStem["trnLabelTag"])
-
         mVars.numOpBusy -=1
-        #trainObj.initTrain()
 
-    def getNextLoc(seld, trainDict):
-        stuff = trainDict["stops"].items()
-        for stop in trainDict["stops"]:
+    def getNextLoc(self, stopLoc, trainDict):
+        print("getNextLoc: stops: ", trainDict["stops"])
+        stopVals = trainDict["stops"].values()
+        index = stopVals.index(stopLoc)     # stop just completed processing
+        trainDict["nextLoc"] = stopVals[index+1]    # next location loaded
+        
+        print("getNextLoc: trainDict: ", trainDict)
+        
+        for stop, obj in trainDict["stops"].items():
             if stop == trainDict["currentLoc"]:
-
+                
+                pass
+            
