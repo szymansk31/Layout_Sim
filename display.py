@@ -116,7 +116,6 @@ class dispObj():
                 trnLabels = ""
                 trnLabels = ' '.join(routeStem["trains"])
 
-                print("draw train: trnLabels: ", trnLabels)
                 print("draw train: ", train, ", timeEnRoute: ", timeEnRoute, " deltaT, distance/time: ", trainStem["deltaT"], 
                         routeStem["distPerTime"])
                 deltaX = int(trainStem["deltaT"]*velocity)

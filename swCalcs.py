@@ -1,7 +1,6 @@
 import random
 import numpy as np
 from mainVars import mVars
-from trainProc import trainParams
 from locProc import locs
 from stateVars import locs, trainDB, routeCls
 from gui import gui
@@ -77,6 +76,9 @@ class swArea():
             pass
 
     def buildTrain(self, loc):
+        from trainProc import trainParams
+        trainObj = trainParams()
+
         numCarsAvail = 0
         #if mVars.prms["dbgYdProc"]: print("buildTrain: number of cars available: ", numCarsAvail)
         
@@ -120,6 +122,8 @@ class swArea():
 
                             
     def buildNewTrain(self, loc):
+        from trainProc import trainParams
+
         genExp = (trackTot for trackTot in locs.locDat[loc]["trackTots"] if "indust" not in trackTot)
         for trackTots in genExp:
             if locs.locDat[loc]["trackTots"][trackTots] >= mVars.prms["trainSize"]*0.5:

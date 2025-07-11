@@ -1,7 +1,6 @@
 import random
 import numpy as np
 from mainVars import mVars
-from trainProc import trainParams
 from stateVars import locs, trainDB, routeCls
 from gui import gui
 np.set_printoptions(precision=2, suppress=True) 
@@ -14,7 +13,7 @@ class ydCalcs():
         self.actionList = ["brkDnTrn", "swTrain", "buildTrain", "servIndus", "misc"]
         #self.weights = [0.18, 0.18, 0.18, 0.18, 0.1]
         self.weights = [0.45, 0, 0.45, 0, 0.1]
-        self.ydtrains = {"brkDnTrn": [], "swTrain": [], "buildTrain": []}
+        self.ydTrains = {"brkDnTrn": [], "swTrain": [], "buildTrain": [], "roadCrewSw": []}
         from locProc import locProc
         self.locProcObj = locProc()
 
@@ -125,6 +124,8 @@ class ydCalcs():
 
                             
     def buildNewTrain(self, loc):
+        from trainProc import trainParams
+
         genExp = (trackTot for trackTot in locs.locDat[loc]["trackTots"] if "indust" not in trackTot)
         for trackTots in genExp:
             if locs.locDat[loc]["trackTots"][trackTots] >= mVars.prms["trainSize"]*0.5:
@@ -174,10 +175,11 @@ class ydCalcs():
         
         if locStem["trackTots"][trainDest] == 0: return
         carSel, typeCount = carProcObj.carTypeSel(thisTrack)
-        carClassType = carProcObj.randomCar(carSel)
+
         carsClassed = 0
         while ((carsClassed < rate) and (typeCount > 0)):
 
+            carClassType = carProcObj.randomCar(carSel)
             carsClassed +=1
             if thisTrack[carClassType] >0:
                 thisTrack[carClassType] -=1
@@ -195,7 +197,7 @@ class ydCalcs():
                 self.bldConsist,
                 "\ntrack contents: ", thisTrack)
             
-    def classCars(self):
+    def swTrain(self, loc):
         pass
     def servIndus(self):
         pass

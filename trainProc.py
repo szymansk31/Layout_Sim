@@ -3,6 +3,7 @@ import tkinter as tk
 from mainVars import mVars
 from fileProc import readFiles
 from display import dispObj
+from locProc import locProc
 from stateVars import locs, trainDB, routeCls
 np.set_printoptions(precision=2, suppress=True) 
 
@@ -103,12 +104,11 @@ class trnProc:
         match trainDict["status"]:
             case "enroute":
                 variance = np.random.normal(loc=0, scale=0.25, size=1)
-                trainDict["timeEnRoute_Old"] = trainDict["timeEnRoute"]
                 routeNam = trainDict["currentLoc"]
                 routeStem = routeCls.routes[routeNam]
                 trainDict["deltaT"] = mVars.prms["timeStep"] + variance
                 
-                trainDict["timeEnRoute"] = trainDict["timeEnRoute_Old"] + trainDict["deltaT"]
+                trainDict["timeEnRoute"] += trainDict["deltaT"]
                 transTime = routeCls.routes[trainDict["currentLoc"]]["transTime"]
                 if mVars.prms["dbgTrnProc"]: self.printTrnEnRoute(trainDict, routeNam, transTime, variance)
                 

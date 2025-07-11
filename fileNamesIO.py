@@ -12,6 +12,8 @@ class fileNames:
             "trainFile": "dictFiles/trainDict.txt",
             "carFile": "dictFiles/initCarDict.txt",
             "consistFile": "dictFiles/consist.txt",
+            "startingTrainFile": "dictFiles/startingTrains.txt",
+            "startingConsistFile": "dictFiles/startingConsists.txt",
             "bare_consist_file": "dictFiles/bare_consist.txt"
             }
 

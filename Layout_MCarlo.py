@@ -30,7 +30,7 @@ def main_loop():
 
 def printTrainInfo(train):
     trainStem = trainDB.trains[train]
-    currentLoc = ["currentLoc"]
+    currentLoc = trainStem["currentLoc"]
     finalLoc = trainStem["finalLoc"]
     origLoc = trainStem["origLoc"]
     status = trainStem["status"]
@@ -76,9 +76,9 @@ from locProc import locProc
 locProcObj = locProc()
 locProcObj.initLocDicts()
 
-trainObj = trainDB()
-#newTrainNam, newConsistNamtrains = trains.newTrain()
-#routeCls.routes["route1"]["trains"].append(newTrainNam)
+from startingTrains import trainFromFile
+startTrainObj = trainFromFile()
+startTrainObj.readTrain()
 
 # from gui.py
 dispObj = dispSim()

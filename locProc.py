@@ -6,14 +6,12 @@ from display import dispObj
 from yardCalcs import ydCalcs
 from swCalcs import swArea
 from gui import gui
-from trainProc import trainParams
 np.set_printoptions(precision=2, suppress=True) 
 
 
 dbgLocal = 1     
 #=================================================
 class locProc():
-    locs = locs()
     
     def __init__(self):
         self.ydTrains = {}
@@ -106,6 +104,8 @@ class locProc():
 
     def startTrain(self, loc, ydtrains, ydtrainNam):
         # setup train
+        from trainProc import trainParams
+
         trainStem = trainDB.trains[ydtrainNam]
         dest = trainDB.trains[ydtrainNam]["nextLoc"]
         match dest:
