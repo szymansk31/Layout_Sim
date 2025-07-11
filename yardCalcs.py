@@ -4,6 +4,8 @@ from mainVars import mVars
 from trainProc import trainParams
 from stateVars import locs, trainDB, routeCls
 from gui import gui
+from classCodes import classify
+
 np.set_printoptions(precision=2, suppress=True) 
 
 dbgLocal = 1          
@@ -17,9 +19,6 @@ class ydCalcs():
         self.ydtrains = {"brkDnTrn": [], "swTrain": [], "buildTrain": []}
         from locProc import locProc
         self.locProcObj = locProc()
-
-    def randomTrack(self):
-        return ''.join(random.choice(self.thisLocDests))
 
 
     def yardMaster(self, thisLoc, loc, ydTrainsIn):
@@ -51,34 +50,25 @@ class ydCalcs():
                     pass
 
     def brkDownTrain(self, loc):
-        from carProc import carProc
-        carProcObj = carProc()
-        rate = mVars.geometry[loc]["classRate"]
-        self.thisLocDests = self.locProcObj.locDests(loc)
+        classObj = classify()
+        classObj.classifyDict["loc"] = loc
+        classObj.classifyDict["action"] = "brkDnTrn"
+        
 
         for ydtrainNam in self.ydtrains["brkDnTrn"]:
             consistNum = trainDB.trains[ydtrainNam]["consistNum"]
             consistNam = "consist"+str(consistNum)
             if mVars.prms["dbgYdProc"]: print("brkDownTrain: ", ydtrainNam, "consist: ", trainDB.consists[consistNam])
-            self.thisConsist = trainDB.consists[consistNam]["stops"][loc]
-            if mVars.prms["dbgYdProc"]: print("consist core: ", self.thisConsist)
             
-            carSel, typeCount = carProcObj.carTypeSel(self.thisConsist)
-            if dbgLocal: print("brkDnTrn: carSel: ", carSel)
-            #if typeCount <= 0: return
+            classObj.classifyDict["trainNam"] = ydtrainNam
+            classObj.classifyDict["consistIn"] = \
+                trainDB.consists[consistNam]["stops"][loc]
 
-            idx = 0
-            while ((idx < rate) and (typeCount > 0)):
-                carClassType = carProcObj.randomCar(carSel)
-                idx +=1
-            # remove cars from consist and assign to destination trackTots
-                if self.thisConsist[carClassType] >0:
-                    self.thisConsist[carClassType] = self.thisConsist[carClassType] - 1
-                    destTrack = self.randomTrack()
-                    locs.locDat[loc]["trackTots"][destTrack] +=1
-                    locs.locDat[loc]["tracks"][destTrack][carClassType] +=1
-                    typeCount -=1
+            classObj.classifyDict["consistInType"] = "train"
+            classObj.classifyDict["consistOutType"] = "location"
             
+            if mVars.prms["dbgYdProc"]: print("consist core: ", self.thisConsist)
+                        
             if dbgLocal: print("brkDownTrain: after while loop: typeCount = ", typeCount, ", ydTrainNam = ", ydtrainNam)
             #if ydtrainNam in self.ydtrains["brkDnTrn"]: print("found ydtrainNam")
             if typeCount == 0:
