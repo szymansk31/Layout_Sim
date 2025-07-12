@@ -18,25 +18,29 @@ class trainFromFile():
 
     def readTrain(self):
         
-        self.train = files.readFile("startingTrainFile")
-        self.dict2TrnNam(self.train)
-        self.train[self.trnName]["color"] = trainParams.colors()
-        print("color for init train: ", self.train[self.trnName]["color"])
+        trainDict = files.readFile("startingTrainFile")
+        for train in trainDict:
+            trainDict[train]["color"] = trainParams.colors()
+            print("color for init train: ", trainDict[train]["color"])
 
-        print("adding initial consist")
-        self.consistFromFile(files, "startingConsistFile")
-        self.dict2ConNam
-        self.train[self.trnName]["trnObjTag"] = self.trnName+"ObjTag"
-        self.train[self.trnName]["trnLabelTag"] = self.trnName+"LabelTag"
+            print("adding initial consist")
+            self.consistFromFile(files, "startingConsistFile")
+            self.dict2ConNam
+            trainDict[train]["trnObjTag"] = train+"ObjTag"
+            trainDict[train]["trnLabelTag"] = train+"LabelTag"
 
-        tmpLoc = self.train[self.trnName]["currentLoc"]
-        if "route" in tmpLoc:
-            routeCls.routes[tmpLoc]["trains"].append(self.trnName)
-        self.consist[self.conName]["trainNum"] = self.train[self.trnName]["trainNum"]
-        trainDB.consists.update(self.consist)
-        self.train[self.trnName]["consistNum"] = self.consist[self.conName]["consistNum"]
-        trainDB.trains.update(self.train)
-        print("starting train: ", trainDB.trains[self.trnName])
+            tmpLoc = trainDict[train]["currentLoc"]
+            if "route" in tmpLoc:
+                routeCls.routes[tmpLoc]["trains"].append(train)
+            self.consist[self.conName]["trainNum"] = trainDict[train]["trainNum"]
+            trainDB.consists.update(self.consist)
+            trainDict[train]["consistNum"] = self.consist[self.conName]["consistNum"]
+            newTrain = {}
+            newTrain[train] = trainDict[train]
+
+            print("newTain dict in startingTrains: ", newTrain)
+            trainDB.trains.update(newTrain)
+            print("starting train: ", trainDB.trains[train])
         return 
 
     def consistFromFile(self, files, fkey):

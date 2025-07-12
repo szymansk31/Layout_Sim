@@ -21,8 +21,6 @@ class trainParams():
 
     def __init__(self):
         #self.trainID = int
-        self.train = {}
-        self.consist = {}
         self.trnName = ""
         self.conName = ""
         self.files = readFiles()
@@ -113,8 +111,14 @@ class trnProc:
                 if mVars.prms["dbgTrnProc"]: self.printTrnEnRoute(trainDict, routeNam, transTime, variance)
                 
                 disp.drawTrain(trnName)
-                if trainDict["timeEnRoute"] >= transTime:
-                    self.procTrnStop(trainDict, trnName)
+                match trainDict["direction"]:
+                    case "east":
+                        if trainDict["xLoc"] >= routeCls.routes[routeNam]["x1"]:
+                            self.procTrnStop(trainDict, trnName)
+                    case "west":
+                        if trainDict["xLoc"] <= routeCls.routes[routeNam]["x0"]:
+                            self.procTrnStop(trainDict, trnName)
+                                                
                     
             case "ready2Leave":
                 trainDict["status"] = "enroute"

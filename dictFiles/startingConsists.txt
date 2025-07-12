@@ -8,5 +8,14 @@
     "swArea1": {"box": 2, "tank": 1,"rfr": 3, "hop": 0, 
         "gons": 1, "flats": 1, "psgr": 0}
         }
+    },
+
+"consist2": {
+"consistNum": 2,
+"trainNum": 2,
+"stops": {
+    "swArea1": {"box": 2, "tank": 1,"rfr": 3, "hop": 0, 
+        "gons": 1, "flats": 1, "psgr": 0}
+        }
     }
 }

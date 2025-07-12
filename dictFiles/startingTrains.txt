@@ -23,5 +23,30 @@
     "swArea1": {"action": "terminate"}
         },
 "color": "blue"
+    },
+
+"train2": {
+"trainNum": 2,
+"consistNum": 2,
+"numCars": 8,
+"status": "enroute",
+"origLoc": "yard1",
+"finalLoc": "swArea1",
+"currentLoc": "route1",
+"nextLoc": "swArea1",
+"direction": "east",
+"startTime": 2, 
+"xTrnInit": 1200,
+"xLoc": 1200,
+"firstDispTrn": 1,
+"timeEnRoute": 0,
+"deltaT": 0,
+"trnObjTag": "",
+"numStops": 1,
+"currentStop": "",
+"stops": {
+    "swArea1": {"action": "terminate"}
+        },
+"color": "blue"
     }
 }

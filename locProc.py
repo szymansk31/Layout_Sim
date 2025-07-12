@@ -14,9 +14,9 @@ dbgLocal = 1
 class locProc():
     
     def __init__(self):
-        self.ydTrains = {}
         #self.locProcObj = locProc()
-        
+        pass
+    
     #classmethod:
     
     def initLocDicts(self):
@@ -52,20 +52,20 @@ class locProc():
 
         #if mVars.prms["\ndbgYdProc"]: print("yardCalcs: thisLoc ", thisloc)
         self.analyzeTrains(loc)
-        if mVars.prms["dbgYdProc"]: print("trains analyzed: ydTrains: ", self.ydTrains)
+        if mVars.prms["dbgYdProc"]: print("trains analyzed: trainDB.ydTrains: ", trainDB.ydTrains)
 
         disp.dispLocDat(loc)
         match thisLoc[loc]["type"]:
             case "yard":
-                ydCalcObj.yardMaster(thisLoc, loc, self.ydTrains)
+                ydCalcObj.yardMaster(thisLoc, loc)
             case "swArea":
-                swAreaObj.switchArea(thisLoc, loc, self.ydTrains)
+                swAreaObj.switchArea(thisLoc, loc)
 
                     
-        disp.dispTrnInLoc(loc, self.ydTrains)
+        disp.dispTrnInLoc(loc, trainDB.ydTrains)
             
     def analyzeTrains(self, loc):
-        self.ydTrains = {"brkDnTrn": [], "swTrain": [], "buildTrain": [], "roadCrewSw": []}
+        trainDB.ydTrains = {"brkDnTrn": [], "swTrain": [], "buildTrain": [], "roadCrewSw": []}
 
         # train status leads to actions by the yard crew or
         # the train crew.  Train actions are the same name as
@@ -73,23 +73,23 @@ class locProc():
         for trainNam in locs.locDat[loc]["trains"]:
             match trainDB.trains[trainNam]["status"]:
                 case "terminate":
-                    if trainNam not in self.ydTrains["brkDnTrn"]:
-                        self.ydTrains["brkDnTrn"].append(trainNam)
+                    if trainNam not in trainDB.ydTrains["brkDnTrn"]:
+                        trainDB.ydTrains["brkDnTrn"].append(trainNam)
                 case "dropPickup":
                     # in a yard this action is often undertaken by 
                     # the yard crew; hence a yard action
-                    if trainNam not in self.ydTrains["swTrain"]:
-                        self.ydTrains["swTrain"].append(trainNam)
+                    if trainNam not in trainDB.ydTrains["swTrain"]:
+                        trainDB.ydTrains["swTrain"].append(trainNam)
                 case "building":
                     # for yards, not switch areas
-                    if trainNam not in self.ydTrains["buildTrain"]:
-                        self.ydTrains["buildTrain"].append(trainNam)
+                    if trainNam not in trainDB.ydTrains["buildTrain"]:
+                        trainDB.ydTrains["buildTrain"].append(trainNam)
                 case "switch" | "turn":
                     # for switch areas no yards
                     # code is in locProc but actions are undertaken by
                     # the virtual train crew
-                    if trainNam not in self.ydTrains["roadCrewSw"]:
-                        self.ydTrains["roadCrewSw"].append(trainNam)
+                    if trainNam not in trainDB.ydTrains["roadCrewSw"]:
+                        trainDB.ydTrains["roadCrewSw"].append(trainNam)
                     pass
                 
     def findRoutes(self, loc, ydtrainNam):
@@ -102,7 +102,7 @@ class locProc():
                 (dest in routeCls.routes[routeNam].values()):
                 return routeNam
 
-    def startTrain(self, loc, ydtrains, ydtrainNam):
+    def startTrain(self, loc, ydtrainNam):
         # setup train
         from trainProc import trainParams
 
@@ -133,13 +133,13 @@ class locProc():
                 
         if mVars.prms["dbgYdProc"]: print("train",ydtrainNam," built: "
             ,trainStem, ", route: ", routeCls.routes[route4newTrn])
-        self.rmTrnFromLoc("buildTrain", loc, ydtrains, ydtrainNam)
+        self.rmTrnFromLoc("buildTrain", loc, ydtrainNam)
 
-    def rmTrnFromLoc(self, action, loc, ydtrains, ydtrainNam):
-        print("rmTrnFromLoc: ydtrains: ", ydtrains)
-        index = ydtrains[action].index(ydtrainNam)
-        ydtrains[action].pop(index)
-        if dbgLocal: print("after removal: ydTrains: ", ydtrains, 
+    def rmTrnFromLoc(self, action, loc, ydtrainNam):
+        print("rmTrnFromLoc: trainDB.ydTrains: ", trainDB.ydTrains)
+        index = trainDB.ydTrains[action].index(ydtrainNam)
+        trainDB.ydTrains[action].pop(index)
+        if dbgLocal: print("after removal: trainDB.ydTrains: ", trainDB.ydTrains, 
                 "\n trains[ydtrainNam]: ", trainDB.trains[ydtrainNam])
         
         index = locs.locDat[loc]["trains"].index(ydtrainNam)

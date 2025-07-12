@@ -46,7 +46,7 @@ class dispObj():
             numTrns +=1
         print("dispTrnInLoc: ydTrains: ", ydTrains, " text: ", text)
         x = (gui.guiDict[loc]["x0"] + gui.guiDict[loc]["x1"])*0.5
-        y = gui.guiDict[loc]["y0"] + 250
+        y = gui.guiDict[loc]["y0"] + 300
         if locStem["firstDispTrnTxt"]:
             locStem["locTrnTxtID"] = gui.C.create_text(x, y, text=text, width=380 , font=("Arial", 8))
             
@@ -83,7 +83,7 @@ class dispObj():
             actionStem = dispList["actions"][action]
             y = actionStem["y"]
             if locStem["firstDispTrnTxt"]:
-                gui.C.create_text(xtrn-50, y+6, text=action, 
+                gui.C.create_text(xtrn-70, y+6, text=action, 
                         font=("Arial", 8))
             for train in actionStem["trains"]:
                 trainNum = train[5:]

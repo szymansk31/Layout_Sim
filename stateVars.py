@@ -9,6 +9,7 @@ class trainDB():
 
     trains = {}
     consists = {}
+    ydTrains = {}
 
 class routeCls():
     routes = {}
