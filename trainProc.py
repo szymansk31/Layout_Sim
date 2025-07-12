@@ -167,7 +167,7 @@ class trnProc:
             case "switch" | "turn": 
                 # switch town with road train
                 trainDict["status"] = "switch"
-                self.getNextLoc(stopLoc, trainDict)
+                self.updateTrain4Stop(stopLoc, trainDict)
 
                 # turn has the same processing as switch,
                 # except train returns to origin after switching location
@@ -177,12 +177,12 @@ class trnProc:
                 # switching typically done by yard crew at yards,
                 # train crew at other locations
                 trainDict["status"] = "dropPickup"
-                self.getNextLoc(stopLoc, trainDict)
+                self.updateTrain4Stop(stopLoc, trainDict)
                 pass
             case "continue":
                 #no action at this stop - continue to nextLoc
                 trainDict["status"] = "continue"
-                self.getNextLoc(stopLoc, trainDict)
+                self.updateTrain4Stop(stopLoc, trainDict)
 
         disp.drawTrain(trnName)
         locs.locDat[trainDict["currentLoc"]]["trains"].append(trnName)
@@ -196,6 +196,15 @@ class trnProc:
         #gui.C.delete(routeStem["trnLabelTag"])
         mVars.numOpBusy -=1
 
+    def updateTrain4Stop(self, stopLoc, trainDict):
+        trainDict["numStops"] -=1
+        if trainDict["numStops"] == 0: 
+            trainDict["status"] = "terminate"
+            return
+        self.getNextLoc(stopLoc, trainDict)
+        pass
+    
+
     def getNextLoc(self, stopLoc, trainDict):
         #print("getNextLoc: stops: ", trainDict["stops"])
         #stopVals = trainDict["stops"].values()
@@ -204,15 +213,15 @@ class trnProc:
         
         print("getNextLoc: trainDict: ", trainDict)
 
-        idx = 0
-        for stop, obj in trainDict["stops"].items():
-            if (stop == stopLoc):
-                if (idx < len(stop)):
-                    trainDict["nextLoc"] = stop[idx+1]
-                else: 
-                    print("no more locations")
-                    trainDict["nextLoc"] = "none"
-            idx +=1    
-            pass
+        iterStops = iter(trainDict["stops"].keys())
+        nextLoc = None
+        for stop in iterStops:
+            if stop == stopLoc:
+                nextLoc = next(iterStops, None)
+        if nextLoc == None: 
+            print("no more locations")
+        else:
+            trainDict["nextLoc"] = nextLoc
+            print("getNextLoc: trainDict: ", trainDict)
         return 
             

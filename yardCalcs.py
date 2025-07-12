@@ -34,7 +34,7 @@ class ydCalcs():
             case "brkDnTrn":
                 #self.brkDownTrain(loc)
                 if trainDB.ydTrains["brkDnTrn"]:
-                    self.classObj.train2Track(loc)
+                    self.classObj.train2Track(loc, "brkDnTrn")
 
                 if mVars.prms["dbgYdProc"]: 
                     #if dbgLocal: print("after brkDnTrn: consist: ", 
