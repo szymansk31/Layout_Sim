@@ -21,7 +21,7 @@ class swArea():
         for action in ydTrainsIn:
             match action:
                 case "continue":
-                    self.locProcObj.startTrain(loc, ydtrainNam)
+                    self.locProcObj.startTrain(action, loc, ydtrainNam)
                     pass
                 case "swTrain":
                     self.swTrain(loc)

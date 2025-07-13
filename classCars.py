@@ -27,21 +27,21 @@ class classCars():
         
         #form train and location dict stems
         if action == "buildTrain":
-            self.ydtrainNam =  ''.join(lcl_ydTrains[action])
+            self.ydTrainNam =  ''.join(lcl_ydTrains[action])
         else:
-            self.ydtrainNam = random.choice(trainDB.ydTrains.get(action))
-        print("ydtrainNam: ", self.ydtrainNam)
+            self.ydTrainNam = random.choice(trainDB.ydTrains.get(action))
+        print("ydtrainNam: ", self.ydTrainNam)
         self.locStem = locs.locDat[loc]
-        self.trainStem = trainDB.trains[self.ydtrainNam]
+        self.trainStem = trainDB.trains[self.ydTrainNam]
         
         #form consist stem
         self.consistNum = self.trainStem["consistNum"]
         self.consistNam = "consist"+str(self.consistNum)
         self.consistStem = trainDB.consists[self.consistNam]["stops"]
-        pass
+        return
 
     def printClassInfo(self, funcName, thisTrack, numCars, dest):
-        print(funcName, "ydtrainNam: ", self.ydtrainNam, "numCars: ", numCars , 
+        print(funcName, "ydtrainNam: ", self.ydTrainNam, "numCars: ", numCars , 
         ", consist: ", trainDB.consists[self.consistNam], ", destination: ", dest)
         print("buildTrain: before next build step, consist : ", 
                 self.consistStem[dest],
@@ -56,12 +56,13 @@ class classCars():
         numCars = self.trainStem["numCars"]
         thisTrack = self.locStem["tracks"][trainDest]
         
+        carSel, typeCount = carProcObj.carTypeSel(thisTrack)
+
         if mVars.prms["dbgYdProc"]:
             self.printClassInfo(self.track2Train.__name__, numCars, 
                                 thisTrack, trainDest)
         
         if self.locStem["trackTots"][trainDest] == 0: return
-        carSel, typeCount = carProcObj.carTypeSel(thisTrack)
         
         carsClassed = 0
         while ((carsClassed < self.rate) and (typeCount > 0)):
@@ -83,7 +84,8 @@ class classCars():
         if mVars.prms["dbgYdProc"]: print("buildTrain: after build step, consist : ", 
                 self.consistStem[trainDest],
                 "\ntrack contents: ", thisTrack)
-
+        
+        return typeCount, self.ydTrainNam
 
     def train2Track(self, loc, action):
         # initialize common params
@@ -92,9 +94,9 @@ class classCars():
         #if mVars.prms["dbgYdProc"]:
         #    self.printClassInfo(self.train2Track.__name__, numCars, 
         #                        thisTrack, trainDest)
-        
-        if mVars.prms["dbgYdProc"]: print("brkDownTrain: ", self.ydtrainNam, "consist: ", trainDB.consists[self.consistNam])
         carSel, typeCount = carProcObj.carTypeSel(self.consistStem[loc])
+
+        if mVars.prms["dbgYdProc"]: print("brkDownTrain: ", self.ydTrainNam, "consist: ", trainDB.consists[self.consistNam])
 
         carsClassed = 0
         while ((carsClassed < self.rate) and (typeCount > 0)):
@@ -110,14 +112,11 @@ class classCars():
                 typeCount -=1
             
             if dbgLocal: print("train2Track: after while loop: typeCount = ", 
-                               typeCount, ", ydTrainNam = ", self.ydtrainNam)
-
-            if typeCount == 0:
-                #remove train name from trainDB.ydTrains and locs.locData
-                locProcObj.rmTrnFromLoc("brkDnTrn", loc, self.ydtrainNam)
-                trainDB.trains.pop(self.ydtrainNam)
+                               typeCount, ", ydTrainNam = ", self.ydTrainNam)
 
         try:
             trainDB.consists[self.consistNum]["stops"][loc] = self.consistStem[loc]
         except:
             pass
+
+        return typeCount, self.ydTrainNam
