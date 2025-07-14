@@ -2,11 +2,12 @@
 import numpy as np
 import tkinter as tk
 from tkinter import ttk
+from stateVars import locs, trainDB, routeCls
+from trainProc import trainParams, trnProc
+trnProcObj = trnProc()
          
 #=================================================
 def main_loop():
-    count = 0
-    maxCount = 7
 
     print("mVars.time: ", mVars.time, "maxtime: ", mVars.prms["maxTime"])
     while mVars.time < mVars.prms["maxTime"]:
@@ -16,23 +17,28 @@ def main_loop():
             wait_button.wait_variable(var)
             var.set(0)
         for train in trainDB.trains:
-            currentLoc = trainDB.trains[train]["currentLoc"]
-            finalLoc = trainDB.trains[train]["finalLoc"]
-            origLoc = trainDB.trains[train]["origLoc"]
-            status = trainDB.trains[train]["status"]
-            direction = trainDB.trains[train]["direction"]
-            if mVars.prms["dbgLoop"]: print ("Before train processing: train: ", 
-                train, "currentLoc: ", currentLoc, ", origLoc: ", origLoc, 
-                ", finalLoc: ", finalLoc, ", direction: ", direction,
-                "status: ", status)
-            trnProcObj.trainCalcs(trainDB.trains[train], train)
-        count +=1
-        for loc in geometry:
+            printTrainInfo(train)
+            if mVars.time > trainDB.trains[train]["startTime"]:
+                trnProcObj.trainCalcs(trainDB.trains[train], train)
+
+        for loc in locs.locDat:
             if mVars.prms["dbgLoop"]: print ("\nAbout to process: ", 
                 loc)
 
-            ydProcObj.yardCalcs(geometry, loc)
+            locProcObj.LocCalcs(locs.locDat, loc)
         mVars.time +=1
+
+def printTrainInfo(train):
+    trainStem = trainDB.trains[train]
+    currentLoc = trainStem["currentLoc"]
+    finalLoc = trainStem["finalLoc"]
+    origLoc = trainStem["origLoc"]
+    status = trainStem["status"]
+    direction = trainStem["direction"]
+    if mVars.prms["dbgLoop"]: print ("Before train processing: train: ", 
+        train, "currentLoc: ", currentLoc, ", origLoc: ", origLoc, 
+        ", finalLoc: ", finalLoc, ", direction: ", direction,
+        "status: ", status)
 
 def clrWait():
     mVars.wait = 0
@@ -57,7 +63,7 @@ geometry = mVars.geometry = files.readFile("layoutGeomFile")
 layoutObj.locListInit(geometry)
 guiObj = gui()
 gui.guiDict = files.readFile("guiFile")
-mVars.routes = routeGeomObj.initRoutes(geometry, gui.guiDict)
+routeCls.routes = routeGeomObj.initRoutes(geometry, gui.guiDict)
 
 
 #setup initial car distribution
@@ -67,14 +73,12 @@ carDict = files.readFile("carFile")
 carProcObj.procCarInfo(carDict)
 
 from locProc import locProc
-ydProcObj = locProc()
-ydProcObj.initLocDicts()
+locProcObj = locProc()
+locProcObj.initLocDicts()
 
-from trainProc import trnProc, trainDB
-trnProcObj = trnProc()
-trains = trainDB()
-#newTrainNam, newConsistNamtrains = trains.newTrain()
-#mVars.routes["route1"]["trains"].append(newTrainNam)
+from startingTrains import trainFromFile
+startTrainObj = trainFromFile()
+startTrainObj.readTrain()
 
 # from gui.py
 dispObj = dispSim()
@@ -91,7 +95,7 @@ var = tk.IntVar()
 mVars.wait = 1
 mainLoop = tk.Button(gui.C, text="Start Sim", 
         command=lambda: main_loop())
-wait_button = tk.Button(gui.C, text="Continue", 
+wait_button = tk.Button(gui.C, text="Step", 
         command=lambda: var.set(1))
 no_wait_button = tk.Button(gui.C, text="skip wait", 
         command=lambda: clrWait())

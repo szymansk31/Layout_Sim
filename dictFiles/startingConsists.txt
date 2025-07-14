@@ -1,0 +1,21 @@
+{
+"consist1": {
+"consistNum": 1,
+"trainNum": 1,
+"stops": {
+    "yard1": {"box": 3, "tank": 2,"rfr": 0, "hop": 1, 
+        "gons": 0, "flats": 1, "psgr": 0},
+    "swArea1": {"box": 2, "tank": 1,"rfr": 3, "hop": 0, 
+        "gons": 1, "flats": 1, "psgr": 0}
+        }
+    },
+
+"consist2": {
+"consistNum": 2,
+"trainNum": 2,
+"stops": {
+    "swArea1": {"box": 2, "tank": 1,"rfr": 3, "hop": 0, 
+        "gons": 1, "flats": 1, "psgr": 0}
+        }
+    }
+}

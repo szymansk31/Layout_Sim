@@ -6,12 +6,10 @@ class mVars:       #short for mainVars
     numOpBusy = 0
     prms = {}
     geometry = {}
-    routes = {}
     carsAtLocs = {}
     carTypes = ["box", "tank", "rfr", "hop", "gons", "flats", "psgr"]
     numCarTyp = len(carTypes)
     wait = 1
-    waitTime = 100
     
     def __init__(self):
         pass

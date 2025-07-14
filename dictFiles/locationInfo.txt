@@ -1,5 +1,6 @@
 {
 "yard1": {
+    "type":"yard",
     "trackTots": {"swArea1": 0, "yard2": 0, "industries": 0},
     "tracks": {
         "swArea1"   :{"box": 4, "tank": 2, "rfr": 3, "hop": 8, 
@@ -10,13 +11,16 @@
         "gons": 0, "flats": 0, "psgr": 0}
     },
     "firstDispLoc": 1,
+    "firstDispAction": 1,
     "firstDispTrnTxt": 1,
     "locObjID": 0,
+    "actionObjID": 0,
     "locTrnTxtID": 0,
     "locTrnRectID": "yd1TrnRectID",
     "trains": []
 },
 "swArea1": {
+    "type":"yard",
     "trackTots": {"yard1": 0, "industries": 0},
     "tracks": {
         "yard1"   :{"box": 2, "tank": 2, "rfr": 3, "hop": 3, 
@@ -25,13 +29,16 @@
         "gons": 0, "flats": 0, "psgr": 0}
     },
     "firstDispLoc": 1,
+    "firstDispAction": 1,
     "firstDispTrnTxt": 1,
     "locObjID": 0,
+    "actionObjID": 0,
     "locTrnTxtID": 0,
     "locTrnRectID": "sw1TrnRectID",
     "trains": []
 },
 "yard2": {
+    "type":"yard",
     "trackTots": {"yard1": 0, "industries": 0},
     "tracks": {
         "yard1"    :{"box": 3, "tank": 2, "rfr": 5, "hop": 5, 
@@ -40,8 +47,10 @@
         "gons": 0, "flats": 0, "psgr": 0}
     },
     "firstDispLoc": 1,
+    "firstDispAction": 1,
     "firstDispTrnTxt": 1,
     "locObjID": 0,
+    "actionObjID": 0,
     "locTrnTxtID": 0,
     "locTrnRectID": "yd2TrnRectID",
     "trains": []

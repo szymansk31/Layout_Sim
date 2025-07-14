@@ -2,28 +2,25 @@ import numpy as np
 import tkinter as tk
 from mainVars import mVars
 from fileProc import readFiles
-from display import dispObj
+from display import dispItems
+from locProc import locProc
+from stateVars import locs, trainDB, routeCls
 np.set_printoptions(precision=2, suppress=True) 
 
 
 #=================================================
-class trainDB():
-    numTrains = 0
-    numConsists = 10
-
-    trains = {}
-    consists = {}
+class trainParams():
     trnHeight = 10
     trnLength = 20
     colorIDX = 0
     colorList = ["red", "green", "yellow", "orange", "purple1", "dodger blue", "deep pink",
                  "lawn green", "goldenrod", "OrangeRed2", "magenta2", "RoyalBlue1"]
+    trnStatusList = ["enRoute", "building", "terminate", "switch", "turn", 
+                     "dropPickup", "continue", "misc"]
 
 
     def __init__(self):
         #self.trainID = int
-        self.train = {}
-        self.consist = {}
         self.trnName = ""
         self.conName = ""
         self.files = readFiles()
@@ -39,7 +36,7 @@ class trainDB():
         print("color: ", cls.color)
         return cls.color
         
-    
+
     def dict2TrnNam(self, train):
         self.trnName = next(iter(train))
     def dict2ConNam(self, consist):
@@ -58,6 +55,7 @@ class trainDB():
         newTrain[newTrainNam]["consistNum"] = newConsistNum
         newTrain[newTrainNam]["trnObjTag"] = newTrainNam+"ObjTag"
         newTrain[newTrainNam]["trnLabelTag"] = newTrainNam+"LabelTag"
+        newTrain[newTrainNam]["startTime"] = mVars.time
     
         print("newTrain: dict: ", newTrain)
         trainDB.trains.update(newTrain)
@@ -96,69 +94,134 @@ class trnProc:
         self.timeEnRoute_Old = 0
         self.trainImage = any
         self.deltaT = 0.0
-        from gui import gui, dispSim
-        self.dispObj = dispSim()
-
-
+        self.trnActionList = [""]
 
     def trainCalcs(self, trainDict, trnName):
-        from locProc import locs
-        from gui import gui
-        disp = dispObj()
+        disp = dispItems()
 
         match trainDict["status"]:
             case "enroute":
                 variance = np.random.normal(loc=0, scale=0.25, size=1)
-                trainDict["timeEnRoute_Old"] = trainDict["timeEnRoute"]
                 routeNam = trainDict["currentLoc"]
-                routeStem = mVars.routes[routeNam]
+                routeStem = routeCls.routes[routeNam]
                 trainDict["deltaT"] = mVars.prms["timeStep"] + variance
                 
-                trainDict["timeEnRoute"] = trainDict["timeEnRoute_Old"] + trainDict["deltaT"]
-                transTime = mVars.routes[trainDict["currentLoc"]]["transTime"]
-                if mVars.prms["dbgTrnProc"]: print("trainCalcs: train: ", 
-                    trainDict["trainNum"], "route: ", routeNam, 
-                    ", origin: ", trainDict["origLoc"], ", dest:", trainDict["finalLoc"], 
-                    ", direction: ", trainDict["direction"], ", transTime:", transTime, 
-                    ", timeEnRoute: ", trainDict["timeEnRoute"], 
-                    ", variance: ", variance)
+                trainDict["timeEnRoute"] += trainDict["deltaT"]
+                transTime = routeCls.routes[trainDict["currentLoc"]]["transTime"]
+                if mVars.prms["dbgTrnProc"]: self.printTrnEnRoute(trainDict, routeNam, transTime, variance)
+                
                 disp.drawTrain(trnName)
-                if trainDict["timeEnRoute"] >= transTime:
-                    #if trainDict["currentLoc"] == trainDict["finalLoc"]:
-                        #trainDict["status"] = "dropPickup"
-                    trainDict["status"] = "terminate"
-                    trainDict["timeEnRoute"] = 0
-                    trainDict["currentLoc"] = trainDict["finalLoc"]
-                    disp.drawTrain(trnName)
-                    locs.locDat[trainDict["currentLoc"]]["trains"].append(trnName)
+                match trainDict["direction"]:
+                    case "east":
+                        if trainDict["xLoc"] >= routeCls.routes[routeNam]["x1"]:
+                            self.procTrnStop(trainDict, trnName)
+                    case "west":
+                        if trainDict["xLoc"] <= routeCls.routes[routeNam]["x0"]:
+                            self.procTrnStop(trainDict, trnName)
+                                                
                     
-                    print("train entering terminal: ", trnName, "trainDict: ", trainDict)
-                    try:
-                        index = routeStem["trains"].index(trnName)
-                    except:
-                        pass
-                    
-                    #remove train from that route
-                    routeStem["trains"].pop(index)
-                    #gui.C.delete(routeStem["trnLabelTag"])
-    
-                    mVars.numOpBusy -=1
-                    #trainObj.initTrain()
-                    
-            case "building":
-                pass
-            case "terminate":
-                pass
-            case "dropPickup":
-                if "sw" in trainDict["currentLoc"]:   
-                    pass
-                else: 
-                    pass
-                pass
             case "ready2Leave":
                 trainDict["status"] = "enroute"
                 disp.drawTrain(trnName)
                 pass
-            
-            
+            case "building":
+                #procssing done in locProc
+                pass
+        # the following are status states for a train
+        # they are also actions that a train can undergo in a 
+        # location/terminal/destination
+            case "terminate" | "continue":
+                #procssing done in locProc
+                pass
+            case "switch" | "turn" | "dropPickup":
+                #procssing done in locProc
+                pass
+            case "stop":
+                pass
+         
+    def printTrnEnRoute(self, trainDict, routeNam, transTime, variance):
+        if mVars.prms["dbgTrnProc"]: print("trainCalcs: train: ", 
+        trainDict["trainNum"], "route: ", routeNam, 
+        ", origin: ", trainDict["origLoc"], ", dest:", trainDict["finalLoc"], 
+        ", direction: ", trainDict["direction"], ", transTime:", transTime, 
+        ", timeEnRoute: ", trainDict["timeEnRoute"], 
+        ", variance: ", variance)
 
+            
+    def procTrnStop(self, trainDict, trnName):
+        disp = dispItems()
+        routeNam = trainDict["currentLoc"]
+        routeStem = routeCls.routes[routeNam]
+
+        stopLoc = trainDict["nextLoc"]
+        trainDict["currentLoc"] = stopLoc
+        print("train ", trnName, "entering terminal: ", stopLoc, "trainDict: ", trainDict)
+        
+        #actions are executed in terminals/yards/switch areas
+        #locProc takes care of these processes
+        match trainDict["stops"][stopLoc]["action"]:
+            case "terminate":
+                trainDict["status"] = "terminate"
+                trainDict["timeEnRoute"] = 0
+                pass
+            case "switch" | "turn": 
+                # switch town with road train
+                trainDict["status"] = "switch"
+                self.updateTrain4Stop(stopLoc, trainDict)
+
+                # turn has the same processing as switch,
+                # except train returns to origin after switching location
+                pass
+            case "dropPickup":
+                # no industry switching done, just car exchange
+                # switching typically done by yard crew at yards,
+                # train crew at other locations
+                trainDict["status"] = "dropPickup"
+                self.updateTrain4Stop(stopLoc, trainDict)
+                pass
+            case "continue":
+                #no action at this stop - continue to nextLoc
+                trainDict["status"] = "continue"
+                self.updateTrain4Stop(stopLoc, trainDict)
+
+        disp.drawTrain(trnName)
+        locs.locDat[trainDict["currentLoc"]]["trains"].append(trnName)
+        try:
+            index = routeStem["trains"].index(trnName)
+        except:
+            pass
+        
+        #remove train from that route
+        routeStem["trains"].pop(index)
+        #gui.C.delete(routeStem["trnLabelTag"])
+        mVars.numOpBusy -=1
+
+    def updateTrain4Stop(self, stopLoc, trainDict):
+        trainDict["numStops"] -=1
+        if trainDict["numStops"] == 0: 
+            trainDict["status"] = "terminate"
+            return
+        self.getNextLoc(stopLoc, trainDict)
+        pass
+    
+
+    def getNextLoc(self, stopLoc, trainDict):
+        #print("getNextLoc: stops: ", trainDict["stops"])
+        #stopVals = trainDict["stops"].values()
+        #index = stopVals.index(stopLoc)     # stop just completed processing
+        #trainDict["nextLoc"] = stopVals[index+1]    # next location loaded
+        
+        print("getNextLoc: trainDict: ", trainDict)
+
+        iterStops = iter(trainDict["stops"].keys())
+        nextLoc = None
+        for stop in iterStops:
+            if stop == stopLoc:
+                nextLoc = next(iterStops, None)
+        if nextLoc == None: 
+            print("no more locations")
+        else:
+            trainDict["nextLoc"] = nextLoc
+            print("getNextLoc: trainDict: ", trainDict)
+        return 
+            

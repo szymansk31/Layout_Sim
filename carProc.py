@@ -8,17 +8,6 @@ class carProc():
     def __init__(self):
         pass
     
-    def carInitInfo(self, files):
-        print("\nReading initial car info from file: ", files.carDictFile)
-        try: 
-            jsonFile = open (files.carDictFile, "r")
-            carDict = json.load(jsonFile)
-            jsonFile.close()
-        except FileNotFoundError:
-            print("\njson file does not exist; returning")
-            return
-        #print("carDict: ", carDict)
-        return carDict
     
     def procCarInfo(self, carDict):
         for loc in mVars.geometry:

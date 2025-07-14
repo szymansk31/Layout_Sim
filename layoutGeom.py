@@ -1,7 +1,7 @@
-import numpy as np
 from mainVars import *
-from trainProc import trainDB
- 
+from trainProc import trainParams
+from gui import gui    
+
             
 #=================================================
 class geom():
@@ -22,8 +22,11 @@ class routeGeom():
     
     def initRoutes(self, geometry, guiDict):
         idx = 1
-        routes = {}
-        from gui import gui
+        newRoute = {}
+        from fileProc import readFiles
+        files = readFiles()
+        print("\ninitializing route dicts: ")
+
         for loc in geometry:
             destIDX = 0
             for dest in geometry[loc]["adjLocNames"]:
@@ -37,22 +40,30 @@ class routeGeom():
                 else: 
                     rtObj = dest
                     leftObj = loc
-                routes[routeName] = {"leftObj": leftObj, "rtObj": rtObj, 
-                                        "transTime": transTime, "trnLabelTag": routeName+"trnLblTag", "trains":[]}
+                    
+                tmpRoute = files.readFile("routeFile")
+     
+                newRoute[routeName] = tmpRoute.pop("routeProto")
+                newRoute[routeName]["leftObj"] = leftObj
+                newRoute[routeName]["rtObj"] = rtObj
+                newRoute[routeName]["transTime"] = transTime
+                newRoute[routeName]["trnLabelTag"] = routeName+"trnLblTag"
+                newRoute[routeName]["trains"] = []
+
                 # route lines are drawn west-to-east; train locs follow
 
-                routes[routeName].update(self.routeLine(routes[routeName], routeName, guiDict))
-                routes[routeName].update(self.trnsOnRoutes(routes[routeName], routeName, guiDict))
+                newRoute[routeName].update(self.routeLine(newRoute[routeName], routeName, guiDict))
+                newRoute[routeName].update(self.trnsOnRoutes(newRoute[routeName], routeName, guiDict))
 
-                if mVars.prms["dbgGeom"]: print("\ninitRoutes: route[",routeName,"] = ", routes[routeName])
+                if mVars.prms["dbgGeom"]: print("\ninitRoutes: route[",routeName,"] = ", newRoute[routeName])
                 rtList = geometry[loc].get("routes")
                 rtList.append(routeName)
                 geometry[loc]["routes"] = rtList
                 if mVars.prms["dbgGeom"]: print("\ninitRoutes: geometry for loc: ", loc, "is", geometry[loc])
                 destIDX +=1
                 idx +=1
-        if mVars.prms["dbgGeom"]: print("\nroutes: ", routes)
-        return routes
+        if mVars.prms["dbgGeom"]: print("\nnewRoutes: ", newRoute)
+        return newRoute
 
     def trnsOnRoutes(self, routeDict, rtNam, guiDict):
         leftObj = guiDict[guiDict[rtNam]["leftObj"]]
@@ -62,8 +73,8 @@ class routeGeom():
         distance = rtObj["x0"] - leftObj["x1"]
         xTrnTxt = (leftObj["x1"] + rtObj["x0"])*0.5
     
-        if mVars.prms["dbgGeom"]: print("trnsOnRoutes: trnLength: ", 
-                trainDB.trnLength, "rtObj[x0]", rtObj["x0"])
+        #if mVars.prms["dbgGeom"]: print("trnsOnRoutes: trnLength: ", 
+        #        trainParams.trnLength, "rtObj[x0]", rtObj["x0"])
 
         routeDictOut = {
             "yTrn": yLoc - height*0.25,

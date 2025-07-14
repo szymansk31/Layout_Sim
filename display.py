@@ -1,10 +1,10 @@
-from shared import locs
+
 from mainVars import mVars
 from gui import gui
-from enum import Enum
+from stateVars import locs, trainDB, routeCls
 
 
-class dispObj():
+class dispItems():
 
     def __init__(self):
         pass
@@ -26,9 +26,23 @@ class dispObj():
         gui.C.itemconfigure(locStem["locObjID"], text=text, font=("Arial", 8))
         locStem["firstDispLoc"] = 0
         pass
+    
+    def dispActionDat(self, loc, action, ydTrainNam):
+        text = ''
+        locStem = locs.locDat[loc]
+        x = (gui.guiDict[loc]["x0"] + gui.guiDict[loc]["x1"])*0.5
+        y = gui.guiDict[loc]["y0"] + 45
+
+        text = "action: " + action + " " + ydTrainNam
+        if locStem["firstDispAction"]:
+            locStem["actionObjID"] = \
+                gui.C.create_text(x, y, text=text, font=("Arial", 8))
+                
+        gui.C.itemconfigure(locStem["actionObjID"], text=text, font=("Arial", 8))
+        locStem["firstDispAction"] = 0
+        pass
 
     def dispTrnInLoc(self, loc, ydTrains):
-        from trainProc import trainDB
         locStem = locs.locDat[loc]
         trainStem = trainDB.trains
         text = loc + "\n"
@@ -47,15 +61,15 @@ class dispObj():
             numTrns +=1
         print("dispTrnInLoc: ydTrains: ", ydTrains, " text: ", text)
         x = (gui.guiDict[loc]["x0"] + gui.guiDict[loc]["x1"])*0.5
-        y = gui.guiDict[loc]["y0"] + 250
+        y = gui.guiDict[loc]["y0"] + 300
         if locStem["firstDispTrnTxt"]:
-            locStem["locTrnTxtID"] = gui.C.create_text(x, y, text=text, width=380 , font=("Arial", 8))
+            locStem["locTrnTxtID"] = \
+                gui.C.create_text(x, y, text=text, width=380 , font=("Arial", 8))
             
         gui.C.itemconfigure(locStem["locTrnTxtID"], text=text, font=("Arial", 8))
         self.dispTrnRecs(locStem, loc, ydTrains, numTrns)
         
     def dispTrnRecs(self, locStem, loc, ydtrains, numTrns):
-        from trainProc import trainDB
         
         dispList = {
             "actions": {
@@ -85,7 +99,7 @@ class dispObj():
             actionStem = dispList["actions"][action]
             y = actionStem["y"]
             if locStem["firstDispTrnTxt"]:
-                gui.C.create_text(xtrn-50, y+6, text=action, 
+                gui.C.create_text(xtrn-70, y+6, text=action, 
                         font=("Arial", 8))
             for train in actionStem["trains"]:
                 trainNum = train[5:]
@@ -100,8 +114,6 @@ class dispObj():
 
             
     def drawTrain(self, train):
-        from trainProc import trainDB
-        from gui import gui
 
         trainStem = trainDB.trains[train]
         trainLoc = trainStem["currentLoc"]
@@ -110,7 +122,7 @@ class dispObj():
         trnHt = gui.guiDict["trainData"]["height"]
         match trainLoc:
             case trainLoc if "route" in trainLoc:
-                routeStem = mVars.routes[trainLoc]
+                routeStem = routeCls.routes[trainLoc]
                 yTrn = routeStem["yTrn"]
                 xTrnTxt = routeStem["xTrnTxt"]
                 yTrnTxt = routeStem["yTrnTxt"]
@@ -120,7 +132,6 @@ class dispObj():
                 trnLabels = ""
                 trnLabels = ' '.join(routeStem["trains"])
 
-                print("draw train: trnLabels: ", trnLabels)
                 print("draw train: ", train, ", timeEnRoute: ", timeEnRoute, " deltaT, distance/time: ", trainStem["deltaT"], 
                         routeStem["distPerTime"])
                 deltaX = int(trainStem["deltaT"]*velocity)
@@ -136,8 +147,8 @@ class dispObj():
                         font=("Arial", 8), tags=trainStem["trnObjTag"])
 
                     #print("train Rect obj: ", trainStem["trnObjTag"])
-                    gui.C.create_text(xTrnTxt, yTrnTxt, text=trnLabels, 
-                        anchor="nw", fill=trainStem["color"], tags=routeStem["trnLabelTag"])
+                    #gui.C.create_text(xTrnTxt, yTrnTxt, text=trnLabels, 
+                    #    anchor="nw", fill=trainStem["color"], tags=routeStem["trnLabelTag"])
                     trainStem["firstDispTrn"] = 0
                     
                 else:
@@ -146,8 +157,8 @@ class dispObj():
                     print("train Rect obj: ", trainStem["trnObjTag"])
                     
                     gui.C.move(trainStem["trnObjTag"], deltaX, 0)
-                    gui.C.itemconfigure(routeStem["trnLabelTag"], text=trnLabels, 
-                        anchor="nw", fill=trainStem["color"])
+                    #gui.C.itemconfigure(routeStem["trnLabelTag"], text=trnLabels, 
+                    #    anchor="nw", fill=trainStem["color"])
                     
                 print("draw train: ", train, ", coordinates after move: ", trainStem["xLoc"], yTrn, trainStem["xLoc"]+trnLen, yTrn+trnHt)
                 print("distance via timeEnRoute: ", timeEnRoute*velocity)
