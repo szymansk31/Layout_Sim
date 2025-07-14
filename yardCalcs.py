@@ -72,8 +72,8 @@ class ydCalcs():
             case "brkDnTrn":
                 #self.brkDownTrain(loc)
                 if trainDB.ydTrains["brkDnTrn"]:
-                    typeCount, ydTrainNam = self.classObj.train2Track(loc, "brkDnTrn")
-                    if typeCount == 0:
+                    availCars, ydTrainNam = self.classObj.train2Track(loc, "brkDnTrn")
+                    if availCars == 0:
                         # train no longer has cars
                         # remove train name from trainDB.ydTrains and locs.locData
                         self.locProcObj.rmTrnFromLoc("brkDnTrn", loc, ydTrainNam)
@@ -111,8 +111,9 @@ class ydCalcs():
             
         # yard has a train already building; add cars to it
         # single train is allowed to build in a yard
-        else:         
-            typeCount, ydTrainNam = self.classObj.track2Train(loc, "buildTrain")
+        else:    
+            ydTrainNam = ''.join(trainDB.ydTrains["buildTrain"])     
+            availCars, trainDest = self.classObj.track2Train(loc, ydTrainNam, "buildTrain")
             trainStem = trainDB.trains[ydTrainNam]
 
             if trainStem["numCars"] >= mVars.prms["trainSize"]*0.7:
@@ -162,16 +163,27 @@ class ydCalcs():
     def swTrain(self, loc):
         # remove cars from train and save on tracks
         # until all cars removed for this stop 
-        typeCount, ydTrainNam = self.classObj.train2Track(loc, "swTrain")
-
+        ready2Pickup = 0
+        availCars, ydTrainNam = self.classObj.train2Track(loc, "swTrain")
+        if availCars == 0:
+            trainStem = trainDB.trains[ydTrainNam]
+            trainStem["stops"].pop(loc)
+            consistNum = trainStem["consistNum"]
+            consistNam = "consist"+str(consistNum)
+            trainDB.consists[consistNam]["stops"].pop(loc)
+            if mVars.prms["dbgYdProc"]: print("swTrain: train:", ydTrainNam, 
+                " trainDict: ", trainStem)
+            ready2Pickup = 1
         # add cars to train until train is
         # 70% or more of max size 
-        typeCount, ydTrainNam = self.classObj.track2Train(loc, "swTrain")
-        if typeCount == 0:
-            # train no longer has pickups or drops
-            # start train to nextLoc, if there are more stops and
-            # remove train name from locs.locData
-            self.locProcObj.startTrain("swTrain", loc, ydTrainNam)
+        if ready2Pickup:
+            availCars, trainDest = self.classObj.track2Train(loc, ydTrainNam, "swTrain")
+            if trainDB.trains[ydTrainNam]["numCars"] >= mVars.prms["trainSize"]*0.7:
+                # train has reached max size
+                # train no longer has pickups or drops
+                # start train to nextLoc, if there are more stops and
+                # remove train name from locs.locData
+                self.locProcObj.startTrain("swTrain", loc, ydTrainNam)
         
         pass
     def servIndus(self):

@@ -33,7 +33,7 @@ class swArea():
                     pass
                 case "misc":
                     waitIdx = 0
-                    while waitIdx < mVars.waitTime:
+                    while waitIdx < mVars.prms["miscWaitTime"]:
                         waitIdx +=1
                         pass
 
@@ -47,12 +47,12 @@ class swArea():
             self.thisConsist = trainDB.consists[consistNam]["stops"][loc]
             if mVars.prms["dbgYdProc"]: print("consist core: ", self.thisConsist)
             
-            carSel, typeCount = carProcObj.carTypeSel(self.thisConsist)
+            carSel, availCars = carProcObj.carTypeSel(self.thisConsist)
             if dbgLocal: print("swArea: carSel: ", carSel)
-            #if typeCount <= 0: return
+            #if availCars <= 0: return
 
             idx = 0
-            while ((idx < rate) and (typeCount > 0)):
+            while ((idx < rate) and (availCars > 0)):
                 carClassType = carProcObj.randomCar(carSel)
                 idx +=1
             # remove cars from consist and assign to destination trackTots
@@ -61,11 +61,11 @@ class swArea():
                     destTrack = self.randomTrack()
                     locs.locDat[loc]["trackTots"][destTrack] +=1
                     locs.locDat[loc]["tracks"][destTrack][carClassType] +=1
-                    typeCount -=1
+                    availCars -=1
             
-            if dbgLocal: print("brkDownTrain: after while loop: typeCount = ", typeCount, ", ydTrainNam = ", ydtrainNam)
+            if dbgLocal: print("brkDownTrain: after while loop: availCars = ", availCars, ", ydTrainNam = ", ydtrainNam)
             #if ydtrainNam in self.ydTrains["brkDnTrn"]: print("found ydtrainNam")
-            if typeCount == 0:
+            if availCars == 0:
                 #remove train name from ydTrains and locs.locData
                 self.rmTrnFromLoc("brkDnTrn", loc, ydtrainNam)
                 trainDB.trains.pop(ydtrainNam)
@@ -172,10 +172,10 @@ class swArea():
                 "\ntrack contents: ", thisTrack)
         
         if locStem["trackTots"][trainDest] == 0: return
-        carSel, typeCount = carProcObj.carTypeSel(thisTrack)
+        carSel, availCars = carProcObj.carTypeSel(thisTrack)
         carClassType = carProcObj.randomCar(carSel)
         carsClassed = 0
-        while ((carsClassed < rate) and (typeCount > 0)):
+        while ((carsClassed < rate) and (availCars > 0)):
 
             carsClassed +=1
             if thisTrack[carClassType] >0:
@@ -183,7 +183,7 @@ class swArea():
                 locStem["trackTots"][trainDest] -=1
                 self.bldConsist[carClassType] +=1
                 trainStem["numCars"] +=1
-                typeCount -=1
+                availCars -=1
 
         try:
             trainDB.consists[consistNum]["stops"][loc] = self.bldConsist

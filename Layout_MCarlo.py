@@ -2,9 +2,10 @@
 import numpy as np
 import tkinter as tk
 from tkinter import ttk
-from stateVars import locs, trainDB, routeCls
+from stateVars import locs, trainDB, routeCls, stVarSaves
 from trainProc import trainParams, trnProc
 trnProcObj = trnProc()
+stVarObj = stVarSaves()
          
 #=================================================
 def main_loop():
@@ -14,8 +15,14 @@ def main_loop():
         print("\nmVars.time: ", mVars.time)
         if mVars.wait:
             print("waiting....")
-            wait_button.wait_variable(var)
+            step_button.wait_variable(var)
             var.set(0)
+        if mVars.stepBackTrue:
+            var.set(0)
+            step_button.wait_variable(var)
+            mVars.stepBackTrue = 0
+            var.set(0)
+            
         for train in trainDB.trains:
             printTrainInfo(train)
             if mVars.time > trainDB.trains[train]["startTime"]:
@@ -26,6 +33,7 @@ def main_loop():
                 loc)
 
             locProcObj.LocCalcs(locs.locDat, loc)
+        stVarObj.saveStVars()
         mVars.time +=1
 
 def printTrainInfo(train):
@@ -43,6 +51,14 @@ def printTrainInfo(train):
 def clrWait():
     mVars.wait = 0
             
+def stepBack():
+    print("step back from ", mVars.time, " to", mVars.time-1)
+    if mVars.stepBackTrue != 1:
+        mVars.stepBackTrue = 1
+        var.set(1)
+    mVars.time -=1
+    print("waiting....")
+    pass
 
 #########################################################
 # start of code
@@ -80,6 +96,8 @@ from startingTrains import trainFromFile
 startTrainObj = trainFromFile()
 startTrainObj.readTrain()
 
+print("consists: ", trainDB.consists)
+
 # from gui.py
 dispObj = dispSim()
 dispObj.drawLayout(gui.guiDict)
@@ -95,15 +113,18 @@ var = tk.IntVar()
 mVars.wait = 1
 mainLoop = tk.Button(gui.C, text="Start Sim", 
         command=lambda: main_loop())
-wait_button = tk.Button(gui.C, text="Step", 
+step_button = tk.Button(gui.C, text="Step", 
         command=lambda: var.set(1))
 no_wait_button = tk.Button(gui.C, text="skip wait", 
         command=lambda: clrWait())
+step_back_button = tk.Button(gui.C, text="Step Back", 
+        command=lambda: stepBack())
 mainLoop.pack()
 #button1.configure(width = 10, activebackground = "#33B5E5", relief = FLAT)
 button_window = gui.C.create_window(10, 10, anchor='nw', window=mainLoop)
-button_window = gui.C.create_window(10, 60, anchor='nw', window=wait_button)
-button_window = gui.C.create_window(10, 110, anchor='nw', window=no_wait_button)
+button_window = gui.C.create_window(10, 60, anchor='nw', window=step_button)
+button_window = gui.C.create_window(10, 110, anchor='nw', window=step_back_button)
+button_window = gui.C.create_window(10, 160, anchor='nw', window=no_wait_button)
 
 #gui.editWindow.after(300, main_loop())
 

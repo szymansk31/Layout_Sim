@@ -152,10 +152,14 @@ class trnProc:
         disp = dispItems()
         routeNam = trainDict["currentLoc"]
         routeStem = routeCls.routes[routeNam]
+        consistNum = trainDict["consistNum"]
+        consistNam = "consist"+str(consistNum)
 
         stopLoc = trainDict["nextLoc"]
         trainDict["currentLoc"] = stopLoc
-        print("train ", trnName, "entering terminal: ", stopLoc, "trainDict: ", trainDict)
+        print("train: ", trnName, "entering terminal: ", stopLoc, "trainDict: ", trainDict)
+        print("train: ", trnName, "consistNum: ", consistNum, 
+              "contents: ", trainDB.consists[consistNam])
         
         #actions are executed in terminals/yards/switch areas
         #locProc takes care of these processes
