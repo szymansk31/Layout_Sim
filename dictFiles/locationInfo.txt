@@ -11,8 +11,10 @@
         "gons": 0, "flats": 0, "psgr": 0}
     },
     "firstDispLoc": 1,
+    "firstDispAction": 1,
     "firstDispTrnTxt": 1,
     "locObjID": 0,
+    "actionObjID": 0,
     "locTrnTxtID": 0,
     "locTrnRectID": "yd1TrnRectID",
     "trains": []
@@ -27,8 +29,10 @@
         "gons": 0, "flats": 0, "psgr": 0}
     },
     "firstDispLoc": 1,
+    "firstDispAction": 1,
     "firstDispTrnTxt": 1,
     "locObjID": 0,
+    "actionObjID": 0,
     "locTrnTxtID": 0,
     "locTrnRectID": "sw1TrnRectID",
     "trains": []
@@ -43,8 +47,10 @@
         "gons": 0, "flats": 0, "psgr": 0}
     },
     "firstDispLoc": 1,
+    "firstDispAction": 1,
     "firstDispTrnTxt": 1,
     "locObjID": 0,
+    "actionObjID": 0,
     "locTrnTxtID": 0,
     "locTrnRectID": "yd2TrnRectID",
     "trains": []

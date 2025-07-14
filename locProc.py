@@ -2,7 +2,7 @@ import random
 import numpy as np
 from mainVars import mVars
 from stateVars import locs, trainDB, routeCls
-from display import dispObj
+from display import dispItems
 from yardCalcs import ydCalcs
 from swCalcs import swArea
 from gui import gui
@@ -43,7 +43,7 @@ class locProc():
         return thisLocDests
 
     def LocCalcs(self, thisLoc, loc):
-        disp = dispObj()
+        disp = dispItems()
         ydCalcObj = ydCalcs()
         swAreaObj = swArea()
 
@@ -54,7 +54,6 @@ class locProc():
         self.analyzeTrains(loc)
         if mVars.prms["dbgYdProc"]: print("trains analyzed: trainDB.ydTrains: ", trainDB.ydTrains)
 
-        disp.dispLocDat(loc)
         match thisLoc[loc]["type"]:
             case "yard":
                 ydCalcObj.yardMaster(thisLoc, loc)

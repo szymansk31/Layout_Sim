@@ -20,6 +20,9 @@ class ydCalcs():
         self.locProcObj = locProc()
         from classCars import classCars
         self.classObj = classCars()
+        from display import dispItems
+        self.dispObj = dispItems()
+        self.startMisc = 0
 
     class Action_e(Enum):
         BRKDNTRN     = 0
@@ -59,6 +62,12 @@ class ydCalcs():
         choice = ''.join(choice)
         if mVars.prms["dbgYdProc"]: print("\nchoice: ", choice)
         
+        self.dispObj.dispLocDat(loc)
+        if self.startMisc:
+            while self.startMisc < endMisc:
+                self.startMisc +=1
+            self.startMisc = 0
+
         match choice:
             case "brkDnTrn":
                 #self.brkDownTrain(loc)
@@ -85,10 +94,9 @@ class ydCalcs():
             case "servIndus":
                 pass
             case "misc":
-                waitIdx = 0
-                while waitIdx < mVars.waitTime:
-                    waitIdx +=1
-                    pass
+                self.startMisc = mVars.time
+                endMisc = self.startMisc + mVars.prms["miscWaitTime"]
+                pass
 
 
     def buildTrain(self, loc):

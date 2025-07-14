@@ -5,12 +5,6 @@
 "stops": {
     "trackTots": {"box": 3, "tank": 2,"rfr": 0, "hop": 3, 
         "gons": 0, "flats": 1, "psgr": 0}
-},
-"numBox": 0,
-"numTank": 0,
-"numReefer": 0,
-"numHopper": 0,
-"numGon": 0,
-"numFlat": 0,
-"numPsgr": 0}
+        }
+    }
 }

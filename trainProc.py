@@ -2,7 +2,7 @@ import numpy as np
 import tkinter as tk
 from mainVars import mVars
 from fileProc import readFiles
-from display import dispObj
+from display import dispItems
 from locProc import locProc
 from stateVars import locs, trainDB, routeCls
 np.set_printoptions(precision=2, suppress=True) 
@@ -97,7 +97,7 @@ class trnProc:
         self.trnActionList = [""]
 
     def trainCalcs(self, trainDict, trnName):
-        disp = dispObj()
+        disp = dispItems()
 
         match trainDict["status"]:
             case "enroute":
@@ -149,7 +149,7 @@ class trnProc:
 
             
     def procTrnStop(self, trainDict, trnName):
-        disp = dispObj()
+        disp = dispItems()
         routeNam = trainDict["currentLoc"]
         routeStem = routeCls.routes[routeNam]
 

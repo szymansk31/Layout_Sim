@@ -4,7 +4,7 @@ from gui import gui
 from stateVars import locs, trainDB, routeCls
 
 
-class dispObj():
+class dispItems():
 
     def __init__(self):
         pass
@@ -25,6 +25,21 @@ class dispObj():
                 
         gui.C.itemconfigure(locStem["locObjID"], text=text, font=("Arial", 8))
         locStem["firstDispLoc"] = 0
+        pass
+    
+    def dispActionDat(self, loc, action, ydTrainNam):
+        text = ''
+        locStem = locs.locDat[loc]
+        x = (gui.guiDict[loc]["x0"] + gui.guiDict[loc]["x1"])*0.5
+        y = gui.guiDict[loc]["y0"] + 45
+
+        text = "action: " + action + " " + ydTrainNam
+        if locStem["firstDispAction"]:
+            locStem["actionObjID"] = \
+                gui.C.create_text(x, y, text=text, font=("Arial", 8))
+                
+        gui.C.itemconfigure(locStem["actionObjID"], text=text, font=("Arial", 8))
+        locStem["firstDispAction"] = 0
         pass
 
     def dispTrnInLoc(self, loc, ydTrains):
@@ -48,7 +63,8 @@ class dispObj():
         x = (gui.guiDict[loc]["x0"] + gui.guiDict[loc]["x1"])*0.5
         y = gui.guiDict[loc]["y0"] + 300
         if locStem["firstDispTrnTxt"]:
-            locStem["locTrnTxtID"] = gui.C.create_text(x, y, text=text, width=380 , font=("Arial", 8))
+            locStem["locTrnTxtID"] = \
+                gui.C.create_text(x, y, text=text, width=380 , font=("Arial", 8))
             
         gui.C.itemconfigure(locStem["locTrnTxtID"], text=text, font=("Arial", 8))
         self.dispTrnRecs(locStem, loc, ydTrains, numTrns)

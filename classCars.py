@@ -5,9 +5,12 @@ from mainVars import mVars
 from stateVars import locs, trainDB, routeCls
 from locProc import locProc
 from carProc import carProc
+from display import dispItems
 from yardCalcs import ydCalcs
 locProcObj = locProc()
 carProcObj = carProc()
+dispObj    = dispItems()
+
 
 dbgLocal = 1
 
@@ -15,7 +18,7 @@ class classCars():
     
     def __init__(self):
         pass
-    
+        
     
     def randomTrack(self):
         return ''.join(random.choice(self.thisLocDests))
@@ -50,6 +53,7 @@ class classCars():
     def track2Train(self, loc, action):
         # initialize common params
         self.initClassPrms(loc, trainDB.ydTrains, action=action)
+        dispObj.dispActionDat(loc, action, self.ydTrainNam)
         # these two variables will depend on whether train or 
         # yard tracks are gettting cars
         trainDest = self.trainStem["nextLoc"]
@@ -58,11 +62,12 @@ class classCars():
         
         carSel, typeCount = carProcObj.carTypeSel(thisTrack)
 
+        if typeCount <= 0: return typeCount, self.ydTrainNam
         if mVars.prms["dbgYdProc"]:
             self.printClassInfo(self.track2Train.__name__, numCars, 
                                 thisTrack, trainDest)
         
-        if self.locStem["trackTots"][trainDest] == 0: return
+        #if self.locStem["trackTots"][trainDest] == 0: return
         
         carsClassed = 0
         while ((carsClassed < self.rate) and (typeCount > 0)):
@@ -90,11 +95,13 @@ class classCars():
     def train2Track(self, loc, action):
         # initialize common params
         self.initClassPrms(loc, trainDB.ydTrains, action=action)
-        
+        dispObj.dispActionDat(loc, action, self.ydTrainNam)
+
         #if mVars.prms["dbgYdProc"]:
         #    self.printClassInfo(self.train2Track.__name__, numCars, 
         #                        thisTrack, trainDest)
         carSel, typeCount = carProcObj.carTypeSel(self.consistStem[loc])
+        if typeCount <= 0: return typeCount, self.ydTrainNam
 
         if mVars.prms["dbgYdProc"]: print("brkDownTrain: ", self.ydTrainNam, "consist: ", trainDB.consists[self.consistNam])
 
