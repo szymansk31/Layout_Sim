@@ -3,7 +3,6 @@ from enum import Enum
 import numpy as np
 from mainVars import mVars
 from stateVars import locs, trainDB, routeCls
-from gui import gui
 
 np.set_printoptions(precision=2, suppress=True) 
 
@@ -22,7 +21,9 @@ class ydCalcs():
         self.classObj = classCars()
         from display import dispItems
         self.dispObj = dispItems()
+        
         self.startMisc = 0
+        self.ready2Pickup = 0
 
     class Action_e(Enum):
         BRKDNTRN     = 0
@@ -70,20 +71,7 @@ class ydCalcs():
 
         match choice:
             case "brkDnTrn":
-                #self.brkDownTrain(loc)
-                if trainDB.ydTrains["brkDnTrn"]:
-                    availCars, ydTrainNam = self.classObj.train2Track(loc, "brkDnTrn")
-                    if availCars == 0:
-                        # train no longer has cars
-                        # remove train name from trainDB.ydTrains and locs.locData
-                        self.locProcObj.rmTrnFromLoc("brkDnTrn", loc, ydTrainNam)
-                        trainDB.trains.pop(ydTrainNam)
-
-                if mVars.prms["dbgYdProc"]: 
-                    #if dbgLocal: print("after brkDnTrn: consist: ", 
-                    #self.thisConsist)
-                    #if dbgLocal: print("this location trackTots: ", locs.locDat[loc]["trackTots"])
-                    pass
+                self.brkDownTrain(loc)
             case "swTrain":
                 if trainDB.ydTrains["swTrain"]:
                     self.swTrain(loc)
@@ -98,9 +86,27 @@ class ydCalcs():
                 endMisc = self.startMisc + mVars.prms["miscWaitTime"]
                 pass
 
+    def brkDownTrain(self, loc):
+        if trainDB.ydTrains["brkDnTrn"]:
+            ydTrainNam = random.choice(trainDB.ydTrains.get("brkDnTrn"))
+            print("ydtrainNam: ", ydTrainNam)
+            self.dispObj.dispActionDat(loc, "brkDnTrn", ydTrainNam)
 
+            availCars = self.classObj.train2Track(loc, ydTrainNam)
+            if availCars == 0:
+                # train no longer has cars
+                # remove train name from trainDB.ydTrains and locs.locData
+                self.locProcObj.rmTrnFromLoc("brkDnTrn", loc, ydTrainNam)
+                trainDB.trains.pop(ydTrainNam)
+        if mVars.prms["dbgYdProc"]: 
+            #if dbgLocal: print("after brkDnTrn: consist: ", 
+            #self.thisConsist)
+            #if dbgLocal: print("this location trackTots: ", locs.locDat[loc]["trackTots"])
+            pass
+
+
+        
     def buildTrain(self, loc):
-        numCarsAvail = 0
         #if mVars.prms["dbgYdProc"]: print("buildTrain: number of cars available: ", numCarsAvail)
         
         # yard has no train undergoing build
@@ -113,7 +119,7 @@ class ydCalcs():
         # single train is allowed to build in a yard
         else:    
             ydTrainNam = ''.join(trainDB.ydTrains["buildTrain"])     
-            availCars, trainDest = self.classObj.track2Train(loc, ydTrainNam, "buildTrain")
+            availCars, trainDest = self.classObj.track2Train(loc, ydTrainNam)
             trainStem = trainDB.trains[ydTrainNam]
 
             if trainStem["numCars"] >= mVars.prms["trainSize"]*0.7:
@@ -163,22 +169,34 @@ class ydCalcs():
     def swTrain(self, loc):
         # remove cars from train and save on tracks
         # until all cars removed for this stop 
-        ready2Pickup = 0
-        availCars, ydTrainNam = self.classObj.train2Track(loc, "swTrain")
-        if availCars == 0:
-            trainStem = trainDB.trains[ydTrainNam]
-            trainStem["stops"].pop(loc)
-            consistNum = trainStem["consistNum"]
-            consistNam = "consist"+str(consistNum)
-            trainDB.consists[consistNam]["stops"].pop(loc)
-            if mVars.prms["dbgYdProc"]: print("swTrain: train:", ydTrainNam, 
-                " trainDict: ", trainStem)
-            ready2Pickup = 1
-        # add cars to train until train is
-        # 70% or more of max size 
-        if ready2Pickup:
-            availCars, trainDest = self.classObj.track2Train(loc, ydTrainNam, "swTrain")
-            if trainDB.trains[ydTrainNam]["numCars"] >= mVars.prms["trainSize"]*0.7:
+        
+        # find out what train is being switched or add new one
+        locStem = locs.locDat[loc]["trn4Action"]
+        if "swTrain"not in locStem:
+            # no trains are undergoing swTrain
+            ydTrainNam = random.choice(trainDB.ydTrains.get("swTrain"))
+            locStem.append({"swTrain": ydTrainNam})
+        else:
+            ydTrainNam = locStem["swTrain"]
+            
+        print("ydtrainNam: ", ydTrainNam)
+        self.dispObj.dispActionDat(loc, "swTrain", ydTrainNam)
+
+        if self.ready2Pickup == 0:
+            availCars = self.classObj.train2Track(loc, ydTrainNam)
+            if availCars == 0:
+                trainStem = trainDB.trains[ydTrainNam]
+                trainStem["stops"].pop(loc)
+                consistNum = trainStem["consistNum"]
+                consistNam = "consist"+str(consistNum)
+                trainDB.consists[consistNam]["stops"].pop(loc)
+                if mVars.prms["dbgYdProc"]: print("swTrain: train:", ydTrainNam, 
+                    " trainDict: ", trainStem)
+                self.ready2Pickup = 1
+        # add cars to train until train is max size
+        if self.ready2Pickup:
+            availCars, trainDest = self.classObj.track2Train(loc, ydTrainNam)
+            if trainDB.trains[ydTrainNam]["numCars"] >= mVars.prms["trainSize"]*1.2:
                 # train has reached max size
                 # train no longer has pickups or drops
                 # start train to nextLoc, if there are more stops and

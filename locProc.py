@@ -14,7 +14,6 @@ dbgLocal = 1
 class locProc():
     
     def __init__(self):
-        #self.locProcObj = locProc()
         pass
     
     #classmethod:

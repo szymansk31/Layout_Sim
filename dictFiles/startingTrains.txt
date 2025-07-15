@@ -9,7 +9,7 @@
 "currentLoc": "route2",
 "nextLoc": "yard1",
 "direction": "east",
-"startTime": 5, 
+"startTime": 3, 
 "xTrnInit": 400,
 "xLoc": 400,
 "firstDispTrn": 1,

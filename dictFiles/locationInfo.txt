@@ -17,7 +17,8 @@
     "actionObjID": 0,
     "locTrnTxtID": 0,
     "locTrnRectID": "yd1TrnRectID",
-    "trains": []
+    "trains": [],
+    "trn4Action":[]
 },
 "swArea1": {
     "type":"yard",
@@ -35,7 +36,8 @@
     "actionObjID": 0,
     "locTrnTxtID": 0,
     "locTrnRectID": "sw1TrnRectID",
-    "trains": []
+    "trains": [],
+    "trn4Action":[]
 },
 "yard2": {
     "type":"yard",
@@ -53,6 +55,7 @@
     "actionObjID": 0,
     "locTrnTxtID": 0,
     "locTrnRectID": "yd2TrnRectID",
-    "trains": []
+    "trains": [],
+    "trn4Action":[]
 }
 }
