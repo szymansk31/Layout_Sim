@@ -8,12 +8,14 @@ np.set_printoptions(precision=2, suppress=True)
 
 dbgLocal = 1          
 class ydCalcs():
-    
+    startMisc = 0
+    ready2Pickup = 0
+
     def __init__(self):
         self.bldConsist = {}
         self.actionList = ["brkDnTrn", "swTrain", "buildTrain", "servIndus", "misc"]
         #self.weights = [0.18, 0.18, 0.18, 0.18, 0.1]
-        self.weights = [0.3, 0.3, 0.3, 0, 0.1]
+        self.weights = [0.3, 0.3, 0.3, 0, 0]
         #self.weights = [0, 0, 0, 0, 0]
         from locProc import locProc
         self.locProcObj = locProc()
@@ -22,8 +24,6 @@ class ydCalcs():
         from display import dispItems
         self.dispObj = dispItems()
         
-        self.startMisc = 0
-        self.ready2Pickup = 0
 
     class Action_e(Enum):
         BRKDNTRN     = 0
@@ -64,10 +64,11 @@ class ydCalcs():
         if mVars.prms["dbgYdProc"]: print("\nchoice: ", choice)
         
         self.dispObj.dispLocDat(loc)
-        if self.startMisc:
-            while self.startMisc < endMisc:
-                self.startMisc +=1
-            self.startMisc = 0
+        
+        if locs.locDat[loc]["startMisc"]:
+            while locs.locDat[loc]["startMisc"] < endMisc:
+                locs.locDat[loc]["startMisc"] +=1
+            locs.locDat[loc]["startMisc"] = 0
 
         match choice:
             case "brkDnTrn":
@@ -82,8 +83,8 @@ class ydCalcs():
             case "servIndus":
                 pass
             case "misc":
-                self.startMisc = mVars.time
-                endMisc = self.startMisc + mVars.prms["miscWaitTime"]
+                locs.locDat[loc]["startMisc"] = mVars.time
+                endMisc = locs.locDat[loc]["startMisc"] + mVars.prms["miscWaitTime"]
                 pass
 
     def brkDownTrain(self, loc):
@@ -179,10 +180,10 @@ class ydCalcs():
         else:
             ydTrainNam = locStem["swTrain"]
             
-        print("ydtrainNam: ", ydTrainNam)
+        print("ydtrainNam: ", ydTrainNam, "ready2Pickup: ", ydCalcs.ready2Pickup)
         self.dispObj.dispActionDat(loc, "swTrain", ydTrainNam)
 
-        if self.ready2Pickup == 0:
+        if ydCalcs.ready2Pickup == 0:
             availCars = self.classObj.train2Track(loc, ydTrainNam)
             if availCars == 0:
                 trainStem = trainDB.trains[ydTrainNam]
@@ -192,9 +193,9 @@ class ydCalcs():
                 trainDB.consists[consistNam]["stops"].pop(loc)
                 if mVars.prms["dbgYdProc"]: print("swTrain: train:", ydTrainNam, 
                     " trainDict: ", trainStem)
-                self.ready2Pickup = 1
+                ydCalcs.ready2Pickup = 1
         # add cars to train until train is max size
-        if self.ready2Pickup:
+        else:
             availCars, trainDest = self.classObj.track2Train(loc, ydTrainNam)
             if trainDB.trains[ydTrainNam]["numCars"] >= mVars.prms["trainSize"]*1.2:
                 # train has reached max size
