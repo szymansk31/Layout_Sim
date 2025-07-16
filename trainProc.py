@@ -53,7 +53,8 @@ class trainParams():
         newTrain[newTrainNam] = tmpTrain.pop("trnProtype")
         newTrain[newTrainNam]["trainNum"] = newTrainNum
         newTrain[newTrainNam]["consistNum"] = newConsistNum
-        newTrain[newTrainNam]["trnObjTag"] = newTrainNam+"ObjTag"
+        newTrain[newTrainNam]["trnRectTag"] = newTrainNam+"RectTag"
+        newTrain[newTrainNam]["trnNumTag"] = newTrainNam+"NumTag"
         newTrain[newTrainNam]["trnLabelTag"] = newTrainNam+"LabelTag"
         newTrain[newTrainNam]["startTime"] = mVars.time
     

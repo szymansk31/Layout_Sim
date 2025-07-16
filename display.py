@@ -94,6 +94,7 @@ class dispItems():
         xtrn = (gui.guiDict[loc]["x0"] + gui.guiDict[loc]["x1"])*0.5 - totXWidth*0.5
 
         gui.C.delete(locStem["locTrnRectID"])
+        gui.C.delete(locStem["locTrnNumID"])
         for action in dispList["actions"]:
             idx = 0
             actionStem = dispList["actions"][action]
@@ -103,12 +104,13 @@ class dispItems():
                         font=("Arial", 8))
             for train in actionStem["trains"]:
                 trainNum = train[5:]
-                gui.C.delete(trainStem[train]["trnObjTag"])
+                gui.C.delete(trainStem[train]["trnRectTag"])
+                gui.C.delete(trainStem[train]["trnNumTag"])
                 gui.C.create_rectangle(xtrn+20*idx, y, xtrn+20*idx+trnLen, 
                     y+trnHt, fill=trainStem[train]["color"], 
                     tags=locStem["locTrnRectID"])
                 gui.C.create_text(xtrn+10+20*idx, y+6, text=trainNum , 
-                    font=("Arial", 8), tags=locStem["locTrnRectID"])
+                    font=("Arial", 8), tags=locStem["locTrnNumID"])
                 idx +=1
         locStem["firstDispTrnTxt"] = 0
 
@@ -128,7 +130,7 @@ class dispItems():
                 yTrnTxt = routeStem["yTrnTxt"]
                 timeEnRoute = trainStem["timeEnRoute"]
                 velocity = routeStem["distPerTime"]
-                print("draw train: ", train, "route: ", trainLoc, routeStem)
+                print("draw train: ", train, "currentLoc: ", trainLoc, ", trainDict: ", trainStem)
                 trnLabels = ""
                 trnLabels = ' '.join(routeStem["trains"])
 
@@ -142,9 +144,9 @@ class dispItems():
                     trainNum = train[5:]
 
                     gui.C.create_rectangle(trainStem["xLoc"], yTrn, trainStem["xLoc"]+trnLen, 
-                        yTrn+trnHt, fill=trainStem["color"], tags=trainStem["trnObjTag"])
+                        yTrn+trnHt, fill=trainStem["color"], tags=trainStem["trnRectTag"])
                     gui.C.create_text(trainStem["xLoc"]+10, yTrn+6, text=trainNum , 
-                        font=("Arial", 8), tags=trainStem["trnObjTag"])
+                        font=("Arial", 8), tags=trainStem["trnNumTag"])
 
                     #print("train Rect obj: ", trainStem["trnObjTag"])
                     #gui.C.create_text(xTrnTxt, yTrnTxt, text=trnLabels, 
@@ -154,26 +156,27 @@ class dispItems():
                 else:
                     trainStem["xLoc"] = trainStem["xLoc"] + deltaX
                     print("moving train by: ", deltaX)
-                    print("train Rect obj: ", trainStem["trnObjTag"])
                     
-                    gui.C.move(trainStem["trnObjTag"], deltaX, 0)
+                    #gui.C.move(trainStem["trnObjTag"], deltaX, 0)
+                    gui.C.coords(trainStem["trnRectTag"], trainStem["xLoc"], yTrn, trainStem["xLoc"]+trnLen, 
+                        yTrn+trnHt)
+                    gui.C.coords(trainStem["trnNumTag"], trainStem["xLoc"]+10, yTrn+6)
                     #gui.C.itemconfigure(routeStem["trnLabelTag"], text=trnLabels, 
                     #    anchor="nw", fill=trainStem["color"])
                     
                 print("draw train: ", train, ", coordinates after move: ", trainStem["xLoc"], yTrn, trainStem["xLoc"]+trnLen, yTrn+trnHt)
                 print("distance via timeEnRoute: ", timeEnRoute*velocity)
                 gui.C.update()
-                #print("train Rect obj: ", trainStem["trnObjTag"])
 
             case trainLoc if "route" not in trainLoc:
                 pass
             
             case trainloc if "xyz" in trainloc:
-                gui.C.delete(trainStem["trnObjTag"])
+                gui.C.delete(trainStem["trnRectTag"])
                 xtrn = (gui.guiDict[trainLoc]["x0"] + gui.guiDict[trainLoc]["x1"])*0.5 - trnLen
                 yTrn = gui.guiDict[trainLoc]["y0"] - 50
                 if (trainStem["status"] == "terminate") or (trainStem["status"] == "dropPickup"):
                     gui.C.create_rectangle(xtrn, yTrn, xtrn+trnLen, 
-                    yTrn+trnHt, fill=trainStem["color"], tags=trainStem["trnObjTag"])
+                    yTrn+trnHt, fill=trainStem["color"], tags=trainStem["trnRectTag"])
 
                                 

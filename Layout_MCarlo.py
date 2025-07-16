@@ -4,7 +4,9 @@ import tkinter as tk
 from tkinter import ttk
 from stateVars import locs, trainDB, routeCls, stVarSaves
 from trainProc import trainParams, trnProc
+from display import dispItems
 trnProcObj = trnProc()
+displayObj = dispItems()
 stVarObj = stVarSaves()
          
 #=================================================
@@ -12,7 +14,8 @@ def main_loop():
 
     print("mVars.time: ", mVars.time, "maxtime: ", mVars.prms["maxTime"])
     while mVars.time < mVars.prms["maxTime"]:
-        print("\nmVars.time: ", mVars.time)
+        stVarObj.saveStVars()
+        print("\nmVars.time: ", mVars.time, ", savIDX: ", stVarSaves.savIDX)
         if mVars.wait:
             print("waiting....")
             step_button.wait_variable(var)
@@ -22,10 +25,12 @@ def main_loop():
             step_button.wait_variable(var)
             mVars.stepBackTrue = 0
             var.set(0)
-            
+            print("\nafter step back: mVars.time: ", mVars.time
+                  , ", savIDX: ", stVarSaves.savIDX)
+ 
         for train in trainDB.trains:
-            printTrainInfo(train)
-            if mVars.time > trainDB.trains[train]["startTime"]:
+            if mVars.time >= trainDB.trains[train]["startTime"]:
+                printTrainInfo(train)
                 trnProcObj.trainCalcs(trainDB.trains[train], train)
 
         for loc in locs.locDat:
@@ -33,7 +38,7 @@ def main_loop():
                 loc)
 
             locProcObj.LocCalcs(locs.locDat, loc)
-        stVarObj.saveStVars()
+        stVarObj.incSavIDX()
         mVars.time +=1
 
 def printTrainInfo(train):
@@ -56,9 +61,19 @@ def stepBack():
     if mVars.stepBackTrue != 1:
         mVars.stepBackTrue = 1
         var.set(1)
+    stVarObj.restStVars(1)
+    reDisp()
     mVars.time -=1
-    print("waiting....")
+    print("waiting after step back....")
     pass
+
+def reDisp():
+    for loc in locs.locDat:
+        displayObj.dispLocDat(loc)
+        displayObj.dispTrnInLoc(loc, trainDB.ydTrains)
+        
+    for train in trainDB.trains:
+        displayObj.drawTrain(train)
 
 #########################################################
 # start of code

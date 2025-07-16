@@ -17,6 +17,7 @@
     "actionObjID": 0,
     "locTrnTxtID": 0,
     "locTrnRectID": "yd1TrnRectID",
+    "locTrnNumID": "yd1TrnNumID",
     "startMisc": 0,
     "trains": [],
     "trn4Action":[]
@@ -37,6 +38,7 @@
     "actionObjID": 0,
     "locTrnTxtID": 0,
     "locTrnRectID": "sw1TrnRectID",
+    "locTrnNumID": "sw1TrnNumID",
     "startMisc": 0,
     "trains": [],
     "trn4Action":[]
@@ -57,6 +59,7 @@
     "actionObjID": 0,
     "locTrnTxtID": 0,
     "locTrnRectID": "yd2TrnRectID",
+    "locTrnNumID": "yd2TrnNumID",
     "startMisc": 0,
     "trains": [],
     "trn4Action":[]

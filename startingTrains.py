@@ -27,7 +27,8 @@ class trainFromFile():
             #print("color for init train: ", trainDict[train]["color"])
 
             print("adding initial consist")
-            trainDict[train]["trnObjTag"] = train+"ObjTag"
+            trainDict[train]["trnRectTag"] = train+"RectTag"
+            trainDict[train]["trnNumTag"] = train+"NumTag"
             trainDict[train]["trnLabelTag"] = train+"LabelTag"
             consistNum = trainDict[train]["consistNum"]
             consistNam = "consist"+str(consistNum)

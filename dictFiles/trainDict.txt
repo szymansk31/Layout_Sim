@@ -15,7 +15,8 @@
 "firstDispTrn": 1,
 "timeEnRoute": 0,
 "deltaT": 0,
-"trnObjTag": "",
+"trnRectTag": "",
+"trnNumTag": "",
 "numStops": 0,
 "currentStop": "",
 "stops": {
