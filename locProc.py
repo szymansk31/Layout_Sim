@@ -25,6 +25,9 @@ class locProc():
         locs.locDat = files.readFile("locationFile")
         for loc in locs.locDat:
             self.countCars(loc)
+            locs.locDat[loc]["locTrnRectID"] = loc+"TrnRectID"
+            locs.locDat[loc]["locTrnNumID"] = loc+"TrnNumID"
+            locs.locDat[loc]["locRectID"] = loc+"RectID"
         
     def countCars(self, loc):
         locDictStem = locs.locDat[loc]

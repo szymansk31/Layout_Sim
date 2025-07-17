@@ -1,22 +1,24 @@
 
 import tkinter as tk
 from tkinter import Canvas
-from stateVars import routeCls
-         
+from stateVars import locs, routeCls
+
 #=================================================
 class gui():
-    editWindow = tk.Tk() 
-    C = Canvas(editWindow, height=500, width=1600, bg="lightgray")
+    root = tk.Tk() 
+    C = Canvas(root, height=500, width=1600, bg="lightgray")
+    #subCanvas = Canvas(root, height=100, width=100, bg="white")
     objects = []
     guiDict = {}
     locTextID = {}
     
     def __init__(self):
-        gui.editWindow.title("Layout Simulation")
+        gui.root.title("Layout Simulation")
         # Adjust size 
-        gui.editWindow.geometry( "1600x500" ) 
+        gui.root.geometry( "1600x500" ) 
         gui.C.pack()
-                
+        
+      
 
 #=================================================
 class dispSim():
@@ -24,7 +26,19 @@ class dispSim():
     def __init__(self):
         self.trnTxtFrame = tk.Frame()
         self.trnTxtWidget = tk.Text()
+        from popups import popups
+        self.popupObj = popups()
         pass
+
+
+    def openRectPop(self, event, loc):
+        locPop = locs.locDat[loc]["locPopObj"]
+        # Create a Toplevel window for the popup
+        locPop = tk.Toplevel(gui.root)
+        locPop.title("Location Window")
+        locPop.geometry("200x150")
+        tk.Label(locPop, text=loc).pack()
+        
 
     def drawLayout(self, guiDict):
         routeCount = 0
@@ -32,17 +46,23 @@ class dispSim():
         for item in guiDict:
             match guiDict[item]["type"]:
                 case "loc":
-                    tmpObj = gui.C.create_rectangle(
+                    locStem = locs.locDat[item]
+                    gui.C.create_rectangle(
                         guiDict[item]["x0"], 
                         guiDict[item]["y0"], 
                         guiDict[item]["x1"],
                         guiDict[item]["y1"],
+                        fill="yellow",
+                        tags=locStem["locRectID"]
                     )
-                    gui.objects.append(tmpObj)
+                    gui.C.tag_bind(locStem["locRectID"], "<Button-1>", 
+                    #    self.openTestPop("from loc Rectangle"))
+                        lambda event, loc=item: self.openRectPop(event, loc))
                     gui.C.create_text(
                         (guiDict[item]["x0"]+guiDict[item]["x1"])/2, 
                         (guiDict[item]["y0"]+10),
-                        text=guiDict[item]["text"]
+                        text=guiDict[item]["text"],
+                        tags=locStem["locRectID"]
                     )
                 case "route":
                     #if routeCount < 2:
@@ -55,10 +75,9 @@ class dispSim():
                     y1 = route["y1"]
                     yLoc = (y0 + y1)/2
                     xLocTxt = (x0 + x1)/2
-                    tmpObj = gui.C.create_line(
+                    gui.C.create_line(
                         x0, yLoc, x1, yLoc
                     )
-                    gui.objects.append(tmpObj)
                     gui.C.create_text(
                         xLocTxt, yLoc+10,
                         text=guiDict[item]["text"]
@@ -67,10 +86,18 @@ class dispSim():
                     routeCount +=1
 
                 case "train":
+                    pass
                     #trainDB.trnHeight = guiDict[item]["height"]
                     #trainDB.trnLength = guiDict[item]["length"]
-
-                    pass
+        #gui.C.pack()
+        #self.open_popup()
+                
+    def open_popup(self):
+        # Create a Toplevel window for the popup
+        popup = tk.Toplevel(gui.root)
+        popup.title("Popup Window")
+        popup.geometry("200x150")
+        #gui.C.pack()
         
     def initTrnTxtFrame(self, route):
         self.trnTxtWidget = tk.Text(gui.C, width=30, height=10, font=("Arial", 8), wrap="word")

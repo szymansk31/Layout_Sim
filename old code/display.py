@@ -19,14 +19,6 @@ class dispItems():
                 gui.C.create_text(x, y, text=text, font=("Arial", 8))
 
 
-    def reDisp(self):
-        for loc in locs.locDat:
-            self.dispLocDat(loc)
-            self.dispTrnInLoc(loc, trainDB.ydTrains)
-            
-        for train in trainDB.trains:
-            self.drawTrain(train)
-
 
     def dispLocDat(self, loc):
         text = ''
@@ -40,7 +32,7 @@ class dispItems():
         if locStem["firstDispLoc"]:
             locStem["locObjID"] = \
                 gui.C.create_text(x, y, text=text, font=("Arial", 8))
-
+                
         gui.C.itemconfigure(locStem["locObjID"], text=text, font=("Arial", 8))
         locStem["firstDispLoc"] = 0
         pass

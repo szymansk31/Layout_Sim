@@ -74,9 +74,9 @@ class ydCalcs():
             case "brkDnTrn":
                 self.brkDownTrain(loc)
             case "swTrain":
-                #if trainDB.ydTrains["swTrain"]:
-                self.swTrain(loc)
-                pass
+                if trainDB.ydTrains["swTrain"]:
+                    self.swTrain(loc)
+                    pass
             case "buildTrain":
                 self.buildTrain(loc)
                 pass
