@@ -53,7 +53,8 @@ class trainParams():
         newTrain[newTrainNam] = tmpTrain.pop("trnProtype")
         newTrain[newTrainNam]["trainNum"] = newTrainNum
         newTrain[newTrainNam]["consistNum"] = newConsistNum
-        newTrain[newTrainNam]["trnObjTag"] = newTrainNam+"ObjTag"
+        newTrain[newTrainNam]["trnRectTag"] = newTrainNam+"RectTag"
+        newTrain[newTrainNam]["trnNumTag"] = newTrainNam+"NumTag"
         newTrain[newTrainNam]["trnLabelTag"] = newTrainNam+"LabelTag"
         newTrain[newTrainNam]["startTime"] = mVars.time
     
@@ -152,10 +153,14 @@ class trnProc:
         disp = dispItems()
         routeNam = trainDict["currentLoc"]
         routeStem = routeCls.routes[routeNam]
+        consistNum = trainDict["consistNum"]
+        consistNam = "consist"+str(consistNum)
 
         stopLoc = trainDict["nextLoc"]
         trainDict["currentLoc"] = stopLoc
-        print("train ", trnName, "entering terminal: ", stopLoc, "trainDict: ", trainDict)
+        print("train: ", trnName, "entering terminal: ", stopLoc, "trainDict: ", trainDict)
+        print("train: ", trnName, "consistNum: ", consistNum, 
+              "contents: ", trainDB.consists[consistNam])
         
         #actions are executed in terminals/yards/switch areas
         #locProc takes care of these processes

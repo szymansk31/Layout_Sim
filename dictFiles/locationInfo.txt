@@ -11,13 +11,15 @@
         "gons": 0, "flats": 0, "psgr": 0}
     },
     "firstDispLoc": 1,
-    "firstDispAction": 1,
     "firstDispTrnTxt": 1,
     "locObjID": 0,
     "actionObjID": 0,
     "locTrnTxtID": 0,
     "locTrnRectID": "yd1TrnRectID",
-    "trains": []
+    "locTrnNumID": "yd1TrnNumID",
+    "startMisc": 0,
+    "trains": [],
+    "trn4Action":[]
 },
 "swArea1": {
     "type":"yard",
@@ -29,13 +31,15 @@
         "gons": 0, "flats": 0, "psgr": 0}
     },
     "firstDispLoc": 1,
-    "firstDispAction": 1,
     "firstDispTrnTxt": 1,
     "locObjID": 0,
     "actionObjID": 0,
     "locTrnTxtID": 0,
     "locTrnRectID": "sw1TrnRectID",
-    "trains": []
+    "locTrnNumID": "sw1TrnNumID",
+    "startMisc": 0,
+    "trains": [],
+    "trn4Action":[]
 },
 "yard2": {
     "type":"yard",
@@ -47,12 +51,14 @@
         "gons": 0, "flats": 0, "psgr": 0}
     },
     "firstDispLoc": 1,
-    "firstDispAction": 1,
     "firstDispTrnTxt": 1,
     "locObjID": 0,
     "actionObjID": 0,
     "locTrnTxtID": 0,
     "locTrnRectID": "yd2TrnRectID",
-    "trains": []
+    "locTrnNumID": "yd2TrnNumID",
+    "startMisc": 0,
+    "trains": [],
+    "trn4Action":[]
 }
 }

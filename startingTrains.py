@@ -19,26 +19,30 @@ class trainFromFile():
     def readTrain(self):
         
         trainDict = files.readFile("startingTrainFile")
+        self.consistFromFile(files, "startingConsistFile")
+        trainDB.consists.update(self.consist)
         for train in trainDict:
+            print("\nTrain: ", train)
             trainDict[train]["color"] = trainParams.colors()
-            print("color for init train: ", trainDict[train]["color"])
+            #print("color for init train: ", trainDict[train]["color"])
 
             print("adding initial consist")
-            self.consistFromFile(files, "startingConsistFile")
-            self.dict2ConNam
-            trainDict[train]["trnObjTag"] = train+"ObjTag"
+            trainDict[train]["trnRectTag"] = train+"RectTag"
+            trainDict[train]["trnNumTag"] = train+"NumTag"
             trainDict[train]["trnLabelTag"] = train+"LabelTag"
+            consistNum = trainDict[train]["consistNum"]
+            consistNam = "consist"+str(consistNum)
 
             tmpLoc = trainDict[train]["currentLoc"]
             if "route" in tmpLoc:
                 routeCls.routes[tmpLoc]["trains"].append(train)
-            self.consist[self.conName]["trainNum"] = trainDict[train]["trainNum"]
-            trainDB.consists.update(self.consist)
-            trainDict[train]["consistNum"] = self.consist[self.conName]["consistNum"]
+            #self.consist[self.conName]["trainNum"] = trainDict[train]["trainNum"]
+            #trainDict[train]["consistNum"] = self.consist[self.conName]["consistNum"]
             newTrain = {}
             newTrain[train] = trainDict[train]
 
             print("newTain dict in startingTrains: ", newTrain)
+            print("with consist: ", consistNam, ", contents: ", self.consist[consistNam])
             trainDB.trains.update(newTrain)
             print("starting train: ", trainDB.trains[train])
         return 
@@ -47,5 +51,5 @@ class trainFromFile():
         self.consist = files.readFile(fkey)
         self.dict2ConNam(self.consist)
         print("\ncreating consist ", self.conName)
-        if mVars.prms["dbgTrnInit"]: print("consistDict: ", self.consist)
+        #if mVars.prms["dbgTrnInit"]: print("consistDict: ", self.consist)
         return
