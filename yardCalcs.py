@@ -74,13 +74,14 @@ class ydCalcs():
             case "brkDnTrn":
                 self.brkDownTrain(loc)
             case "swTrain":
-                if trainDB.ydTrains["swTrain"]:
-                    self.swTrain(loc)
-                    pass
+                #if trainDB.ydTrains["swTrain"]:
+                self.swTrain(loc)
+                pass
             case "buildTrain":
                 self.buildTrain(loc)
                 pass
             case "servIndus":
+                self.servIndus(loc)
                 pass
             case "misc":
                 locs.locDat[loc]["startMisc"] = mVars.time
@@ -206,7 +207,7 @@ class ydCalcs():
                 self.locProcObj.startTrain("swTrain", loc, ydTrainNam)
         
         pass
-    def servIndus(self):
+    def servIndus(self, loc):
         pass
     # calc trains that arrive, trains ready to leave (and do they?)
     # cars classified; need a dict with all car types, next dest (track or 

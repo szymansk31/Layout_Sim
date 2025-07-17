@@ -62,7 +62,7 @@ class dispItems():
             text += str(trainDB.consists[consistNam]["stops"]) 
             text += "\n"
             numTrns +=1
-        print("dispTrnInLoc: ydTrains: ", ydTrains, " text: ", text)
+        #print("dispTrnInLoc: ydTrains: ", ydTrains, " text: ", text)
         x = (gui.guiDict[loc]["x0"] + gui.guiDict[loc]["x1"])*0.5
         y = gui.guiDict[loc]["y0"] + 300
         if locStem["firstDispTrnTxt"]:

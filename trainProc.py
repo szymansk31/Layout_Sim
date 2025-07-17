@@ -16,7 +16,7 @@ class trainParams():
     colorList = ["red", "green", "yellow", "orange", "purple1", "dodger blue", "deep pink",
                  "lawn green", "goldenrod", "OrangeRed2", "magenta2", "RoyalBlue1"]
     trnStatusList = ["enRoute", "building", "terminate", "switch", "turn", 
-                     "dropPickup", "continue", "misc"]
+                     "dropPickup", "continue", "misc", "stop"]
 
 
     def __init__(self):
