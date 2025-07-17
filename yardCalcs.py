@@ -122,6 +122,7 @@ class ydCalcs():
             ydTrainNam = ''.join(trainDB.ydTrains["buildTrain"])     
             availCars, trainDest = self.classObj.track2Train(loc, ydTrainNam)
             trainStem = trainDB.trains[ydTrainNam]
+            self.dispObj.dispActionDat(loc, "buildTrain", ydTrainNam)
 
             if trainStem["numCars"] >= mVars.prms["trainSize"]*0.7:
                 # train has reached max size

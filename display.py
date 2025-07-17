@@ -10,6 +10,16 @@ class dispItems():
         pass
     
 
+    def initLocDisp(self):
+        for loc in locs.locDat:
+            x = (gui.guiDict[loc]["x0"] + gui.guiDict[loc]["x1"])*0.5
+            y = gui.guiDict[loc]["y0"] + 45
+            text = "action: "
+            locs.locDat[loc]["actionObjID"] = \
+                gui.C.create_text(x, y, text=text, font=("Arial", 8))
+
+
+
     def dispLocDat(self, loc):
         text = ''
         locStem = locs.locDat[loc]
@@ -30,16 +40,9 @@ class dispItems():
     def dispActionDat(self, loc, action, ydTrainNam):
         text = ''
         locStem = locs.locDat[loc]
-        x = (gui.guiDict[loc]["x0"] + gui.guiDict[loc]["x1"])*0.5
-        y = gui.guiDict[loc]["y0"] + 45
 
-        text = "action: " + action + " " + ydTrainNam
-        if locStem["firstDispAction"]:
-            locStem["actionObjID"] = \
-                gui.C.create_text(x, y, text=text, font=("Arial", 8))
-                
+        text = "action: " + action + " " + ydTrainNam    
         gui.C.itemconfigure(locStem["actionObjID"], text=text, font=("Arial", 8))
-        locStem["firstDispAction"] = 0
         pass
 
     def dispTrnInLoc(self, loc, ydTrains):
@@ -131,8 +134,6 @@ class dispItems():
                 timeEnRoute = trainStem["timeEnRoute"]
                 velocity = routeStem["distPerTime"]
                 print("draw train: ", train, "currentLoc: ", trainLoc, ", trainDict: ", trainStem)
-                trnLabels = ""
-                trnLabels = ' '.join(routeStem["trains"])
 
                 print("draw train: ", train, ", timeEnRoute: ", timeEnRoute, " deltaT, distance/time: ", trainStem["deltaT"], 
                         routeStem["distPerTime"])
@@ -157,6 +158,8 @@ class dispItems():
                     trainStem["xLoc"] = trainStem["xLoc"] + deltaX
                     print("moving train by: ", deltaX)
                     
+                    #gui.C.delete(trainStem["trnRectTag"])
+                    #gui.C.delete(trainStem["trnNumTag"])
                     #gui.C.move(trainStem["trnObjTag"], deltaX, 0)
                     gui.C.coords(trainStem["trnRectTag"], trainStem["xLoc"], yTrn, trainStem["xLoc"]+trnLen, 
                         yTrn+trnHt)

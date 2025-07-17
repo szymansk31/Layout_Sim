@@ -117,6 +117,9 @@ print("consists: ", trainDB.consists)
 dispObj = dispSim()
 dispObj.drawLayout(gui.guiDict)
 
+# initialize dynamic action display in locations
+displayObj.initLocDisp()
+
 idx = 0
 print("\n")
 for loc in geometry:
