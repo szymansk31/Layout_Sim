@@ -6,7 +6,7 @@ import copy
 class locs():
     locDat = {}
     locPop = {}
-    canvas= {}
+    labels= {}
     
 #=================================================
 class trainDB():

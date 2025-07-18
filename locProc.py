@@ -63,7 +63,7 @@ class locProc():
                 swAreaObj.switchArea(thisLoc, loc)
 
                     
-        disp.dispTrnInLoc(loc, trainDB.ydTrains)
+        disp.dispTrnLocDat(loc)
             
     def analyzeTrains(self, loc):
         trainDB.ydTrains = {"brkDnTrn": [], "swTrain": [], "buildTrain": [], "roadCrewSw": []}

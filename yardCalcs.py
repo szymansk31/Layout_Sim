@@ -63,7 +63,7 @@ class ydCalcs():
         choice = ''.join(choice)
         if mVars.prms["dbgYdProc"]: print("\nchoice: ", choice)
         
-        self.dispObj.dispLocDat(loc)
+        self.dispObj.dispTrnLocDat(loc)
         
         if locs.locDat[loc]["startMisc"]:
             while locs.locDat[loc]["startMisc"] < endMisc:

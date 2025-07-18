@@ -82,7 +82,7 @@ class dispItems():
 
         gui.C.itemconfigure(locStem["locObjID"], text=text, font=("Arial", 8))
         if loc in locs.locPop:
-            locs.canvas[loc].itemconfigure(locStem["locTestID"], text=text, font=("Arial", 8))
+            locs.labels[loc].itemconfigure(locStem["locTestID"], text=text, font=("Arial", 8))
         pass
     
     def dispActionDat(self, loc, action, ydTrainNam):
