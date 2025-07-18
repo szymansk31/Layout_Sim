@@ -17,7 +17,7 @@ class gui():
         # Adjust size 
         gui.root.geometry( "1600x500" ) 
         gui.C.pack()
-        
+
       
 
 #=================================================
@@ -26,19 +26,11 @@ class dispSim():
     def __init__(self):
         self.trnTxtFrame = tk.Frame()
         self.trnTxtWidget = tk.Text()
-        from popups import popups
-        self.popupObj = popups()
+        from display import dispItems
+        self.displayObj = dispItems()
         pass
 
 
-    def openRectPop(self, event, loc):
-        locPop = locs.locDat[loc]["locPopObj"]
-        # Create a Toplevel window for the popup
-        locPop = tk.Toplevel(gui.root)
-        locPop.title("Location Window")
-        locPop.geometry("200x150")
-        tk.Label(locPop, text=loc).pack()
-        
 
     def drawLayout(self, guiDict):
         routeCount = 0
@@ -57,7 +49,7 @@ class dispSim():
                     )
                     gui.C.tag_bind(locStem["locRectID"], "<Button-1>", 
                     #    self.openTestPop("from loc Rectangle"))
-                        lambda event, loc=item: self.openRectPop(event, loc))
+                        lambda event, loc=item: self.displayObj.openLocPopup(event, loc))
                     gui.C.create_text(
                         (guiDict[item]["x0"]+guiDict[item]["x1"])/2, 
                         (guiDict[item]["y0"]+10),

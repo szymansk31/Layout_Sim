@@ -27,8 +27,7 @@ class dispItems():
         locs.locPop[loc].title(loc + " Window")
         locs.locPop[loc].geometry("400x200")
         locs.locPop[loc]['bg'] = 'tan'
-        
-        text = tk.StringVar()
+        tk.Label(locs.locPop[loc], text=loc).pack()
         #locs.locDat[loc]["firstDispLoc"] = 1
 
         text = loc
@@ -39,16 +38,14 @@ class dispItems():
         for track in locStem["tracks"]:
             text += track + "\n"
             text += str(locStem["tracks"][track]) + "\n"
-        """
-        textObj = \
+        locStem["locTestID"] = \
                 tk.Text(locs.locPop[loc])
-        textObj.insert(
+        locStem["locTestID"].insert(
             index='1.0',
             chars = text,
             font=("Arial", 8)
             )
-            """
-        tk.Label(locs.locPop[loc], text=text).pack()
+        locStem["locTestID"].pack()
         
         
         pass
@@ -65,6 +62,12 @@ class dispItems():
 
     def dispLocDat(self, loc):
         text = ''
+        """
+        locCanvas = any
+            locCanvas = locs.canvas[loc]
+        else: 
+            locCanvas = gui.C
+            """
         locStem = locs.locDat[loc]
         x = (gui.guiDict[loc]["x0"] + gui.guiDict[loc]["x1"])*0.5
         y = gui.guiDict[loc]["y0"] + 120
@@ -78,8 +81,8 @@ class dispItems():
             locStem["firstDispLoc"] = 0
 
         gui.C.itemconfigure(locStem["locObjID"], text=text, font=("Arial", 8))
-        ##if loc in locs.locPop:
-        #    locs.canvas[loc].itemconfigure(locStem["locTestID"], text=text, font=("Arial", 8))
+        if loc in locs.locPop:
+            locs.canvas[loc].itemconfigure(locStem["locTestID"], text=text, font=("Arial", 8))
         pass
     
     def dispActionDat(self, loc, action, ydTrainNam):
