@@ -37,7 +37,7 @@ class dispSim():
         guiDict = gui.guiDict
         for item in guiDict:
             match guiDict[item]["type"]:
-                case "loc":
+                case "yard"|"swArea"|"staging":
                     locStem = locs.locDat[item]
                     gui.C.create_rectangle(
                         guiDict[item]["x0"], 

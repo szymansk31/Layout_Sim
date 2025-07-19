@@ -123,6 +123,11 @@ class trnProc:
                     
             case "ready2Leave":
                 trainDict["status"] = "enroute"
+                if "route" not in trainDict["currentLoc"]:
+                    trainDict["currentLoc"] = trainDict["nextLoc"]
+                    self.getNextLoc(trainDict["currentLoc"], trainDict)
+                else:
+                    trainDict["nextLoc"] = trainDict["stops"]
                 disp.drawTrain(trnName)
                 pass
             case "building":

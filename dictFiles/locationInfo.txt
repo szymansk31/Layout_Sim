@@ -69,5 +69,23 @@
     "startMisc": 0,
     "trains": [],
     "trn4Action":[]
+},
+"staging1": {
+    "type":"staging",
+    "trackTots": {},
+    "tracks": {},
+    "firstDispLoc": 1,
+    "firstDispTrnTxt": 1,
+    "locObjID": 0,
+    "locTestID": 0,
+    "locRectID": "",
+    "locPopObj": null,
+    "actionObjID": 0,
+    "locTrnTxtID": 0,
+    "locTrnRectID": "",
+    "locTrnNumID": "",
+    "startMisc": 0,
+    "trains": [],
+    "trn4Action":[]
 }
 }

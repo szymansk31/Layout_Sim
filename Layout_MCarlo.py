@@ -121,8 +121,8 @@ routeCls.routes = routeGeomObj.initRoutes(geometry, gui.guiDict)
 #setup initial car distribution
 from carProc import carProc
 carProcObj = carProc()
-carDict = files.readFile("carFile")
-carProcObj.procCarInfo(carDict)
+#carDict = files.readFile("carFile")
+#carProcObj.procCarInfo(carDict)
 
 #dynamic info for each location
 from locProc import locProc

@@ -26,12 +26,10 @@ class dispItems():
         locs.locPop[loc] = tk.Toplevel(gui.root)
         print("popup windows: ", locs.locPop)
         locs.locPop[loc].title(loc + " Window")
-        locs.locPop[loc].geometry("400x300")
+        locs.locPop[loc].geometry("400x400")
         locs.locPop[loc]['bg'] = 'tan'
         
         text = tk.StringVar()
-        #locs.locDat[loc]["firstDispLoc"] = 1
-
         text = loc + "\n"
         locStem = locs.locDat[loc]
         for track in locStem["tracks"]:
@@ -60,7 +58,7 @@ class dispItems():
         locStem = locs.locDat[loc]
         trainStem = trainDB.trains
         ydTrains = trainDB.ydTrains
-        text = loc + "\n"
+        text = loc + ": yard tracks: \n"
         numTrns = 0
         x = (gui.guiDict[loc]["x0"] + gui.guiDict[loc]["x1"])*0.5
         y = gui.guiDict[loc]["y0"] + 200
@@ -68,7 +66,7 @@ class dispItems():
         for track in locStem["tracks"]:
             text += track + "\n"
             text += str(locStem["tracks"][track]) + "\n"
-        text += "\n\n\n"
+        text += "\nTrains worked in yard\n"
         for train in locStem["trains"]:
             consistNum = trainStem[train]["consistNum"]
             consistNam = "consist"+str(consistNum)
@@ -76,8 +74,9 @@ class dispItems():
                 if train in ydTrains[action]:
                     text += train + ": " + action + "\n"
             #text += train+"\n"
-            text += str(trainDB.consists[consistNam]["stops"]) 
-            text += "\n"
+            for stop in trainDB.consists[consistNam]["stops"]:
+                text += stop+": "+str(trainDB.consists[consistNam]["stops"][stop]) 
+                text += "\n"
             numTrns +=1
         if locStem["firstDispLoc"]:
             locStem["locObjID"] = \
@@ -87,6 +86,7 @@ class dispItems():
         if loc in locs.labels:
             locs.labels[loc].config(text=text)
             gui.C.delete(locStem["locTrnTxtID"])
+            gui.C.delete(locStem["locObjID"])
         else:
             gui.C.itemconfigure(locStem["locObjID"], text=text, font=("Arial", 8))
 
