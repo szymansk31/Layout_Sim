@@ -88,7 +88,7 @@
 "currentLoc": "staging1",
 "nextLoc": "route1",
 "direction": "east",
-"startTime": 2, 
+"startTime": 12, 
 "xTrnInit": 250,
 "xLoc": 250,
 "firstDispTrn": 1,

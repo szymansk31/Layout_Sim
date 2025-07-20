@@ -152,6 +152,7 @@ class ydCalcs():
                 "origLoc": loc,
                 "nextLoc": trackMaxCars,
                 "currentLoc": loc,
+                "finalLoc": trackMaxCars,
                 "numStops": 1,
                 "stops": {trackMaxCars: {"action": "terminate"}},
                 "color": trainParams.colors()           

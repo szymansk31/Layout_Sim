@@ -18,7 +18,8 @@ class mainMethods():
 
 #=================================================
     def main_loop(self):
-
+        count = 0
+        maxCount = 10
         print("mVars.time: ", mVars.time, "maxtime: ", mVars.prms["maxTime"])
         while mVars.time < mVars.prms["maxTime"]:
             stVarObj.saveStVars()
@@ -39,7 +40,10 @@ class mainMethods():
                 if mVars.time >= trainDB.trains[train]["startTime"]:
                     self.printTrainInfo(train)
                     trnProcObj.trainCalcs(trainDB.trains[train], train)
-
+            if count == maxCount:
+                print("routes: ", routeCls.routes)
+                count = 0
+            count +=1
             for loc in locs.locDat:
                 if mVars.prms["dbgLoop"]: print ("\nAbout to process: ", 
                     loc)

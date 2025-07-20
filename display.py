@@ -132,13 +132,15 @@ class dispItems():
             gui.C.itemconfigure(locStem["locTrnTxtID"], text=text, font=("Arial", 8))
         self.dispTrnRecs(locStem, loc, ydTrains, numTrns)
         
-    def dispTrnRecs(self, locStem, loc, ydtrains, numTrns):
-        
+    def dispTrnRecs(self, locStem, loc, ydtrains, numTrns):        
+        actionIter = iter(trainDB.ydTrains)
+        action1 = next(actionIter)
+        action2 = next(actionIter)
         dispList = {
             "actions": {
-            "brkDnTrn": {"trains": [], 
+            action1: {"trains": [], 
                 "y": gui.guiDict[loc]["y0"] - 30,},
-            "buildTrain": {"trains": [],
+            action2: {"trains": [],
                 "y": gui.guiDict[loc]["y0"] - 55}},
             
             "allTrains": {"trains": [], "y": 0,}
