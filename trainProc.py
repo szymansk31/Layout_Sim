@@ -106,8 +106,10 @@ class trnProc:
                 routeNam = trainDict["currentLoc"]
                 routeStem = routeCls.routes[routeNam]
                 trainDict["deltaT"] = mVars.prms["timeStep"] + variance
+                trainDict["deltaT"] = round(trainDict["deltaT"].item(), 2)
                 
                 trainDict["timeEnRoute"] += trainDict["deltaT"]
+                trainDict["timeEnRoute"] = round(trainDict["timeEnRoute"], 2)
                 transTime = routeCls.routes[trainDict["currentLoc"]]["transTime"]
                 if mVars.prms["dbgTrnProc"]: self.printTrnEnRoute(trainDict, routeNam, transTime, variance)
                 

@@ -119,7 +119,7 @@ from fileProc import readFiles
 files = readFiles()
 
 from mainVars import mVars
-mVars.prms = files.readFile("paramFile")
+mVars.prms = files.readFile("paramDict.txt")
 
 #static info for each location
 from layoutGeom import geom, routeGeom

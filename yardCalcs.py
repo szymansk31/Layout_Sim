@@ -176,7 +176,8 @@ class ydCalcs():
         
         # find out what train is being switched or add new one
         locStem = locs.locDat[loc]["trn4Action"]
-        if "swTrain"not in locStem:
+        found = [d for d in locStem if "swTrain" in d]
+        if not found:
             # no trains are undergoing swTrain
             ydTrainNam = random.choice(trainDB.ydTrains.get("swTrain"))
             locStem.append({"swTrain": ydTrainNam})

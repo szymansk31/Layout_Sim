@@ -1,5 +1,4 @@
 import json
-from mainVars import mVars
 from fileNamesIO import fileNames
 
 
@@ -10,11 +9,15 @@ class readFiles():
         pass
         
     def readFile(self, fileToRead):
-        fileObj = fileNames()
-        fnames = fileObj.fNames
         print("\nreading ", fileToRead)
+        if "param" in fileToRead:
+            fullFName = fileToRead
+        else:
+            fileObj = fileNames()
+            fnames = fileObj.fNames
+            fullFName = fnames[fileToRead]
         try: 
-            jsonFile = open (fnames[fileToRead], "r")
+            jsonFile = open (fullFName, "r")
             inputDict = json.load(jsonFile)
             jsonFile.close()
         except FileNotFoundError:

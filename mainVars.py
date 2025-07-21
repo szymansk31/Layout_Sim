@@ -16,17 +16,6 @@ class mVars:       #short for mainVars
         pass
         #self.files = fileNames()
      
-    def readParams(files):
-        print("\nreading param file ", files.paramDictFile)
-        try: 
-            jsonFile = open (files.paramDictFile, "r")
-            mVars.prms = json.load(jsonFile)
-            jsonFile.close()
-        except FileNotFoundError:
-            print("\njson file does not exist; returning")
-            return
-        if mVars.prms["dbgPrmInit"]: print("paramDict: ", mVars.prms)
-
 
 #=================================================
 class carHdr:
