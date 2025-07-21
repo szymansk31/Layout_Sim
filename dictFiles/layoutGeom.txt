@@ -19,11 +19,19 @@
     },
 "yard2": {"type": "yard",
     "numTracks": 10,
-    "numAdjLocs": 1,
-    "adjLocNames": [],
+    "numAdjLocs": 2,
+    "adjLocNames": ["staging1"],
     "time2AdjLocs": [10],
     "fracTrainBuild": 0.50,
     "classRate": 2,    
+    "routes": []
+    },
+"staging1": 
+    {"type": "staging",
+    "numTracks": 10,
+    "numAdjLocs": 1,
+    "adjLocNames": [],
+    "time2AdjLocs": [10],
     "routes": []
     }
 }

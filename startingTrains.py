@@ -36,6 +36,8 @@ class trainFromFile():
             tmpLoc = trainDict[train]["currentLoc"]
             if "route" in tmpLoc:
                 routeCls.routes[tmpLoc]["trains"].append(train)
+            else: 
+                locs.locDat[tmpLoc]["trains"].append(train)
             #self.consist[self.conName]["trainNum"] = trainDict[train]["trainNum"]
             #trainDict[train]["consistNum"] = self.consist[self.conName]["consistNum"]
             newTrain = {}

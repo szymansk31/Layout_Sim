@@ -17,5 +17,27 @@
     "swArea1": {"box": 2, "tank": 1,"rfr": 3, "hop": 0, 
         "gons": 1, "flats": 1, "psgr": 0}
         }
+    },
+
+"consist3": {
+"consistNum": 3,
+"trainNum": 3,
+"stops": {
+    "yard2": {"box": 2, "tank": 1,"rfr": 3, "hop": 0, 
+        "gons": 3, "flats": 1, "psgr": 0}
+        }
+    },
+
+"consist4": {
+"consistNum": 4,
+"trainNum": 4,
+"stops": {
+    "yard2": {"box": 1, "tank": 2,"rfr": 2, "hop": 0, 
+        "gons": 0, "flats": 0, "psgr": 0},
+    "yard1": {"box": 2, "tank": 0,"rfr": 2, "hop": 0, 
+        "gons": 0, "flats": 0, "psgr": 0},
+    "swArea1": {"box": 0, "tank": 0,"rfr": 0, "hop": 1, 
+        "gons": 1, "flats": 1, "psgr": 0}
+        }
     }
 }

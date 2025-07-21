@@ -10,8 +10,8 @@
 "nextLoc": "yard1",
 "direction": "east",
 "startTime": 3, 
-"xTrnInit": 400,
-"xLoc": 400,
+"xTrnInit": 700,
+"xLoc": 700,
 "firstDispTrn": 1,
 "timeEnRoute": 0,
 "deltaT": 0,
@@ -23,7 +23,7 @@
     "yard1": {"action": "dropPickup"},
     "swArea1": {"action": "terminate"}
         },
-"color": "blue"
+"color": ""
     },
 
 "train2": {
@@ -33,7 +33,7 @@
 "status": "ready2Leave",
 "origLoc": "yard1",
 "finalLoc": "swArea1",
-"currentLoc": "route1",
+"currentLoc": "route3",
 "nextLoc": "swArea1",
 "direction": "east",
 "startTime": 2, 
@@ -49,6 +49,60 @@
 "stops": {
     "swArea1": {"action": "terminate"}
         },
-"color": "blue"
+"color": ""
+    },
+
+"train3": {
+"trainNum": 3,
+"consistNum": 3,
+"numCars": 10,
+"status": "ready2Leave",
+"origLoc": "staging1",
+"finalLoc": "yard2",
+"currentLoc": "route1",
+"nextLoc": "yard2",
+"direction": "east",
+"startTime": 3, 
+"xTrnInit": 300,
+"xLoc": 300,
+"firstDispTrn": 1,
+"timeEnRoute": 0,
+"deltaT": 0,
+"trnRectTag": "",
+"trnNumTag": "",
+"numStops": 1,
+"currentStop": "",
+"stops": {
+    "yard2": {"action": "terminate"}
+        },
+"color": ""
+    },
+
+"train4": {
+"trainNum": 4,
+"consistNum": 4,
+"numCars": 12,
+"status": "ready2Leave",
+"origLoc": "staging1",
+"finalLoc": "swArea1",
+"currentLoc": "staging1",
+"nextLoc": "yard2",
+"direction": "east",
+"startTime": 12, 
+"xTrnInit": 250,
+"xLoc": 250,
+"firstDispTrn": 1,
+"timeEnRoute": 0,
+"deltaT": 0,
+"trnRectTag": "",
+"trnNumTag": "",
+"numStops": 1,
+"currentStop": "",
+"stops": {
+    "yard2": {"action": "dropPickup"},
+    "yard1": {"action": "dropPickup"},
+    "swArea1": {"action": "terminate"}
+        },
+"color": ""
     }
 }

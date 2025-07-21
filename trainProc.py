@@ -16,7 +16,7 @@ class trainParams():
     colorList = ["red", "green", "yellow", "orange", "purple1", "dodger blue", "deep pink",
                  "lawn green", "goldenrod", "OrangeRed2", "magenta2", "RoyalBlue1"]
     trnStatusList = ["enRoute", "building", "terminate", "switch", "turn", 
-                     "dropPickup", "continue", "misc"]
+                     "dropPickup", "continue", "misc", "stop"]
 
 
     def __init__(self):
@@ -122,6 +122,8 @@ class trnProc:
                                                 
                     
             case "ready2Leave":
+                #fills nextLoc with the route it is taking out of currentLoc
+                #self.fillNextLoc(trainDict["currentLoc"], trainDict) 
                 trainDict["status"] = "enroute"
                 disp.drawTrain(trnName)
                 pass
@@ -206,18 +208,16 @@ class trnProc:
         if trainDict["numStops"] == 0: 
             trainDict["status"] = "terminate"
             return
-        self.getNextLoc(stopLoc, trainDict)
+        self.fillNextLoc(stopLoc, trainDict)
         pass
     
 
-    def getNextLoc(self, stopLoc, trainDict):
-        #print("getNextLoc: stops: ", trainDict["stops"])
-        #stopVals = trainDict["stops"].values()
-        #index = stopVals.index(stopLoc)     # stop just completed processing
-        #trainDict["nextLoc"] = stopVals[index+1]    # next location loaded
-        
+    def fillNextLoc(self, stopLoc, trainDict):        
         print("getNextLoc: trainDict: ", trainDict)
 
+        if "route" not in trainDict["currentLoc"]:
+            trainDict["currentLoc"] = trainDict["nextLoc"] #will be a route
+        
         iterStops = iter(trainDict["stops"].keys())
         nextLoc = None
         for stop in iterStops:
@@ -225,8 +225,11 @@ class trnProc:
                 nextLoc = next(iterStops, None)
         if nextLoc == None: 
             print("no more locations")
+            trainDict["status"] = "stop"
         else:
             trainDict["nextLoc"] = nextLoc
-            print("getNextLoc: trainDict: ", trainDict)
-        return 
+         
+        print("getNextLoc: trainDict: ", trainDict)
             
+        return 
+

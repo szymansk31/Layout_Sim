@@ -5,6 +5,7 @@ from stateVars import locs, trainDB, routeCls
 from display import dispItems
 from yardCalcs import ydCalcs
 from swCalcs import swArea
+from stagCalcs import stCalcs
 from gui import gui
 np.set_printoptions(precision=2, suppress=True) 
 
@@ -25,6 +26,9 @@ class locProc():
         locs.locDat = files.readFile("locationFile")
         for loc in locs.locDat:
             self.countCars(loc)
+            locs.locDat[loc]["locTrnRectID"] = loc+"TrnRectID"
+            locs.locDat[loc]["locTrnNumID"] = loc+"TrnNumID"
+            locs.locDat[loc]["locRectID"] = loc+"RectID"
         
     def countCars(self, loc):
         locDictStem = locs.locDat[loc]
@@ -45,6 +49,7 @@ class locProc():
         disp = dispItems()
         ydCalcObj = ydCalcs()
         swAreaObj = swArea()
+        stagCalcObj = stCalcs()
 
         if mVars.prms["dbgYdProc"]: print("entering yardCalcs: locdat: "
                     , locs.locDat[loc])
@@ -58,12 +63,14 @@ class locProc():
                 ydCalcObj.yardMaster(thisLoc, loc)
             case "swArea":
                 swAreaObj.switchArea(thisLoc, loc)
+            case "staging":
+                stagCalcObj.staging(thisLoc, loc)
 
                     
-        disp.dispTrnInLoc(loc, trainDB.ydTrains)
+        disp.dispTrnLocDat(loc)
             
     def analyzeTrains(self, loc):
-        trainDB.ydTrains = {"brkDnTrn": [], "swTrain": [], "buildTrain": [], "roadCrewSw": []}
+        trainDB.ydTrains = {"brkDnTrn": [], "buildTrain": [], "swTrain": [], "roadCrewSw": []}
 
         # train status leads to actions by the yard crew or
         # the train crew.  Train actions are the same name as
@@ -92,9 +99,10 @@ class locProc():
         
                 
     def findRoutes(self, loc, ydTrainNam):
+        nextLoc = trainDB.trains[ydTrainNam]["nextLoc"]
         for routeNam in routeCls.routes:
             loc = ''.join(loc)
-            dest = ''.join(trainDB.trains[ydTrainNam]["nextLoc"])
+            dest = ''.join(nextLoc)
             if dbgLocal: print("routNam: ", routeNam, " loc: ", loc, 
                 " nextLoc: ", dest, "route: ", routeCls.routes[routeNam])
             if (loc in routeCls.routes[routeNam].values()) and \
@@ -122,15 +130,17 @@ class locProc():
                 elif loc == rtObj.strip():
                     trainStem["direction"] = "west"
                     trainStem["xTrnInit"] = gui.guiDict[loc]["x0"] - trainParams.trnLength
-                else: print("no route found", ydTrainNam,  "leftObj: ", leftObj, "rtObj: "
+                else: 
+                    print("no route found", ydTrainNam,  "leftObj: ", leftObj, "rtObj: "
                             , rtObj,"loc: ", loc, "direction: ", trainStem["direction"])
+                    trainStem["status"] = "stop"
 
                 trainStem["currentLoc"] = route4newTrn
                 
             case "none":
                 trainStem["status"] = "stop"
                 
-        if mVars.prms["dbgYdProc"]: print("train",ydTrainNam," built: "
+        if mVars.prms["dbgYdProc"]: print("train",ydTrainNam," starting: "
             ,trainStem, ", route: ", routeCls.routes[route4newTrn])
         self.rmTrnFromLoc(action, loc, ydTrainNam)
 

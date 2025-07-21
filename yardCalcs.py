@@ -13,7 +13,7 @@ class ydCalcs():
 
     def __init__(self):
         self.bldConsist = {}
-        self.actionList = ["brkDnTrn", "swTrain", "buildTrain", "servIndus", "misc"]
+        self.actionList = ["brkDnTrn", "buildTrain", "swTrain", "servIndus", "misc"]
         #self.weights = [0.18, 0.18, 0.18, 0.18, 0.1]
         self.weights = [0.3, 0.3, 0.3, 0, 0]
         #self.weights = [0, 0, 0, 0, 0]
@@ -27,8 +27,8 @@ class ydCalcs():
 
     class Action_e(Enum):
         BRKDNTRN     = 0
-        SWTRAIN      = 1
-        BUILDTRAIN   = 2
+        BUILDTRAIN   = 1
+        SWTRAIN      = 2
         SERVINDUS    = 3
         MISC         = 4
 
@@ -63,7 +63,7 @@ class ydCalcs():
         choice = ''.join(choice)
         if mVars.prms["dbgYdProc"]: print("\nchoice: ", choice)
         
-        self.dispObj.dispLocDat(loc)
+        self.dispObj.dispTrnLocDat(loc)
         
         if locs.locDat[loc]["startMisc"]:
             while locs.locDat[loc]["startMisc"] < endMisc:
@@ -81,6 +81,7 @@ class ydCalcs():
                 self.buildTrain(loc)
                 pass
             case "servIndus":
+                self.servIndus(loc)
                 pass
             case "misc":
                 locs.locDat[loc]["startMisc"] = mVars.time
@@ -151,6 +152,7 @@ class ydCalcs():
                 "origLoc": loc,
                 "nextLoc": trackMaxCars,
                 "currentLoc": loc,
+                "finalLoc": trackMaxCars,
                 "numStops": 1,
                 "stops": {trackMaxCars: {"action": "terminate"}},
                 "color": trainParams.colors()           
@@ -206,7 +208,7 @@ class ydCalcs():
                 self.locProcObj.startTrain("swTrain", loc, ydTrainNam)
         
         pass
-    def servIndus(self):
+    def servIndus(self, loc):
         pass
     # calc trains that arrive, trains ready to leave (and do they?)
     # cars classified; need a dict with all car types, next dest (track or 

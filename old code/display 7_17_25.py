@@ -19,79 +19,71 @@ class dispItems():
             text = "action: "
             locs.locDat[loc]["actionObjID"] = \
                 gui.C.create_text(x, y, text=text, font=("Arial", 8))
-            #locs.locPop = {}
 
     def openLocPopup(self, event, loc):
         # Create a Toplevel window for the popup
         locs.locPop[loc] = tk.Toplevel(gui.root)
         print("popup windows: ", locs.locPop)
         locs.locPop[loc].title(loc + " Window")
-        locs.locPop[loc].geometry("400x400")
+        locs.locPop[loc].geometry("400x200")
         locs.locPop[loc]['bg'] = 'tan'
-        
-        text = tk.StringVar()
-        text = loc + "\n"
+        tk.Label(locs.locPop[loc], text=loc).pack()
+        #locs.locDat[loc]["firstDispLoc"] = 1
+
+        text = loc
         locStem = locs.locDat[loc]
+        x = (gui.guiDict[loc]["x0"] + gui.guiDict[loc]["x1"])*0.5
+        y = gui.guiDict[loc]["y0"] + 120
+
         for track in locStem["tracks"]:
             text += track + "\n"
             text += str(locStem["tracks"][track]) + "\n"
-
-        locs.labels[loc] = tk.Label(locs.locPop[loc], text=text)
-        print("just wrote label; label obj is: ", locs.labels[loc])
-        locs.labels[loc].config(font=("Arial", 8), justify="left")
-        locs.labels[loc].pack()
-
+        locStem["locTestID"] = \
+                tk.Text(locs.locPop[loc])
+        locStem["locTestID"].insert(
+            index='1.0',
+            chars = text,
+            font=("Arial", 8)
+            )
+        locStem["locTestID"].pack()
+        
         
         pass
 
 
     def reDisp(self):
         for loc in locs.locDat:
-            self.dispTrnLocDat(loc)
+            self.dispLocDat(loc)
+            self.dispTrnInLoc(loc, trainDB.ydTrains)
             
         for train in trainDB.trains:
             self.drawTrain(train)
 
 
-    def dispTrnLocDat(self, loc):
+    def dispLocDat(self, loc):
         text = ''
+        """
+        locCanvas = any
+            locCanvas = locs.canvas[loc]
+        else: 
+            locCanvas = gui.C
+            """
         locStem = locs.locDat[loc]
-        trainStem = trainDB.trains
-        ydTrains = trainDB.ydTrains
-        text = loc + ": yard tracks: \n"
-        numTrns = 0
         x = (gui.guiDict[loc]["x0"] + gui.guiDict[loc]["x1"])*0.5
-        y = gui.guiDict[loc]["y0"] + 200
+        y = gui.guiDict[loc]["y0"] + 120
 
         for track in locStem["tracks"]:
             text += track + "\n"
             text += str(locStem["tracks"][track]) + "\n"
-        text += "\nTrains worked in yard\n"
-        for train in locStem["trains"]:
-            consistNum = trainStem[train]["consistNum"]
-            consistNam = "consist"+str(consistNum)
-            for action in ydTrains:
-                if train in ydTrains[action]:
-                    text += train + ": " + action + "\n"
-            #text += train+"\n"
-            for stop in trainDB.consists[consistNam]["stops"]:
-                text += stop+": "+str(trainDB.consists[consistNam]["stops"][stop]) 
-                text += "\n"
-            numTrns +=1
         if locStem["firstDispLoc"]:
             locStem["locObjID"] = \
-                gui.C.create_text(x, y, text=text, font=("Arial", 8), justify="left")
+                gui.C.create_text(x, y, text=text, font=("Arial", 8))
             locStem["firstDispLoc"] = 0
 
-        if loc in locs.labels:
-            locs.labels[loc].config(text=text)
-            gui.C.delete(locStem["locTrnTxtID"])
-            gui.C.delete(locStem["locObjID"])
-        else:
-            gui.C.itemconfigure(locStem["locObjID"], text=text, font=("Arial", 8))
-
-        self.dispTrnRecs(locStem, loc, ydTrains, numTrns)
-
+        gui.C.itemconfigure(locStem["locObjID"], text=text, font=("Arial", 8))
+        if loc in locs.locPop:
+            locs.labels[loc].itemconfigure(locStem["locTestID"], text=text, font=("Arial", 8))
+        pass
     
     def dispActionDat(self, loc, action, ydTrainNam):
         text = ''
@@ -125,22 +117,16 @@ class dispItems():
             locStem["locTrnTxtID"] = \
                 gui.C.create_text(x, y, text=text, width=380 , font=("Arial", 8))
             
-        if loc in locs.labels:
-            locs.labels[loc].config(text=text)
-            gui.C.delete(locStem["locTrnTxtID"])
-        else:
-            gui.C.itemconfigure(locStem["locTrnTxtID"], text=text, font=("Arial", 8))
+        gui.C.itemconfigure(locStem["locTrnTxtID"], text=text, font=("Arial", 8))
         self.dispTrnRecs(locStem, loc, ydTrains, numTrns)
         
-    def dispTrnRecs(self, locStem, loc, ydtrains, numTrns):        
-        actionIter = iter(trainDB.ydTrains)
-        action1 = next(actionIter)
-        action2 = next(actionIter)
+    def dispTrnRecs(self, locStem, loc, ydtrains, numTrns):
+        
         dispList = {
             "actions": {
-            action1: {"trains": [], 
+            "brkDnTrn": {"trains": [], 
                 "y": gui.guiDict[loc]["y0"] - 30,},
-            action2: {"trains": [],
+            "buildTrain": {"trains": [],
                 "y": gui.guiDict[loc]["y0"] - 55}},
             
             "allTrains": {"trains": [], "y": 0,}

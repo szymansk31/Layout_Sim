@@ -1,26 +1,38 @@
 {
+"staging1": {
+    "type": "staging",
+    "x0": 150, "y0": 100, "x1": 250, "y1": 160,
+    "text": "Staging 1"
+},
 "yard2": {
-    "type": "loc",
-    "x0": 200, "y0": 100, "x1": 300, "y1": 160,
+    "type": "yard",
+    "x0": 550, "y0": 100, "x1": 650, "y1": 160,
     "text": "Yard 2"
 },
 "yard1": {
-    "type": "loc",
-    "x0": 750, "y0": 100, "x1": 850, "y1": 160,
+    "type": "yard",
+    "x0": 950, "y0": 100, "x1": 1050, "y1": 160,
     "text": "Yard 1"
 },
 "swArea1": {
-    "type": "loc",
-    "x0": 1300, "y0": 100, "x1": 1400, "y1": 160,
+    "type": "swArea",
+    "x0": 1350, "y0": 100, "x1": 1450, "y1": 160,
     "text": "Sw Area 1"
 },
 "route1": {
-    "type": "route", "leftObj": "yard1", "rtObj": "swArea1",
-    "text": "Route 1"
+    "type": "route", "leftObj": "staging1", "rtObj": "yard2",
+    "text": "Route 1",
+    "transTime": 10
 },
 "route2": {
     "type": "route", "leftObj": "yard2", "rtObj": "yard1",
-    "text": "Route 2"
+    "text": "Route 2",
+    "transTime": 10
+},
+"route3": {
+    "type": "route", "leftObj": "yard1", "rtObj": "swArea1",
+    "text": "Route 3",
+    "transTime": 10
 },
 "trainData": {
     "type": "train", "height": 10, "length": 20

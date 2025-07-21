@@ -1,0 +1,79 @@
+
+
+Train states.  For example, a state/status of dropPickup results in the train
+entering into ydTrains under "swTrain" - an action that the yard takes to switch
+the train.
+
+Alternatively, a "switch" or "turn" status results in an action by the road crew:
+"roadCrewSw" in ydTrains
+    trnStatusList = ["enRoute", "building", "terminate", "switch", "turn", 
+                     "dropPickup", "continue", "misc", "stop"]
+
+In trainProc:
+        match trainDict["status"]:
+            case "enroute":
+
+            case "ready2Leave":
+                trainDict["status"] = "enroute"
+                disp.drawTrain(trnName)
+                pass
+            case "building":
+                #procssing done in locProc
+                pass
+        # the following are status states for a train
+        # they are also actions that a train can undergo in a 
+        # location/terminal/destination
+            case "terminate" | "continue":
+                #procssing done in locProc
+                pass
+            case "switch" | "turn" | "dropPickup":
+                #procssing done in locProc
+                pass
+            case "stop":
+                pass
+
+trainDB.ydTrains = {"brkDnTrn": [], "swTrain": [], "buildTrain": [], "roadCrewSw": []}
+
+In locProc, analyzeTrains sets up the routines in yardCalcs file after 
+categorizing how the train needs to be handled.
+            match trainDB.trains[trainNam]["status"]:
+                case "terminate":
+                    if trainNam not in trainDB.ydTrains["brkDnTrn"]:
+                        trainDB.ydTrains["brkDnTrn"].append(trainNam)
+                case "dropPickup":
+                    # in a yard this action is often undertaken by 
+                    # the yard crew; hence a yard action
+                    if trainNam not in trainDB.ydTrains["swTrain"]:
+                        trainDB.ydTrains["swTrain"].append(trainNam)
+                case "building":
+                    # for yards, not switch areas
+                    if trainNam not in trainDB.ydTrains["buildTrain"]:
+                        trainDB.ydTrains["buildTrain"].append(trainNam)
+                case "switch" | "turn":
+                    # for switch areas no yards
+                    # code is in locProc but actions are undertaken by
+                    # the virtual train crew
+                    if trainNam not in trainDB.ydTrains["roadCrewSw"]:
+                        trainDB.ydTrains["roadCrewSw"].append(trainNam)
+                    pass
+
+
+self.actionList = ["brkDnTrn", "swTrain", "buildTrain", "servIndus", "misc"]
+
+Finally, yardCalcs chooses an action to take from this list:
+        match choice:
+            case "brkDnTrn":
+                self.brkDownTrain(loc)
+            case "swTrain":
+                if trainDB.ydTrains["swTrain"]:
+                    self.swTrain(loc)
+                    pass
+            case "buildTrain":
+                self.buildTrain(loc)
+                pass
+            case "servIndus":
+                pass
+            case "misc":
+                locs.locDat[loc]["startMisc"] = mVars.time
+                endMisc = locs.locDat[loc]["startMisc"] + mVars.prms["miscWaitTime"]
+                pass
