@@ -55,17 +55,25 @@ class mainMethods():
     def printTrainInfo(self, train):
         trainStem = trainDB.trains[train]
         currentLoc = trainStem["currentLoc"]
+        nextLoc = trainStem["nextLoc"]
         finalLoc = trainStem["finalLoc"]
         origLoc = trainStem["origLoc"]
         status = trainStem["status"]
         direction = trainStem["direction"]
-        if mVars.prms["dbgLoop"]: print ("Before train processing: train: ", 
-            train, "currentLoc: ", currentLoc, ", origLoc: ", origLoc, 
+        if mVars.prms["dbgLoop"]: print (
+            "Before train processing: train: ", train, 
+            "currentLoc: ", currentLoc, ", nextLoc: ", nextLoc, 
+            ", origLoc: ", origLoc, 
             ", finalLoc: ", finalLoc, ", direction: ", direction,
             "status: ", status)
 
     def clrWait(self):
         mVars.wait = 0
+        
+    def quitSim(self):
+        gui.root.destroy()
+        gui.root.quit()
+        sys.exit()
                 
     def stepBack(self):
         print("step back from ", mVars.time, " to", mVars.time-1)
@@ -89,15 +97,18 @@ class mainMethods():
                 command=lambda: self.clrWait())
         step_back_button = tk.Button(gui.C, text="Step Back", 
                 command=lambda: self.stepBack())
+        stVars_button = tk.Button(gui.C, text="Dump State Vars", 
+                command=lambda: stVarObj.dumpStVars())
         quit_button = tk.Button(gui.C, text="Quit", 
-                command=lambda: sys.exit())
+                command=lambda: self.quitSim())
         #mainLoop.pack()
         #button1.configure(width = 10, activebackground = "#33B5E5", relief = FLAT)
         gui.C.create_window(10, 10, anchor='nw', window=mainLoop)
         gui.C.create_window(10, 60, anchor='nw', window=self.step_button)
         gui.C.create_window(10, 110, anchor='nw', window=step_back_button)
         gui.C.create_window(10, 160, anchor='nw', window=no_wait_button)
-        gui.C.create_window(10, 220, anchor='nw', window=quit_button)
+        gui.C.create_window(10, 220, anchor='nw', window=stVars_button)
+        gui.C.create_window(10, 280, anchor='nw', window=quit_button)
 
 #########################################################
 # start of code
@@ -119,7 +130,7 @@ geometry = mVars.geometry = files.readFile("layoutGeomFile")
 layoutObj.locListInit(geometry)
 guiObj = gui()
 gui.guiDict = files.readFile("guiFile")
-routeCls.routes = routeGeomObj.initRoutes(geometry, gui.guiDict)
+routeGeomObj.initRoutes(geometry, gui.guiDict)
 
 
 #setup initial car distribution

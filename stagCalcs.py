@@ -20,7 +20,9 @@ class stCalcs():
         self.classObj = classCars()
         from display import dispItems
         self.dispObj = dispItems()
-        
+        from trainProc import trnProc
+        self.trnProcObj = trnProc()
+
     def staging(self, thisLoc, loc):
         
         self.stAnalyzeTrains(loc)
@@ -29,6 +31,13 @@ class stCalcs():
         
         for train in trainDB.ydTrains["ready2Leave"]:
             if mVars.time == trainDB.trains[train]["startTime"] - 1:
+                nextLoc = trainDB.trains[train]["nextLoc"]
+
+                print("in staging: nextLoc: ", nextLoc)
+                if "route" in nextLoc:
+                    self.trnProcObj.fillNextLoc(loc, trainDB.trains[train])
+                    nextLoc = trainDB.trains[train]["nextLoc"]
+                    print("in staging: new nextLoc: ", nextLoc)
                 self.locProcObj.startTrain("ready2Leave", loc, train)
                 
         self.dispObj.dispTrnLocDat(loc)

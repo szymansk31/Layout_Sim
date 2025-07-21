@@ -1,5 +1,4 @@
 from mainVars import *
-from stateVars import routeCls
 from trainProc import trainParams
 from gui import gui    
 
@@ -22,43 +21,49 @@ class routeGeom():
         pass
     
     def initRoutes(self, geometry, guiDict):
+        idx = 1
+        newRoute = {}
         from fileProc import readFiles
         files = readFiles()
         print("\ninitializing route dicts: ")
 
-        tmpRoute = files.readFile("routeFile")
-        routeProto = tmpRoute.pop("routeProto")
-        for item in guiDict:
-            newRoute = {}
-            if guiDict[item]["type"] != "route": continue
-            
-            routeName = item
-            leftObj = guiDict[item]["leftObj"]
-            rtObj = guiDict[item]["rtObj"]
-            newRoute[routeName] = routeProto
-            newRoute[routeName]["leftObj"] = leftObj
-            newRoute[routeName]["rtObj"] = rtObj
-            newRoute[routeName]["transTime"] = guiDict[item]["transTime"]
-            newRoute[routeName]["trnLabelTag"] = routeName+"trnLblTag"
-            newRoute[routeName]["trains"] = []
-
-            # route lines are drawn west-to-east; train locs follow
-
-            newRoute[routeName].update(self.routeLine(routeName, guiDict))
-            newRoute[routeName].update(self.trnsOnRoutes(newRoute[routeName], routeName, guiDict))
-
-            if mVars.prms["dbgGeom"]: print("\ninitRoutes: newRoute: ", newRoute)
-            routeCls.routes[routeName] = dict(newRoute[routeName])
-            if mVars.prms["dbgGeom"]: print("\nRoutes = ", routeCls.routes)
-            
         for loc in geometry:
-            if (loc == leftObj) or (loc == rtObj):
+            destIDX = 0
+            for dest in geometry[loc]["adjLocNames"]:
+                if mVars.prms["dbgGeom"]: print("in initRoutes; orig, dest: ", loc, ",", dest)
+                transTime = geometry[loc]["time2AdjLocs"][destIDX]
+                routeName = "route"+str(idx)
+                
+                if gui.guiDict[loc]["x0"] > gui.guiDict[dest]["x0"]: 
+                    rtObj = loc
+                    leftObj = dest
+                else: 
+                    rtObj = dest
+                    leftObj = loc
+                    
+                tmpRoute = files.readFile("routeFile")
+     
+                newRoute[routeName] = tmpRoute.pop("routeProto")
+                newRoute[routeName]["leftObj"] = leftObj
+                newRoute[routeName]["rtObj"] = rtObj
+                newRoute[routeName]["transTime"] = transTime
+                newRoute[routeName]["trnLabelTag"] = routeName+"trnLblTag"
+                newRoute[routeName]["trains"] = []
+
+                # route lines are drawn west-to-east; train locs follow
+
+                newRoute[routeName].update(self.routeLine(newRoute[routeName], routeName, guiDict))
+                newRoute[routeName].update(self.trnsOnRoutes(newRoute[routeName], routeName, guiDict))
+
+                if mVars.prms["dbgGeom"]: print("\ninitRoutes: route[",routeName,"] = ", newRoute[routeName])
                 rtList = geometry[loc].get("routes")
                 rtList.append(routeName)
                 geometry[loc]["routes"] = rtList
-        if mVars.prms["dbgGeom"]: print("\ninitRoutes: geometry for loc: ", loc, "is", geometry[loc])
-        #if mVars.prms["dbgGeom"]: print("\nnewRoutes: ", newRoute)
-        return
+                if mVars.prms["dbgGeom"]: print("\ninitRoutes: geometry for loc: ", loc, "is", geometry[loc])
+                destIDX +=1
+                idx +=1
+        if mVars.prms["dbgGeom"]: print("\nnewRoutes: ", newRoute)
+        return newRoute
 
     def trnsOnRoutes(self, routeDict, rtNam, guiDict):
         leftObj = guiDict[guiDict[rtNam]["leftObj"]]
@@ -83,7 +88,7 @@ class routeGeom():
     # routeLine draws lines to represent all routes between endpoints
     # no regard for direction, just want the lines between locs
     # train gui data is initialized in trnsOnRoutes
-    def routeLine(self, rtNam, guiDict):
+    def routeLine(self, routeDict, rtNam, guiDict):
         leftObj = guiDict[guiDict[rtNam]["leftObj"]]
         rtObj = guiDict[guiDict[rtNam]["rtObj"]]
         yLoc = (leftObj["y0"] + leftObj["y1"])*0.5

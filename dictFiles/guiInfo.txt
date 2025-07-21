@@ -21,15 +21,18 @@
 },
 "route1": {
     "type": "route", "leftObj": "staging1", "rtObj": "yard2",
-    "text": "Route 1"
+    "text": "Route 1",
+    "transTime": 10
 },
 "route2": {
     "type": "route", "leftObj": "yard2", "rtObj": "yard1",
-    "text": "Route 2"
+    "text": "Route 2",
+    "transTime": 10
 },
 "route3": {
     "type": "route", "leftObj": "yard1", "rtObj": "swArea1",
-    "text": "Route 3"
+    "text": "Route 3",
+    "transTime": 10
 },
 "trainData": {
     "type": "train", "height": 10, "length": 20

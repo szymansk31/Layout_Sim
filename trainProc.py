@@ -123,9 +123,9 @@ class trnProc:
                     
             case "ready2Leave":
                 #fills nextLoc with the route it is taking out of currentLoc
-                self.fillNextLoc(trainDict["currentLoc"], trainDict) 
-                disp.drawTrain(trnName)
+                #self.fillNextLoc(trainDict["currentLoc"], trainDict) 
                 trainDict["status"] = "enroute"
+                disp.drawTrain(trnName)
                 pass
             case "building":
                 #procssing done in locProc
@@ -212,37 +212,24 @@ class trnProc:
         pass
     
 
-    def fillNextLoc(self, stopLoc, trainDict):
-        #print("getNextLoc: stops: ", trainDict["stops"])
-        #stopVals = trainDict["stops"].values()
-        #index = stopVals.index(stopLoc)     # stop just completed processing
-        #trainDict["nextLoc"] = stopVals[index+1]    # next location loaded
+    def fillNextLoc(self, stopLoc, trainDict):        
+        print("getNextLoc: trainDict: ", trainDict)
+
+        if "route" not in trainDict["currentLoc"]:
+            trainDict["currentLoc"] = trainDict["nextLoc"] #will be a route
         
-        print("getNextLoc: trainDict: ", trainDict)
-
-        match trainDict["status"]:
-            case "ready2Leave":
-                if "route" not in trainDict["currentLoc"]:
-                    trainDict["currentLoc"] = trainDict["nextLoc"] #will be a route
-                trainDict["nextLoc"] = next(iter(trainDict["stops"]))
-                
-            #case "enroute":
-            #    trainDict["nextLoc"] = next(iter(trainDict["stops"]))
-            case "switch" | "turn" | "dropPickup" | "continue":
-                trainDict["nextLoc"] = next(iter(trainDict["stops"]))
-                
-        if trainDict["nextLoc"] == None:
-            print("no more locations")
-            trainDict["status"] = "stop"
-        print("getNextLoc: trainDict: ", trainDict)
-
-"""        for stop in iterStops:
         iterStops = iter(trainDict["stops"].keys())
         nextLoc = None
+        for stop in iterStops:
             if stop == stopLoc:
                 nextLoc = next(iterStops, None)
         if nextLoc == None: 
+            print("no more locations")
+            trainDict["status"] = "stop"
         else:
             trainDict["nextLoc"] = nextLoc
+         
+        print("getNextLoc: trainDict: ", trainDict)
+            
         return 
-            """
+

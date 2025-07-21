@@ -99,9 +99,10 @@ class locProc():
         
                 
     def findRoutes(self, loc, ydTrainNam):
+        nextLoc = trainDB.trains[ydTrainNam]["nextLoc"]
         for routeNam in routeCls.routes:
             loc = ''.join(loc)
-            dest = ''.join(trainDB.trains[ydTrainNam]["nextLoc"])
+            dest = ''.join(nextLoc)
             if dbgLocal: print("routNam: ", routeNam, " loc: ", loc, 
                 " nextLoc: ", dest, "route: ", routeCls.routes[routeNam])
             if (loc in routeCls.routes[routeNam].values()) and \
