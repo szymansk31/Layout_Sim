@@ -34,10 +34,6 @@ class stCalcs():
                 nextLoc = trainDB.trains[train]["nextLoc"]
 
                 print("in staging: nextLoc: ", nextLoc)
-                if "route" in nextLoc:
-                    self.trnProcObj.fillNextLoc(loc, trainDB.trains[train])
-                    nextLoc = trainDB.trains[train]["nextLoc"]
-                    print("in staging: new nextLoc: ", nextLoc)
                 self.locProcObj.startTrain("ready2Leave", loc, train)
                 
         self.dispObj.dispTrnLocDat(loc)

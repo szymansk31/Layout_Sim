@@ -95,7 +95,7 @@ class stVarSaves():
 
             for item in self.savNames:
                 savStem = self.savNames[item]
-                outFile.write("\n\n================================")
+                outFile.write("\n\n================================\n")
                 outFile.write(item+"\n")
                 for subItem in savStem["data"]:
                     outFile.write(savStem["title"] + subItem + "\n")

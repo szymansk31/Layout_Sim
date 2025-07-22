@@ -89,7 +89,7 @@ class locProc():
                     # for yards, not switch areas
                     if trainNam not in trainDB.ydTrains["buildTrain"]:
                         trainDB.ydTrains["buildTrain"].append(trainNam)
-                case "switch" | "turn":
+                case "switch":
                     # for switch areas no yards
                     # code is in locProc but actions are undertaken by
                     # the virtual train crew

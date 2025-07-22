@@ -15,7 +15,7 @@ class trainParams():
     colorIDX = 0
     colorList = ["red", "green", "yellow", "orange", "purple1", "dodger blue", "deep pink",
                  "lawn green", "goldenrod", "OrangeRed2", "magenta2", "RoyalBlue1"]
-    trnStatusList = ["enRoute", "building", "terminate", "switch", "turn", 
+    trnStatusList = ["enRoute", "ready2Leave", "building", "terminate", "switch"
                      "dropPickup", "continue", "misc", "stop"]
 
 
@@ -138,7 +138,7 @@ class trnProc:
             case "terminate" | "continue":
                 #procssing done in locProc
                 pass
-            case "switch" | "turn" | "dropPickup":
+            case "switch" | "dropPickup":
                 #procssing done in locProc
                 pass
             case "stop":
@@ -173,7 +173,7 @@ class trnProc:
                 trainDict["status"] = "terminate"
                 trainDict["timeEnRoute"] = 0
                 pass
-            case "switch" | "turn": 
+            case "switch": 
                 # switch town with road train
                 trainDict["status"] = "switch"
                 self.updateTrain4Stop(stopLoc, trainDict)
@@ -190,7 +190,7 @@ class trnProc:
                 pass
             case "continue":
                 #no action at this stop - continue to nextLoc
-                trainDict["status"] = "continue"
+                trainDict["status"] = "ready2Leave"
                 self.updateTrain4Stop(stopLoc, trainDict)
 
         disp.drawTrain(trnName)
@@ -216,9 +216,6 @@ class trnProc:
 
     def fillNextLoc(self, stopLoc, trainDict):        
         print("getNextLoc: trainDict: ", trainDict)
-
-        if "route" not in trainDict["currentLoc"]:
-            trainDict["currentLoc"] = trainDict["nextLoc"] #will be a route
         
         iterStops = iter(trainDict["stops"].keys())
         nextLoc = None

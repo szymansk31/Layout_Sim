@@ -3,6 +3,7 @@ from fileProc import readFiles
 from stateVars import trainDB, locs, routeCls
 from mainVars import mVars
 from trainProc import trainParams
+from display import dispItems
 
 files = readFiles()
 
@@ -47,6 +48,8 @@ class trainFromFile():
             print("with consist: ", consistNam, ", contents: ", self.consist[consistNam])
             trainDB.trains.update(newTrain)
             print("starting train: ", trainDB.trains[train])
+            dispObj = dispItems()
+            dispObj.drawTrain(train)
         return 
 
     def consistFromFile(self, files, fkey):

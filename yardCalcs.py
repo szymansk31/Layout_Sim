@@ -207,6 +207,9 @@ class ydCalcs():
                 # train no longer has pickups or drops
                 # start train to nextLoc, if there are more stops and
                 # remove train name from locs.locData
+                index = [d for d in locStem if "swTrain" in d]
+                locStem.pop(index)
+
                 self.locProcObj.startTrain("swTrain", loc, ydTrainNam)
         
         pass

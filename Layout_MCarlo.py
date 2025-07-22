@@ -71,6 +71,7 @@ class mainMethods():
         mVars.wait = 0
         
     def quitSim(self):
+        self.var.set(1)        
         gui.root.destroy()
         sys.exit()
         #gui.root.quit()

@@ -41,10 +41,6 @@ class dispItems():
         locs.labels[loc].config(font=("Arial", 8), justify="left")
         locs.labels[loc].pack()
 
-        
-        pass
-
-
     def reDisp(self):
         for loc in locs.locDat:
             self.dispTrnLocDat(loc)
@@ -101,36 +97,6 @@ class dispItems():
         gui.C.itemconfigure(locStem["actionObjID"], text=text, font=("Arial", 8))
         pass
 
-    def dispTrnInLoc(self, loc, ydTrains):
-        locStem = locs.locDat[loc]
-        trainStem = trainDB.trains
-        text = loc + "\n"
-        numTrns = 0
-        #if not locStem["trains"]:
-        for train in locStem["trains"]:
-
-            consistNum = trainStem[train]["consistNum"]
-            consistNam = "consist"+str(consistNum)
-            for action in ydTrains:
-                if train in ydTrains[action]:
-                    text += train + ": " + action + "\n"
-            #text += train+"\n"
-            text += str(trainDB.consists[consistNam]["stops"]) 
-            text += "\n"
-            numTrns +=1
-        #print("dispTrnInLoc: ydTrains: ", ydTrains, " text: ", text)
-        x = (gui.guiDict[loc]["x0"] + gui.guiDict[loc]["x1"])*0.5
-        y = gui.guiDict[loc]["y0"] + 300
-        if locStem["firstDispTrnTxt"]:
-            locStem["locTrnTxtID"] = \
-                gui.C.create_text(x, y, text=text, width=380 , font=("Arial", 8))
-            
-        if loc in locs.labels:
-            locs.labels[loc].config(text=text)
-            gui.C.delete(locStem["locTrnTxtID"])
-        else:
-            gui.C.itemconfigure(locStem["locTrnTxtID"], text=text, font=("Arial", 8))
-        self.dispTrnRecs(locStem, loc, ydTrains, numTrns)
         
     def dispTrnRecs(self, locStem, loc, ydtrains, numTrns):        
         actionIter = iter(trainDB.ydTrains)
