@@ -96,7 +96,7 @@
 "deltaT": 0,
 "trnRectTag": "",
 "trnNumTag": "",
-"numStops": 1,
+"numStops": 3,
 "currentStop": "",
 "stops": {
     "yard2": {"action": "dropPickup"},

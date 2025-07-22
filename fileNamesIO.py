@@ -1,20 +1,22 @@
 
+
 #=================================================
 class fileNames:
     
     def __init__(self):
+        from mainVars import mVars
         self.fNames = {
-            "paramFile": "dictFiles/paramDict.txt",
-            "guiFile": "dictFiles/guiInfo.txt",
-            "layoutGeomFile": "dictFiles/layoutGeom.txt",
-            "locationFile": "dictFiles/locationInfo.txt",
-            "routeFile": "dictFiles/routeDict.txt",
-            "trainFile": "dictFiles/trainDict.txt",
-            "carFile": "dictFiles/initCarDict.txt",
-            "consistFile": "dictFiles/consist.txt",
-            "startingTrainFile": "dictFiles/startingTrains.txt",
-            "startingConsistFile": "dictFiles/startingConsists.txt",
-            "bare_consist_file": "dictFiles/bare_consist.txt"
+            "paramFile": "paramDict.txt",
+            "guiFile": mVars.prms["dictDirect"] + "/guiInfo.txt",
+            "layoutGeomFile": mVars.prms["dictDirect"] + "/layoutGeom.txt",
+            "locationFile": mVars.prms["dictDirect"] + "/locationInfo.txt",
+            "routeFile": mVars.prms["dictDirect"] + "/routeDict.txt",
+            "trainFile": mVars.prms["dictDirect"] + "/trainDict.txt",
+            "carFile": mVars.prms["dictDirect"] + "/initCarDict.txt",
+            "consistFile": mVars.prms["dictDirect"] + "/consist.txt",
+            "startingTrainFile": mVars.prms["dictDirect"] + "/startingTrains.txt",
+            "startingConsistFile": mVars.prms["dictDirect"] + "/startingConsists.txt",
+            "bare_consist_file": mVars.prms["dictDirect"] + "/bare_consist.txt"
             }
 
 

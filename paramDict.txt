@@ -1,4 +1,5 @@
 {
+    "dictDirect": "dictFiles",
     "maxTime": 40,
     "timeStep": 1,
     "trainSize": 10,
