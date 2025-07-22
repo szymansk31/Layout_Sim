@@ -182,7 +182,8 @@ class ydCalcs():
             ydTrainNam = random.choice(trainDB.ydTrains.get("swTrain"))
             locStem.append({"swTrain": ydTrainNam})
         else:
-            ydTrainNam = locStem["swTrain"]
+            entry = next(iter(locStem))
+            ydTrainNam = entry["swTrain"]
             
         print("ydtrainNam: ", ydTrainNam, "ready2Pickup: ", ydCalcs.ready2Pickup)
         self.dispObj.dispActionDat(loc, "swTrain", ydTrainNam)

@@ -72,8 +72,8 @@ class mainMethods():
         
     def quitSim(self):
         gui.root.destroy()
-        gui.root.quit()
         sys.exit()
+        #gui.root.quit()
                 
     def stepBack(self):
         print("step back from ", mVars.time, " to", mVars.time-1)
