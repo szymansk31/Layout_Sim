@@ -23,10 +23,11 @@ class mainMethods():
         count = 0
         maxCount = 10
         print("mVars.time: ", mVars.time, "maxtime: ", mVars.prms["maxTime"])
-        while mVars.time < mVars.prms["maxTime"]:
+        while mVars.time <= mVars.prms["maxTime"]:
             # save state variables and statistics for this time step
             stVarObj.savStats()
             stVarObj.saveStVars()
+            displayObj.updateTimer()
             print("\nmVars.time: ", mVars.time, ", savIDX: ", stVarSaves.savIDX)
             if mVars.wait:
                 print("waiting....")

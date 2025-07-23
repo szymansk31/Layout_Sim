@@ -36,6 +36,9 @@
 },
 "trainData": {
     "type": "train", "height": 10, "length": 20
+},
+"timer": {
+    "type": "timer", "x0": 40, "y0": 70, "timerTag": 0
 }
 
 }

@@ -2,6 +2,7 @@
 import tkinter as tk
 from tkinter import Canvas
 from stateVars import locs, routeCls
+from mainVars import mVars
 
 #=================================================
 class gui():
@@ -81,25 +82,17 @@ class dispSim():
                     pass
                     #trainDB.trnHeight = guiDict[item]["height"]
                     #trainDB.trnLength = guiDict[item]["length"]
+                case "timer":
+                    x = gui.guiDict["timer"]["x0"]
+                    y = gui.guiDict["timer"]["y0"]
+                    text = "time: " + str(mVars.time)
+                    text += "\nmax: " + str(mVars.prms["maxTime"])
+                    gui.guiDict["timer"]["timerTag"] = gui.C.create_text(
+                        x, y, text=text, font=("Arial", 10)
+                    )
+                    pass
+                    #trainDB.trnHeight = guiDict[item]["height"]
+                    #trainDB.trnLength = guiDict[item]["length"]
         #gui.C.pack()
         #self.open_popup()
                 
-    def open_popup(self):
-        # Create a Toplevel window for the popup
-        popup = tk.Toplevel(gui.root)
-        popup.title("Popup Window")
-        popup.geometry("200x150")
-        #gui.C.pack()
-        
-    def initTrnTxtFrame(self, route):
-        self.trnTxtWidget = tk.Text(gui.C, width=30, height=10, font=("Arial", 8), wrap="word")
-        self.trnTxtFrame = gui.C.create_window(route["xTrnTxt"], route["yTrnTxt"], 
-            window=self.trnTxtWidget, width=50, height=20)
-        self.trnTxtWidget.insert(tk.END, "train names go here")
-        return 
-        #gui.trnTxtFrame.grid(row=2, column=2)
-        
-    def writeTrnTxt(self, text):
-        print("in writeTrnTxt: text:", text)
-        self.trnTxtWidget.insert(tk.END, text)
-

@@ -49,6 +49,12 @@ class dispItems():
         for train in trainDB.trains:
             self.drawTrain(train)
 
+    def updateTimer(self):
+        text = "time: " + str(mVars.time)
+        text += "\nmax: " + str(mVars.prms["maxTime"])
+        gui.C.itemconfigure(gui.guiDict["timer"]["timerTag"], 
+            text=text, font=("Arial", 10))
+
 
     def dispTrnLocDat(self, loc):
         text = ''
