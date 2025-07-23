@@ -94,11 +94,11 @@ class mainMethods():
         #mainLoop.pack()
         #button1.configure(width = 10, activebackground = "#33B5E5", relief = FLAT)
         gui.C.create_window(10, 10, anchor='nw', window=mainLoop)
-        gui.C.create_window(10, 60, anchor='nw', window=self.step_button)
-        gui.C.create_window(10, 110, anchor='nw', window=step_back_button)
-        gui.C.create_window(10, 160, anchor='nw', window=no_wait_button)
-        gui.C.create_window(10, 220, anchor='nw', window=stVars_button)
-        gui.C.create_window(10, 280, anchor='nw', window=quit_button)
+        gui.C.create_window(90, 10, anchor='nw', window=self.step_button)
+        gui.C.create_window(140, 10, anchor='nw', window=step_back_button)
+        gui.C.create_window(220, 10, anchor='nw', window=no_wait_button)
+        gui.C.create_window(290, 10, anchor='nw', window=stVars_button)
+        gui.C.create_window(420, 10, anchor='nw', window=quit_button)
 
 #########################################################
 # start of code

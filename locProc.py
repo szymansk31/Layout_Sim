@@ -70,7 +70,7 @@ class locProc():
         disp.dispTrnLocDat(loc)
             
     def analyzeTrains(self, loc):
-        trainDB.ydTrains = {"brkDnTrn": [], "buildTrain": [], "swTrain": [], "roadCrewSw": []}
+        trainDB.ydTrains = {"brkDnTrn": [], "buildTrain": [], "swTrain": [], "roadCrewSw": [], "continue": []}
 
         # train status leads to actions by the yard crew or
         # the train crew.  Train actions are the same name as
@@ -96,6 +96,14 @@ class locProc():
                     if trainNam not in trainDB.ydTrains["roadCrewSw"]:
                         trainDB.ydTrains["roadCrewSw"].append(trainNam)
                     pass
+                case "continue":
+                    # no action for yard.  May have a call to 
+                    # dispatcher eventually, so process "continue" here 
+                    # as no action needed by train crew (modulo dispatch call)
+                    if trainNam not in trainDB.ydTrains["continue"]:
+                        trainDB.ydTrains["continue"].append(trainNam)
+
+                    self.startTrain("continue", loc, trainNam)
         
                 
     def findRoutes(self, loc, ydTrainNam):
@@ -112,6 +120,7 @@ class locProc():
     def startTrain(self, action, loc, ydTrainNam):
         # setup train
         from trainProc import trainParams
+        disp = dispItems()
 
         trainStem = trainDB.trains[ydTrainNam]
         dest = trainDB.trains[ydTrainNam]["nextLoc"]
@@ -134,9 +143,11 @@ class locProc():
                     print("no route found", ydTrainNam,  "leftObj: ", leftObj, "rtObj: "
                             , rtObj,"loc: ", loc, "direction: ", trainStem["direction"])
                     trainStem["status"] = "stop"
-
+                    
+                trainStem["firstDispTrn"] = 1
                 trainStem["currentLoc"] = route4newTrn
-                
+                #print("trainStem: ", trainStem, ", original dict: ", trainDB.trains[ydTrainNam])
+                disp.drawTrain(ydTrainNam)
             case "none":
                 trainStem["status"] = "stop"
                 

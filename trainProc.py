@@ -15,7 +15,7 @@ class trainParams():
     colorIDX = 0
     colorList = ["red", "green", "yellow", "orange", "purple1", "dodger blue", "deep pink",
                  "lawn green", "goldenrod", "OrangeRed2", "magenta2", "RoyalBlue1"]
-    trnStatusList = ["enRoute", "ready2Leave", "building", "terminate", "switch"
+    trnStatusList = ["enroute", "ready2Leave", "building", "terminate", "switch"
                      "dropPickup", "continue", "misc", "stop"]
 
 
@@ -126,6 +126,7 @@ class trnProc:
             case "ready2Leave":
                 #fills nextLoc with the route it is taking out of currentLoc
                 #self.fillNextLoc(trainDict["currentLoc"], trainDict) 
+                print("train: ", trnName, " switching to enroute status")
                 trainDict["status"] = "enroute"
                 disp.drawTrain(trnName)
                 pass
@@ -190,7 +191,7 @@ class trnProc:
                 pass
             case "continue":
                 #no action at this stop - continue to nextLoc
-                trainDict["status"] = "ready2Leave"
+                trainDict["status"] = "continue"
                 self.updateTrain4Stop(stopLoc, trainDict)
 
         disp.drawTrain(trnName)

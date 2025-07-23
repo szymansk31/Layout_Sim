@@ -144,21 +144,4 @@ class stVarSaves():
                     for stop in stopStem:
                         statFile.write("\n" + stop + ": " + str(stopStem[stop]))
 
-    def dumpJSON(self):
-        spacer = "locs.locDat: \n\n\n"
-        with open ("output/stVars.txt", "w") as jsonFile:
-            json.dump(spacer, jsonFile)
-            json.dump(locs.locDat, jsonFile)
-            spacer = "trainDC.trains: \n\n\n"
-            json.dump(spacer, jsonFile)
-            json.dump(trainDB.trains, jsonFile)
-            json.dump(trainDB.consists, jsonFile)
-            json.dump(trainDB.ydTrains, jsonFile)
-            json.dump(routeCls.routes, jsonFile)
-        try:    
-            "output/stVars.txt".close()
-        except:
-            print("\nCould not find stVars.txt")
-
-
         

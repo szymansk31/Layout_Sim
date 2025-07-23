@@ -6,7 +6,7 @@ from stateVars import locs, routeCls
 #=================================================
 class gui():
     root = tk.Tk() 
-    C = Canvas(root, height=500, width=1600, bg="lightgray")
+    C = Canvas(root, height=550, width=1600, bg="lightgray")
     #subCanvas = Canvas(root, height=100, width=100, bg="white")
     objects = []
     guiDict = {}
@@ -15,7 +15,7 @@ class gui():
     def __init__(self):
         gui.root.title("Layout Simulation")
         # Adjust size 
-        gui.root.geometry( "1600x500" ) 
+        gui.root.geometry( "1600x550" ) 
         gui.C.pack()
 
       

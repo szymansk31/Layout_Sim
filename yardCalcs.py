@@ -185,7 +185,8 @@ class ydCalcs():
             entry = next(iter(locStem))
             ydTrainNam = entry["swTrain"]
             
-        print("ydtrainNam: ", ydTrainNam, "ready2Pickup: ", ydCalcs.ready2Pickup)
+        print("ydtrainNam: ", ydTrainNam, "ready2Pickup: ", ydCalcs.ready2Pickup,
+              "trn4Action: ", locs.locDat[loc]["trn4Action"])
         self.dispObj.dispActionDat(loc, "swTrain", ydTrainNam)
 
         if ydCalcs.ready2Pickup == 0:
@@ -207,8 +208,9 @@ class ydCalcs():
                 # train no longer has pickups or drops
                 # start train to nextLoc, if there are more stops and
                 # remove train name from locs.locData
-                index = [d for d in locStem if "swTrain" in d]
-                locStem.pop(index)
+                locs.locDat[loc]["trn4Action"] = [d for d in locStem if "swTrain" not in d]
+                if mVars.prms["dbgYdProc"]: print("trn4Action:", 
+                        locs.locDat[loc]["trn4Action"])
 
                 self.locProcObj.startTrain("swTrain", loc, ydTrainNam)
         

@@ -58,7 +58,7 @@
 "numCars": 10,
 "status": "ready2Leave",
 "origLoc": "staging1",
-"finalLoc": "yard2",
+"finalLoc": "yard1",
 "currentLoc": "route1",
 "nextLoc": "yard2",
 "direction": "east",
@@ -70,10 +70,11 @@
 "deltaT": 0,
 "trnRectTag": "",
 "trnNumTag": "",
-"numStops": 1,
+"numStops": 2,
 "currentStop": "",
 "stops": {
-    "yard2": {"action": "terminate"}
+    "yard2": {"action": "continue"},
+    "yard1": {"action": "terminate"}
         },
 "color": ""
     },

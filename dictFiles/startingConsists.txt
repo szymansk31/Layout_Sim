@@ -23,7 +23,8 @@
 "consistNum": 3,
 "trainNum": 3,
 "stops": {
-    "yard2": {"box": 2, "tank": 1,"rfr": 3, "hop": 0, 
+    "yard2": {},
+    "yard1": {"box": 2, "tank": 1,"rfr": 3, "hop": 0, 
         "gons": 3, "flats": 1, "psgr": 0}
         }
     },

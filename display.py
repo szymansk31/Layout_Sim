@@ -1,6 +1,7 @@
 
 import tkinter as tk
 from tkinter import Canvas
+import sys
 
 from mainVars import mVars
 from gui import gui
@@ -57,7 +58,7 @@ class dispItems():
         text = loc + ": yard tracks: \n"
         numTrns = 0
         x = (gui.guiDict[loc]["x0"] + gui.guiDict[loc]["x1"])*0.5
-        y = gui.guiDict[loc]["y0"] + 200
+        y = gui.guiDict[loc]["y0"] + 300
 
         for track in locStem["tracks"]:
             text += track + "\n"
@@ -147,6 +148,7 @@ class dispItems():
 
             
     def drawTrain(self, train):
+        print("drawTrain called by: ", sys._getframe(1).f_code.co_name)
 
         trainStem = trainDB.trains[train]
         trainLoc = trainStem["currentLoc"]
@@ -171,6 +173,9 @@ class dispItems():
                 if trainStem["firstDispTrn"] == 1:
                     trainStem["xLoc"] = trainStem["xTrnInit"]
                     trainNum = train[5:]
+                    
+                    gui.C.delete(trainStem["trnRectTag"])
+                    gui.C.delete(trainStem["trnNumTag"])
 
                     gui.C.create_rectangle(trainStem["xLoc"], yTrn, trainStem["xLoc"]+trnLen, 
                         yTrn+trnHt, fill=trainStem["color"], tags=trainStem["trnRectTag"])
