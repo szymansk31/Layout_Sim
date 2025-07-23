@@ -2,6 +2,7 @@
 
 import copy
 import json
+from datetime import datetime
 
 #=================================================
 class locs():
@@ -54,6 +55,9 @@ class stVarSaves():
                 "data": {}
                 }
         }
+        from printMethods import printMethods
+        self.printObj = printMethods()
+
     
     def saveStVars(self):
         saveNam = "save" + str(stVarSaves.savIDX)
@@ -102,6 +106,43 @@ class stVarSaves():
                     outFile.write(str(savStem["data"][subItem]))
 
 
+    def savStats(self):
+
+        now = datetime.now()
+        date_time = now.strftime("%m_%d_at_%H%M")
+        fileName = "output/stats_" + date_time + ".txt"
+        with open (fileName, "a") as statFile:
+            statFile.write("\n\n===============================\n")
+            statFile.write("time step: " + str(mVars.time))
+            for loc in locs.locDat:
+                statFile.write("\n\nLocation: " + loc)
+                statFile.write("\nDestination, #cars     \n")
+
+                for dest in locs.locDat[loc]["trackTots"]:
+                    numCars = locs.locDat[loc]["trackTots"][dest]
+                    statFile.write("  " + dest + "    " + str(numCars))
+                statFile.write("\nTrain and consist:     ")
+
+                for train in locs.locDat[loc]["trains"]:
+                    self.printObj.writeTrainInfo(statFile, train)
+                    consistNum = trainDB.trains[train]["consistNum"]
+                    consistNam = "consist"+str(consistNum)
+                    stopStem = trainDB.consists[consistNam]["stops"]
+                    statFile.write("\n" + train + ":")
+                    for stop in stopStem:
+                        statFile.write("\n" + stop + ": " + str(stopStem[stop]))
+
+            for route in routeCls.routes:
+                statFile.write("\n\nroute: " + route)
+                statFile.write("\nTrain and consist:     ")
+                for train in routeCls.routes[route]["trains"]:
+                    self.printObj.writeTrainInfo(statFile, train)
+                    consistNum = trainDB.trains[train]["consistNum"]
+                    consistNam = "consist"+str(consistNum)
+                    stopStem = trainDB.consists[consistNam]["stops"]
+                    statFile.write("\n" + train + ":")
+                    for stop in stopStem:
+                        statFile.write("\n" + stop + ": " + str(stopStem[stop]))
 
     def dumpJSON(self):
         spacer = "locs.locDat: \n\n\n"

@@ -6,9 +6,11 @@ from tkinter import ttk
 from stateVars import locs, trainDB, routeCls, stVarSaves
 from trainProc import trainParams, trnProc
 from display import dispItems
+from printMethods import printMethods
 trnProcObj = trnProc()
 displayObj = dispItems()
 stVarObj = stVarSaves()
+printObj = printMethods()
          
 #=================================================
 class mainMethods():
@@ -22,6 +24,8 @@ class mainMethods():
         maxCount = 10
         print("mVars.time: ", mVars.time, "maxtime: ", mVars.prms["maxTime"])
         while mVars.time < mVars.prms["maxTime"]:
+            # save state variables and statistics for this time step
+            stVarObj.savStats()
             stVarObj.saveStVars()
             print("\nmVars.time: ", mVars.time, ", savIDX: ", stVarSaves.savIDX)
             if mVars.wait:
@@ -38,7 +42,7 @@ class mainMethods():
     
             for train in trainDB.trains:
                 if mVars.time >= trainDB.trains[train]["startTime"]:
-                    self.printTrainInfo(train)
+                    printObj.printTrainInfo(train)
                     trnProcObj.trainCalcs(trainDB.trains[train], train)
             if count == maxCount:
                 print("routes: ", routeCls.routes)
@@ -51,21 +55,6 @@ class mainMethods():
                 locProcObj.LocCalcs(locs.locDat, loc)
             stVarObj.incSavIDX()
             mVars.time +=1
-
-    def printTrainInfo(self, train):
-        trainStem = trainDB.trains[train]
-        currentLoc = trainStem["currentLoc"]
-        nextLoc = trainStem["nextLoc"]
-        finalLoc = trainStem["finalLoc"]
-        origLoc = trainStem["origLoc"]
-        status = trainStem["status"]
-        direction = trainStem["direction"]
-        if mVars.prms["dbgLoop"]: print (
-            "Before train processing: train: ", train, 
-            "currentLoc: ", currentLoc, ", nextLoc: ", nextLoc, 
-            ", origLoc: ", origLoc, 
-            ", finalLoc: ", finalLoc, ", direction: ", direction,
-            "status: ", status)
 
     def clrWait(self):
         mVars.wait = 0
