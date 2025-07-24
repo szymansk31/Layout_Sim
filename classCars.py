@@ -96,7 +96,7 @@ class classCars():
         #    self.printClassInfo(self.train2Track.__name__, numCars, 
         #                        thisTrack, trainDest)
         carSel, availCars = carProcObj.carTypeSel(self.consistStem[loc])
-        if availCars <= 0: return availCars, train
+        if availCars <= 0: return availCars
 
         if mVars.prms["dbgYdProc"]: print("train2Track: ", train, "consist: ", trainDB.consists[self.consistNam])
 
