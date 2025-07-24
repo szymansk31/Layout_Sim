@@ -1,7 +1,7 @@
 {
 "staging1": {
     "type": "staging",
-    "x0": 150, "y0": 100, "x1": 250, "y1": 160,
+    "x0": 200, "y0": 100, "x1": 300, "y1": 160,
     "text": "Staging 1"
 },
 "yard2": {
@@ -39,6 +39,9 @@
 },
 "timer": {
     "type": "timer", "x0": 40, "y0": 70, "timerTag": 0
+},
+"buttons": {
+    "type": "buttons"
 }
 
 }

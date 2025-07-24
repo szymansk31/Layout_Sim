@@ -109,21 +109,29 @@ class dispItems():
         actionIter = iter(trainDB.ydTrains)
         action1 = next(actionIter)
         action2 = next(actionIter)
+
+        y0 = gui.guiDict[loc]["y0"]
         dispList = {
             "actions": {
             action1: {"trains": [], 
-                "y": gui.guiDict[loc]["y0"] - 30,},
+                "y": y0 - 55,},
             action2: {"trains": [],
-                "y": gui.guiDict[loc]["y0"] - 55}},
-            
-            "allTrains": {"trains": [], "y": 0,}
-            
+                "y": y0 - 40}}
             }
+        
         for action in dispList["actions"]:
             for train in ydtrains[action]:
                 dispList["actions"][action]["trains"].append(train)
-                dispList["allTrains"]["trains"].append(train)
-            
+
+        dispList["actions"]["ready2Leave"] = dict(trains= [], y= y0 - 25)
+        dispList["actions"]["built"] = dict(trains = [], y = y0 - 10)
+        tmp = locs.locDat[loc]["trains"]
+        for train in tmp:
+            if trainDB.trains[train]["status"] == "ready2Leave":
+                dispList["actions"]["ready2Leave"]["trains"].append(train)
+            if trainDB.trains[train]["status"] == "built":
+                dispList["actions"]["built"]["trains"].append(train)
+        print("dispList: ", dispList)
         trainStem = trainDB.trains
         trnLen = gui.guiDict["trainData"]["length"]
         trnHt = gui.guiDict["trainData"]["height"]
@@ -138,7 +146,7 @@ class dispItems():
             actionStem = dispList["actions"][action]
             y = actionStem["y"]
             if locStem["firstDispTrnTxt"]:
-                gui.C.create_text(xtrn-70, y+6, text=action, 
+                gui.C.create_text(xtrn-90, y+6, text=action, 
                         font=("Arial", 8))
             for train in actionStem["trains"]:
                 trainNum = train[5:]

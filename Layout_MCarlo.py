@@ -6,7 +6,7 @@ from tkinter import ttk
 from stateVars import locs, trainDB, routeCls, stVarSaves
 from trainProc import trainParams, trnProc
 from display import dispItems
-from printMethods import printMethods
+from outputMethods import printMethods
 trnProcObj = trnProc()
 displayObj = dispItems()
 stVarObj = stVarSaves()
@@ -53,7 +53,7 @@ class mainMethods():
                 if mVars.prms["dbgLoop"]: print ("\nAbout to process: ", 
                     loc)
 
-                locProcObj.LocCalcs(locs.locDat, loc)
+                locProcObj.locCalcs(locs.locDat, loc)
             stVarObj.incSavIDX()
             mVars.time +=1
 

@@ -15,7 +15,7 @@ class trainParams():
     colorIDX = 0
     colorList = ["red", "green", "yellow", "orange", "purple1", "dodger blue", "deep pink",
                  "lawn green", "goldenrod", "OrangeRed2", "magenta2", "RoyalBlue1"]
-    trnStatusList = ["enroute", "ready2Leave", "building", "terminate", "switch"
+    trnStatusList = ["enroute", "ready2Leave", "building", "built", "terminate", "switch"
                      "dropPickup", "continue", "misc", "stop"]
 
 
@@ -130,7 +130,7 @@ class trnProc:
                 trainDict["status"] = "enroute"
                 disp.drawTrain(trnName)
                 pass
-            case "building":
+            case "building"|"built":
                 #procssing done in locProc
                 pass
         # the following are status states for a train

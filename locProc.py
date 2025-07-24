@@ -45,13 +45,13 @@ class locProc():
             thisLocDests.append(dest)
         return thisLocDests
 
-    def LocCalcs(self, thisLoc, loc):
+    def locCalcs(self, thisLoc, loc):
         disp = dispItems()
         ydCalcObj = ydCalcs()
         swAreaObj = swArea()
         stagCalcObj = stCalcs()
 
-        if mVars.prms["dbgYdProc"]: print("entering yardCalcs: locdat: "
+        if mVars.prms["dbgYdProc"]: print("entering locCalcs: locdat: "
                     , locs.locDat[loc])
 
         #if mVars.prms["\ndbgYdProc"]: print("yardCalcs: thisLoc ", thisloc)
@@ -67,7 +67,7 @@ class locProc():
                 stagCalcObj.staging(thisLoc, loc)
 
                     
-        disp.dispTrnLocDat(loc)
+        #disp.dispTrnLocDat(loc)
             
     def analyzeTrains(self, loc):
         trainDB.ydTrains = {"brkDnTrn": [], "buildTrain": [], "swTrain": [], "roadCrewSw": [], "continue": []}
@@ -104,6 +104,18 @@ class locProc():
                         trainDB.ydTrains["continue"].append(trainNam)
 
                     self.startTrain("continue", loc, trainNam)
+                case "built":
+                    startTime = locs.locDat[loc]["bldTrnDepTimes"][0]
+                    if mVars.time >= startTime - 1:
+                        locs.locDat[loc]["bldTrnDepTimes"].pop(0)
+                        nextLoc = trainDB.trains[trainNam]["nextLoc"]
+                        print(trainNam, ": with start time ", startTime,
+                              " in loc: ", loc, 
+                              " built and leaving for (nextLoc): ", 
+                              nextLoc)
+                        # train status is "built"; use "noAction" to bypass
+                        # train removal from ydTrains
+                        self.startTrain("noAction", loc, trainNam)
         
                 
     def findRoutes(self, loc, ydTrainNam):
@@ -158,10 +170,13 @@ class locProc():
     def rmTrnFromLoc(self, action, loc, ydTrainNam):
         # remove train from ydTrains and location
         print("rmTrnFromLoc: trainDB.ydTrains: ", trainDB.ydTrains)
-        index = trainDB.ydTrains[action].index(ydTrainNam)
-        trainDB.ydTrains[action].pop(index)
-        if dbgLocal: print("after removal: trainDB.ydTrains: ", trainDB.ydTrains, 
-                "\n trains[ydTrainNam]: ", trainDB.trains[ydTrainNam])
+        if action == "noAction":
+            print("Train no longer in ydTrains")
+        else:
+            index = trainDB.ydTrains[action].index(ydTrainNam)
+            trainDB.ydTrains[action].pop(index)
+            if dbgLocal: print("after removal: trainDB.ydTrains: ", trainDB.ydTrains, 
+                    "\n trains[ydTrainNam]: ", trainDB.trains[ydTrainNam])
         
         index = locs.locDat[loc]["trains"].index(ydTrainNam)
         locs.locDat[loc]["trains"].pop(index)

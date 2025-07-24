@@ -55,7 +55,7 @@ class stVarSaves():
                 "data": {}
                 }
         }
-        from printMethods import printMethods
+        from outputMethods import printMethods
         self.printObj = printMethods()
 
     

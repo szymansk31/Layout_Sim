@@ -127,7 +127,8 @@ class ydCalcs():
 
             if trainStem["numCars"] >= mVars.prms["trainSize"]*0.7:
                 # train has reached max size
-                self.locProcObj.startTrain("buildTrain", loc, ydTrainNam)
+                trainStem["status"] = "built"
+                #self.locProcObj.startTrain("buildTrain", loc, ydTrainNam)
 
     def ready2Build(self, loc):
         trackList = [trackTot for trackTot in locs.locDat[loc]["trackTots"] if "indust" not in trackTot]
