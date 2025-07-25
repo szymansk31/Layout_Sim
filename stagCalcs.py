@@ -39,7 +39,7 @@ class stCalcs():
         self.dispObj.dispTrnLocDat(loc)
                 
     def stAnalyzeTrains(self, loc):
-        trainDB.ydTrains = {"ready2Leave": [], "terminated": []}
+        trainDB.ydTrains = {"ready2Leave": [], "terminated": [], "turn": []}
 
         # train status leads to actions by the yard crew or
         # the train crew.  Train actions are the same name as

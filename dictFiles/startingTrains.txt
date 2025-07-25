@@ -89,7 +89,7 @@
 "currentLoc": "staging1",
 "nextLoc": "yard2",
 "direction": "east",
-"startTime": 12, 
+"startTime": 5, 
 "xTrnInit": 250,
 "xLoc": 250,
 "firstDispTrn": 1,

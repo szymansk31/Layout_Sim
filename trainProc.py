@@ -16,7 +16,7 @@ class trainParams():
     colorList = ["red", "green", "yellow", "orange", "purple1", "dodger blue", "deep pink",
                  "lawn green", "goldenrod", "OrangeRed2", "magenta2", "RoyalBlue1"]
     trnStatusList = ["enroute", "ready2Leave", "building", "built", "terminate", "switch"
-                     "dropPickup", "continue", "misc", "stop"]
+                     "dropPickup", "continue", "turn", "misc", "stop"]
 
 
     def __init__(self):
@@ -58,7 +58,7 @@ class trainParams():
         newTrain[newTrainNam]["trnLabelTag"] = newTrainNam+"LabelTag"
         newTrain[newTrainNam]["startTime"] = mVars.time
     
-        print("newTrain: dict: ", newTrain)
+        print("newTrain: partial dict: ", newTrain)
         trainDB.trains.update(newTrain)
         
         self.newConsist(newConsistNum, newTrainNum)

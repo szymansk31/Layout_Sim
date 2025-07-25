@@ -131,6 +131,10 @@ class stVarSaves():
                     consistNam = "consist"+str(consistNum)
                     stopStem = trainDB.consists[consistNam]["stops"]
                     statFile.write("\n" + train + ":")
+                    trnStopStem = trainDB.trains[train]["stops"]
+                    for stop in trnStopStem:
+                        statFile.write("\n"+ stop \
+                             + str(trnStopStem[stop]))
                     for stop in stopStem:
                         numCars = sum(stopStem[stop].values())
                         statFile.write("\n"+ stop +": #cars: "+\

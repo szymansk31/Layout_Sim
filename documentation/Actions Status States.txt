@@ -1,4 +1,17 @@
 
+How are trains initialized and started?
+1. Train is part of "startingTrains.txt" input deck.  The train may be in
+   a yard or staging area, or may start on a route with status "enroute".
+2. For case 1, the train has a "startTime" parameter from the input deck.
+3. Train is created in a yard from cars on yard tracks.  Destination is selected 
+    by which track has the most cars.
+4. For case 3, the train is created in the yard with a status of "built".  Start time
+    is taken from a start time list given in the input deck.  
+5. Further for case 3, the train status changes from "built" to "ready2Leave" by
+    yardCalcs.py.  TrainProc takes over status processing, turning "ready2Leave" 
+    into "enroute".
+
+
 
 Train states.  For example, a state/status of dropPickup results in the train
 entering into ydTrains under "swTrain" - an action that the yard takes to switch
@@ -6,8 +19,8 @@ the train.
 
 Alternatively, a "switch" or "turn" status results in an action by the road crew:
 "roadCrewSw" in ydTrains
-    trnStatusList = ["enRoute", "building", "terminate", "switch", "turn", 
-                     "dropPickup", "continue", "misc", "stop"]
+    trnStatusList = ["enroute", "ready2Leave", "building", "built", "terminate", "switch"
+                     "dropPickup", "continue", "turn", "misc", "stop"]
 
 In trainProc:
         match trainDict["status"]:

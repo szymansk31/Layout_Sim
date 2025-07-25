@@ -138,7 +138,30 @@ class ydCalcs():
         if locs.locDat[loc]["trackTots"][trackMaxCars] >= mVars.prms["trainSize"]*0.5: return trackMaxCars
         else: return 0
         
+    def setStops(self, loc, dest):
+        from gui import gui
+        stops = {}
+        testLoc = loc
+        nextLoc = dest
+        numStops = 0
+        while 1:
+            if dest in locs.locDat[testLoc]["adjLocNames"].values():
+                stops.update({dest: {"action": "terminate"}})
+                numStops +=1
+                return nextLoc, numStops, stops
+
+            if gui.guiDict[dest]["x0"] < gui.guiDict[loc]["x0"]:
+                tmpStop = locs.locDat[loc]["adjLocNames"]["W"]
+                stops[tmpStop] = dict(action = "continue")
+                numStops +=1
+            else:
+                tmpStop = locs.locDat[loc]["adjLocNames"]["E"]
+                stops[tmpStop] = dict(action = "continue")
+                numStops +=1
+            if numStops == 1: nextLoc = tmpStop
+            testLoc = tmpStop    
         
+        return
                             
     def buildNewTrain(self, loc):
         from trainProc import trainParams
@@ -147,17 +170,22 @@ class ydCalcs():
         if trackMaxCars:            
             trainObj = trainParams()
             trnName, conName = trainObj.newTrain()
-
+            
+            nextLoc, numstops, stops = self.setStops(loc, trackMaxCars)
+            print("train: ", trnName, ", stops: ", stops)
             trainDB.trains[trnName].update( {
                 "status": "building",
                 "origLoc": loc,
-                "nextLoc": trackMaxCars,
+                "nextLoc": nextLoc,
                 "currentLoc": loc,
                 "finalLoc": trackMaxCars,
-                "numStops": 1,
-                "stops": {trackMaxCars: {"action": "terminate"}},
+                "numStops": numstops,
+                "stops": stops,
                 "color": trainParams.colors()           
                     })
+            # consist gets stops that have cars to drop, not those where
+            # the train continues through.  Pickups are triggered by
+            # "dropPickup" status in that location and will add to consists
             trainDB.consists[conName].update({
                 "stops": {trackMaxCars:{"box": 0, "tank": 0,"rfr": 0, "hop": 0, 
                 "gons": 0, "flats": 0, "psgr": 0}  }

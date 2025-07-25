@@ -33,7 +33,8 @@ class locProc():
     def countCars(self, loc):
         locDictStem = locs.locDat[loc]
         for dest in locDictStem["trackTots"]:
-            #print("\n Location: ", loc, "destination: ", dest)
+            print("\n Location: ", loc, "destination: ", dest)
+            if dest not in locDictStem["tracks"]: continue
             for carType in locDictStem["tracks"][dest]:
                 locDictStem["trackTots"][dest] = locDictStem["trackTots"][dest]\
                     + locDictStem["tracks"][dest][carType]
@@ -51,8 +52,8 @@ class locProc():
         swAreaObj = swArea()
         stagCalcObj = stCalcs()
 
-        if mVars.prms["dbgYdProc"]: print("entering locCalcs: locdat: "
-                    , locs.locDat[loc])
+        if mVars.prms["dbgYdProc"]: 
+            print("\nentering locCalcs: nlocation: ", loc, ", locDat: ", locs.locDat[loc])
 
         #if mVars.prms["\ndbgYdProc"]: print("yardCalcs: thisLoc ", thisloc)
         self.analyzeTrains(loc)
@@ -164,7 +165,7 @@ class locProc():
                 trainStem["status"] = "stop"
                 
         if mVars.prms["dbgYdProc"]: print("train",ydTrainNam," starting: "
-            ,trainStem, ", route: ", routeCls.routes[route4newTrn])
+            ,trainStem, ",\n route: ", routeCls.routes[route4newTrn])
         self.rmTrnFromLoc(action, loc, ydTrainNam)
 
     def rmTrnFromLoc(self, action, loc, ydTrainNam):

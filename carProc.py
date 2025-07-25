@@ -8,13 +8,6 @@ class carProc():
     def __init__(self):
         pass
     
-    
-    def procCarInfo(self, carDict):
-        for loc in mVars.geometry:
-            for carType in mVars.carTypes:
-                for nextLoc in mVars.geometry:      #nextLoc is a new name for a second loc var
-                    carDict[loc][carType]["nextDest"].update({nextLoc: 0})
-                #print("carDict for carType: ", carType, ": ", carDict[loc][carType])
                     
     def carTypeSel(self, consist):
         carSelDict = {}
