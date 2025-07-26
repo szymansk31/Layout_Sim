@@ -12,8 +12,7 @@ class ydCalcs():
     ready2Pickup = 0
 
     def __init__(self):
-        self.bldConsist = {}
-        self.actionList = ["brkDnTrn", "buildTrain", "swTrain", "servIndus", "misc"]
+        self.actionList = ["brkDnTrn", "buildTrain", "dropPickup", "servIndus", "misc"]
         #self.weights = [0.18, 0.18, 0.18, 0.18, 0.1]
         self.weights = [0.3, 0.3, 0.3, 0, 0]
         #self.weights = [0, 0, 0, 0, 0]
@@ -28,7 +27,7 @@ class ydCalcs():
     class Action_e(Enum):
         BRKDNTRN     = 0
         BUILDTRAIN   = 1
-        SWTRAIN      = 2
+        dropPickup      = 2
         SERVINDUS    = 3
         MISC         = 4
 
@@ -53,10 +52,6 @@ class ydCalcs():
                 idx +=1
         if mVars.prms["dbgYdProc"]: print("action weights are: ", self.weights)
         
-    def randomTrack(self):
-        return ''.join(random.choice(self.thisLocDests))
-
-
     def yardMaster(self, thisLoc, loc):
         self.setWeights(loc)
         choice = random.choices(self.actionList, weights=self.weights, k=1)
@@ -73,8 +68,8 @@ class ydCalcs():
         match choice:
             case "brkDnTrn":
                 self.brkDownTrain(loc)
-            case "swTrain":
-                if trainDB.ydTrains["swTrain"]:
+            case "dropPickup":
+                if trainDB.ydTrains["dropPickup"]:
                     self.swTrain(loc)
                     pass
             case "buildTrain":

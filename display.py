@@ -20,6 +20,7 @@ class dispItems():
             text = "action: "
             locs.locDat[loc]["actionObjID"] = \
                 gui.C.create_text(x, y, text=text, font=("Arial", 8))
+            
             #locs.locPop = {}
 
     def openLocPopup(self, event, loc):
@@ -30,13 +31,27 @@ class dispItems():
         locs.locPop[loc].geometry("400x400")
         locs.locPop[loc]['bg'] = 'tan'
         
+        type = locs.locDat[loc]["type"]
         text = tk.StringVar()
         text = loc + "\n"
         locStem = locs.locDat[loc]
-        for track in locStem["tracks"]:
-            text += track + "\n"
-            text += str(locStem["tracks"][track]) + "\n"
-
+        match type:
+            case "yard":
+                for track in locStem["tracks"]:
+                    text += track + "\n"
+                    text += str(locStem["tracks"][track]) + "\n"
+            case "swArea":
+                indusStem = locStem["industries"]
+                for indus in indusStem:
+                    text += indus + ":\n"
+                    tmpList = [carStatus+str(indusStem[indus][carStatus])\
+                        for carStatus in indusStem[indus]\
+                        if "numCarS" not in carStatus ]
+                    #gen = (carStatus for carStatus in indusStem[indus]\
+                    #    if "numCarS" not in carStatus)
+                    #for carStatus in gen:
+                    text += "\n".join(tmpList) + "\n"
+                
         locs.labels[loc] = tk.Label(locs.locPop[loc], text=text)
         print("just wrote label; label obj is: ", locs.labels[loc])
         locs.labels[loc].config(font=("Arial", 8), justify="left")
@@ -58,14 +73,15 @@ class dispItems():
 
     def dispTrnLocDat(self, loc):
         text = ''
+        type = locs.locDat[loc]["type"]
         locStem = locs.locDat[loc]
         trainStem = trainDB.trains
         ydTrains = trainDB.ydTrains
-        text = loc + ": yard tracks: \n"
         numTrns = 0
         x = (gui.guiDict[loc]["x0"] + gui.guiDict[loc]["x1"])*0.5
         y = gui.guiDict[loc]["y0"] + 300
-
+        
+        text = loc + ": yard tracks: \n"
         for track in locStem["tracks"]:
             text += track + "\n"
             text += str(locStem["tracks"][track]) + "\n"

@@ -1,0 +1,136 @@
+{
+"yard1": {
+    "type":"yard",
+    "trackTots": {"swArea1": 0, "yard2": 0, "staging1":0, "industries": 0},
+    "tracks": {
+        "swArea1"   :{"box": 4, "tank": 2, "rfr": 3, "hop": 8, 
+        "gons": 0, "flats": 0, "psgr": 0},
+        "yard2"    :{"box": 3, "tank": 0, "rfr": 1, "hop": 0, 
+        "gons": 4, "flats": 3, "psgr": 0},
+        "staging1"    :{"box": 1, "tank": 3, "rfr": 3, "hop": 0, 
+        "gons": 1, "flats": 3, "psgr": 0},
+        "industries"   :{"box": 0, "tank": 0, "rfr": 0, "hop": 0, 
+        "gons": 0, "flats": 0, "psgr": 0}
+    },
+    "numAdjLocs": 2,
+    "adjLocNames": {"W":"yard2", "E":"swArea1"},
+    "time2AdjLocs": [10, 10],
+    "firstDispLoc": 1,
+    "firstDispTrnTxt": 1,
+    "locObjID": 0,
+    "locTestID": 0,
+    "locRectID": "",
+    "locPopObj": null,
+    "actionObjID": 0,
+    "locTrnTxtID": 0,
+    "locTrnRectID": "",
+    "locTrnNumID": "",
+    "startMisc": 0,
+    "trains": [],
+    "bldTrnDepTimes": [15, 20, 25, 30],
+    "trn4Action":[]
+},
+"swArea1": {
+    "type":"swArea",
+    "trackTots": {"indus1": 0, "bakery": 0, "foundry": 0},
+    "industries": {
+        "indus1": {
+            "numCarSpots": 5,
+            "pickups":
+                {"box": 1, "tank": 1, "rfr": 0},
+            "spot"    :
+                {"box": 1, "tank": 1, "flats": 1},
+            "leave"    :
+                {"box": 1, "tank": 1, "flats": 1}
+            },
+        "bakery": {
+            "numCarSpots": 2,
+            "pickups":
+                {"box": 2},
+            "spot"    :
+                {"box": 2},
+            "leave"    :
+                {"box": 1}
+            },
+        "foundry": {
+            "numCarSpots": 6,
+            "pickups":
+                {"box": 0, "hop": 2, "gons": 1, "flats": 0},
+            "spot"    :
+                {"box": 1, "hop": 1, "gons": 0, "flats": 1},
+            "leave"    :
+                {"box": 1, "hop": 0, "gons": 0, "flats": 1}
+            }
+        },
+    "offspot": {
+        "box": "bakery", "flat": "foundry"
+    },
+    "numAdjLocs": 1,
+    "adjLocNames": {"W":"yard1"},
+    "time2AdjLocs": [10],
+    "firstDispLoc": 1,
+    "firstDispTrnTxt": 1,
+    "locObjID": 0,
+    "locTestID": 0,
+    "locRectID": "",
+    "locPopObj": null,
+    "actionObjID": 0,
+    "locTrnTxtID": 0,
+    "locTrnRectID": "",
+    "locTrnNumID": "",
+    "startMisc": 0,
+    "trains": [],
+    "trn4Action":[]
+},
+"yard2": {
+    "type":"yard",
+    "trackTots": {"yard1": 0, "staging1": 0, "industries": 0},
+    "tracks": {
+        "yard1"    :{"box": 3, "tank": 2, "rfr": 5, "hop": 5, 
+        "gons": 1, "flats": 3, "psgr": 0},
+        "staging1"    :{"box": 2, "tank": 3, "rfr": 3, "hop": 0, 
+        "gons": 1, "flats": 1, "psgr": 0},
+        "industries"   :{"box": 0, "tank": 0, "rfr": 0, "hop": 0, 
+        "gons": 0, "flats": 0, "psgr": 0}
+    },
+    "numAdjLocs": 2,
+    "adjLocNames": {"W":"staging1", "E":"yard1"},
+    "time2AdjLocs": [10, 10],
+    "firstDispLoc": 1,
+    "firstDispTrnTxt": 1,
+    "locObjID": 0,
+    "locTestID": 0,
+    "locRectID": "",
+    "locPopObj": null,
+    "actionObjID": 0,
+    "locTrnTxtID": 0,
+    "locTrnRectID": "",
+    "locTrnNumID": "",
+    "startMisc": 0,
+    "trains": [],
+    "bldTrnDepTimes": [15, 20, 25, 30],
+    "trn4Action":[]
+},
+"staging1": {
+    "type":"staging",
+    "trackTots": {},
+    "tracks": {},
+    "numAdjLocs": 1,
+    "adjLocNames": {"E":"yard2"},
+    "time2AdjLocs": [10, 10],
+    "firstDispLoc": 1,
+    "firstDispTrnTxt": 1,
+    "locObjID": 0,
+    "locTestID": 0,
+    "locRectID": "",
+    "locPopObj": null,
+    "actionObjID": 0,
+    "locTrnTxtID": 0,
+    "locTrnRectID": "",
+    "locTrnNumID": "",
+    "startMisc": 0,
+    "trains": [],
+    "bldTrnDepTimes": [],
+    "trn4Action":[]
+}
+}

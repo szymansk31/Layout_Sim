@@ -4,7 +4,7 @@ from mainVars import mVars
 from stateVars import locs, trainDB, routeCls
 from display import dispItems
 from yardCalcs import ydCalcs
-from swCalcs import swArea
+from swCalcs import swCalcs
 from stagCalcs import stCalcs
 from gui import gui
 np.set_printoptions(precision=2, suppress=True) 
@@ -32,13 +32,24 @@ class locProc():
         
     def countCars(self, loc):
         locDictStem = locs.locDat[loc]
-        for dest in locDictStem["trackTots"]:
-            print("\n Location: ", loc, "destination: ", dest)
-            if dest not in locDictStem["tracks"]: continue
-            for carType in locDictStem["tracks"][dest]:
-                locDictStem["trackTots"][dest] = locDictStem["trackTots"][dest]\
-                    + locDictStem["tracks"][dest][carType]
-                #print("countCars: ", locDictStem)
+        type = locs.locDat[loc]["type"]
+        match type:
+            case "yard":
+                trackStem = locDictStem["tracks"]
+            case "swArea":
+                trackStem = locDictStem["industries"]
+        for carLoc in locDictStem["trackTots"]:
+            print("\n Location: ", loc, "destination: ", carLoc)
+            if carLoc not in trackStem: continue
+            match type:
+                case "yard":
+                    locDictStem["trackTots"][carLoc] = sum(trackStem[carLoc].values())
+                case "swArea":
+                    locDictStem["trackTots"][carLoc] = \
+                        sum(trackStem[carLoc]["pickups"].values()) + \
+                        sum(trackStem[carLoc]["leave"].values())
+        #print("countCars: ", locDictStem)
+                        
 
     def locDests(self, loc):
         thisLocDests = []
@@ -46,32 +57,39 @@ class locProc():
             thisLocDests.append(dest)
         return thisLocDests
 
+    def printydTrains(self):
+        if mVars.prms["dbgYdProc"]: print("trains analyzed: trainDB.ydTrains: ",
+                    trainDB.ydTrains)
+        
     def locCalcs(self, thisLoc, loc):
         disp = dispItems()
         ydCalcObj = ydCalcs()
-        swAreaObj = swArea()
+        swAreaObj = swCalcs()
         stagCalcObj = stCalcs()
 
         if mVars.prms["dbgYdProc"]: 
             print("\nentering locCalcs: nlocation: ", loc, ", locDat: ", locs.locDat[loc])
 
-        #if mVars.prms["\ndbgYdProc"]: print("yardCalcs: thisLoc ", thisloc)
-        self.analyzeTrains(loc)
-        if mVars.prms["dbgYdProc"]: print("trains analyzed: trainDB.ydTrains: ", trainDB.ydTrains)
 
         match thisLoc[loc]["type"]:
             case "yard":
+                self.analyzeTrains(loc)
+                self.printydTrains()
                 ydCalcObj.yardMaster(thisLoc, loc)
             case "swArea":
+                swAreaObj.swAnalyzeTrains(loc)
+                self.printydTrains()
                 swAreaObj.switchArea(thisLoc, loc)
             case "staging":
+                stagCalcObj.stAnalyzeTrains(loc)
+                self.printydTrains()
                 stagCalcObj.staging(thisLoc, loc)
 
                     
         #disp.dispTrnLocDat(loc)
             
     def analyzeTrains(self, loc):
-        trainDB.ydTrains = {"brkDnTrn": [], "buildTrain": [], "swTrain": [], "roadCrewSw": [], "continue": []}
+        trainDB.ydTrains = {"brkDnTrn": [], "buildTrain": [], "dropPickup": [], "roadCrewSw": [], "continue": []}
 
         # train status leads to actions by the yard crew or
         # the train crew.  Train actions are the same name as

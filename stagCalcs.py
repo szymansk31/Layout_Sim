@@ -25,10 +25,6 @@ class stCalcs():
 
     def staging(self, thisLoc, loc):
         
-        self.stAnalyzeTrains(loc)
-        if mVars.prms["dbgYdProc"]: print("trains analyzed: trainDB.ydTrains: ", trainDB.ydTrains)
-
-        
         for train in trainDB.ydTrains["ready2Leave"]:
             if mVars.time == trainDB.trains[train]["startTime"] - 1:
                 nextLoc = trainDB.trains[train]["nextLoc"]
