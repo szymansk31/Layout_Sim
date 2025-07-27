@@ -89,7 +89,7 @@ class locProc():
         #disp.dispTrnLocDat(loc)
             
     def analyzeTrains(self, loc):
-        trainDB.ydTrains = {"brkDnTrn": [], "buildTrain": [], "dropPickup": [], "roadCrewSw": [], "continue": []}
+        trainDB.ydTrains = {"brkDnTrn": [], "buildTrain": [], "swTrain": [], "roadCrewSw": [], "continue": []}
 
         # train status leads to actions by the yard crew or
         # the train crew.  Train actions are the same name as

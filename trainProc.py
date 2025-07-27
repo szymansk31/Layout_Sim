@@ -15,7 +15,7 @@ class trainParams():
     colorIDX = 0
     colorList = ["red", "green", "yellow", "orange", "purple1", "dodger blue", "deep pink",
                  "lawn green", "goldenrod", "OrangeRed2", "magenta2", "RoyalBlue1"]
-    trnStatusList = ["enroute", "ready2Leave", "building", "built", "terminate", "switch"
+    trnStatusList = ["enroute", "ready2Leave", "building", "built", "terminate", "switch",
                      "dropPickup", "continue", "turn", "misc", "stop"]
 
 
@@ -187,11 +187,13 @@ class trnProc:
                 # switching typically done by yard crew at yards,
                 # train crew at other locations
                 trainDict["status"] = "dropPickup"
+                trainDict["timeEnRoute"] = 0
                 self.updateTrain4Stop(stopLoc, trainDict)
                 pass
             case "continue":
                 #no action at this stop - continue to nextLoc
                 trainDict["status"] = "continue"
+                trainDict["timeEnRoute"] = 0
                 self.updateTrain4Stop(stopLoc, trainDict)
 
         disp.drawTrain(trnName)

@@ -19,7 +19,15 @@ class gui():
         gui.root.geometry( "1600x550" ) 
         gui.C.pack()
 
+    def preProcGui(self):
+        for loc in gui.guiDict:
+            guiStem = gui.guiDict[loc]
+            type = guiStem["type"]
+            if type != "staging" and type != "yard" and type != "swArea": continue
+            guiStem["x1"] = guiStem["x0"] + 100
+            guiStem["y1"] = guiStem["y0"] + 60
       
+        #print("new guiDict: ", gui.guiDict)
 
 #=================================================
 class dispSim():

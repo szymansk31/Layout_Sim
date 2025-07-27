@@ -121,6 +121,7 @@ geometry = mVars.geometry = files.readFile("layoutGeomFile")
 layoutObj.locListInit(geometry)
 guiObj = gui()
 gui.guiDict = files.readFile("guiFile")
+guiObj.preProcGui()
 routeGeomObj.initRoutes(geometry, gui.guiDict)
 
 

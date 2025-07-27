@@ -21,6 +21,9 @@ class dispItems():
             locs.locDat[loc]["actionObjID"] = \
                 gui.C.create_text(x, y, text=text, font=("Arial", 8))
             
+            type = locs.locDat[loc]["type"]
+            if type == "yard" or type == "swArea":
+                self.openLocPopup(0, loc)
             #locs.locPop = {}
 
     def openLocPopup(self, event, loc):
@@ -81,11 +84,23 @@ class dispItems():
         x = (gui.guiDict[loc]["x0"] + gui.guiDict[loc]["x1"])*0.5
         y = gui.guiDict[loc]["y0"] + 300
         
-        text = loc + ": yard tracks: \n"
-        for track in locStem["tracks"]:
-            text += track + "\n"
-            text += str(locStem["tracks"][track]) + "\n"
-        text += "\nTrains worked in yard\n"
+        match type:
+            case "yard":
+                text = loc + ": yard tracks: \n"
+                for track in locStem["tracks"]:
+                    text += track + "\n"
+                    text += str(locStem["tracks"][track]) + "\n"
+                text += "\nTrains worked in yard\n"
+            case "swArea":
+                indusStem = locStem["industries"]
+                text = loc + ": industries: \n"
+                for indus in indusStem:
+                    text += indus + ":\n"
+                    tmpList = [carStatus+" "+str(indusStem[indus][carStatus])\
+                        for carStatus in indusStem[indus]\
+                        if "numCarS" not in carStatus ]
+                    text += "\n".join(tmpList) + "\n"
+                text += "\nTrains in this area:\n"
         for train in locStem["trains"]:
             consistNum = trainStem[train]["consistNum"]
             consistNam = "consist"+str(consistNum)
@@ -237,12 +252,4 @@ class dispItems():
             case trainLoc if "route" not in trainLoc:
                 pass
             
-            case trainloc if "xyz" in trainloc:
-                gui.C.delete(trainStem["trnRectTag"])
-                xtrn = (gui.guiDict[trainLoc]["x0"] + gui.guiDict[trainLoc]["x1"])*0.5 - trnLen
-                yTrn = gui.guiDict[trainLoc]["y0"] - 50
-                if (trainStem["status"] == "terminate") or (trainStem["status"] == "dropPickup"):
-                    gui.C.create_rectangle(xtrn, yTrn, xtrn+trnLen, 
-                    yTrn+trnHt, fill=trainStem["color"], tags=trainStem["trnRectTag"])
-
                                 

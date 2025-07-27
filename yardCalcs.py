@@ -12,7 +12,7 @@ class ydCalcs():
     ready2Pickup = 0
 
     def __init__(self):
-        self.actionList = ["brkDnTrn", "buildTrain", "dropPickup", "servIndus", "misc"]
+        self.actionList = ["brkDnTrn", "buildTrain", "swTrain", "servIndus", "misc"]
         #self.weights = [0.18, 0.18, 0.18, 0.18, 0.1]
         self.weights = [0.3, 0.3, 0.3, 0, 0]
         #self.weights = [0, 0, 0, 0, 0]
@@ -27,7 +27,7 @@ class ydCalcs():
     class Action_e(Enum):
         BRKDNTRN     = 0
         BUILDTRAIN   = 1
-        dropPickup      = 2
+        SWTRAIN      = 2
         SERVINDUS    = 3
         MISC         = 4
 
@@ -68,8 +68,8 @@ class ydCalcs():
         match choice:
             case "brkDnTrn":
                 self.brkDownTrain(loc)
-            case "dropPickup":
-                if trainDB.ydTrains["dropPickup"]:
+            case "swTrain":
+                if trainDB.ydTrains["swTrain"]:
                     self.swTrain(loc)
                     pass
             case "buildTrain":

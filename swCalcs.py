@@ -83,40 +83,34 @@ class swCalcs():
         
         # prepare for multiple trains in a swArea
         # first see if a train is already switching
-        locStem = locs.locDat[loc]["trn4Action"]
-        found = [d for d in locStem if "roadCrewSw" in d]
-        if found:
-            # same train continues to switch industries, 
-            # starting with the same one stored in last time step
-            found = [d for d in locStem if "industry" in d]
-            if found: industry = locStem["industry"]
-            else:
-                industry = next(iter(locs.locDat[loc]["industries"]))
-                print("industry: ", industry)
-            self.swIndus(loc, industry)
-            return
-        
-            
-    def swIndus(self, loc):
-        # remove cars from train and save on industry track
-        # until all cars removed for this stop 
-        
-        # find out what train is being switched or add new one
-        locStem = locs.locDat[loc]["trn4Action"]
-        found = [d for d in locStem if "swTrain" in d]
+        locActionStem = locs.locDat[loc]["trn4Action"]
+        found = [d for d in locActionStem if "roadCrewSw" in d]
         if not found:
             # no trains are undergoing swTrain
-            ydTrainNam = random.choice(trainDB.ydTrains.get("swTrain"))
-            locStem.append({"swTrain": ydTrainNam})
+            ydTrainNam = random.choice(trainDB.ydTrains.get("roadCrewSw"))
+            locActionStem.append({"roadCrewSw": ydTrainNam})
         else:
-            entry = next(iter(locStem))
-            ydTrainNam = entry["swTrain"]
+            entry = next(iter(locActionStem))
+            ydTrainNam = entry["roadCrewSw"]
+            # same train continues to switch industries, 
+            # starting with the same industry stored in last time step
+        found = [d for d in locActionStem if "industry" in d]
+        if found: industry = locActionStem["industry"]
+        else:
+            industry = next(iter(locs.locDat[loc]["industries"]))
+            print("industry: ", industry)
+        print("ydtrainNam: ", ydTrainNam, ", industry: ", industry, ", ready2Pickup: ", swCalcs.ready2Pickup,
+              ", trn4Action: ", locs.locDat[loc]["trn4Action"])
+        self.swIndus(loc, ydTrainNam, industry)
+        return
+        
             
-        print("ydtrainNam: ", ydTrainNam, "ready2Pickup: ", swCalcs.ready2Pickup,
-              "trn4Action: ", locs.locDat[loc]["trn4Action"])
+    def swIndus(self, loc, ydTrainNam, indus):
+            
         self.dispObj.dispActionDat(loc, "swTrain", ydTrainNam)
 
         if swCalcs.ready2Pickup == 0:
+            
             availCars = self.classObj.train2Track(loc, ydTrainNam)
             if availCars == 0:
                 trainStem = trainDB.trains[ydTrainNam]
@@ -127,6 +121,9 @@ class swCalcs():
                 if mVars.prms["dbgYdProc"]: print("swTrain: train:", ydTrainNam, 
                     " trainDict: ", trainStem)
                 swCalcs.ready2Pickup = 1
+        # remove cars from train and save on industry tracks
+        # until all cars removed for this stop 
+        
         # add cars to train until train is max size
         else:
             availCars, trainDest = self.classObj.track2Train(loc, ydTrainNam)
