@@ -18,6 +18,15 @@ class trainDB():
     trains = {}
     consists = {}
     ydTrains = {}
+    
+    def __init__(self):
+        pass
+    
+    def getConNam(self, train):
+        consistNum = trainDB.trains[train]["consistNum"]
+        consistNam = "consist"+str(consistNum)
+        return consistNam
+
 
 class routeCls():
     routes = {}

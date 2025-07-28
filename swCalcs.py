@@ -9,7 +9,7 @@ np.set_printoptions(precision=2, suppress=True)
 dbgLocal = 1          
 class swCalcs():
     startMisc = 0
-    ready2Pickup = 0
+    nextSwStep = 0
 
     def __init__(self):
         #self.weights = [0.18, 0.18, 0.18, 0.18, 0.1]
@@ -83,6 +83,8 @@ class swCalcs():
         
         # prepare for multiple trains in a swArea
         # first see if a train is already switching
+        if len(trainDB.ydTrains["roadCrewSw"]) == 0: return
+        
         locActionStem = locs.locDat[loc]["trn4Action"]
         found = [d for d in locActionStem if "roadCrewSw" in d]
         if not found:
@@ -94,13 +96,16 @@ class swCalcs():
             ydTrainNam = entry["roadCrewSw"]
             # same train continues to switch industries, 
             # starting with the same industry stored in last time step
+            
         found = [d for d in locActionStem if "industry" in d]
         if found: industry = locActionStem["industry"]
         else:
             industry = next(iter(locs.locDat[loc]["industries"]))
             print("industry: ", industry)
-        print("ydtrainNam: ", ydTrainNam, ", industry: ", industry, ", ready2Pickup: ", swCalcs.ready2Pickup,
+            
+        print("ydtrainNam: ", ydTrainNam, ", industry: ", industry, ", nextSwStep: ", swCalcs.nextSwStep,
               ", trn4Action: ", locs.locDat[loc]["trn4Action"])
+        
         self.swIndus(loc, ydTrainNam, industry)
         return
         
@@ -109,10 +114,30 @@ class swCalcs():
             
         self.dispObj.dispActionDat(loc, "swTrain", ydTrainNam)
 
-        if swCalcs.ready2Pickup == 0:
-            
-            availCars = self.classObj.train2Track(loc, ydTrainNam)
+        consistNam = trainDB.getConNam(ydTrainNam)
+        # add pickups to train
+        if swCalcs.nextSwStep == 0:
+            thisTrack = locs.locDat[loc]["industries"][indus]["pickups"]
+            availCars = self.classObj.track2Train(loc, thisTrack, ydTrainNam, consistNam)
             if availCars == 0:
+                locs.locDat[loc]["industries"][indus].pop("pickups")
+                swCalcs.nextSwStep = 1
+                #removes this train from "trn4Action"
+                locs.locDat[loc]["trn4Action"] = [d for d in locs.locDat[loc]["trn4Action"] if "swTrain" not in d]
+                if mVars.prms["dbgYdProc"]: print("trn4Action:", 
+                        locs.locDat[loc]["trn4Action"])
+                
+        # remove cars from train and place on industry tracks
+        # until all requested cars are spotted 
+        else:
+            thisTrack = locs.locDat[loc]["industries"][indus]["leave"]
+            cars2Spot = locs.locDat[loc]["industries"]["spot"]
+            availCars, trainDest = self.classObj.train2Track(loc, thisTrack, ydTrainNam, consistNam)
+            if trainDB.trains[ydTrainNam]["numCars"] >= mVars.prms["trainSize"]*1.2:
+                # train has reached max size
+                # train no longer has pickups or drops
+                # start train to nextLoc, if there are more stops and
+                # remove train name from locs.locData
                 trainStem = trainDB.trains[ydTrainNam]
                 trainStem["stops"].pop(loc)
                 consistNum = trainStem["consistNum"]
@@ -120,21 +145,6 @@ class swCalcs():
                 trainDB.consists[consistNam]["stops"].pop(loc)
                 if mVars.prms["dbgYdProc"]: print("swTrain: train:", ydTrainNam, 
                     " trainDict: ", trainStem)
-                swCalcs.ready2Pickup = 1
-        # remove cars from train and save on industry tracks
-        # until all cars removed for this stop 
-        
-        # add cars to train until train is max size
-        else:
-            availCars, trainDest = self.classObj.track2Train(loc, ydTrainNam)
-            if trainDB.trains[ydTrainNam]["numCars"] >= mVars.prms["trainSize"]*1.2:
-                # train has reached max size
-                # train no longer has pickups or drops
-                # start train to nextLoc, if there are more stops and
-                # remove train name from locs.locData
-                locs.locDat[loc]["trn4Action"] = [d for d in locStem if "swTrain" not in d]
-                if mVars.prms["dbgYdProc"]: print("trn4Action:", 
-                        locs.locDat[loc]["trn4Action"])
 
                 self.locProcObj.startTrain("swTrain", loc, ydTrainNam)
         
