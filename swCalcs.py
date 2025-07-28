@@ -10,6 +10,7 @@ dbgLocal = 1
 class swCalcs():
     startMisc = 0
     nextSwStep = 0
+    indusIter = any
 
     def __init__(self):
         #self.weights = [0.18, 0.18, 0.18, 0.18, 0.1]
@@ -86,23 +87,31 @@ class swCalcs():
         if len(trainDB.ydTrains["roadCrewSw"]) == 0: return
         
         locActionStem = locs.locDat[loc]["trn4Action"]
-        found = [d for d in locActionStem if "roadCrewSw" in d]
-        if not found:
+        index = [i for i, d in enumerate(locActionStem) if "roadCrewSw" in d]
+        if len(index) == 0:
             # no trains are undergoing swTrain
             ydTrainNam = random.choice(trainDB.ydTrains.get("roadCrewSw"))
             locActionStem.append({"roadCrewSw": ydTrainNam})
         else:
-            entry = next(iter(locActionStem))
-            ydTrainNam = entry["roadCrewSw"]
+            ydTrainNam = locActionStem[index[0]]["roadCrewSw"]
             # same train continues to switch industries, 
             # starting with the same industry stored in last time step
             
+        index = [i for i, d in enumerate(locActionStem) if "industry" in d]
         found = [d for d in locActionStem if "industry" in d]
-        if found: industry = locActionStem["industry"]
+        if len(index) != 0: 
+            industry = locActionStem[index[0]]["industry"]
         else:
-            industry = next(iter(locs.locDat[loc]["industries"]))
-            print("industry: ", industry)
-            
+            try:
+                industry = next(swCalcs.indusIter)
+                locActionStem.append({"industry": industry})
+            except:
+                print("all industries have been switched")
+                self.cleanup(loc, ydTrainNam)
+                self.locProcObj.startTrain("roadCrewSw", loc, ydTrainNam)
+                return
+
+        print("industry: ", industry)
         print("ydtrainNam: ", ydTrainNam, ", industry: ", industry, ", nextSwStep: ", swCalcs.nextSwStep,
               ", trn4Action: ", locs.locDat[loc]["trn4Action"])
         
@@ -111,49 +120,44 @@ class swCalcs():
         
             
     def swIndus(self, loc, ydTrainNam, indus):
-            
-        self.dispObj.dispActionDat(loc, "swTrain", ydTrainNam)
+        locActionStem = locs.locDat[loc]["trn4Action"]            
+        self.dispObj.dispActionDat(loc, "roadCrewSw", ydTrainNam)
 
         consistNam = trainDB.getConNam(ydTrainNam)
         # add pickups to train
         if swCalcs.nextSwStep == 0:
-            thisTrack = locs.locDat[loc]["industries"][indus]["pickups"]
-            availCars = self.classObj.track2Train(loc, thisTrack, ydTrainNam, consistNam)
+            availCars, trainDest = self.classObj.track2Train(loc, indus, ydTrainNam)
             if availCars == 0:
-                locs.locDat[loc]["industries"][indus].pop("pickups")
+                #locs.locDat[loc]["industries"][indus].pop("pickups")
                 swCalcs.nextSwStep = 1
                 #removes this train from "trn4Action"
-                locs.locDat[loc]["trn4Action"] = [d for d in locs.locDat[loc]["trn4Action"] if "swTrain" not in d]
+                #locs.locDat[loc]["trn4Action"] = [d for d in locs.locDat[loc]["trn4Action"] if "roadCrewSw" not in d]
                 if mVars.prms["dbgYdProc"]: print("trn4Action:", 
                         locs.locDat[loc]["trn4Action"])
                 
         # remove cars from train and place on industry tracks
         # until all requested cars are spotted 
         else:
-            thisTrack = locs.locDat[loc]["industries"][indus]["leave"]
-            cars2Spot = locs.locDat[loc]["industries"]["spot"]
-            availCars, trainDest = self.classObj.train2Track(loc, thisTrack, ydTrainNam, consistNam)
-            if trainDB.trains[ydTrainNam]["numCars"] >= mVars.prms["trainSize"]*1.2:
-                # train has reached max size
-                # train no longer has pickups or drops
-                # start train to nextLoc, if there are more stops and
-                # remove train name from locs.locData
-                trainStem = trainDB.trains[ydTrainNam]
-                trainStem["stops"].pop(loc)
-                consistNum = trainStem["consistNum"]
-                consistNam = "consist"+str(consistNum)
-                trainDB.consists[consistNam]["stops"].pop(loc)
-                if mVars.prms["dbgYdProc"]: print("swTrain: train:", ydTrainNam, 
-                    " trainDict: ", trainStem)
-
-                self.locProcObj.startTrain("swTrain", loc, ydTrainNam)
+            availCars, needCars, numNeedAA = self.classObj.train2Indus(loc, indus, ydTrainNam)
+            if numNeedAA == 0:
+                # car spotting finished at this industry
+                index = [i for i, d in enumerate(locActionStem)\
+                    if "industry" in d]
+                locActionStem.pop(index[0])
+                # move to next industry
+                swCalcs.nextSwStep = 0
+                self.dispObj.dispTrnLocDat(loc)
+                
+                if mVars.prms["dbgYdProc"]: print("swIndus: train:", ydTrainNam, 
+                    " trainDict: ", trainDB.trains[ydTrainNam],
+                    ", locAction: ", locActionStem)
         
-        pass
-    def servIndus(self, loc):
-        pass
-    # calc trains that arrive, trains ready to leave (and do they?)
-    # cars classified; need a dict with all car types, next dest (track or 
-    # loc), status (ready to classify, classified, in arriving train)
-        #self.trainOut = self.rateClassification*self.fracTrainBuild/mVars.trainSize
-
+    def cleanup(self, loc, ydTrainNam):
+        locs.locDat[loc]["trn4Action"].pop("roadCrewSw")
+        trainStem = trainDB.trains[ydTrainNam]
+        # remove stop from train
+        trainStem["stops"].pop(loc)
+        # remove stop from consist
+        consistNam = trainDB.getConNam(ydTrainNam)
+        trainDB.consists[consistNam]["stops"].pop(loc)
 

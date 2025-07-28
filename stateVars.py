@@ -22,7 +22,7 @@ class trainDB():
     def __init__(self):
         pass
     
-    def getConNam(self, train):
+    def getConNam(train):
         consistNum = trainDB.trains[train]["consistNum"]
         consistNam = "consist"+str(consistNum)
         return consistNam

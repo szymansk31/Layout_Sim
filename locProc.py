@@ -68,7 +68,7 @@ class locProc():
         stagCalcObj = stCalcs()
 
         if mVars.prms["dbgYdProc"]: 
-            print("\nentering locCalcs: nlocation: ", loc, ", locDat: ", locs.locDat[loc])
+            print("\nentering locCalcs: location: ", loc, ", locDat: ", locs.locDat[loc])
 
 
         match thisLoc[loc]["type"]:
@@ -108,7 +108,7 @@ class locProc():
                     # for yards, not switch areas
                     if trainNam not in trainDB.ydTrains["buildTrain"]:
                         trainDB.ydTrains["buildTrain"].append(trainNam)
-                case "switch":
+                case "roadCrewSw":
                     # for switch areas no yards
                     # code is in locProc but actions are undertaken by
                     # the virtual train crew
@@ -190,7 +190,7 @@ class locProc():
         # remove train from ydTrains and location
         print("rmTrnFromLoc: trainDB.ydTrains: ", trainDB.ydTrains)
         if action == "noAction":
-            print("Train no longer in ydTrains")
+            print("Train no longer in ydTrains and waiting to leave")
         else:
             index = trainDB.ydTrains[action].index(ydTrainNam)
             trainDB.ydTrains[action].pop(index)

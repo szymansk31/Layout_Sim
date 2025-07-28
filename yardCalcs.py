@@ -115,8 +115,9 @@ class ydCalcs():
         # yard has a train already building; add cars to it
         # single train is allowed to build in a yard
         else:    
-            ydTrainNam = ''.join(trainDB.ydTrains["buildTrain"])     
-            availCars, trainDest = self.classObj.track2Train(loc, ydTrainNam)
+            ydTrainNam = ''.join(trainDB.ydTrains["buildTrain"])    
+            # dummy input is "indus" 
+            availCars, trainDest = self.classObj.track2Train(loc, "", ydTrainNam)
             trainStem = trainDB.trains[ydTrainNam]
             self.dispObj.dispActionDat(loc, "buildTrain", ydTrainNam)
 
@@ -226,7 +227,7 @@ class ydCalcs():
                 ydCalcs.ready2Pickup = 1
         # add cars to train until train is max size
         else:
-            availCars, trainDest = self.classObj.track2Train(loc, ydTrainNam)
+            availCars, trainDest = self.classObj.track2Train(loc, "", ydTrainNam)
             if trainDB.trains[ydTrainNam]["numCars"] >= mVars.prms["trainSize"]*1.2:
                 # train has reached max size
                 # train no longer has pickups or drops
@@ -241,9 +242,3 @@ class ydCalcs():
         pass
     def servIndus(self, loc):
         pass
-    # calc trains that arrive, trains ready to leave (and do they?)
-    # cars classified; need a dict with all car types, next dest (track or 
-    # loc), status (ready to classify, classified, in arriving train)
-        #self.trainOut = self.rateClassification*self.fracTrainBuild/mVars.trainSize
-
-

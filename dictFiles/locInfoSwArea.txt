@@ -41,7 +41,9 @@
             "spot"    :
                 {"box": 1, "tank": 1, "flats": 1},
             "leave"    :
-                {"box": 1, "tank": 1, "flats": 1}
+                {"box": 1, "tank": 1, "flats": 1},
+	    "offspot"  :
+                {"box": 0, "tank": 0, "flats": 0}
             },
         "bakery": {
             "numCarSpots": 2,
@@ -50,6 +52,8 @@
             "spot"    :
                 {"box": 2},
             "leave"    :
+                {"box": 1},
+	    "offspot"  :
                 {"box": 1}
             },
         "foundry": {
@@ -59,12 +63,11 @@
             "spot"    :
                 {"box": 1, "hop": 1, "gons": 0, "flats": 1},
             "leave"    :
-                {"box": 1, "hop": 0, "gons": 0, "flats": 1}
+                {"box": 1, "hop": 0, "gons": 0, "flats": 1},
+	    "offspot"  :
+                {"box": 0, "hop": 0, "gons": 0, "flats": 1}
             }
         },
-    "offspot": {
-        "box": "bakery", "flat": "foundry"
-    },
     "numAdjLocs": 1,
     "adjLocNames": {"W":"yard1","E":"staging2"},
     "time2AdjLocs": [10],
