@@ -98,7 +98,6 @@ class swCalcs():
             # starting with the same industry stored in last time step
             
         index = [i for i, d in enumerate(locActionStem) if "industry" in d]
-        found = [d for d in locActionStem if "industry" in d]
         if len(index) != 0: 
             industry = locActionStem[index[0]]["industry"]
         else:

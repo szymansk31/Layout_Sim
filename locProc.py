@@ -31,24 +31,25 @@ class locProc():
             locs.locDat[loc]["locRectID"] = loc+"RectID"
         
     def countCars(self, loc):
-        locDictStem = locs.locDat[loc]
+        locStem = locs.locDat[loc]
         type = locs.locDat[loc]["type"]
         match type:
             case "yard":
-                trackStem = locDictStem["tracks"]
+                trackStem = locStem["tracks"]
             case "swArea":
-                trackStem = locDictStem["industries"]
-        for carLoc in locDictStem["trackTots"]:
+                trackStem = locStem["industries"]
+        for carLoc in locStem["trackTots"]:
             print("\n Location: ", loc, "destination: ", carLoc)
             if carLoc not in trackStem: continue
             match type:
                 case "yard":
-                    locDictStem["trackTots"][carLoc] = sum(trackStem[carLoc].values())
+                    locStem["trackTots"][carLoc] = sum(trackStem[carLoc].values())
                 case "swArea":
-                    locDictStem["trackTots"][carLoc] = \
+                    locStem["trackTots"][carLoc] = \
                         sum(trackStem[carLoc]["pickups"].values()) + \
-                        sum(trackStem[carLoc]["leave"].values())
-        #print("countCars: ", locDictStem)
+                        sum(trackStem[carLoc]["leave"].values()) 
+        #print("countCars: ", locStem)
+        locStem["totCars"] = sum(locStem["trackTots"].values())
                         
 
     def locDests(self, loc):
@@ -70,6 +71,7 @@ class locProc():
         if mVars.prms["dbgYdProc"]: 
             print("\nentering locCalcs: location: ", loc, ", locDat: ", locs.locDat[loc])
 
+        thisLoc[loc]["totCars"] = sum(thisLoc[loc]["trackTots"].values())
 
         match thisLoc[loc]["type"]:
             case "yard":

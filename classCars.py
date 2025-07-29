@@ -61,13 +61,16 @@ class classCars():
                     return availCars, trainDest
             case "swArea":
                 thisTrack = locs.locDat[loc]["industries"][indus]["pickups"]
+                
         def selCar():            
             carSel, availCars = carProcObj.carTypeSel(thisTrack)
             print("track2Train: track ", trainDest, 
                 ", selected cartypes: ", carSel, ", availCars: ", availCars)
+            carClassType = ""
             if availCars > 0:
                 carClassType = carProcObj.randomCar(carSel)
             return availCars, carClassType
+        
         availCars, carClassType = selCar()
         if availCars <= 0: 
             print("no more cars available")

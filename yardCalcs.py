@@ -52,12 +52,22 @@ class ydCalcs():
                 idx +=1
         if mVars.prms["dbgYdProc"]: print("action weights are: ", self.weights)
         
+    def cars2Class(self, loc):
+        cars2Class = 0
+        for train in trainDB.ydTrains["brkDnTrn"]:
+            cars2Class += trainDB.trains[train]["numCars"]
+        for train in trainDB.ydTrains["buildTrain"]: 
+            cars2Class += mVars.prms["trainSize"] - \
+                trainDB.trains[train]["numCars"]
+        cars2Class += locs.locDat[loc]["trackTots"]["industries"]
+        locs.locDat[loc]["cars2Class"] = cars2Class
+
     def yardMaster(self, thisLoc, loc):
         self.setWeights(loc)
         choice = random.choices(self.actionList, weights=self.weights, k=1)
         choice = ''.join(choice)
         if mVars.prms["dbgYdProc"]: print("\nchoice: ", choice)
-        
+        self.cars2Class(loc)
         self.dispObj.dispTrnLocDat(loc)
         
         if locs.locDat[loc]["startMisc"]:

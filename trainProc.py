@@ -41,7 +41,15 @@ class trainParams():
         self.trnName = next(iter(train))
     def dict2ConNam(self, consist):
         self.conName = next(iter(consist))
-        
+
+    def numCars(self, train):
+        consistNam = trainDB.getConNam(train)
+        consist = trainDB.consists[consistNam]
+        numCars = 0
+        for loc in consist["stops"]:
+            numCars += sum(consist["stops"][loc].values())
+        return numCars
+            
     def newTrain(self):
         newTrain = {}
         newTrainNum = trainDB.numTrains+1
@@ -76,14 +84,8 @@ class trainParams():
             "stops": {
                 "yard"   :{"box": 0, "tank": 0,"rfr": 0, "hop": 0, 
                     "gons": 0, "flats": 0, "psgr": 0},
-            },
-            "numBox": 0,
-            "numTank": 0,
-            "numReefer": 0,
-            "numHopper": 0,
-            "numGon": 0,
-            "numFlat": 0,
-            "numPsgr": 0}
+                }
+            }
         })
         return 
 

@@ -16,7 +16,7 @@ class dispItems():
     def initLocDisp(self):
         for loc in locs.locDat:
             x = (gui.guiDict[loc]["x0"] + gui.guiDict[loc]["x1"])*0.5
-            y = gui.guiDict[loc]["y0"] + 45
+            y = gui.guiDict[loc]["y0"] + gui.guiDict["locDims"]["yActTxt"]
             text = "action: "
             locs.locDat[loc]["actionObjID"] = \
                 gui.C.create_text(x, y, text=text, font=("Arial", 8))
@@ -130,8 +130,9 @@ class dispItems():
     def dispActionDat(self, loc, action, ydTrainNam):
         text = ''
         locStem = locs.locDat[loc]
-
-        text = "action:" + action + " \n" + \
+        text = "# Cars: " + str(locStem["totCars"]) + ", class: " + \
+            str(locStem["cars2Class"]) + " \n"
+        text += "action:" + action + " \n" + \
             ydTrainNam 
         gui.C.itemconfigure(locStem["actionObjID"], text=text, font=("Arial", 8))
         pass
@@ -139,8 +140,9 @@ class dispItems():
     def dispSwitchDat(self, loc, indus, ydTrainNam):
         text = ''
         locStem = locs.locDat[loc]
-
-        text = ydTrainNam + " switching:\n" + indus
+        text = "# Cars: " + str(locStem["totCars"]) + ", class: " + \
+            str(locStem["cars2Class"]) + " \n"
+        text += ydTrainNam + " switching:\n" + indus
         gui.C.itemconfigure(locStem["actionObjID"], text=text, font=("Arial", 8))
         pass
 
