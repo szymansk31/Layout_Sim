@@ -18,12 +18,11 @@ class carProc():
             carSelDict[cartyp] = consist[cartyp]
             availCars += consist[cartyp]
         idx = 0
-        print("carSelDict: ", carSelDict)
+        #print("carSelDict: ", carSelDict)
         if availCars != 0:
             for keys in carSelDict.keys():
                 carSelList[idx] = carSelDict[keys]/availCars
                 idx +=1
-        print("carSelList: ", carSelList, ", availCars: ", availCars)
         return carSelList, availCars
         
     def randomCar(self, carSelList):

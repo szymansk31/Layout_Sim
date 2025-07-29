@@ -89,7 +89,7 @@ class locProc():
         #disp.dispTrnLocDat(loc)
             
     def analyzeTrains(self, loc):
-        trainDB.ydTrains = {"brkDnTrn": [], "buildTrain": [], "swTrain": [], "roadCrewSw": [], "continue": []}
+        trainDB.ydTrains = {"brkDnTrn": [], "buildTrain": [], "swTrain": [], "rdCrwSw": [], "continue": []}
 
         # train status leads to actions by the yard crew or
         # the train crew.  Train actions are the same name as
@@ -108,12 +108,12 @@ class locProc():
                     # for yards, not switch areas
                     if trainNam not in trainDB.ydTrains["buildTrain"]:
                         trainDB.ydTrains["buildTrain"].append(trainNam)
-                case "roadCrewSw":
+                case "rdCrwSw":
                     # for switch areas no yards
                     # code is in locProc but actions are undertaken by
                     # the virtual train crew
-                    if trainNam not in trainDB.ydTrains["roadCrewSw"]:
-                        trainDB.ydTrains["roadCrewSw"].append(trainNam)
+                    if trainNam not in trainDB.ydTrains["rdCrwSw"]:
+                        trainDB.ydTrains["rdCrwSw"].append(trainNam)
                     pass
                 case "continue":
                     # no action for yard.  May have a call to 

@@ -49,10 +49,11 @@ class classCars():
         self.ydTrainNam = train
         self.initClassPrms(loc, train)
         
+        trainDest = self.trainStem["finalLoc"]
+        trackNam = trainDest
+        if self.type == "swArea": trackNam = indus
         match self.type:
             case "yard":
-                trainDest = self.trainStem["finalLoc"]
-                trackNam = trainDest
                 if trainDest in self.locStem["tracks"]:
                     thisTrack = self.locStem["tracks"][trainDest]
                 else:
@@ -60,10 +61,14 @@ class classCars():
                     return availCars, trainDest
             case "swArea":
                 thisTrack = locs.locDat[loc]["industries"][indus]["pickups"]
-                trainDest = self.trainStem["finalLoc"]  
-                trackNam = indus      
-                
-        carSel, availCars = carProcObj.carTypeSel(thisTrack)
+        def selCar():            
+            carSel, availCars = carProcObj.carTypeSel(thisTrack)
+            print("track2Train: track ", trainDest, 
+                ", selected cartypes: ", carSel, ", availCars: ", availCars)
+            if availCars > 0:
+                carClassType = carProcObj.randomCar(carSel)
+            return availCars, carClassType
+        availCars, carClassType = selCar()
         if availCars <= 0: 
             print("no more cars available")
             return availCars, trainDest
@@ -72,11 +77,9 @@ class classCars():
                 trainDest)
         
         #if self.locStem["trackTots"][trainDest] == 0: return
-        
         carsClassed = 0
         while ((carsClassed < self.rate) and (availCars > 0)):
-
-            carClassType = carProcObj.randomCar(carSel)
+            availCars, carClassType = selCar()
             carsClassed +=1
             if thisTrack[carClassType] >0:
                 thisTrack[carClassType] -=1
@@ -84,7 +87,7 @@ class classCars():
                 self.consistStem[trainDest][carClassType] +=1
                 self.trainStem["numCars"] +=1
                 availCars -=1
-
+            
         try:
         #    trainDB.consists[self.consistNum]["stops"][loc] = self.consistStem[trainDest]
         #    self.locStem["tracks"][trainDest] = thisTrack
@@ -125,6 +128,8 @@ class classCars():
         #    self.printClassInfo(self.train2Track.__name__, numCars, 
         #                        thisTrack, trainDest)
         carSel, availCars = carProcObj.carTypeSel(self.consistStem[loc])
+        print("train2Track: train ", train, 
+              ", selected cartypes: ", carSel, ", availCars: ", availCars)
         if availCars <= 0: return availCars
 
         if mVars.prms["dbgYdProc"]: print("train2Track: ", train, "consist: ", trainDB.consists[self.consistNam])
@@ -162,11 +167,17 @@ class classCars():
         #if mVars.prms["dbgYdProc"]:
         #    self.printClassInfo(self.train2Track.__name__, numCars, 
         #                        thisTrack, trainDest)
+        print("check cars in train for this swArea")
         carSet, availCars = carProcObj.carTypeSel(self.consistStem[loc])
+        print("train2Indus: industry ", indus, 
+              ", carTypes in train: ", carSet, ", availCars: ", availCars)
         if availCars <= 0: 
             print("no more cars in train")
             return availCars, nSpotCars
+        print("check cars needed by industry (\"spot\" dict)")
         spotSet, nSpotCars = carProcObj.carTypeSel(indusStem[indus]["spot"])
+        print("train2Indus: industry ", indus, 
+              ", carTypes requested: ", spotSet, ", nSpotCars: ", availCars)
         if nSpotCars <= 0: 
             print("no more car spots available")
             return availCars, nSpotCars
@@ -175,7 +186,7 @@ class classCars():
         spotAndAvail = [1 if x != 0 and y != 0 else 0 for x, y in zip(carSet, spotSet)]
         nSpotAvail = sum(spotAndAvail)
 
-        if mVars.prms["dbgYdProc"]: print("train2Track: #car types need and avail:", nSpotAvail, "spotAndAvail: ", spotAndAvail)
+        if mVars.prms["dbgYdProc"]: print("train2Track: #car types requested by \"spot\" and on train:", nSpotAvail, "spotAndAvail: ", spotAndAvail)
 
         carsClassed = 0
         while ((carsClassed < self.rate) and (nSpotAvail > 0)):
@@ -201,7 +212,7 @@ class classCars():
                     spotAndAvail[carClassIDX] = 0
             
         if dbgLocal: print("train2Track: after while loop: availCars = ", 
-            availCars, ", nSpotCars: ", nSpotCars, ", nSpotAvail ", nSpotAvail)
+            availCars, ", nSpotAvail ", nSpotAvail)
 
         try:
             trainDB.consists[self.consistNum]["stops"][loc] = self.consistStem[loc]

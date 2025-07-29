@@ -131,7 +131,16 @@ class dispItems():
         text = ''
         locStem = locs.locDat[loc]
 
-        text = "action:\n" + action + " " + ydTrainNam    
+        text = "action:" + action + " \n" + \
+            ydTrainNam 
+        gui.C.itemconfigure(locStem["actionObjID"], text=text, font=("Arial", 8))
+        pass
+
+    def dispSwitchDat(self, loc, indus, ydTrainNam):
+        text = ''
+        locStem = locs.locDat[loc]
+
+        text = ydTrainNam + " switching:\n" + indus
         gui.C.itemconfigure(locStem["actionObjID"], text=text, font=("Arial", 8))
         pass
 

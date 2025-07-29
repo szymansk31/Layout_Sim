@@ -15,7 +15,7 @@ class trainParams():
     colorIDX = 0
     colorList = ["red", "green", "yellow", "orange", "purple1", "dodger blue", "deep pink",
                  "lawn green", "goldenrod", "OrangeRed2", "magenta2", "RoyalBlue1"]
-    trnStatusList = ["enroute", "ready2Leave", "building", "built", "terminate", "roadCrewSw",
+    trnStatusList = ["enroute", "ready2Leave", "building", "built", "terminate", "rdCrwSw",
                      "dropPickup", "continue", "turn", "misc", "stop"]
 
 
@@ -139,7 +139,7 @@ class trnProc:
             case "terminate" | "continue":
                 #procssing done in locProc
                 pass
-            case "roadCrewSw" | "dropPickup":
+            case "rdCrwSw" | "dropPickup":
                 #procssing done in locProc
                 pass
             case "stop":
@@ -174,10 +174,10 @@ class trnProc:
                 trainDict["status"] = "terminate"
                 trainDict["timeEnRoute"] = 0
                 pass
-            case "roadCrewSw": 
+            case "rdCrwSw": 
                 from swCalcs import swCalcs
                 # switch town with road train
-                trainDict["status"] = "roadCrewSw"
+                trainDict["status"] = "rdCrwSw"
                 # setup list of industries when first entering swArea
                 swCalcs.indusIter = iter(locs.locDat[stopLoc]["industries"])
                 self.updateTrain4Stop(stopLoc, trainDict)

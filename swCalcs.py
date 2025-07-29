@@ -26,7 +26,7 @@ class swCalcs():
 
     class Action_e(Enum):
         DROPPICKUP   = 0
-        ROADCREWSW   = 1
+        rdCrwSw   = 1
         READY2LEAVE  = 2
         TURN         = 3
         MISC         = 4
@@ -53,7 +53,7 @@ class swCalcs():
         if mVars.prms["dbgYdProc"]: print("action weights are: ", self.weights)
         
     def swAnalyzeTrains(self, loc):
-        trainDB.ydTrains = {"dropPickup": [], "roadCrewSw": [], "ready2Leave": [], "turn": []}
+        trainDB.ydTrains = {"dropPickup": [], "rdCrwSw": [], "ready2Leave": [], "turn": []}
 
         # train status leads to actions by the yard crew or
         # the train crew.  Train actions are the same name as
@@ -63,9 +63,9 @@ class swCalcs():
                 case "dropPickup":
                     if trainNam not in trainDB.ydTrains["dropPickup"]:
                         trainDB.ydTrains["dropPickup"].append(trainNam)
-                case "roadCrewSw":
-                    if trainNam not in trainDB.ydTrains["roadCrewSw"]:
-                        trainDB.ydTrains["roadCrewSw"].append(trainNam)
+                case "rdCrwSw":
+                    if trainNam not in trainDB.ydTrains["rdCrwSw"]:
+                        trainDB.ydTrains["rdCrwSw"].append(trainNam)
                 case "ready2Leave":
                     if trainNam not in trainDB.ydTrains["ready2Leave"]:
                         trainDB.ydTrains["ready2Leave"].append(trainNam)
@@ -84,16 +84,16 @@ class swCalcs():
         
         # prepare for multiple trains in a swArea
         # first see if a train is already switching
-        if len(trainDB.ydTrains["roadCrewSw"]) == 0: return
+        if len(trainDB.ydTrains["rdCrwSw"]) == 0: return
         
         locActionStem = locs.locDat[loc]["trn4Action"]
-        index = [i for i, d in enumerate(locActionStem) if "roadCrewSw" in d]
+        index = [i for i, d in enumerate(locActionStem) if "rdCrwSw" in d]
         if len(index) == 0:
             # no trains are undergoing swTrain
-            ydTrainNam = random.choice(trainDB.ydTrains.get("roadCrewSw"))
-            locActionStem.append({"roadCrewSw": ydTrainNam})
+            ydTrainNam = random.choice(trainDB.ydTrains.get("rdCrwSw"))
+            locActionStem.append({"rdCrwSw": ydTrainNam})
         else:
-            ydTrainNam = locActionStem[index[0]]["roadCrewSw"]
+            ydTrainNam = locActionStem[index[0]]["rdCrwSw"]
             # same train continues to switch industries, 
             # starting with the same industry stored in last time step
             
@@ -108,7 +108,7 @@ class swCalcs():
             except:
                 print("all industries have been switched")
                 self.cleanup(loc, ydTrainNam)
-                self.locProcObj.startTrain("roadCrewSw", loc, ydTrainNam)
+                self.locProcObj.startTrain("rdCrwSw", loc, ydTrainNam)
                 return
 
         print("industry: ", industry)
@@ -121,7 +121,7 @@ class swCalcs():
             
     def swIndus(self, loc, ydTrainNam, indus):
         locActionStem = locs.locDat[loc]["trn4Action"]            
-        self.dispObj.dispActionDat(loc, "roadCrewSw", ydTrainNam)
+        self.dispObj.dispSwitchDat(loc, indus, ydTrainNam)
 
         consistNam = trainDB.getConNam(ydTrainNam)
         # add pickups to train
@@ -131,7 +131,7 @@ class swCalcs():
                 #locs.locDat[loc]["industries"][indus].pop("pickups")
                 swCalcs.nextSwStep = 1
                 #removes this train from "trn4Action"
-                #locs.locDat[loc]["trn4Action"] = [d for d in locs.locDat[loc]["trn4Action"] if "roadCrewSw" not in d]
+                #locs.locDat[loc]["trn4Action"] = [d for d in locs.locDat[loc]["trn4Action"] if "rdCrwSw" not in d]
                 if mVars.prms["dbgYdProc"]: print("trn4Action:", 
                         locs.locDat[loc]["trn4Action"])
                 
@@ -153,7 +153,10 @@ class swCalcs():
                     ", locAction: ", locActionStem)
         
     def cleanup(self, loc, ydTrainNam):
-        locs.locDat[loc]["trn4Action"].pop("roadCrewSw")
+        locActionStem = locs.locDat[loc]["trn4Action"]            
+        index = [i for i, d in enumerate(locActionStem)\
+            if "rdCrwSw" in d]
+        locActionStem.pop(index[0])
         trainStem = trainDB.trains[ydTrainNam]
         # remove stop from train
         trainStem["stops"].pop(loc)

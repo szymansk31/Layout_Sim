@@ -47,7 +47,7 @@
 "numStops": 2,
 "currentStop": "",
 "stops": {
-    "swArea1": {"action": "roadCrewSw"},
+    "swArea1": {"action": "rdCrwSw"},
     "staging2": {"action": "terminate"}
         },
 "color": ""
