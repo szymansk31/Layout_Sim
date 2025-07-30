@@ -38,16 +38,20 @@ class locProc():
                 trackStem = locStem["tracks"]
             case "swArea":
                 trackStem = locStem["industries"]
-        for carLoc in locStem["trackTots"]:
-            print("\n Location: ", loc, "destination: ", carLoc)
-            if carLoc not in trackStem: continue
+        for trackNam in locStem["trackTots"]:
+            print("\n Location: ", loc, "destination: ", trackNam)
+            if trackNam not in trackStem: continue
             match type:
                 case "yard":
-                    locStem["trackTots"][carLoc] = sum(trackStem[carLoc].values())
+                    locStem["trackTots"][trackNam] = sum(trackStem[trackNam].values())
                 case "swArea":
-                    locStem["trackTots"][carLoc] = \
-                        sum(trackStem[carLoc]["pickups"].values()) + \
-                        sum(trackStem[carLoc]["leave"].values()) 
+                    if trackNam == "offspot": 
+                        locStem["trackTots"]["offspot"] = sum(locs.locDat[loc]["offspot"].values())
+                        continue
+                    locStem["trackTots"][trackNam] = \
+                        sum(trackStem[trackNam]["pickups"].values()) + \
+                        sum(trackStem[trackNam]["leave"].values())
+                        
         #print("countCars: ", locStem)
         locStem["totCars"] = sum(locStem["trackTots"].values())
                         
@@ -77,15 +81,15 @@ class locProc():
             case "yard":
                 self.analyzeTrains(loc)
                 self.printydTrains()
-                ydCalcObj.yardMaster(thisLoc, loc)
+                ydCalcObj.yardMaster(loc)
             case "swArea":
                 swAreaObj.swAnalyzeTrains(loc)
                 self.printydTrains()
-                swAreaObj.switchArea(thisLoc, loc)
+                swAreaObj.switchCalcs(loc)
             case "staging":
                 stagCalcObj.stAnalyzeTrains(loc)
                 self.printydTrains()
-                stagCalcObj.staging(thisLoc, loc)
+                stagCalcObj.staging(loc)
 
                     
         #disp.dispTrnLocDat(loc)

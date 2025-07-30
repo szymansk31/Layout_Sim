@@ -62,7 +62,7 @@ class ydCalcs():
         cars2Class += locs.locDat[loc]["trackTots"]["industries"]
         locs.locDat[loc]["cars2Class"] = cars2Class
 
-    def yardMaster(self, thisLoc, loc):
+    def yardMaster(self, loc):
         self.setWeights(loc)
         choice = random.choices(self.actionList, weights=self.weights, k=1)
         choice = ''.join(choice)

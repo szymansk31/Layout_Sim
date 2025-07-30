@@ -35,10 +35,13 @@
 },
 "swArea1": {
     "type":"swArea",
-    "trackTots": {"indus1": 0, "bakery": 0, "foundry": 0},
+    "trackTots": {"indus1": 0, "bakery": 0, "foundry": 0, "offspot": 0},
     "totCars": 0,
     "cars2Class": 0,
     "time2Class": 0,
+    "offspot": 
+        {"box": 0, "tank": 0, "rfr": 0, "hop": 2, "gons": 1, "flats": 0},
+
     "industries": {
         "indus1": {
             "numCarSpots": 5,
@@ -47,9 +50,7 @@
             "spot"    :
                 {"box": 1, "tank": 1, "flats": 1},
             "leave"    :
-                {"box": 1, "tank": 1, "flats": 1},
-	    "offspot"  :
-                {"box": 0, "tank": 0, "flats": 0}
+                {"box": 1, "tank": 1, "rfr": 0, "hop": 0, "flats": 1}
             },
         "bakery": {
             "numCarSpots": 2,
@@ -58,8 +59,6 @@
             "spot"    :
                 {"box": 2},
             "leave"    :
-                {"box": 1},
-	    "offspot"  :
                 {"box": 1}
             },
         "foundry": {
@@ -69,9 +68,7 @@
             "spot"    :
                 {"box": 1, "hop": 1, "gons": 0, "flats": 1},
             "leave"    :
-                {"box": 1, "hop": 0, "gons": 0, "flats": 1},
-	    "offspot"  :
-                {"box": 0, "hop": 0, "gons": 0, "flats": 1}
+                {"box": 1, "hop": 0, "gons": 0, "flats": 1}
             }
         },
     "numAdjLocs": 2,

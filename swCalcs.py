@@ -69,22 +69,52 @@ class swCalcs():
                 case "ready2Leave":
                     if trainNam not in trainDB.ydTrains["ready2Leave"]:
                         trainDB.ydTrains["ready2Leave"].append(trainNam)
-                case "turn":
-                    if trainNam not in trainDB.ydTrains["turn"]:
-                        trainDB.ydTrains["turn"].append(trainNam)
-        
+                case "continue":
+                    # May have a call to 
+                    # dispatcher eventually, so process "continue" here 
+                    # as no action needed by train crew (modulo dispatch call)
+                    if trainNam not in trainDB.ydTrains["continue"]:
+                        trainDB.ydTrains["continue"].append(trainNam)
 
-    def switchArea(self, thisLoc, loc):
-        #self.setWeights(loc)
-        #choice = random.choices(self.actionList, weights=self.weights, k=1)
-        #choice = ''.join(choice)
-        #if mVars.prms["dbgYdProc"]: print("\nchoice: ", choice)
+                    self.locProcObj.startTrain("continue", loc, trainNam)
         
+    def switchCalcs(self, loc):
         self.dispObj.dispTrnLocDat(loc)
-        
+        # assume two operators can work at the same time, if one is
+        # switching industries and the other is dropping off
+        trainsWorking = 0
+        for action in ["dropPickup", "rdCrwSw"]:
+            # allow up to two trains working at once
+            
+            if len(trainDB.ydTrains[action]) != 0:
+                train = ''.join(trainDB.ydTrains[action])
+                match action:
+                    case "dropPickup":
+                        self.dropPickup(loc, train)
+                    case "rdCrwSw":
+                        self.rdCrwSw(loc, train)
+                pass
+            trainsWorking +=1
+            if trainsWorking == 2: return
+
+    def dropPickup(self, loc, train):
+        # drop cars for this stop
+        availCars = self.classObj.train2Track(loc, train)
+        if availCars == 0:
+            # pickup cars earmarked for final location
+            #availCars = self.classObj.track2Train(loc, train)
+            #if availCars == 0:
+                # train no longer has cars
+                # remove train name from trainDB.ydTrains and locs.locData
+                self.cleanup(loc, train, "dropPickup")
+                self.locProcObj.startTrain("dropPickup", loc, train)
+
+
+    def rdCrwSw(self, loc, train):
         # prepare for multiple trains in a swArea
         # first see if a train is already switching
         if len(trainDB.ydTrains["rdCrwSw"]) == 0: return
+        
         
         locActionStem = locs.locDat[loc]["trn4Action"]
         index = [i for i, d in enumerate(locActionStem) if "rdCrwSw" in d]
@@ -106,7 +136,7 @@ class swCalcs():
                 locActionStem.append({"industry": industry})
             except:
                 print("all industries have been switched")
-                self.cleanup(loc, ydTrainNam)
+                self.cleanup(loc, ydTrainNam, "rdCrwSw")
                 self.locProcObj.startTrain("rdCrwSw", loc, ydTrainNam)
                 return
 
@@ -151,15 +181,18 @@ class swCalcs():
                     " trainDict: ", trainDB.trains[ydTrainNam],
                     ", locAction: ", locActionStem)
         
-    def cleanup(self, loc, ydTrainNam):
+    def cleanup(self, loc, ydTrainNam, action):
         locActionStem = locs.locDat[loc]["trn4Action"]            
         index = [i for i, d in enumerate(locActionStem)\
-            if "rdCrwSw" in d]
-        locActionStem.pop(index[0])
+            if action in d]
+        if index:
+            locActionStem.pop(index[0])
         trainStem = trainDB.trains[ydTrainNam]
         # remove stop from train
         trainStem["stops"].pop(loc)
         # remove stop from consist
         consistNam = trainDB.getConNam(ydTrainNam)
         trainDB.consists[consistNam]["stops"].pop(loc)
+        # clear action data from display
+        self.dispObj.clearActionDat(loc)
 
