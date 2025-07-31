@@ -23,7 +23,7 @@ class stCalcs():
         from trainProc import trnProc
         self.trnProcObj = trnProc()
 
-    def staging(self, thisLoc, loc):
+    def staging(self, loc):
         
         for train in trainDB.ydTrains["ready2Leave"]:
             if mVars.time == trainDB.trains[train]["startTime"] - 1:

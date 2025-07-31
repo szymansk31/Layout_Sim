@@ -18,6 +18,15 @@ class trainDB():
     trains = {}
     consists = {}
     ydTrains = {}
+    
+    def __init__(self):
+        pass
+    
+    def getConNam(train):
+        consistNum = trainDB.trains[train]["consistNum"]
+        consistNam = "consist"+str(consistNum)
+        return consistNam
+
 
 class routeCls():
     routes = {}
@@ -119,13 +128,18 @@ class stVarSaves():
                 statFile.write("\n\n---------------------------")
                 statFile.write("\nLocation: " + loc)
                 statFile.write("\nDestination, #cars     \n")
-
-                for dest in locs.locDat[loc]["trackTots"]:
-                    numCars = locs.locDat[loc]["trackTots"][dest]
+                locStem = locs.locDat[loc]
+                for dest in locStem["trackTots"]:
+                    numCars = locStem["trackTots"][dest]
                     statFile.write("  " + dest + "    " + str(numCars))
+                text = "\n# Cars: " + str(locStem["totCars"])
+                if locStem["type"] != "staging":
+                    text +=  ", class: " + str(locStem["cars2Class"])
+                statFile.write(text)
+
                 statFile.write("\nTrain and consist:     ")
 
-                for train in locs.locDat[loc]["trains"]:
+                for train in locStem["trains"]:
                     self.printObj.writeTrainInfo(statFile, train)
                     consistNum = trainDB.trains[train]["consistNum"]
                     consistNam = "consist"+str(consistNum)

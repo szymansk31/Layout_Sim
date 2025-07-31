@@ -52,6 +52,12 @@
 },
 "buttons": {
     "type": "buttons"
+}, 
+"locDims": {
+    "type": "locDims",
+    "width": 100,
+    "height": 80,
+    "yActTxt": 55
 }
 
 }

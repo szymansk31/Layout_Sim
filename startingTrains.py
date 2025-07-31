@@ -18,7 +18,7 @@ class trainFromFile():
         self.conName = next(iter(consist))
 
     def readTrain(self):
-        
+        trainProcObj = trainParams()
         trainDict = files.readFile("startingTrainFile")
         self.consistFromFile(files, "startingConsistFile")
         trainDB.consists.update(self.consist)
@@ -47,6 +47,7 @@ class trainFromFile():
             print("newTain dict in startingTrains: ", newTrain)
             print("with consist: ", consistNam, ", contents: ", self.consist[consistNam])
             trainDB.trains.update(newTrain)
+            trainDB.trains[train]["numCars"] = trainProcObj.numCars(train)
             print("starting train: ", trainDB.trains[train])
             dispObj = dispItems()
             dispObj.drawTrain(train)

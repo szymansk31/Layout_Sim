@@ -10,7 +10,7 @@ class carProc():
     
                     
     def carTypeSel(self, consist):
-        carSelDict = {}
+        carSelDict = {'box': 0, 'tank': 0, 'rfr': 0, 'hop': 0, 'gons': 0, 'flats': 0, 'psgr': 0}
         carSelList = [0 for _ in range(mVars.numCarTyp)]  # Creates a list like [0, 0, 0, 0, 0]
 
         availCars = 0
@@ -18,7 +18,7 @@ class carProc():
             carSelDict[cartyp] = consist[cartyp]
             availCars += consist[cartyp]
         idx = 0
-        print("carSelDict: ", carSelDict, ", availCars: ", availCars)
+        #print("carSelDict: ", carSelDict)
         if availCars != 0:
             for keys in carSelDict.keys():
                 carSelList[idx] = carSelDict[keys]/availCars

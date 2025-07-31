@@ -24,8 +24,8 @@ class gui():
             guiStem = gui.guiDict[loc]
             type = guiStem["type"]
             if type != "staging" and type != "yard" and type != "swArea": continue
-            guiStem["x1"] = guiStem["x0"] + 100
-            guiStem["y1"] = guiStem["y0"] + 60
+            guiStem["x1"] = guiStem["x0"] + gui.guiDict["locDims"]["width"]
+            guiStem["y1"] = guiStem["y0"] + gui.guiDict["locDims"]["height"]
       
         #print("new guiDict: ", gui.guiDict)
 
@@ -99,8 +99,8 @@ class dispSim():
                         x, y, text=text, font=("Arial", 10)
                     )
                     pass
-                    #trainDB.trnHeight = guiDict[item]["height"]
-                    #trainDB.trnLength = guiDict[item]["length"]
+                case "locDims":
+                    pass
         #gui.C.pack()
         #self.open_popup()
                 

@@ -18,7 +18,7 @@ entering into ydTrains under "swTrain" - an action that the yard takes to switch
 the train.
 
 Alternatively, a "switch" or "turn" status results in an action by the road crew:
-"roadCrewSw" in ydTrains
+"rdCrwSw" in ydTrains
     trnStatusList = ["enroute", "ready2Leave", "building", "built", "terminate", "switch"
                      "dropPickup", "continue", "turn", "misc", "stop"]
 
@@ -45,7 +45,7 @@ In trainProc:
             case "stop":
                 pass
 
-trainDB.ydTrains = {"brkDnTrn": [], "swTrain": [], "buildTrain": [], "roadCrewSw": []}
+trainDB.ydTrains = {"brkDnTrn": [], "swTrain": [], "buildTrain": [], "rdCrwSw": []}
 
 In locProc, analyzeTrains sets up the routines in yardCalcs file after 
 categorizing how the train needs to be handled.
@@ -66,8 +66,8 @@ categorizing how the train needs to be handled.
                     # for switch areas no yards
                     # code is in locProc but actions are undertaken by
                     # the virtual train crew
-                    if trainNam not in trainDB.ydTrains["roadCrewSw"]:
-                        trainDB.ydTrains["roadCrewSw"].append(trainNam)
+                    if trainNam not in trainDB.ydTrains["rdCrwSw"]:
+                        trainDB.ydTrains["rdCrwSw"].append(trainNam)
                     pass
 
 

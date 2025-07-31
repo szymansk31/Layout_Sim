@@ -31,24 +31,29 @@ class locProc():
             locs.locDat[loc]["locRectID"] = loc+"RectID"
         
     def countCars(self, loc):
-        locDictStem = locs.locDat[loc]
+        locStem = locs.locDat[loc]
         type = locs.locDat[loc]["type"]
         match type:
             case "yard":
-                trackStem = locDictStem["tracks"]
+                trackStem = locStem["tracks"]
             case "swArea":
-                trackStem = locDictStem["industries"]
-        for carLoc in locDictStem["trackTots"]:
-            print("\n Location: ", loc, "destination: ", carLoc)
-            if carLoc not in trackStem: continue
+                trackStem = locStem["industries"]
+        for trackNam in locStem["trackTots"]:
+            print("\n Location: ", loc, "destination: ", trackNam)
+            if trackNam not in trackStem: continue
             match type:
                 case "yard":
-                    locDictStem["trackTots"][carLoc] = sum(trackStem[carLoc].values())
+                    locStem["trackTots"][trackNam] = sum(trackStem[trackNam].values())
                 case "swArea":
-                    locDictStem["trackTots"][carLoc] = \
-                        sum(trackStem[carLoc]["pickups"].values()) + \
-                        sum(trackStem[carLoc]["leave"].values())
-        #print("countCars: ", locDictStem)
+                    if trackNam == "offspot": 
+                        locStem["numOffspot"] = sum(locs.locDat[loc]["offspot"].values())
+                        continue
+                    locStem["trackTots"][trackNam] = \
+                        sum(trackStem[trackNam]["pickups"].values()) + \
+                        sum(trackStem[trackNam]["leave"].values())
+                        
+        #print("countCars: ", locStem)
+        locStem["totCars"] = sum(locStem["trackTots"].values())
                         
 
     def locDests(self, loc):
@@ -68,28 +73,29 @@ class locProc():
         stagCalcObj = stCalcs()
 
         if mVars.prms["dbgYdProc"]: 
-            print("\nentering locCalcs: nlocation: ", loc, ", locDat: ", locs.locDat[loc])
+            print("\nentering locCalcs: location: ", loc, ", locDat: ", locs.locDat[loc])
 
+        thisLoc[loc]["totCars"] = sum(thisLoc[loc]["trackTots"].values())
 
         match thisLoc[loc]["type"]:
             case "yard":
                 self.analyzeTrains(loc)
                 self.printydTrains()
-                ydCalcObj.yardMaster(thisLoc, loc)
+                ydCalcObj.yardMaster(loc)
             case "swArea":
                 swAreaObj.swAnalyzeTrains(loc)
                 self.printydTrains()
-                swAreaObj.switchArea(thisLoc, loc)
+                swAreaObj.switchCalcs(loc)
             case "staging":
                 stagCalcObj.stAnalyzeTrains(loc)
                 self.printydTrains()
-                stagCalcObj.staging(thisLoc, loc)
+                stagCalcObj.staging(loc)
 
                     
         #disp.dispTrnLocDat(loc)
             
     def analyzeTrains(self, loc):
-        trainDB.ydTrains = {"brkDnTrn": [], "buildTrain": [], "swTrain": [], "roadCrewSw": [], "continue": []}
+        trainDB.ydTrains = {"brkDnTrn": [], "buildTrain": [], "swTrain": [], "rdCrwSw": [], "continue": []}
 
         # train status leads to actions by the yard crew or
         # the train crew.  Train actions are the same name as
@@ -108,12 +114,12 @@ class locProc():
                     # for yards, not switch areas
                     if trainNam not in trainDB.ydTrains["buildTrain"]:
                         trainDB.ydTrains["buildTrain"].append(trainNam)
-                case "switch":
+                case "rdCrwSw":
                     # for switch areas no yards
                     # code is in locProc but actions are undertaken by
                     # the virtual train crew
-                    if trainNam not in trainDB.ydTrains["roadCrewSw"]:
-                        trainDB.ydTrains["roadCrewSw"].append(trainNam)
+                    if trainNam not in trainDB.ydTrains["rdCrwSw"]:
+                        trainDB.ydTrains["rdCrwSw"].append(trainNam)
                     pass
                 case "continue":
                     # no action for yard.  May have a call to 
@@ -187,10 +193,11 @@ class locProc():
         self.rmTrnFromLoc(action, loc, ydTrainNam)
 
     def rmTrnFromLoc(self, action, loc, ydTrainNam):
+        disp = dispItems()
         # remove train from ydTrains and location
         print("rmTrnFromLoc: trainDB.ydTrains: ", trainDB.ydTrains)
         if action == "noAction":
-            print("Train no longer in ydTrains")
+            print("Train no longer in ydTrains and waiting to leave")
         else:
             index = trainDB.ydTrains[action].index(ydTrainNam)
             trainDB.ydTrains[action].pop(index)
@@ -199,4 +206,6 @@ class locProc():
         
         index = locs.locDat[loc]["trains"].index(ydTrainNam)
         locs.locDat[loc]["trains"].pop(index)
-        
+        # clear action data from display
+        disp.clearActionDat(loc)
+
