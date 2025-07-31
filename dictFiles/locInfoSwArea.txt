@@ -13,7 +13,7 @@
         "staging1"    :{"box": 1, "tank": 3, "rfr": 3, "hop": 0, 
         "gons": 1, "flats": 3},
         "staging2"   :{"box": 0, "tank": 0, "rfr": 0, "hop": 0, 
-        "gons": 0, "flats": 0}
+        "gons": 0, "flats": 0},
         "industries"   :{"box": 0, "tank": 0, "rfr": 0, "hop": 0, 
         "gons": 0, "flats": 0}
     },

@@ -18,7 +18,7 @@
 "trnRectTag": "",
 "trnNumTag": "",
 "numStops": 3,
-"currentStop": "",
+"departStop": "",
 "stops": {
     "yard1": {"action": "dropPickup"},
     "swArea1": {"action": "dropPickup"},
@@ -46,7 +46,7 @@
 "trnRectTag": "",
 "trnNumTag": "",
 "numStops": 2,
-"currentStop": "",
+"departStop": "",
 "stops": {
     "swArea1": {"action": "rdCrwSw"},
     "staging2": {"action": "terminate"}
@@ -73,7 +73,7 @@
 "trnRectTag": "",
 "trnNumTag": "",
 "numStops": 2,
-"currentStop": "",
+"departStop": "",
 "stops": {
     "yard2": {"action": "continue"},
     "yard1": {"action": "terminate"}
@@ -100,7 +100,7 @@
 "trnRectTag": "",
 "trnNumTag": "",
 "numStops": 3,
-"currentStop": "",
+"departStop": "",
 "stops": {
     "yard2": {"action": "dropPickup"},
     "yard1": {"action": "dropPickup"},

@@ -43,7 +43,7 @@ class ydCalcs():
                 })
         # if a track has enough cars to build a train, then that increases weight of buildTrain
         numCars, maxCarTrk = self.ready2Build(loc)
-        if (numCars>0) and (numTrains["buildTrain"] == 0): numTrains["buildTrain"] +=1
+        if (numCars>0) and (numTrains["buildTrain"] == 0): numTrains["buildTrain"] = 1
         totTrains = sum(numTrains[action] for action in numTrains)
         idx = 0
         print("numTrains list, totTrains: ", numTrains, ",", totTrains)
@@ -106,7 +106,7 @@ class ydCalcs():
             if availCars == 0:
                 # train no longer has cars
                 # remove train name from trainDB.ydTrains and locs.locData
-                self.locProcObj.rmTrnFromLoc("brkDnTrn", loc, ydTrainNam)
+                self.locProcObj.rmTrnFrmActions("brkDnTrn", loc, ydTrainNam)
                 trainDB.trains.pop(ydTrainNam)
 
         if mVars.prms["dbgYdProc"]: 
@@ -252,8 +252,8 @@ class ydCalcs():
                 locs.locDat[loc]["trn4Action"] = [d for d in locStem if "swTrain" not in d]
                 if mVars.prms["dbgYdProc"]: print("trn4Action:", 
                         locs.locDat[loc]["trn4Action"])
-
-                self.locProcObj.startTrain("swTrain", loc, ydTrainNam)
+                self.locProcObj.rmTrnFrmActions("swTrain", loc, ydTrainNam)
+                self.locProcObj.startTrain(loc, ydTrainNam)
         
         pass
     def servIndus(self, loc):

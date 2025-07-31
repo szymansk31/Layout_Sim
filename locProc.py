@@ -127,11 +127,9 @@ class locProc():
                     # no action for yard.  May have a call to 
                     # dispatcher eventually, so process "continue" here 
                     # as no action needed by train crew (modulo dispatch call)
-                    if trainNam not in trainDB.ydTrains["continue"]:
-                        trainDB.ydTrains["continue"].append(trainNam)
-
-                    self.startTrain("continue", loc, trainNam)
+                    self.startTrain(loc, trainNam)
                 case "built":
+                    self.rmTrnFrmActions("buildTrain", loc, trainNam)
                     startTime = locs.locDat[loc]["bldTrnDepTimes"][0]
                     if mVars.time >= startTime - 1:
                         locs.locDat[loc]["bldTrnDepTimes"].pop(0)
@@ -140,9 +138,7 @@ class locProc():
                               " in loc: ", loc, 
                               " built and leaving for (nextLoc): ", 
                               nextLoc)
-                        # train status is "built"; use "noAction" to bypass
-                        # train removal from ydTrains
-                        self.startTrain("noAction", loc, trainNam)
+                        self.startTrain(loc, trainNam)
         
                 
     def findRoutes(self, loc, ydTrainNam):
@@ -150,13 +146,13 @@ class locProc():
         for routeNam in routeCls.routes:
             loc = ''.join(loc)
             dest = ''.join(nextLoc)
-            if dbgLocal: print("routNam: ", routeNam, " loc: ", loc, 
-                " nextLoc: ", dest, "route: ", routeCls.routes[routeNam])
+            #if dbgLocal: print("routNam: ", routeNam, " loc: ", loc, 
+            #    " nextLoc: ", dest, "route: ", routeCls.routes[routeNam])
             if (loc in routeCls.routes[routeNam].values()) and \
                 (dest in routeCls.routes[routeNam].values()):
                 return routeNam
 
-    def startTrain(self, action, loc, ydTrainNam):
+    def startTrain(self, loc, ydTrainNam):
         # setup train
         from trainProc import trainParams
         disp = dispItems()
@@ -191,23 +187,21 @@ class locProc():
                 trainStem["status"] = "stop"
                 
         if mVars.prms["dbgYdProc"]: print("train",ydTrainNam," starting: "
-            ,trainStem, ",\n route: ", routeCls.routes[route4newTrn])
-        self.rmTrnFromLoc(action, loc, ydTrainNam)
+            ,trainStem, ",\n")
+            #route: ", routeCls.routes[route4newTrn])
 
-    def rmTrnFromLoc(self, action, loc, ydTrainNam):
+    def rmTrnFrmActions(self, action, loc, ydTrainNam):
         disp = dispItems()
         # remove train from ydTrains and location
         print("rmTrnFromLoc: trainDB.ydTrains: ", trainDB.ydTrains)
-        if action == "noAction":
-            print("Train no longer in ydTrains and waiting to leave")
-        else:
-            index = trainDB.ydTrains[action].index(ydTrainNam)
-            trainDB.ydTrains[action].pop(index)
-            if dbgLocal: print("after removal: trainDB.ydTrains: ", trainDB.ydTrains, 
-                    "\n trains[ydTrainNam]: ", trainDB.trains[ydTrainNam])
-        
-        index = locs.locDat[loc]["trains"].index(ydTrainNam)
-        locs.locDat[loc]["trains"].pop(index)
+        index = trainDB.ydTrains[action].index(ydTrainNam)
+        trainDB.ydTrains[action].pop(index)
+        if dbgLocal: print("after removal: trainDB.ydTrains: ", trainDB.ydTrains, 
+                "\n trains[ydTrainNam]: ", trainDB.trains[ydTrainNam])
         # clear action data from display
         disp.clearActionDat(loc)
+    
+    def rmTrnFrmLoc(self, loc, tranNam):  
+        index = locs.locDat[loc]["trains"].index(tranNam)
+        locs.locDat[loc]["trains"].pop(index)
 

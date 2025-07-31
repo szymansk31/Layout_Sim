@@ -66,6 +66,7 @@ class dispItems():
             
         for train in trainDB.trains:
             self.drawTrain(train)
+        self.updateTimer()
 
     def updateTimer(self):
         text = "time: " + str(mVars.time)

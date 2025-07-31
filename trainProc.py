@@ -21,7 +21,7 @@ class trainParams():
 
     def __init__(self):
         #self.trainID = int
-        self.trnName = ""
+        self.trainNam = ""
         self.conName = ""
         self.files = readFiles()
 
@@ -38,7 +38,7 @@ class trainParams():
         
 
     def dict2TrnNam(self, train):
-        self.trnName = next(iter(train))
+        self.trainNam = next(iter(train))
     def dict2ConNam(self, consist):
         self.conName = next(iter(consist))
 
@@ -99,8 +99,9 @@ class trnProc:
         self.deltaT = 0.0
         self.trnActionList = [""]
 
-    def trainCalcs(self, trainDict, trnName):
+    def trainCalcs(self, trainDict, trainNam):
         disp = dispItems()
+        locProcObj = locProc()
 
         match trainDict["status"]:
             case "enroute":
@@ -115,22 +116,22 @@ class trnProc:
                 transTime = routeCls.routes[trainDict["currentLoc"]]["transTime"]
                 if mVars.prms["dbgTrnProc"]: self.printTrnEnRoute(trainDict, routeNam, transTime, variance)
                 
-                disp.drawTrain(trnName)
+                disp.drawTrain(trainNam)
                 match trainDict["direction"]:
                     case "east":
                         if trainDict["xLoc"] >= routeCls.routes[routeNam]["x1"]:
-                            self.procTrnStop(trainDict, trnName)
+                            self.procTrnStop(trainDict, trainNam)
                     case "west":
                         if trainDict["xLoc"] <= routeCls.routes[routeNam]["x0"]:
-                            self.procTrnStop(trainDict, trnName)
+                            self.procTrnStop(trainDict, trainNam)
                                                 
                     
             case "ready2Leave":
-                #fills nextLoc with the route it is taking out of currentLoc
-                #self.fillNextLoc(trainDict["currentLoc"], trainDict) 
-                print("train: ", trnName, " switching to enroute status")
+                print("train: ", trainNam, " switching to enroute status")
                 trainDict["status"] = "enroute"
-                disp.drawTrain(trnName)
+                disp.drawTrain(trainNam)
+                loc = trainDB.trains[trainNam]["departStop"]
+                locProcObj.rmTrnFrmLoc(loc, trainNam)
                 pass
             case "building"|"built":
                 #procssing done in locProc
@@ -156,7 +157,7 @@ class trnProc:
         ", variance: ", variance)
 
             
-    def procTrnStop(self, trainDict, trnName):
+    def procTrnStop(self, trainDict, trainNam):
         disp = dispItems()
         routeNam = trainDict["currentLoc"]
         routeStem = routeCls.routes[routeNam]
@@ -165,8 +166,9 @@ class trnProc:
 
         stopLoc = trainDict["nextLoc"]
         trainDict["currentLoc"] = stopLoc
-        print("train: ", trnName, "entering terminal: ", stopLoc, "trainDict: ", trainDict)
-        print("train: ", trnName, "consistNum: ", consistNum, 
+        trainDict["departStop"] = stopLoc
+        print("train: ", trainNam, "entering terminal: ", stopLoc, "trainDict: ", trainDict)
+        print("train: ", trainNam, "consistNum: ", consistNum, 
               "contents: ", trainDB.consists[consistNam])
         
         #actions are executed in terminals/yards/switch areas
@@ -198,10 +200,10 @@ class trnProc:
                 trainDict["timeEnRoute"] = 0
                 self.updateTrain4Stop(stopLoc, trainDict)
 
-        disp.drawTrain(trnName)
-        locs.locDat[trainDict["currentLoc"]]["trains"].append(trnName)
+        disp.drawTrain(trainNam)
+        locs.locDat[trainDict["currentLoc"]]["trains"].append(trainNam)
         try:
-            index = routeStem["trains"].index(trnName)
+            index = routeStem["trains"].index(trainNam)
         except:
             pass
         

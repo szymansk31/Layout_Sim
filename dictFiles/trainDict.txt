@@ -18,7 +18,7 @@
 "trnRectTag": "",
 "trnNumTag": "",
 "numStops": 0,
-"currentStop": "",
+"departStop": "",
 "stops": {
     "yard1": {"action": "dropPickup"},
     "swArea1": {"action": "terminate"}

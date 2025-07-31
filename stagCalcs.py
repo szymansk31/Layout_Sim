@@ -30,7 +30,8 @@ class stCalcs():
                 nextLoc = trainDB.trains[train]["nextLoc"]
 
                 print("in staging: nextLoc: ", nextLoc)
-                self.locProcObj.startTrain("ready2Leave", loc, train)
+                self.locProcObj.rmTrnFrmActions("ready2Leave", loc, train)
+                self.locProcObj.startTrain(loc, train)
                 
         self.dispObj.dispTrnLocDat(loc)
                 
