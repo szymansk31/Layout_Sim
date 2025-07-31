@@ -105,7 +105,6 @@ class ydCalcs():
                 # remove train name from trainDB.ydTrains and locs.locData
                 self.locProcObj.rmTrnFromLoc("brkDnTrn", loc, ydTrainNam)
                 trainDB.trains.pop(ydTrainNam)
-
         if mVars.prms["dbgYdProc"]: 
             #if dbgLocal: print("after brkDnTrn: consist: ", 
             #self.thisConsist)

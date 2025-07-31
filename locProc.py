@@ -193,7 +193,6 @@ class locProc():
         self.rmTrnFromLoc(action, loc, ydTrainNam)
 
     def rmTrnFromLoc(self, action, loc, ydTrainNam):
-        disp = dispItems()
         # remove train from ydTrains and location
         print("rmTrnFromLoc: trainDB.ydTrains: ", trainDB.ydTrains)
         if action == "noAction":
@@ -206,6 +205,4 @@ class locProc():
         
         index = locs.locDat[loc]["trains"].index(ydTrainNam)
         locs.locDat[loc]["trains"].pop(index)
-        # clear action data from display
-        disp.clearActionDat(loc)
-
+        
