@@ -1,16 +1,16 @@
 {
 "yard1": {
     "type":"yard",
-    "trackTots": {"swArea1": 0, "yard2": 0, "staging1":0, "industries": 0},
+    "destTrkTots": {"swArea1": 0, "yard2": 0, "staging1":0, "industries": 0},
     "tracks": {
         "swArea1"   :{"box": 4, "tank": 2, "rfr": 3, "hop": 8, 
-        "gons": 0, "flats": 0, "psgr": 0},
+        "gons": 0, "flats": 0},
         "yard2"    :{"box": 3, "tank": 0, "rfr": 1, "hop": 0, 
-        "gons": 4, "flats": 3, "psgr": 0},
+        "gons": 4, "flats": 3},
         "staging1"    :{"box": 1, "tank": 3, "rfr": 3, "hop": 0, 
-        "gons": 1, "flats": 3, "psgr": 0},
+        "gons": 1, "flats": 3},
         "industries"   :{"box": 0, "tank": 0, "rfr": 0, "hop": 0, 
-        "gons": 0, "flats": 0, "psgr": 0}
+        "gons": 0, "flats": 0}
     },
     "numAdjLocs": 2,
     "adjLocNames": {"W":"yard2", "E":"swArea1"},
@@ -32,16 +32,16 @@
 },
 "swArea1": {
     "type":"yard",
-    "trackTots": {"yard1": 0, "yard2": 0, "staging1": 0, "industries": 0},
+    "destTrkTots": {"yard1": 0, "yard2": 0, "staging1": 0, "industries": 0},
     "tracks": {
         "yard1"   :{"box": 2, "tank": 2, "rfr": 3, "hop": 3, 
-        "gons": 2, "flats": 2, "psgr": 0},
+        "gons": 2, "flats": 2},
         "yard2"    :{"box": 3, "tank": 2, "rfr": 1, "hop": 0, 
-        "gons": 1, "flats": 1, "psgr": 0},
+        "gons": 1, "flats": 1},
         "staging1"    :{"box": 2, "tank": 3, "rfr": 3, "hop": 0, 
-        "gons": 1, "flats": 1, "psgr": 0},
+        "gons": 1, "flats": 1},
         "industries"   :{"box": 0, "tank": 0, "rfr": 0, "hop": 0, 
-        "gons": 0, "flats": 0, "psgr": 0}
+        "gons": 0, "flats": 0}
     },
     "numAdjLocs": 1,
     "adjLocNames": {"W":"yard1"},
@@ -63,14 +63,14 @@
 },
 "yard2": {
     "type":"yard",
-    "trackTots": {"yard1": 0, "staging1": 0, "industries": 0},
+    "destTrkTots": {"yard1": 0, "staging1": 0, "industries": 0},
     "tracks": {
         "yard1"    :{"box": 3, "tank": 2, "rfr": 5, "hop": 5, 
-        "gons": 1, "flats": 3, "psgr": 0},
+        "gons": 1, "flats": 3},
         "staging1"    :{"box": 2, "tank": 3, "rfr": 3, "hop": 0, 
-        "gons": 1, "flats": 1, "psgr": 0},
+        "gons": 1, "flats": 1},
         "industries"   :{"box": 0, "tank": 0, "rfr": 0, "hop": 0, 
-        "gons": 0, "flats": 0, "psgr": 0}
+        "gons": 0, "flats": 0}
     },
     "numAdjLocs": 2,
     "adjLocNames": {"W":"staging1", "E":"yard1"},
@@ -92,7 +92,7 @@
 },
 "staging1": {
     "type":"staging",
-    "trackTots": {},
+    "destTrkTots": {},
     "tracks": {},
     "numAdjLocs": 1,
     "adjLocNames": {"E":"yard2"},

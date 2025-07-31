@@ -129,8 +129,8 @@ class stVarSaves():
                 statFile.write("\nLocation: " + loc)
                 statFile.write("\nDestination, #cars     \n")
                 locStem = locs.locDat[loc]
-                for dest in locStem["trackTots"]:
-                    numCars = locStem["trackTots"][dest]
+                for dest in locStem["destTrkTots"]:
+                    numCars = locStem["destTrkTots"][dest]
                     statFile.write("  " + dest + "    " + str(numCars))
                 text = "\n# Cars: " + str(locStem["totCars"])
                 if locStem["type"] != "staging":

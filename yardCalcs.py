@@ -60,7 +60,9 @@ class ydCalcs():
         for train in trainDB.ydTrains["buildTrain"]: 
             cars2Class += mVars.prms["trainSize"] - \
                 trainDB.trains[train]["numCars"]
-        cars2Class += locs.locDat[loc]["trackTots"]["industries"]
+        cars2Class += locs.locDat[loc]["destTrkTots"]["industries"]
+        if locs.locDat[loc]["type"] == "swArea": 
+            cars2Class += locs.locDat[loc]["numOffspot"]
         locs.locDat[loc]["cars2Class"] = cars2Class
 
     def yardMaster(self, loc):
@@ -110,7 +112,7 @@ class ydCalcs():
         if mVars.prms["dbgYdProc"]: 
             #if dbgLocal: print("after brkDnTrn: consist: ", 
             #self.thisConsist)
-            #if dbgLocal: print("this location trackTots: ", locs.locDat[loc]["trackTots"])
+            #if dbgLocal: print("this location destTrkTots: ", locs.locDat[loc]["destTrkTots"])
             pass
 
 
@@ -140,11 +142,11 @@ class ydCalcs():
 
     def ready2Build(self, loc):
         import copy
-        trackList = copy.deepcopy(locs.locDat[loc]["trackTots"])
+        trackList = copy.deepcopy(locs.locDat[loc]["destTrkTots"])
         trackList.pop("industries")
         maxCarTrk = max(trackList, key=trackList.get)
 
-        if locs.locDat[loc]["trackTots"][maxCarTrk] >= mVars.prms["trainSize"]*0.5:
+        if locs.locDat[loc]["destTrkTots"][maxCarTrk] >= mVars.prms["trainSize"]*0.5:
             return trackList[maxCarTrk], maxCarTrk
         else: return 0,""
         
@@ -198,7 +200,7 @@ class ydCalcs():
             # "dropPickup" status in that location and will add to consists
             trainDB.consists[conName].update({
                 "stops": {maxCarTrk:{"box": 0, "tank": 0,"rfr": 0, "hop": 0, 
-                "gons": 0, "flats": 0, "psgr": 0}  }
+                "gons": 0, "flats": 0}  }
             })
             
             print("new train: ", trnName, ": ", trainDB.trains[trnName])

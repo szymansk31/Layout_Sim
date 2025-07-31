@@ -83,7 +83,7 @@ class trainParams():
             "trainNum": newTrainNum,
             "stops": {
                 "yard"   :{"box": 0, "tank": 0,"rfr": 0, "hop": 0, 
-                    "gons": 0, "flats": 0, "psgr": 0},
+                    "gons": 0, "flats": 0},
                 }
             }
         })

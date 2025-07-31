@@ -38,27 +38,29 @@ class locProc():
                 trackStem = locStem["tracks"]
             case "swArea":
                 trackStem = locStem["industries"]
-        for trackNam in locStem["trackTots"]:
+        for trackNam in locStem["destTrkTots"]:
             print("\n Location: ", loc, "destination: ", trackNam)
             if trackNam not in trackStem: continue
             match type:
                 case "yard":
-                    locStem["trackTots"][trackNam] = sum(trackStem[trackNam].values())
+                    locStem["destTrkTots"][trackNam] = sum(trackStem[trackNam].values())
+                    locStem["totCars"] = sum(locStem["destTrkTots"].values())
                 case "swArea":
                     if trackNam == "offspot": 
                         locStem["numOffspot"] = sum(locs.locDat[loc]["offspot"].values())
                         continue
-                    locStem["trackTots"][trackNam] = \
+                    locStem["indusTots"][trackNam] = \
                         sum(trackStem[trackNam]["pickups"].values()) + \
                         sum(trackStem[trackNam]["leave"].values())
-                        
+                    locStem["totCars"] = sum(locStem["indusTots"].values())
+                    locStem["totCars"] += locStem["numOffspot"]
+                    
         #print("countCars: ", locStem)
-        locStem["totCars"] = sum(locStem["trackTots"].values())
                         
 
     def locDests(self, loc):
         thisLocDests = []
-        for dest in locs.locDat[loc]["trackTots"]:
+        for dest in locs.locDat[loc]["destTrkTots"]:
             thisLocDests.append(dest)
         return thisLocDests
 
@@ -75,7 +77,7 @@ class locProc():
         if mVars.prms["dbgYdProc"]: 
             print("\nentering locCalcs: location: ", loc, ", locDat: ", locs.locDat[loc])
 
-        thisLoc[loc]["totCars"] = sum(thisLoc[loc]["trackTots"].values())
+        thisLoc[loc]["totCars"] = sum(thisLoc[loc]["destTrkTots"].values())
 
         match thisLoc[loc]["type"]:
             case "yard":
