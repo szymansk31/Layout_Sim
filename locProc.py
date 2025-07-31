@@ -46,7 +46,7 @@ class locProc():
                     locStem["trackTots"][trackNam] = sum(trackStem[trackNam].values())
                 case "swArea":
                     if trackNam == "offspot": 
-                        locStem["trackTots"]["offspot"] = sum(locs.locDat[loc]["offspot"].values())
+                        locStem["numOffspot"] = sum(locs.locDat[loc]["offspot"].values())
                         continue
                     locStem["trackTots"][trackNam] = \
                         sum(trackStem[trackNam]["pickups"].values()) + \

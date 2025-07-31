@@ -35,13 +35,13 @@
 },
 "swArea1": {
     "type":"swArea",
-    "trackTots": {"indus1": 0, "bakery": 0, "foundry": 0, "offspot": 0},
+    "trackTots": {"indus1": 0, "bakery": 0, "foundry": 0},
     "totCars": 0,
     "cars2Class": 0,
     "time2Class": 0,
     "offspot": 
         {"box": 0, "tank": 0, "rfr": 0, "hop": 2, "gons": 1, "flats": 0},
-
+    "numOffspot": 0,
     "industries": {
         "indus1": {
             "numCarSpots": 5,
