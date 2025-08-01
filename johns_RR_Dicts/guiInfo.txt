@@ -1,0 +1,73 @@
+{
+"staging1": {
+    "type": "staging",
+    "x0": 150, "y0": 100, 
+    "text": "Staging 1"
+},
+"yard2": {
+    "type": "yard",
+    "x0": 475, "y0": 100, 
+    "text": "Yard 2"
+},
+"yard1": {
+    "type": "yard",
+    "x0": 800, "y0": 100, 
+    "text": "Yard 1"
+},
+"swArea1": {
+    "type": "swArea",
+    "x0": 1125, "y0": 100, 
+    "text": "Sw Area 1"
+},
+"staging2": {
+    "type": "staging",
+    "x0": 1350, "y0": 100, 
+    "text": "Staging 2"
+},
+"ErieRRStaging": {
+    "type": "staging",
+    "x0": 600, "y0": 220, 
+    "text": "ErieRRStaging"
+},
+"route1": {
+    "type": "route", "leftObj": "staging1", "rtObj": "yard2",
+    "text": "Route 1",
+    "transTime": 10
+},
+"route2": {
+    "type": "route", "leftObj": "yard2", "rtObj": "yard1",
+    "text": "Route 2",
+    "transTime": 10
+},
+"route3": {
+    "type": "route", "leftObj": "yard1", "rtObj": "swArea1",
+    "text": "Route 3",
+    "transTime": 10
+},
+"route4": {
+    "type": "route", "leftObj": "swArea1", "rtObj": "staging2",
+    "text": "Route 4",
+    "transTime": 10
+},
+"route5": {
+    "type": "route", "leftObj": "ErieRRStaging", "rtObj": "yard1",
+    "text": "Route 5",
+    "transTime": 10
+},
+"trainData": {
+    "type": "train", "height": 10, "length": 20
+},
+"timer": {
+    "type": "timer", "x0": 40, "y0": 70, "timerTag": 0
+},
+"buttons": {
+    "type": "buttons"
+}, 
+"locDims": {
+    "type": "locDims",
+    "width": 100,
+    "height": 80,
+    "yActTxt": 55
+}
+
+}

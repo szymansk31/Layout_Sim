@@ -1,0 +1,10 @@
+{
+"consist10": {
+"consistNum": 10,
+"trainNum": 0,
+"stops": {
+    "destTrkTots": {"box": 3, "tank": 2,"rfr": 0, "hop": 3, 
+        "gons": 0, "flats": 1}
+        }
+    }
+}

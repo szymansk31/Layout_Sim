@@ -1,0 +1,10 @@
+{
+"routeProto": {
+    "leftObj": "yard1", "rtObj": "swArea1", 
+    "transTime": 10, "trnLabelTag": "route1trnLblTag", 
+    "trains": [], 
+    "x0": 0, "x1": 0, "y0": 0, "y1": 0,
+    "yTrn": 0, "xTrnTxt": 0, "yTrnTxt": 80, 
+    "yTrnCon": 95, "distPerTime": 45.0
+    } 
+}

@@ -1,3 +1,5 @@
+
+import numpy as np
 from mainVars import *
 from stateVars import routeCls
 from trainProc import trainParams
@@ -86,13 +88,22 @@ class routeGeom():
     def routeLine(self, rtNam, guiDict):
         leftObj = guiDict[guiDict[rtNam]["leftObj"]]
         rtObj = guiDict[guiDict[rtNam]["rtObj"]]
-        yLoc = (leftObj["y0"] + leftObj["y1"])*0.5
+        y0 = (leftObj["y0"] + leftObj["y1"])*0.5
+        y1 = (rtObj["y0"] + rtObj["y1"])*0.5
+        
+        yDist = np.abs(y1 - y0)
+        xDist = np.abs(rtObj["x0"] - leftObj["x1"])
+        lineLen = np.sqrt(xDist*xDist+yDist*yDist)
+        
         routeDictOut = {
             "x0": leftObj["x1"],
             "x1": rtObj["x0"],
-            "y0": yLoc,
-            "y1": yLoc,
-                    }
+            "y0": y0,
+            "y1": y1,
+            "coord": {"cosTh": xDist/lineLen,
+                      "sinTh": yDist/lineLen
+                  }
+                }
         return routeDictOut
 
 
