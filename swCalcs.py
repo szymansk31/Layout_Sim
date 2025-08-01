@@ -194,7 +194,7 @@ class swCalcs():
         consistNam = trainDB.getConNam(ydTrainNam)
         trainDB.consists[consistNam]["stops"].pop(loc)
         # remove from ydTrains action list
-        self.locProcObj.rmTrnFrmActions("swTrain", loc, ydTrainNam)
+        self.locProcObj.rmTrnFrmActions(action, loc, ydTrainNam)
 
         # clear action data from display
         self.dispObj.clearActionDat(loc)

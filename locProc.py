@@ -129,7 +129,6 @@ class locProc():
                     # as no action needed by train crew (modulo dispatch call)
                     self.startTrain(loc, trainNam)
                 case "built":
-                    self.rmTrnFrmActions("buildTrain", loc, trainNam)
                     startTime = locs.locDat[loc]["bldTrnDepTimes"][0]
                     if mVars.time >= startTime - 1:
                         locs.locDat[loc]["bldTrnDepTimes"].pop(0)
@@ -193,7 +192,7 @@ class locProc():
     def rmTrnFrmActions(self, action, loc, ydTrainNam):
         disp = dispItems()
         # remove train from ydTrains and location
-        print("rmTrnFromLoc: trainDB.ydTrains: ", trainDB.ydTrains)
+        print("rmTrnFrmLoc: trainDB.ydTrains: ", trainDB.ydTrains)
         index = trainDB.ydTrains[action].index(ydTrainNam)
         trainDB.ydTrains[action].pop(index)
         if dbgLocal: print("after removal: trainDB.ydTrains: ", trainDB.ydTrains, 
