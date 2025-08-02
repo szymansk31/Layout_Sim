@@ -107,6 +107,7 @@ class ydCalcs():
                 # train no longer has cars
                 # remove train name from trainDB.ydTrains and locs.locData
                 self.locProcObj.rmTrnFrmActions("brkDnTrn", loc, ydTrainNam)
+                self.locProcObj.rmTrnFrmLoc(loc, ydTrainNam)
                 trainDB.trains.pop(ydTrainNam)
 
         if mVars.prms["dbgYdProc"]: 
@@ -146,6 +147,7 @@ class ydCalcs():
         trackList.pop("industries")
         maxCarTrk = max(trackList, key=trackList.get)
 
+        print("ready2Build: maxCarTrk: ", maxCarTrk, ", trackList: ", trackList)
         if locs.locDat[loc]["destTrkTots"][maxCarTrk] >= mVars.prms["trainSize"]*0.5:
             return trackList[maxCarTrk], maxCarTrk
         else: return 0,""
@@ -163,11 +165,11 @@ class ydCalcs():
                 return nextLoc, numStops, stops
 
             if gui.guiDict[dest]["x0"] < gui.guiDict[loc]["x0"]:
-                tmpStop = locs.locDat[loc]["adjLocNames"]["W"]
+                tmpStop = locs.locDat[testLoc]["adjLocNames"]["W"]
                 stops[tmpStop] = dict(action = "continue")
                 numStops +=1
             else:
-                tmpStop = locs.locDat[loc]["adjLocNames"]["E"]
+                tmpStop = locs.locDat[testLoc]["adjLocNames"]["E"]
                 stops[tmpStop] = dict(action = "continue")
                 numStops +=1
             if numStops == 1: nextLoc = tmpStop
@@ -179,7 +181,7 @@ class ydCalcs():
         from trainProc import trainParams
 
         numCars, maxCarTrk = self.ready2Build(loc)
-        if numCars:            
+        if numCars != 0:            
             trainObj = trainParams()
             trnName, conName = trainObj.newTrain()
             
@@ -192,6 +194,7 @@ class ydCalcs():
                 "currentLoc": loc,
                 "finalLoc": maxCarTrk,
                 "numStops": numstops,
+                "departStop": loc,
                 "stops": stops,
                 "color": trainParams.colors()           
                     })

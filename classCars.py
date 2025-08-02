@@ -47,7 +47,7 @@ class classCars():
     def selCar(self, thisTrack):            
         carSel, availCars = carProcObj.carTypeSel(thisTrack)
         print(\
-            ", selected cartypes: ", carSel, ", availCars: ", availCars)
+            "selected cartypes: ", carSel, ", availCars: ", availCars)
         carClassType = ""
         if availCars > 0:
             carClassType = carProcObj.randomCar(carSel)

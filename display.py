@@ -221,15 +221,11 @@ class dispItems():
         match trainLoc:
             case trainLoc if "route" in trainLoc:
                 routeStem = routeCls.routes[trainLoc]
-                yTrn = routeStem["yTrn"]
                 timeEnRoute = trainStem["timeEnRoute"]
-                velocity = routeStem["distPerTime"]
+                deltaX = trainStem["deltaX"]
                 print("draw train: ", train, "currentLoc: ", trainLoc, ", trainDict: ", trainStem)
 
-                print("draw train: ", train, ", timeEnRoute: ", timeEnRoute, " deltaT, distance/time: ", trainStem["deltaT"], 
-                        routeStem["distPerTime"])
-                deltaX = int(trainStem["deltaT"]*velocity)
-                if trainStem["direction"] == "west": deltaX = -deltaX
+                print("draw train: ", train, ", timeEnRoute: ", timeEnRoute)
                 
                 if trainStem["firstDispTrn"] == 1:
                     trainStem["xPath"] = trainStem["xTrnInit"]
@@ -254,13 +250,12 @@ class dispItems():
                     #gui.C.delete(trainStem["trnNumTag"])
                     #gui.C.move(trainStem["trnObjTag"], deltaX, 0)
                     gui.C.coords(trainStem["trnRectTag"], trainStem["xPath"], trainStem["yPath"], trainStem["xPath"]+trnLen, 
-                        yTrn+trnHt)
+                        trainStem["yPath"]+trnHt)
                     gui.C.coords(trainStem["trnNumTag"], trainStem["xPath"]+10, trainStem["yPath"]+6)
                     #gui.C.itemconfigure(routeStem["trnLabelTag"], text=trnLabels, 
                     #    anchor="nw", fill=trainStem["color"])
                     
-                print("draw train: ", train, ", coordinates after move: ", trainStem["xPath"], yTrn, trainStem["xPath"]+trnLen, yTrn+trnHt)
-                print("distance via timeEnRoute: ", timeEnRoute*velocity)
+                print("draw train: ", train, ", coordinates after move: ", trainStem["xPath"], trainStem["yPath"], trainStem["xPath"]+trnLen, trainStem["yPath"]+trnHt)
                 gui.C.update()
 
             case trainLoc if "route" not in trainLoc:

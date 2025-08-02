@@ -18,17 +18,27 @@ class trainFromFile():
     def dict2ConNam(self, consist):
         self.conName = next(iter(consist))
         
-    def setTrnCoord(self, trainDict, train):
-        currentLoc = trainDict[train]["currentLoc"]
-        guiLocStem = gui.guiDict[gui.guiDict[currentLoc]]
-        match currentLoc:
-            case currentLoc if "route" in currentLoc:
-                leftObj = guiLocStem["leftObj"]
-                rtObj = guiLocStem["rtObj"]
-                yPath = (leftObj["y0"] + leftObj["y1"])*0.5
+    def setTrnCoord(self, currLoc, dir):
+
+        match currLoc:
+            case currLoc if "route" in currLoc:
+                leftObj = gui.guiDict[gui.guiDict[currLoc]["leftObj"]]
+                rtObj = gui.guiDict[gui.guiDict[currLoc]["rtObj"]]
                 height = leftObj["y1"] - leftObj["y0"]
-                distance = rtObj["x0"] - leftObj["x1"]
-                xTrnTxt = (leftObj["x1"] + rtObj["x0"])*0.5
+                match dir:
+                    case "east":
+                        yTrnInit = (leftObj["y0"] + leftObj["y1"])*0.5 - height*0.25
+    
+    
+                    case "west":
+                        yTrnInit = (rtObj["y0"] + rtObj["y1"])*0.5 - height*0.25
+            case currLoc:
+                # if train on other than route, y for either dir is equal,
+                # hence just use one loc object
+                yTrnInit = (gui.guiDict[currLoc]["y0"] + gui.guiDict[currLoc]["y0"])*0.5
+
+                        
+        return yTrnInit
 
     def readTrain(self):
         trainProcObj = trainParams()
@@ -37,7 +47,9 @@ class trainFromFile():
         trainDB.consists.update(self.consist)
         for train in trainDict:
             print("\nTrain: ", train)
-            self.setTrnCoord(trainDict[train])
+            currLoc = trainDict[train]["currentLoc"]
+            dir = trainDict[train]["direction"]
+            trainDict[train]["yTrnInit"] = self.setTrnCoord(currLoc, dir)
             trainDict[train]["color"] = trainParams.colors()
             #print("color for init train: ", trainDict[train]["color"])
 
@@ -48,11 +60,10 @@ class trainFromFile():
             consistNum = trainDict[train]["consistNum"]
             consistNam = "consist"+str(consistNum)
 
-            tmpLoc = trainDict[train]["currentLoc"]
-            if "route" in tmpLoc:
-                routeCls.routes[tmpLoc]["trains"].append(train)
+            if "route" in currLoc:
+                routeCls.routes[currLoc]["trains"].append(train)
             else: 
-                locs.locDat[tmpLoc]["trains"].append(train)
+                locs.locDat[currLoc]["trains"].append(train)
             #self.consist[self.conName]["trainNum"] = trainDict[train]["trainNum"]
             #trainDict[train]["consistNum"] = self.consist[self.conName]["consistNum"]
             newTrain = {}

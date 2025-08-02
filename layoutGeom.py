@@ -1,5 +1,5 @@
 
-import numpy as np
+import math
 from mainVars import *
 from stateVars import routeCls
 from trainProc import trainParams
@@ -88,7 +88,7 @@ class routeGeom():
     # train gui data is initialized in trnsOnRoutes
     def routeLine(self, rtNam, guiDict):
         coordObj = transForms()
-        xDist, yDist, lineLen = coordObj.distCalcs(rtNam, guiDict)
+        xDist, yDist, lineLen = self.rtGeomCalcs(rtNam, guiDict)
         leftObj = guiDict[guiDict[rtNam]["leftObj"]]
         rtObj = guiDict[guiDict[rtNam]["rtObj"]]
         y0 = (leftObj["y0"] + leftObj["y1"])*0.5
@@ -99,10 +99,21 @@ class routeGeom():
             "x1": rtObj["x0"],
             "y0": y0,
             "y1": y1,
-            "coord": {"cosTh": xDist/lineLen,
-                      "sinTh": yDist/lineLen
+            "coord": {"cosTh": round(xDist/lineLen, 3),
+                      "sinTh": round(yDist/lineLen, 3)
                   }
                 }
         return routeDictOut
 
+    def rtGeomCalcs(self, rtNam, guiDict):        
+        leftObj = guiDict[guiDict[rtNam]["leftObj"]]
+        rtObj = guiDict[guiDict[rtNam]["rtObj"]]
+        y0 = (leftObj["y0"] + leftObj["y1"])*0.5
+        y1 = (rtObj["y0"] + rtObj["y1"])*0.5
+        
+        yDist = abs(y1 - y0)
+        xDist = abs(rtObj["x0"] - leftObj["x1"])
+        lineLen = math.sqrt(xDist*xDist+yDist*yDist)
+            
+        return xDist, yDist, lineLen
 

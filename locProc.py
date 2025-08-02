@@ -193,7 +193,7 @@ class locProc():
     def rmTrnFrmActions(self, action, loc, ydTrainNam):
         disp = dispItems()
         # remove train from ydTrains and location
-        print("rmTrnFrmLoc: trainDB.ydTrains: ", trainDB.ydTrains)
+        print("rmTrnFrmActions: trainDB.ydTrains: ", trainDB.ydTrains)
         index = trainDB.ydTrains[action].index(ydTrainNam)
         trainDB.ydTrains[action].pop(index)
         if dbgLocal: print("after removal: trainDB.ydTrains: ", trainDB.ydTrains, 

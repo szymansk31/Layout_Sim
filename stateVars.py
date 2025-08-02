@@ -166,5 +166,7 @@ class stVarSaves():
                     statFile.write("\n" + train + ":")
                     for stop in stopStem:
                         statFile.write("\n" + stop + ": " + str(stopStem[stop]))
+                        
+            statFile.flush()
 
         

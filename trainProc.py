@@ -110,13 +110,18 @@ class trnProc:
                 variance = np.random.normal(loc=0, scale=0.25, size=1)
                 routeNam = trainDict["currentLoc"]
                 routeStem = routeCls.routes[routeNam]
-                trainDict["deltaT"] = mVars.prms["timeStep"] + variance
-                trainDict["deltaT"] = round(trainDict["deltaT"].item(), 2)
-                
-                trainDict["timeEnRoute"] += trainDict["deltaT"]
+                deltaT = mVars.prms["timeStep"] + variance
+                deltaT = round(deltaT.item(), 2)
+                velocity = routeStem["distPerTime"]
+
+                deltaX = int(deltaT*velocity)
+                if trainDict["direction"] == "west": deltaX = -deltaX
+                trainDict["deltaX"] = deltaX
+                trainDict["timeEnRoute"] += deltaT
                 trainDict["timeEnRoute"] = round(trainDict["timeEnRoute"], 2)
+                print("distance via timeEnRoute: ", trainDict["timeEnRoute"]*velocity)
                 transTime = routeCls.routes[trainDict["currentLoc"]]["transTime"]
-                if mVars.prms["dbgTrnProc"]: self.printTrnEnRoute(trainDict, routeNam, transTime, variance)
+                if mVars.prms["dbgTrnProc"]: self.printTrnEnRoute(trainDict, routeNam, transTime, variance, deltaX)
                 
                 #coordObj.
                 disp.drawTrain(trainNam)
@@ -152,13 +157,13 @@ class trnProc:
             case "stop":
                 pass
          
-    def printTrnEnRoute(self, trainDict, routeNam, transTime, variance):
+    def printTrnEnRoute(self, trainDict, routeNam, transTime, variance, deltaX):
         if mVars.prms["dbgTrnProc"]: print("trainCalcs: train: ", 
         trainDict["trainNum"], "route: ", routeNam, 
         ", origin: ", trainDict["origLoc"], ", dest:", trainDict["finalLoc"], 
         ", direction: ", trainDict["direction"], ", transTime:", transTime, 
         ", timeEnRoute: ", trainDict["timeEnRoute"], 
-        ", variance: ", variance)
+        ", variance: ", variance, ", dist this step: ", deltaX)
 
             
     def procTrnStop(self, trainDict, trainNam):

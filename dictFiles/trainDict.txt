@@ -14,7 +14,7 @@
 "xPath": 0,
 "firstDispTrn": 1,
 "timeEnRoute": 0,
-"deltaT": 0,
+"deltaX": 0,
 "trnRectTag": "",
 "trnNumTag": "",
 "numStops": 0,

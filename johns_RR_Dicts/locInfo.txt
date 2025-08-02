@@ -102,6 +102,8 @@
         "gons": 1, "flats": 3},
         "staging1"    :{"box": 2, "tank": 3, "rfr": 3, "hop": 0, 
         "gons": 1, "flats": 1},
+        "staging2"    :{"box": 0, "tank": 1, "rfr": 2, "hop": 0, 
+        "gons": 1, "flats": 1},
         "industries"   :{"box": 0, "tank": 0, "rfr": 0, "hop": 0, 
         "gons": 0, "flats": 0}
     },
