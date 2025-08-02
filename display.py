@@ -22,7 +22,7 @@ class dispItems():
                 gui.C.create_text(x, y, text=text, font=("Arial", 8))
             
             type = locs.locDat[loc]["type"]
-            if type == "yard" or type == "swArea":
+            if type == "yard" or type == "swArea" or type == "staging":
                 self.openLocPopup(0, loc)
             #locs.locPop = {}
 
@@ -208,7 +208,8 @@ class dispItems():
                 idx +=1
         locStem["firstDispTrnTxt"] = 0
 
-            
+    # coordinates are x, y within the canvas; routes at an angle have movement calculated
+    # along rotated coordinates in trainProc
     def drawTrain(self, train):
         print("drawTrain called by: ", sys._getframe(1).f_code.co_name)
 
@@ -221,8 +222,6 @@ class dispItems():
             case trainLoc if "route" in trainLoc:
                 routeStem = routeCls.routes[trainLoc]
                 yTrn = routeStem["yTrn"]
-                xTrnTxt = routeStem["xTrnTxt"]
-                yTrnTxt = routeStem["yTrnTxt"]
                 timeEnRoute = trainStem["timeEnRoute"]
                 velocity = routeStem["distPerTime"]
                 print("draw train: ", train, "currentLoc: ", trainLoc, ", trainDict: ", trainStem)
@@ -233,36 +232,34 @@ class dispItems():
                 if trainStem["direction"] == "west": deltaX = -deltaX
                 
                 if trainStem["firstDispTrn"] == 1:
-                    trainStem["xLoc"] = trainStem["xTrnInit"]
+                    trainStem["xPath"] = trainStem["xTrnInit"]
+                    trainStem["yPath"] = trainStem["yTrnInit"]
                     trainNum = train[5:]
                     
                     gui.C.delete(trainStem["trnRectTag"])
                     gui.C.delete(trainStem["trnNumTag"])
 
-                    gui.C.create_rectangle(trainStem["xLoc"], yTrn, trainStem["xLoc"]+trnLen, 
-                        yTrn+trnHt, fill=trainStem["color"], tags=trainStem["trnRectTag"])
-                    gui.C.create_text(trainStem["xLoc"]+10, yTrn+6, text=trainNum , 
+                    gui.C.create_rectangle(trainStem["xPath"], trainStem["yPath"], trainStem["xPath"]+trnLen, 
+                        trainStem["yPath"]+trnHt, fill=trainStem["color"], tags=trainStem["trnRectTag"])
+                    gui.C.create_text(trainStem["xPath"]+10, trainStem["yPath"]+6, text=trainNum , 
                         font=("Arial", 8), tags=trainStem["trnNumTag"])
 
-                    #print("train Rect obj: ", trainStem["trnObjTag"])
-                    #gui.C.create_text(xTrnTxt, yTrnTxt, text=trnLabels, 
-                    #    anchor="nw", fill=trainStem["color"], tags=routeStem["trnLabelTag"])
                     trainStem["firstDispTrn"] = 0
                     
                 else:
-                    trainStem["xLoc"] = trainStem["xLoc"] + deltaX
+                    trainStem["xPath"] = trainStem["xPath"] + deltaX
                     print("moving train by: ", deltaX)
                     
                     #gui.C.delete(trainStem["trnRectTag"])
                     #gui.C.delete(trainStem["trnNumTag"])
                     #gui.C.move(trainStem["trnObjTag"], deltaX, 0)
-                    gui.C.coords(trainStem["trnRectTag"], trainStem["xLoc"], yTrn, trainStem["xLoc"]+trnLen, 
+                    gui.C.coords(trainStem["trnRectTag"], trainStem["xPath"], trainStem["yPath"], trainStem["xPath"]+trnLen, 
                         yTrn+trnHt)
-                    gui.C.coords(trainStem["trnNumTag"], trainStem["xLoc"]+10, yTrn+6)
+                    gui.C.coords(trainStem["trnNumTag"], trainStem["xPath"]+10, trainStem["yPath"]+6)
                     #gui.C.itemconfigure(routeStem["trnLabelTag"], text=trnLabels, 
                     #    anchor="nw", fill=trainStem["color"])
                     
-                print("draw train: ", train, ", coordinates after move: ", trainStem["xLoc"], yTrn, trainStem["xLoc"]+trnLen, yTrn+trnHt)
+                print("draw train: ", train, ", coordinates after move: ", trainStem["xPath"], yTrn, trainStem["xPath"]+trnLen, yTrn+trnHt)
                 print("distance via timeEnRoute: ", timeEnRoute*velocity)
                 gui.C.update()
 

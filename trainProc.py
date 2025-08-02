@@ -4,6 +4,7 @@ from mainVars import mVars
 from fileProc import readFiles
 from display import dispItems
 from locProc import locProc
+from coords import transForms
 from stateVars import locs, trainDB, routeCls
 np.set_printoptions(precision=2, suppress=True) 
 
@@ -102,6 +103,7 @@ class trnProc:
     def trainCalcs(self, trainDict, trainNam):
         disp = dispItems()
         locProcObj = locProc()
+        coordObj = transForms()
 
         match trainDict["status"]:
             case "enroute":
@@ -116,13 +118,14 @@ class trnProc:
                 transTime = routeCls.routes[trainDict["currentLoc"]]["transTime"]
                 if mVars.prms["dbgTrnProc"]: self.printTrnEnRoute(trainDict, routeNam, transTime, variance)
                 
+                #coordObj.
                 disp.drawTrain(trainNam)
                 match trainDict["direction"]:
                     case "east":
-                        if trainDict["xLoc"] >= routeCls.routes[routeNam]["x1"]:
+                        if trainDict["xPath"] >= routeCls.routes[routeNam]["x1"]:
                             self.procTrnStop(trainDict, trainNam)
                     case "west":
-                        if trainDict["xLoc"] <= routeCls.routes[routeNam]["x0"]:
+                        if trainDict["xPath"] <= routeCls.routes[routeNam]["x0"]:
                             self.procTrnStop(trainDict, trainNam)
                                                 
                     

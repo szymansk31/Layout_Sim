@@ -4,6 +4,7 @@ from mainVars import *
 from stateVars import routeCls
 from trainProc import trainParams
 from gui import gui    
+from coords import transForms
 
             
 #=================================================
@@ -65,7 +66,7 @@ class routeGeom():
     def trnsOnRoutes(self, routeDict, rtNam, guiDict):
         leftObj = guiDict[guiDict[rtNam]["leftObj"]]
         rtObj = guiDict[guiDict[rtNam]["rtObj"]]
-        yLoc = (leftObj["y0"] + leftObj["y1"])*0.5
+        yPath = (leftObj["y0"] + leftObj["y1"])*0.5
         height = leftObj["y1"] - leftObj["y0"]
         distance = rtObj["x0"] - leftObj["x1"]
         xTrnTxt = (leftObj["x1"] + rtObj["x0"])*0.5
@@ -74,7 +75,7 @@ class routeGeom():
         #        trainParams.trnLength, "rtObj[x0]", rtObj["x0"])
 
         routeDictOut = {
-            "yTrn": yLoc - height*0.25,
+            "yTrn": yPath - height*0.25,
             "xTrnTxt": xTrnTxt,
             "yTrnTxt": leftObj["y0"] - 20,
             "yTrnCon": leftObj["y0"] - 5,
@@ -86,14 +87,12 @@ class routeGeom():
     # no regard for direction, just want the lines between locs
     # train gui data is initialized in trnsOnRoutes
     def routeLine(self, rtNam, guiDict):
+        coordObj = transForms()
+        xDist, yDist, lineLen = coordObj.distCalcs(rtNam, guiDict)
         leftObj = guiDict[guiDict[rtNam]["leftObj"]]
         rtObj = guiDict[guiDict[rtNam]["rtObj"]]
         y0 = (leftObj["y0"] + leftObj["y1"])*0.5
         y1 = (rtObj["y0"] + rtObj["y1"])*0.5
-        
-        yDist = np.abs(y1 - y0)
-        xDist = np.abs(rtObj["x0"] - leftObj["x1"])
-        lineLen = np.sqrt(xDist*xDist+yDist*yDist)
         
         routeDictOut = {
             "x0": leftObj["x1"],

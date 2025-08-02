@@ -167,6 +167,7 @@ class locProc():
                 leftObj = routeCls.routes[route4newTrn]["leftObj"]
                 rtObj = routeCls.routes[route4newTrn]["rtObj"]
                 routeCls.routes[route4newTrn]["trains"].append(ydTrainNam)
+                trainStem["yTrnInit"] = gui.guiDict[loc]["y0"] + (trainParams.trnHeight*0.5)
                 if loc == leftObj.strip(): 
                     trainStem["direction"] = "east"
                     trainStem["xTrnInit"] = gui.guiDict[loc]["x1"]

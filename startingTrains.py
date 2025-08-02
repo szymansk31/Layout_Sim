@@ -4,6 +4,7 @@ from stateVars import trainDB, locs, routeCls
 from mainVars import mVars
 from trainProc import trainParams
 from display import dispItems
+from gui import gui
 
 files = readFiles()
 
@@ -16,6 +17,18 @@ class trainFromFile():
         self.trnName = next(iter(train))
     def dict2ConNam(self, consist):
         self.conName = next(iter(consist))
+        
+    def setTrnCoord(self, trainDict, train):
+        currentLoc = trainDict[train]["currentLoc"]
+        guiLocStem = gui.guiDict[gui.guiDict[currentLoc]]
+        match currentLoc:
+            case currentLoc if "route" in currentLoc:
+                leftObj = guiLocStem["leftObj"]
+                rtObj = guiLocStem["rtObj"]
+                yPath = (leftObj["y0"] + leftObj["y1"])*0.5
+                height = leftObj["y1"] - leftObj["y0"]
+                distance = rtObj["x0"] - leftObj["x1"]
+                xTrnTxt = (leftObj["x1"] + rtObj["x0"])*0.5
 
     def readTrain(self):
         trainProcObj = trainParams()
@@ -24,6 +37,7 @@ class trainFromFile():
         trainDB.consists.update(self.consist)
         for train in trainDict:
             print("\nTrain: ", train)
+            self.setTrnCoord(trainDict[train])
             trainDict[train]["color"] = trainParams.colors()
             #print("color for init train: ", trainDict[train]["color"])
 
