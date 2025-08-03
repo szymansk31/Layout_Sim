@@ -15,16 +15,30 @@ class transForms():
         pass
     
 
-    def x2XPrime(self, route, coord):
-        cosTh = routeCls[route]["coord"]["cosTh"]
-        sinTh = routeCls[route]["coord"]["sinTh"]
-        coord["xP"] = coord["x"]*cosTh + coord["y"]*sinTh
-        coord["yP"] = coord["y"]*cosTh - coord["x"]*sinTh    
+    def xPlot2xRoute(self, route, train):
+        cosTh = routeCls.routes[route]["cosTh"]
+        sinTh = routeCls.routes[route]["sinTh"]
+        x = trainDB.trains[train]["coord"]["xPlot"]
+        y = trainDB.trains[train]["coord"]["yPlot"]
+        xRoute = x*cosTh + y*sinTh
+        yRoute = y*cosTh - x*sinTh    
+        trainDB.trains[train]["coord"]["xRoute"] = round(xRoute, 2)
+        trainDB.trains[train]["coord"]["yRoute"] = round(yRoute, 2)
         
-    def xPrime2X(self, route, coord):
-        cosTh = routeCls[route]["coord"]["cosTh"]
-        sinTh = routeCls[route]["coord"]["sinTh"]
-        coord["x"] = coord["xP"]*cosTh - coord["yP"]*sinTh
-        coord["y"] = coord["yP"]*cosTh + coord["xP"]*sinTh
+    def xRoute2xPlot(self, route, train):
+        cosTh = routeCls.routes[route]["cosTh"]
+        sinTh = routeCls.routes[route]["sinTh"]
+        xRoute = trainDB.trains[train]["coord"]["xRoute"]
+        yRoute = trainDB.trains[train]["coord"]["yRoute"]
+        if trainDB.trains[train]["direction"] == "east":
+            xOffset = routeCls.routes[route]["x0"]
+            yOffset = routeCls.routes[route]["y0"]
+        else:
+            xOffset = routeCls.routes[route]["x1"]
+            yOffset = routeCls.routes[route]["y1"]
+        x = xRoute*cosTh - yRoute*sinTh + xOffset
+        y = -(yRoute*cosTh + xRoute*sinTh) + yOffset - gui.guiDict["locDims"]["height"]*0.25
+        trainDB.trains[train]["coord"]["xPlot"] = round(x, 2)
+        trainDB.trains[train]["coord"]["yPlot"] = round(y, 2)
 
 

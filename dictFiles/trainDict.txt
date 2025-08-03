@@ -11,7 +11,7 @@
 "direction": "",
 "startTime": 0, 
 "xTrnInit": 0,
-"xPath": 0,
+"xRoute": 0,
 "firstDispTrn": 1,
 "timeEnRoute": 0,
 "deltaX": 0,

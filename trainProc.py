@@ -114,23 +114,25 @@ class trnProc:
                 deltaT = round(deltaT.item(), 2)
                 velocity = routeStem["distPerTime"]
 
+                # Note that deltaX is in the rotated coord system.
                 deltaX = int(deltaT*velocity)
                 if trainDict["direction"] == "west": deltaX = -deltaX
                 trainDict["deltaX"] = deltaX
+                trainDict["coord"]["xRoute"] += deltaX
                 trainDict["timeEnRoute"] += deltaT
                 trainDict["timeEnRoute"] = round(trainDict["timeEnRoute"], 2)
                 print("distance via timeEnRoute: ", trainDict["timeEnRoute"]*velocity)
                 transTime = routeCls.routes[trainDict["currentLoc"]]["transTime"]
                 if mVars.prms["dbgTrnProc"]: self.printTrnEnRoute(trainDict, routeNam, transTime, variance, deltaX)
                 
-                #coordObj.
+                coordObj.xRoute2xPlot(routeNam, trainNam)
                 disp.drawTrain(trainNam)
                 match trainDict["direction"]:
                     case "east":
-                        if trainDict["xPath"] >= routeCls.routes[routeNam]["x1"]:
+                        if trainDict["coord"]["xPlot"] >= routeCls.routes[routeNam]["x1"]:
                             self.procTrnStop(trainDict, trainNam)
                     case "west":
-                        if trainDict["xPath"] <= routeCls.routes[routeNam]["x0"]:
+                        if trainDict["coord"]["xPlot"] <= routeCls.routes[routeNam]["x0"]:
                             self.procTrnStop(trainDict, trainNam)
                                                 
                     

@@ -197,7 +197,7 @@
     "locTrnNumID": "",
     "startMisc": 0,
     "trains": [],
-    "bldTrnDepTimes": [2],
+    "bldTrnDepTimes": [1, 5],
     "trn4Action":[]
 }
 }

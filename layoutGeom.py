@@ -65,21 +65,18 @@ class routeGeom():
 
     def trnsOnRoutes(self, routeDict, rtNam, guiDict):
         leftObj = guiDict[guiDict[rtNam]["leftObj"]]
-        rtObj = guiDict[guiDict[rtNam]["rtObj"]]
-        yPath = (leftObj["y0"] + leftObj["y1"])*0.5
+        xDist, yDist, lineLen = self.rtGeomCalcs(rtNam, guiDict)
+        yRoute = (leftObj["y0"] + leftObj["y1"])*0.5
         height = leftObj["y1"] - leftObj["y0"]
-        distance = rtObj["x0"] - leftObj["x1"]
-        xTrnTxt = (leftObj["x1"] + rtObj["x0"])*0.5
     
-        #if mVars.prms["dbgGeom"]: print("trnsOnRoutes: trnLength: ", 
-        #        trainParams.trnLength, "rtObj[x0]", rtObj["x0"])
+        #if mVars.prms["dbgGeom"]: print("trnsOnRoutes: trnrtLength: ", 
+        #        trainParams.trnrtLength, "rtObj[x0]", rtObj["x0"])
 
         routeDictOut = {
-            "yTrn": yPath - height*0.25,
-            "xTrnTxt": xTrnTxt,
-            "yTrnTxt": leftObj["y0"] - 20,
+            "yTrn": yRoute - height*0.25,
             "yTrnCon": leftObj["y0"] - 5,
-            "distPerTime": distance/routeDict["transTime"]
+            "rtLength": lineLen,
+            "distPerTime": lineLen/routeDict["transTime"]
                     }
         return routeDictOut
 
@@ -99,10 +96,10 @@ class routeGeom():
             "x1": rtObj["x0"],
             "y0": y0,
             "y1": y1,
-            "coord": {"cosTh": round(xDist/lineLen, 3),
-                      "sinTh": round(yDist/lineLen, 3)
+            "cosTh": round(xDist/lineLen, 3),
+            "sinTh": round(yDist/lineLen, 3)
                   }
-                }
+        
         return routeDictOut
 
     def rtGeomCalcs(self, rtNam, guiDict):        

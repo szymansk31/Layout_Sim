@@ -228,34 +228,38 @@ class dispItems():
                 print("draw train: ", train, ", timeEnRoute: ", timeEnRoute)
                 
                 if trainStem["firstDispTrn"] == 1:
-                    trainStem["xPath"] = trainStem["xTrnInit"]
-                    trainStem["yPath"] = trainStem["yTrnInit"]
+                    #trainStem["coord"]["xPlot"] = trainStem["coord"]["xTrnInit"]
+                    xPlot = trainStem["coord"]["xPlot"]
+                    yPlot = trainStem["coord"]["yPlot"]
                     trainNum = train[5:]
                     
                     gui.C.delete(trainStem["trnRectTag"])
                     gui.C.delete(trainStem["trnNumTag"])
 
-                    gui.C.create_rectangle(trainStem["xPath"], trainStem["yPath"], trainStem["xPath"]+trnLen, 
-                        trainStem["yPath"]+trnHt, fill=trainStem["color"], tags=trainStem["trnRectTag"])
-                    gui.C.create_text(trainStem["xPath"]+10, trainStem["yPath"]+6, text=trainNum , 
+                    gui.C.create_rectangle(xPlot, yPlot, xPlot+trnLen, 
+                        yPlot+trnHt, fill=trainStem["color"], tags=trainStem["trnRectTag"])
+                    gui.C.create_text(xPlot+10, yPlot+6, text=trainNum , 
                         font=("Arial", 8), tags=trainStem["trnNumTag"])
 
                     trainStem["firstDispTrn"] = 0
                     
                 else:
-                    trainStem["xPath"] = trainStem["xPath"] + deltaX
+                    xPlot = trainStem["coord"]["xPlot"]
+                    xPlot = xPlot + deltaX
+                    yPlot = trainStem["coord"]["yPlot"]
                     print("moving train by: ", deltaX)
                     
                     #gui.C.delete(trainStem["trnRectTag"])
                     #gui.C.delete(trainStem["trnNumTag"])
                     #gui.C.move(trainStem["trnObjTag"], deltaX, 0)
-                    gui.C.coords(trainStem["trnRectTag"], trainStem["xPath"], trainStem["yPath"], trainStem["xPath"]+trnLen, 
-                        trainStem["yPath"]+trnHt)
-                    gui.C.coords(trainStem["trnNumTag"], trainStem["xPath"]+10, trainStem["yPath"]+6)
+                    gui.C.coords(trainStem["trnRectTag"], xPlot, yPlot, xPlot+trnLen, 
+                        yPlot+trnHt)
+                    gui.C.coords(trainStem["trnNumTag"], xPlot+10, yPlot+6)
                     #gui.C.itemconfigure(routeStem["trnLabelTag"], text=trnLabels, 
                     #    anchor="nw", fill=trainStem["color"])
                     
-                print("draw train: ", train, ", coordinates after move: ", trainStem["xPath"], trainStem["yPath"], trainStem["xPath"]+trnLen, trainStem["yPath"]+trnHt)
+                print("draw train: ", train, ", coordinates after move: ", 
+                      xPlot, yPlot, xPlot+trnLen, yPlot+trnHt)
                 gui.C.update()
 
             case trainLoc if "route" not in trainLoc:
