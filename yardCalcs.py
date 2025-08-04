@@ -60,7 +60,8 @@ class ydCalcs():
         for train in trainDB.ydTrains["buildTrain"]: 
             cars2Class += mVars.prms["trainSize"] - \
                 trainDB.trains[train]["numCars"]
-        cars2Class += locs.locDat[loc]["destTrkTots"]["industries"]
+        if "indust" in locs.locDat[loc]["destTrkTots"]:
+            cars2Class += locs.locDat[loc]["destTrkTots"]["industries"]
         if locs.locDat[loc]["type"] == "swArea": 
             cars2Class += locs.locDat[loc]["numOffspot"]
         locs.locDat[loc]["cars2Class"] = cars2Class
@@ -144,7 +145,11 @@ class ydCalcs():
     def ready2Build(self, loc):
         import copy
         trackList = copy.deepcopy(locs.locDat[loc]["destTrkTots"])
-        trackList.pop("industries")
+        try:
+            trackList.pop("industries")
+        except:
+            pass
+        
         maxCarTrk = max(trackList, key=trackList.get)
 
         print("ready2Build: maxCarTrk: ", maxCarTrk, ", trackList: ", trackList)

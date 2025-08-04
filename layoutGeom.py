@@ -1,7 +1,7 @@
 
 import math
 from mainVars import *
-from stateVars import routeCls
+from stateVars import locs, routeCls
 from trainProc import trainParams
 from gui import gui    
 from coords import transForms
@@ -15,8 +15,8 @@ class geom():
     def __init__(self):
         pass
     
-    def locListInit(self, geometry):
-        for loc in geometry:
+    def locListInit(self, locStem):
+        for loc in locStem:
             geom.locList.append(loc)
         if mVars.prms["dbgGeom"]: print("locList: ", geom.locList)
     
@@ -24,7 +24,7 @@ class routeGeom():
     def __init__(self):
         pass
     
-    def initRoutes(self, geometry, guiDict):
+    def initRoutes(self, guiDict):
         from fileProc import readFiles
         files = readFiles()
         print("\ninitializing route dicts: ")
@@ -54,12 +54,13 @@ class routeGeom():
             routeCls.routes[routeName] = dict(newRoute[routeName])
             if mVars.prms["dbgGeom"]: print("\nRoutes = ", routeCls.routes)
             
-        for loc in geometry:
+        locStem = locs.locDat
+        for loc in locStem:
             if (loc == leftObj) or (loc == rtObj):
-                rtList = geometry[loc].get("routes")
+                rtList = locStem[loc].get("routes")
                 rtList.append(routeName)
-                geometry[loc]["routes"] = rtList
-        if mVars.prms["dbgGeom"]: print("\ninitRoutes: geometry for loc: ", loc, "is", geometry[loc])
+                locStem[loc]["routes"] = rtList
+        if mVars.prms["dbgGeom"]: print("\ninitRoutes: locStem for loc: ", loc, "is", locStem[loc])
         #if mVars.prms["dbgGeom"]: print("\nnewRoutes: ", newRoute)
         return
 

@@ -29,28 +29,82 @@
     "startMisc": 0,
     "trains": [],
     "bldTrnDepTimes": [15, 20, 25, 30],
-    "trn4Action":[],
-    "classRate": 2,
-    "routes": []
+    "trn4Action":[]
 },
 "Kiski": {
     "type":"yard",
-    "destTrkTots": {"pgh": 0, "OilCity": 0, "NStaging": 0, "industries": 0},
+    "totCars": 0,
+    "cars2Class": 0,
+    "time2Class": 0,
+    "offspot": 
+        {"box": 0, "tank": 0, "rfr": 0, "hop": 2, "gons": 1, "flats": 0},
+    "numOffspot": 0,
+    "destTrkTots": {"OilCity": 0, "Kiski": 0, "staging1":0, "staging2": 0},
+    "indusTots": {"indus1": 0, "bakery": 0, "foundry": 0},
+    "industries": {
+        "indus1": {
+            "numCarSpots": 5,
+            "pickups":
+                {"box": 1, "tank": 1, "rfr": 0},
+            "spot"    :
+                {"box": 1, "tank": 1, "flats": 1},
+            "leave"    :
+                {"box": 1, "tank": 1, "rfr": 0, "hop": 0, "flats": 1}
+            },
+        "bakery": {
+            "numCarSpots": 2,
+            "pickups":
+                {"box": 2},
+            "spot"    :
+                {"box": 2},
+            "leave"    :
+                {"box": 1}
+            },
+        "foundry": {
+            "numCarSpots": 6,
+            "pickups":
+                {"box": 0, "hop": 2, "gons": 1, "flats": 0},
+            "spot"    :
+                {"box": 1, "hop": 1, "gons": 0, "flats": 1},
+            "leave"    :
+                {"box": 1, "hop": 0, "gons": 0, "flats": 1}
+            }
+        },
+    "numAdjLocs": 2,
+    "adjLocNames": {"W":"OilCity","E":"staging2"},
+    "time2AdjLocs": [10, 10],
+    "firstDispLoc": 1,
+    "firstDispTrnTxt": 1,
+    "locObjID": 0,
+    "locTestID": 0,
+    "locRectID": "",
+    "locPopObj": null,
+    "actionObjID": 0,
+    "locTrnTxtID": 0,
+    "locTrnRectID": "",
+    "locTrnNumID": "",
+    "startMisc": 0,
+    "trains": [],
+    "trn4Action":[]
+},
+"Kiski": {
+    "type":"yard",
+    "destTrkTots": {"OilCity": 0, "staging1": 0, "staging2": 0, "industries": 0},
     "totCars": 0,
     "cars2Class": 0,
     "time2Class": 0,
     "tracks": {
-        "pgh"    :{"box": 2, "tank": 3, "rfr": 3, "hop": 0, 
-        "gons": 1, "flats": 1},
         "OilCity"    :{"box": 3, "tank": 2, "rfr": 5, "hop": 5, 
         "gons": 1, "flats": 3},
-        "NStaging"    :{"box": 0, "tank": 1, "rfr": 2, "hop": 0, 
+        "staging1"    :{"box": 2, "tank": 3, "rfr": 3, "hop": 0, 
+        "gons": 1, "flats": 1},
+        "staging2"    :{"box": 0, "tank": 1, "rfr": 2, "hop": 0, 
         "gons": 1, "flats": 1},
         "industries"   :{"box": 0, "tank": 0, "rfr": 0, "hop": 0, 
         "gons": 0, "flats": 0}
     },
     "numAdjLocs": 2,
-    "adjLocNames": {"W":"pgh", "E":"OilCity"},
+    "adjLocNames": {"W":"staging1", "E":"OilCity"},
     "time2AdjLocs": [10, 10],
     "firstDispLoc": 1,
     "firstDispTrnTxt": 1,
@@ -65,50 +119,9 @@
     "startMisc": 0,
     "trains": [],
     "bldTrnDepTimes": [15, 20, 25, 30],
-    "trn4Action":[],
-    "classRate": 2,
-    "routes": []
+    "trn4Action":[]
 },
-"OilCity": {
-    "type":"yard",
-    "destTrkTots": {"pgh": 0, "Kiski": 0, "NStaging": 0, 
-        "ErieRRStaging": 0, "industries": 0},
-    "totCars": 0,
-    "cars2Class": 0,
-    "time2Class": 0,
-    "tracks": {
-        "pgh"    :{"box": 2, "tank": 3, "rfr": 3, "hop": 0, 
-        "gons": 1, "flats": 1},
-        "Kiski"    :{"box": 3, "tank": 2, "rfr": 5, "hop": 5, 
-        "gons": 1, "flats": 3},
-        "NStaging"    :{"box": 0, "tank": 1, "rfr": 2, "hop": 0, 
-        "gons": 1, "flats": 1},
-        "ErieRRStaging"   :{"box": 0, "tank": 0, "rfr": 0, "hop": 0, 
-        "gons": 0, "flats": 0},
-        "industries"   :{"box": 0, "tank": 0, "rfr": 0, "hop": 0, 
-        "gons": 0, "flats": 0}
-    },
-    "numAdjLocs": 3,
-    "adjLocNames": {"W":"ErieRRStaging", "W":"pgh", "E":"NStaging"},
-    "time2AdjLocs": [10, 10],
-    "firstDispLoc": 1,
-    "firstDispTrnTxt": 1,
-    "locObjID": 0,
-    "locTestID": 0,
-    "locRectID": "",
-    "locPopObj": null,
-    "actionObjID": 0,
-    "locTrnTxtID": 0,
-    "locTrnRectID": "",
-    "locTrnNumID": "",
-    "startMisc": 0,
-    "trains": [],
-    "bldTrnDepTimes": [15, 20, 25, 30],
-    "trn4Action":[],
-    "classRate": 2,
-    "routes": []
-},
-"NStaging": {
+"staging1": {
     "type":"staging",
     "destTrkTots": {},
     "totCars": 0,
@@ -116,7 +129,7 @@
     "time2Class": 0,
     "tracks": {},
     "numAdjLocs": 1,
-    "adjLocNames": {"W":"OilCity"},
+    "adjLocNames": {"E":"Kiski"},
     "time2AdjLocs": [10, 10],
     "firstDispLoc": 1,
     "firstDispTrnTxt": 1,
@@ -131,9 +144,32 @@
     "startMisc": 0,
     "trains": [],
     "bldTrnDepTimes": [],
-    "trn4Action":[],
-    "classRate": 2,
-    "routes": []
+    "trn4Action":[]
+},
+"staging2": {
+    "type":"staging",
+    "destTrkTots": {},
+    "totCars": 0,
+    "cars2Class": 0,
+    "time2Class": 0,
+    "tracks": {},
+    "numAdjLocs": 1,
+    "adjLocNames": {"W":"swArea1"},
+    "time2AdjLocs": [10, 10],
+    "firstDispLoc": 1,
+    "firstDispTrnTxt": 1,
+    "locObjID": 0,
+    "locTestID": 0,
+    "locRectID": "",
+    "locPopObj": null,
+    "actionObjID": 0,
+    "locTrnTxtID": 0,
+    "locTrnRectID": "",
+    "locTrnNumID": "",
+    "startMisc": 0,
+    "trains": [],
+    "bldTrnDepTimes": [],
+    "trn4Action":[]
 },
 "ErieRRStaging": {
     "type":"staging",
@@ -158,8 +194,6 @@
     "startMisc": 0,
     "trains": [],
     "bldTrnDepTimes": [1, 5],
-    "trn4Action":[],
-    "classRate": 2,
-    "routes": []
+    "trn4Action":[]
 }
 }

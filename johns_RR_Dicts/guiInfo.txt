@@ -1,28 +1,23 @@
 {
-"staging1": {
-    "type": "staging",
+"pgh": {
+    "type": "yard",
     "x0": 150, "y0": 100, 
-    "text": "Staging 1"
+    "text": "Pittsburgh"
 },
-"yard2": {
+"Kiski": {
     "type": "yard",
     "x0": 475, "y0": 100, 
-    "text": "Yard 2"
+    "text": "Kiski"
 },
-"yard1": {
+"OilCity": {
     "type": "yard",
     "x0": 800, "y0": 100, 
-    "text": "Yard 1"
+    "text": "OilCity"
 },
-"swArea1": {
-    "type": "swArea",
-    "x0": 1125, "y0": 100, 
-    "text": "Sw Area 1"
-},
-"staging2": {
+"NStaging": {
     "type": "staging",
-    "x0": 1350, "y0": 100, 
-    "text": "Staging 2"
+    "x0": 1125, "y0": 100, 
+    "text": "North Staging"
 },
 "ErieRRStaging": {
     "type": "staging",
@@ -30,27 +25,22 @@
     "text": "ErieRRStaging"
 },
 "route1": {
-    "type": "route", "leftObj": "staging1", "rtObj": "yard2",
+    "type": "route", "leftObj": "pgh", "rtObj": "Kiski",
     "text": "Route 1",
     "transTime": 10
 },
 "route2": {
-    "type": "route", "leftObj": "yard2", "rtObj": "yard1",
+    "type": "route", "leftObj": "Kiski", "rtObj": "OilCity",
     "text": "Route 2",
     "transTime": 10
 },
 "route3": {
-    "type": "route", "leftObj": "yard1", "rtObj": "swArea1",
+    "type": "route", "leftObj": "OilCity", "rtObj": "NStaging",
     "text": "Route 3",
     "transTime": 10
 },
 "route4": {
-    "type": "route", "leftObj": "swArea1", "rtObj": "staging2",
-    "text": "Route 4",
-    "transTime": 10
-},
-"route5": {
-    "type": "route", "leftObj": "ErieRRStaging", "rtObj": "yard1",
+    "type": "route", "leftObj": "ErieRRStaging", "rtObj": "OilCity",
     "text": "Route 5",
     "transTime": 10
 },

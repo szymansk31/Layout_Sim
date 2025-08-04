@@ -23,7 +23,7 @@ class classCars():
     def initClassPrms(self, loc, train):
         #form destination list
         self.thisLocDests = locProcObj.locDests(loc)
-        self.rate = mVars.geometry[loc]["classRate"]
+        self.rate = locs.locDat[loc]["classRate"]
         
         #form train and location dict stems
         self.locStem = locs.locDat[loc]

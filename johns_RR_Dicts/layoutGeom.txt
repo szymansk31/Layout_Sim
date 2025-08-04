@@ -1,5 +1,5 @@
 {
-"yard1": {"type": "yard",
+"pittsburgh": {"type": "yard",
     "numTracks": 5,
     "numAdjLocs": 2,
     "adjLocNames": ["swArea1", "yard2"],

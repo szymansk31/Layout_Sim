@@ -117,12 +117,12 @@ from layoutGeom import geom, routeGeom
 from gui import gui, dispSim
 layoutObj = geom()
 routeGeomObj = routeGeom()
-geometry = mVars.geometry = files.readFile("layoutGeomFile")
-layoutObj.locListInit(geometry)
+locs.locDat = files.readFile("locationFile")
+layoutObj.locListInit(locs.locDat)
 guiObj = gui()
 gui.guiDict = files.readFile("guiFile")
 guiObj.preProcGui()
-routeGeomObj.initRoutes(geometry, gui.guiDict)
+routeGeomObj.initRoutes(gui.guiDict)
 
 
 #setup initial car distribution
@@ -146,14 +146,6 @@ displayObj.initLocDisp()
 from startingTrains import trainFromFile
 startTrainObj = trainFromFile()
 startTrainObj.readTrain()
-
-print("consists: ", trainDB.consists)
-
-idx = 0
-print("\n")
-for loc in geometry:
-    if mVars.prms["dbgGeom"]: print("location: ", loc,": ", geometry[loc])
-    idx +=1
 
 #setup control buttons
 mainObj = mainMethods()

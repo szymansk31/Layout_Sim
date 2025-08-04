@@ -191,12 +191,14 @@ class locProc():
                 if trainStem["direction"] == "west": 
                     trainStem["coord"]["xPlot"] -= trainParams.trnLength
                     westXPlotTransform = trainStem["coord"]["xPlot"]
-                print("test of coord transform: \neastXPlot no transform: ", eastXPlot, ", with transform: ", 
-                     trainStem["coord"]["xPlot"])
-                print("westXPlot no transform: ", westXPlot, ", with transform: ", 
-                      westXPlotTransform)
-                print("eastYPlot no transform: ", eastYPlot, ", with transform: ", 
-                      trainStem["coord"]["yPlot"])
+                    print("westXPlot no transform: ", westXPlot, ", with transform: ", 
+                        westXPlotTransform)
+                else:
+                    print("test of coord transform: \neastXPlot no transform: ", 
+                        eastXPlot, ", with transform: ", 
+                        trainStem["coord"]["xPlot"])
+                    print("eastYPlot no transform: ", eastYPlot, ", with transform: ", 
+                        trainStem["coord"]["yPlot"])
 
                 #print("trainStem: ", trainStem, ", original dict: ", trainDB.trains[ydTrainNam])
                 dispObj.drawTrain(ydTrainNam)
