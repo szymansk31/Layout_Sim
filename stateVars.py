@@ -126,6 +126,7 @@ class stVarSaves():
             statFile.write("time step: " + str(mVars.time))
             for loc in locs.locDat:
                 statFile.write("\n\n---------------------------")
+                statFile.write("\ntime step: " + str(mVars.time))
                 statFile.write("\nLocation: " + loc)
                 statFile.write("\nDestination, #cars     \n")
                 locStem = locs.locDat[loc]
@@ -136,7 +137,13 @@ class stVarSaves():
                 if locStem["type"] != "staging":
                     text +=  ", class: " + str(locStem["cars2Class"])
                 statFile.write(text)
-
+                text = "\ntrains built: " + str(locStem["trnCnts"]["built"]) +\
+                    "; started: " + str(locStem["trnCnts"]["started"]) +\
+                    "; switched: " + str(locStem["trnCnts"]["switched"]) +\
+                    "; brkDown: " + str(locStem["trnCnts"]["brkDown"]) +\
+                    "; passThru: " + str(locStem["trnCnts"]["passThru"])
+                statFile.write(text)
+ 
                 statFile.write("\nTrain and consist:     ")
 
                 for train in locStem["trains"]:
@@ -156,6 +163,7 @@ class stVarSaves():
 
             for route in routeCls.routes:
                 statFile.write("\n\n---------------------------\n")
+                statFile.write("\ntime step: " + str(mVars.time))
                 statFile.write("\nroute: " + route)
                 statFile.write("\nTrain and consist:     ")
                 for train in routeCls.routes[route]["trains"]:

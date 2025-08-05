@@ -32,12 +32,12 @@
 "route2": {
     "type": "route", "leftObj": "Kiski", "rtObj": "OilCity",
     "text": "Route 2",
-    "transTime": 10
+    "transTime": 15
 },
 "route3": {
     "type": "route", "leftObj": "OilCity", "rtObj": "NStaging",
     "text": "Route 3",
-    "transTime": 10
+    "transTime": 7
 },
 "route4": {
     "type": "route", "leftObj": "ErieRRStaging", "rtObj": "OilCity",

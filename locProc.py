@@ -34,6 +34,7 @@ class locProc():
     def countCars(self, loc):
         locStem = locs.locDat[loc]
         type = locs.locDat[loc]["type"]
+        locStem["totCars"] = 0
         match type:
             case "yard":
                 trackStem = locStem["tracks"]
@@ -45,7 +46,7 @@ class locProc():
             match type:
                 case "yard":
                     locStem["destTrkTots"][trackNam] = sum(trackStem[trackNam].values())
-                    locStem["totCars"] = sum(locStem["destTrkTots"].values())
+                    locStem["totCars"] += locStem["destTrkTots"][trackNam]
                 case "swArea":
                     if trackNam == "offspot": 
                         locStem["numOffspot"] = sum(locs.locDat[loc]["offspot"].values())
@@ -53,7 +54,7 @@ class locProc():
                     locStem["indusTots"][trackNam] = \
                         sum(trackStem[trackNam]["pickups"].values()) + \
                         sum(trackStem[trackNam]["leave"].values())
-                    locStem["totCars"] = sum(locStem["indusTots"].values())
+                    locStem["totCars"] += locStem["indusTots"][trackNam]
                     locStem["totCars"] += locStem["numOffspot"]
                     
         #print("countCars: ", locStem)
@@ -69,7 +70,7 @@ class locProc():
         if mVars.prms["dbgYdProc"]: print("trains analyzed: trainDB.ydTrains: ",
                     trainDB.ydTrains)
         
-    def locCalcs(self, thisLoc, loc):
+    def locCalcs(self, locStem, loc):
         ydCalcObj = ydCalcs()
         swAreaObj = swCalcs()
         stagCalcObj = stCalcs()
@@ -77,9 +78,9 @@ class locProc():
         if mVars.prms["dbgYdProc"]: 
             print("\nentering locCalcs: location: ", loc, ", locDat: ", locs.locDat[loc])
 
-        thisLoc[loc]["totCars"] = sum(thisLoc[loc]["destTrkTots"].values())
+        self.countCars(loc)
 
-        match thisLoc[loc]["type"]:
+        match locStem[loc]["type"]:
             case "yard":
                 self.analyzeTrains(loc)
                 self.printydTrains()
@@ -127,10 +128,12 @@ class locProc():
                     # no action for yard.  May have a call to 
                     # dispatcher eventually, so process "continue" here 
                     # as no action needed by train crew (modulo dispatch call)
+                    locs.locDat[loc]["trnCnts"]["passThru"] += 1
                     self.startTrain(loc, trainNam)
                 case "built":
                     startTime = locs.locDat[loc]["bldTrnDepTimes"][0]
-                    if mVars.time >= startTime - 1:
+                    if mVars.time >= startTime:
+                        locs.locDat[loc]["trnCnts"]["started"] += 1
                         locs.locDat[loc]["bldTrnDepTimes"].pop(0)
                         nextLoc = trainDB.trains[trainNam]["nextLoc"]
                         print(trainNam, ": with start time ", startTime,
@@ -201,6 +204,7 @@ class locProc():
                         trainStem["coord"]["yPlot"])
 
                 #print("trainStem: ", trainStem, ", original dict: ", trainDB.trains[ydTrainNam])
+                self.rmTrnFrmLoc(loc, ydTrainNam)
                 dispObj.drawTrain(ydTrainNam)
             case "none":
                 trainStem["status"] = "stop"

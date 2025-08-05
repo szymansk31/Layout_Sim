@@ -28,7 +28,14 @@
     "locTrnNumID": "",
     "startMisc": 0,
     "trains": [],
-    "bldTrnDepTimes": [15, 20, 25, 30],
+    "trnCnts": {
+	"built": 0,
+	"started": 0,
+	"switched": 0,
+	"brkDown": 0,
+	"passThru": 0
+	},
+    "bldTrnDepTimes": [5, 10, 25, 30],
     "trn4Action":[],
     "classRate": 2,
     "routes": []
@@ -64,7 +71,14 @@
     "locTrnNumID": "",
     "startMisc": 0,
     "trains": [],
-    "bldTrnDepTimes": [15, 20, 25, 30],
+    "trnCnts": {
+	"built": 0,
+	"started": 0,
+	"switched": 0,
+	"brkDown": 0,
+	"passThru": 0
+	},
+    "bldTrnDepTimes": [5, 10, 25, 30],
     "trn4Action":[],
     "classRate": 2,
     "routes": []
@@ -89,7 +103,7 @@
         "gons": 0, "flats": 0}
     },
     "numAdjLocs": 3,
-    "adjLocNames": {"W":"ErieRRStaging", "W":"pgh", "E":"NStaging"},
+    "adjLocNames": {"Wstag":"ErieRRStaging", "W":"Kiski", "E":"NStaging"},
     "time2AdjLocs": [10, 10],
     "firstDispLoc": 1,
     "firstDispTrnTxt": 1,
@@ -103,7 +117,14 @@
     "locTrnNumID": "",
     "startMisc": 0,
     "trains": [],
-    "bldTrnDepTimes": [15, 20, 25, 30],
+    "trnCnts": {
+	"built": 0,
+	"started": 0,
+	"switched": 0,
+	"brkDown": 0,
+	"passThru": 0
+	},
+    "bldTrnDepTimes": [5, 10, 25, 30],
     "trn4Action":[],
     "classRate": 2,
     "routes": []
@@ -130,6 +151,13 @@
     "locTrnNumID": "",
     "startMisc": 0,
     "trains": [],
+    "trnCnts": {
+	"built": 0,
+	"started": 0,
+	"switched": 0,
+	"brkDown": 0,
+	"passThru": 0
+	},
     "bldTrnDepTimes": [],
     "trn4Action":[],
     "classRate": 2,
@@ -157,6 +185,13 @@
     "locTrnNumID": "",
     "startMisc": 0,
     "trains": [],
+    "trnCnts": {
+	"built": 0,
+	"started": 0,
+	"switched": 0,
+	"brkDown": 0,
+	"passThru": 0
+	},
     "bldTrnDepTimes": [1, 5],
     "trn4Action":[],
     "classRate": 2,

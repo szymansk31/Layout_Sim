@@ -107,6 +107,7 @@ class ydCalcs():
             if availCars == 0:
                 # train no longer has cars
                 # remove train name from trainDB.ydTrains and locs.locData
+                locs.locDat[loc]["trnCnts"]["brkDown"] += 1
                 self.locProcObj.rmTrnFrmActions("brkDnTrn", loc, ydTrainNam)
                 self.locProcObj.rmTrnFrmLoc(loc, ydTrainNam)
                 trainDB.trains.pop(ydTrainNam)
@@ -140,6 +141,8 @@ class ydCalcs():
             if trainStem["numCars"] >= mVars.prms["trainSize"]*0.7:
                 # train has reached max size
                 trainStem["status"] = "built"
+                locs.locDat[loc]["trnCnts"]["built"] += 1
+
                 #self.locProcObj.startTrain("buildTrain", loc, ydTrainNam)
 
     def ready2Build(self, loc):
@@ -257,6 +260,7 @@ class ydCalcs():
                 # train no longer has pickups or drops
                 # start train to nextLoc, if there are more stops and
                 # remove train name from locs.locData
+                locs.locDat[loc]["trnCnts"]["switched"] += 1
                 locs.locDat[loc]["trn4Action"] = [d for d in locStem if "swTrain" not in d]
                 if mVars.prms["dbgYdProc"]: print("trn4Action:", 
                         locs.locDat[loc]["trn4Action"])

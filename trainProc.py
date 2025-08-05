@@ -140,9 +140,9 @@ class trnProc:
                 print("train: ", trainNam, " switching to enroute status")
                 trainDict["status"] = "enroute"
                 disp.drawTrain(trainNam)
-                loc = trainDB.trains[trainNam]["departStop"]
-                if loc != "":
-                    locProcObj.rmTrnFrmLoc(loc, trainNam)
+                #loc = trainDB.trains[trainNam]["departStop"]
+                #if loc != "":
+                #    locProcObj.rmTrnFrmLoc(loc, trainNam)
                 pass
             case "building"|"built":
                 #procssing done in locProc
