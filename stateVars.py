@@ -5,6 +5,11 @@ import json
 from datetime import datetime
 
 #=================================================
+class dspCh():
+    dspchDat = {}
+    
+    pass
+#=================================================
 class locs():
     locDat = {}
     locPop = {}
@@ -151,7 +156,7 @@ class stVarSaves():
                     consistNum = trainDB.trains[train]["consistNum"]
                     consistNam = "consist"+str(consistNum)
                     stopStem = trainDB.consists[consistNam]["stops"]
-                    statFile.write("\n" + train + ":")
+                    statFile.write("\n\n" + train + ":")
                     trnStopStem = trainDB.trains[train]["stops"]
                     for stop in trnStopStem:
                         statFile.write("\n"+ stop \
