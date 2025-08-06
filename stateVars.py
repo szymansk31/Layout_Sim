@@ -5,6 +5,11 @@ import json
 from datetime import datetime
 
 #=================================================
+class dspCh():
+    dspchDat = {}
+    
+    pass
+#=================================================
 class locs():
     locDat = {}
     locPop = {}
@@ -126,17 +131,24 @@ class stVarSaves():
             statFile.write("time step: " + str(mVars.time))
             for loc in locs.locDat:
                 statFile.write("\n\n---------------------------")
+                statFile.write("\ntime step: " + str(mVars.time))
                 statFile.write("\nLocation: " + loc)
                 statFile.write("\nDestination, #cars     \n")
                 locStem = locs.locDat[loc]
-                for dest in locStem["trackTots"]:
-                    numCars = locStem["trackTots"][dest]
+                for dest in locStem["destTrkTots"]:
+                    numCars = locStem["destTrkTots"][dest]
                     statFile.write("  " + dest + "    " + str(numCars))
                 text = "\n# Cars: " + str(locStem["totCars"])
                 if locStem["type"] != "staging":
                     text +=  ", class: " + str(locStem["cars2Class"])
                 statFile.write(text)
-
+                text = "\ntrains built: " + str(locStem["trnCnts"]["built"]) +\
+                    "; started: " + str(locStem["trnCnts"]["started"]) +\
+                    "; switched: " + str(locStem["trnCnts"]["switched"]) +\
+                    "; brkDown: " + str(locStem["trnCnts"]["brkDown"]) +\
+                    "; passThru: " + str(locStem["trnCnts"]["passThru"])
+                statFile.write(text)
+ 
                 statFile.write("\nTrain and consist:     ")
 
                 for train in locStem["trains"]:
@@ -144,7 +156,7 @@ class stVarSaves():
                     consistNum = trainDB.trains[train]["consistNum"]
                     consistNam = "consist"+str(consistNum)
                     stopStem = trainDB.consists[consistNam]["stops"]
-                    statFile.write("\n" + train + ":")
+                    statFile.write("\n\n" + train + ":")
                     trnStopStem = trainDB.trains[train]["stops"]
                     for stop in trnStopStem:
                         statFile.write("\n"+ stop \
@@ -156,6 +168,7 @@ class stVarSaves():
 
             for route in routeCls.routes:
                 statFile.write("\n\n---------------------------\n")
+                statFile.write("\ntime step: " + str(mVars.time))
                 statFile.write("\nroute: " + route)
                 statFile.write("\nTrain and consist:     ")
                 for train in routeCls.routes[route]["trains"]:
@@ -166,5 +179,7 @@ class stVarSaves():
                     statFile.write("\n" + train + ":")
                     for stop in stopStem:
                         statFile.write("\n" + stop + ": " + str(stopStem[stop]))
+                        
+            statFile.flush()
 
         

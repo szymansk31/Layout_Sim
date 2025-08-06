@@ -43,7 +43,7 @@ class ydCalcs():
                 })
         # if a track has enough cars to build a train, then that increases weight of buildTrain
         numCars, maxCarTrk = self.ready2Build(loc)
-        if (numCars>0) and (numTrains["buildTrain"] == 0): numTrains["buildTrain"] +=1
+        if (numCars>0) and (numTrains["buildTrain"] == 0): numTrains["buildTrain"] = 1
         totTrains = sum(numTrains[action] for action in numTrains)
         idx = 0
         print("numTrains list, totTrains: ", numTrains, ",", totTrains)
@@ -60,7 +60,10 @@ class ydCalcs():
         for train in trainDB.ydTrains["buildTrain"]: 
             cars2Class += mVars.prms["trainSize"] - \
                 trainDB.trains[train]["numCars"]
-        cars2Class += locs.locDat[loc]["trackTots"]["industries"]
+        if "indust" in locs.locDat[loc]["destTrkTots"]:
+            cars2Class += locs.locDat[loc]["destTrkTots"]["industries"]
+        if locs.locDat[loc]["type"] == "swArea": 
+            cars2Class += locs.locDat[loc]["numOffspot"]
         locs.locDat[loc]["cars2Class"] = cars2Class
 
     def yardMaster(self, loc):
@@ -104,13 +107,15 @@ class ydCalcs():
             if availCars == 0:
                 # train no longer has cars
                 # remove train name from trainDB.ydTrains and locs.locData
-                self.locProcObj.rmTrnFromLoc("brkDnTrn", loc, ydTrainNam)
+                locs.locDat[loc]["trnCnts"]["brkDown"] += 1
+                self.locProcObj.rmTrnFrmActions("brkDnTrn", loc, ydTrainNam)
+                self.locProcObj.rmTrnFrmLoc(loc, ydTrainNam)
                 trainDB.trains.pop(ydTrainNam)
 
         if mVars.prms["dbgYdProc"]: 
             #if dbgLocal: print("after brkDnTrn: consist: ", 
             #self.thisConsist)
-            #if dbgLocal: print("this location trackTots: ", locs.locDat[loc]["trackTots"])
+            #if dbgLocal: print("this location destTrkTots: ", locs.locDat[loc]["destTrkTots"])
             pass
 
 
@@ -136,15 +141,22 @@ class ydCalcs():
             if trainStem["numCars"] >= mVars.prms["trainSize"]*0.7:
                 # train has reached max size
                 trainStem["status"] = "built"
+                locs.locDat[loc]["trnCnts"]["built"] += 1
+
                 #self.locProcObj.startTrain("buildTrain", loc, ydTrainNam)
 
     def ready2Build(self, loc):
         import copy
-        trackList = copy.deepcopy(locs.locDat[loc]["trackTots"])
-        trackList.pop("industries")
+        trackList = copy.deepcopy(locs.locDat[loc]["destTrkTots"])
+        try:
+            trackList.pop("industries")
+        except:
+            pass
+        
         maxCarTrk = max(trackList, key=trackList.get)
 
-        if locs.locDat[loc]["trackTots"][maxCarTrk] >= mVars.prms["trainSize"]*0.5:
+        print("ready2Build: maxCarTrk: ", maxCarTrk, ", trackList: ", trackList)
+        if locs.locDat[loc]["destTrkTots"][maxCarTrk] >= mVars.prms["trainSize"]*0.5:
             return trackList[maxCarTrk], maxCarTrk
         else: return 0,""
         
@@ -161,11 +173,11 @@ class ydCalcs():
                 return nextLoc, numStops, stops
 
             if gui.guiDict[dest]["x0"] < gui.guiDict[loc]["x0"]:
-                tmpStop = locs.locDat[loc]["adjLocNames"]["W"]
+                tmpStop = locs.locDat[testLoc]["adjLocNames"]["W"]
                 stops[tmpStop] = dict(action = "continue")
                 numStops +=1
             else:
-                tmpStop = locs.locDat[loc]["adjLocNames"]["E"]
+                tmpStop = locs.locDat[testLoc]["adjLocNames"]["E"]
                 stops[tmpStop] = dict(action = "continue")
                 numStops +=1
             if numStops == 1: nextLoc = tmpStop
@@ -177,7 +189,7 @@ class ydCalcs():
         from trainProc import trainParams
 
         numCars, maxCarTrk = self.ready2Build(loc)
-        if numCars:            
+        if numCars != 0:            
             trainObj = trainParams()
             trnName, conName = trainObj.newTrain()
             
@@ -190,6 +202,7 @@ class ydCalcs():
                 "currentLoc": loc,
                 "finalLoc": maxCarTrk,
                 "numStops": numstops,
+                "departStop": loc,
                 "stops": stops,
                 "color": trainParams.colors()           
                     })
@@ -198,7 +211,7 @@ class ydCalcs():
             # "dropPickup" status in that location and will add to consists
             trainDB.consists[conName].update({
                 "stops": {maxCarTrk:{"box": 0, "tank": 0,"rfr": 0, "hop": 0, 
-                "gons": 0, "flats": 0, "psgr": 0}  }
+                "gons": 0, "flats": 0}  }
             })
             
             print("new train: ", trnName, ": ", trainDB.trains[trnName])
@@ -247,11 +260,12 @@ class ydCalcs():
                 # train no longer has pickups or drops
                 # start train to nextLoc, if there are more stops and
                 # remove train name from locs.locData
+                locs.locDat[loc]["trnCnts"]["switched"] += 1
                 locs.locDat[loc]["trn4Action"] = [d for d in locStem if "swTrain" not in d]
                 if mVars.prms["dbgYdProc"]: print("trn4Action:", 
                         locs.locDat[loc]["trn4Action"])
-
-                self.locProcObj.startTrain("swTrain", loc, ydTrainNam)
+                self.locProcObj.rmTrnFrmActions("swTrain", loc, ydTrainNam)
+                self.locProcObj.startTrain(loc, ydTrainNam)
         
         pass
     def servIndus(self, loc):

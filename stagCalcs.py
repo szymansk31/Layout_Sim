@@ -26,11 +26,14 @@ class stCalcs():
     def staging(self, loc):
         
         for train in trainDB.ydTrains["ready2Leave"]:
-            if mVars.time == trainDB.trains[train]["startTime"] - 1:
+            if mVars.time == trainDB.trains[train]["startTime"]:
                 nextLoc = trainDB.trains[train]["nextLoc"]
 
                 print("in staging: nextLoc: ", nextLoc)
-                self.locProcObj.startTrain("ready2Leave", loc, train)
+                locs.locDat[loc]["trnCnts"]["started"] += 1
+
+                self.locProcObj.rmTrnFrmActions("ready2Leave", loc, train)
+                self.locProcObj.startTrain(loc, train)
                 
         self.dispObj.dispTrnLocDat(loc)
                 

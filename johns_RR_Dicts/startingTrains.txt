@@ -1,0 +1,133 @@
+{
+"train1": {
+"trainNum": 1,
+"consistNum": 1,
+"numCars": 15,
+"status": "ready2Leave",
+"origLoc": "pgh",
+"finalLoc": "NStaging",
+"currentLoc": "route1",
+"nextLoc": "Kiski",
+"direction": "east",
+"startTime": 3, 
+"coord": {
+    "xTrnInit": 0.5,
+    "yTrnInit": 0,
+    "xPlot": 0,
+    "yPlot": 0,
+    "xRoute": 0,
+    "yRoute": 0
+},
+"firstDispTrn": 1,
+"timeEnRoute": 0,
+"deltaX": 0,
+"trnRectTag": "",
+"trnNumTag": "",
+"numStops": 3,
+"departStop": "",
+"stops": {
+    "Kiski": {"action": "dropPickup"},
+    "OilCity": {"action": "dropPickup"},
+    "NStaging": {"action": "terminate"}
+        },
+"color": ""
+    },
+
+"train2": {
+"trainNum": 2,
+"consistNum": 2,
+"numCars": 8,
+"status": "ready2Leave",
+"origLoc": "Kiski",
+"finalLoc": "NStaging",
+"currentLoc": "route2",
+"nextLoc": "OilCity",
+"direction": "east",
+"startTime": 2, 
+"coord": {
+    "xTrnInit": 0.2,
+    "yTrnInit": 0,
+    "xPlot": 0,
+    "yPlot": 0,
+    "xRoute": 0,
+    "yRoute": 0
+},
+"firstDispTrn": 1,
+"timeEnRoute": 0,
+"deltaX": 0,
+"trnRectTag": "",
+"trnNumTag": "",
+"numStops": 2,
+"departStop": "",
+"stops": {
+    "OilCity": {"action": "dropPickup"},
+    "NStaging": {"action": "terminate"}
+        },
+"color": ""
+    },
+
+"train3": {
+"trainNum": 3,
+"consistNum": 3,
+"numCars": 10,
+"status": "ready2Leave",
+"origLoc": "ErieRRStaging",
+"finalLoc": "OilCity",
+"currentLoc": "route4",
+"nextLoc": "OilCity",
+"direction": "east",
+"startTime": 0, 
+"coord": {
+    "xTrnInit": 0,
+    "yTrnInit": 0,
+    "xPlot": 0,
+    "yPlot": 0,
+    "xRoute": 0,
+    "yRoute": 0
+},
+"firstDispTrn": 1,
+"timeEnRoute": 0,
+"deltaX": 0,
+"trnRectTag": "",
+"trnNumTag": "",
+"numStops": 1,
+"departStop": "",
+"stops": {
+    "OilCity": {"action": "terminate"}
+        },
+"color": ""
+    },
+
+"train4": {
+"trainNum": 4,
+"consistNum": 4,
+"numCars": 9,
+"status": "ready2Leave",
+"origLoc": "pgh",
+"finalLoc": "OilCity",
+"currentLoc": "route1",
+"nextLoc": "Kiski",
+"direction": "east",
+"startTime": 5, 
+"coord": {
+    "xTrnInit": 0,
+    "yTrnInit": 0,
+    "xPlot": 0,
+    "yPlot": 0,
+    "xRoute": 0,
+    "yRoute": 0
+},
+"firstDispTrn": 1,
+"timeEnRoute": 0,
+"deltaX": 0,
+"trnRectTag": "",
+"trnNumTag": "",
+"numStops": 2,
+"departStop": "",
+"stops": {
+    "Kiski": {"action": "dropPickup"},
+    "OilCity": {"action": "terminate"}
+        },
+"color": ""
+    }
+}

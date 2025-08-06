@@ -1,0 +1,20 @@
+{
+"pgh": {
+    "numTrains": 1,
+    "num2Build": 0,
+    "num2BrkDwn": 0,
+    "num2Sw": 0,
+    "num2Continue": 0
+    "totCars": 0,
+    "cars2Class": 0,
+    "numAdjLocs": 1,
+    "adjLocNames": {"E":"Kiski"},
+    "trains": [],
+    "bldTrnDepTimes": [5, 10, 25, 30],
+    "stops": {
+        "yard1": {"action": "dropPickup"},
+        "swArea1": {"action": "terminate"}
+    },
+    "color": "blue"
+    }
+}

@@ -10,8 +10,14 @@
 "nextLoc": "swArea1",
 "direction": "",
 "startTime": 0, 
-"xTrnInit": 0,
-"xRoute": 0,
+"coord": {
+    "xTrnInit": 0,
+    "yTrnInit": 0,
+    "xPlot": 0,
+    "yPlot": 0,
+    "xRoute": 0,
+    "yRoute": 0
+},
 "firstDispTrn": 1,
 "timeEnRoute": 0,
 "deltaX": 0,

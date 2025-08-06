@@ -4,6 +4,7 @@ from mainVars import mVars
 from fileProc import readFiles
 from display import dispItems
 from locProc import locProc
+from coords import transForms
 from stateVars import locs, trainDB, routeCls
 np.set_printoptions(precision=2, suppress=True) 
 
@@ -21,7 +22,7 @@ class trainParams():
 
     def __init__(self):
         #self.trainID = int
-        self.trnName = ""
+        self.trainNam = ""
         self.conName = ""
         self.files = readFiles()
 
@@ -38,7 +39,7 @@ class trainParams():
         
 
     def dict2TrnNam(self, train):
-        self.trnName = next(iter(train))
+        self.trainNam = next(iter(train))
     def dict2ConNam(self, consist):
         self.conName = next(iter(consist))
 
@@ -83,7 +84,7 @@ class trainParams():
             "trainNum": newTrainNum,
             "stops": {
                 "yard"   :{"box": 0, "tank": 0,"rfr": 0, "hop": 0, 
-                    "gons": 0, "flats": 0, "psgr": 0},
+                    "gons": 0, "flats": 0},
                 }
             }
         })
@@ -99,38 +100,49 @@ class trnProc:
         self.deltaT = 0.0
         self.trnActionList = [""]
 
-    def trainCalcs(self, trainDict, trnName):
+    def trainCalcs(self, trainDict, trainNam):
         disp = dispItems()
+        locProcObj = locProc()
+        coordObj = transForms()
 
         match trainDict["status"]:
             case "enroute":
                 variance = np.random.normal(loc=0, scale=0.25, size=1)
                 routeNam = trainDict["currentLoc"]
                 routeStem = routeCls.routes[routeNam]
-                trainDict["deltaT"] = mVars.prms["timeStep"] + variance
-                trainDict["deltaT"] = round(trainDict["deltaT"].item(), 2)
-                
-                trainDict["timeEnRoute"] += trainDict["deltaT"]
+                deltaT = mVars.prms["timeStep"] + variance
+                deltaT = round(deltaT.item(), 2)
+                velocity = routeStem["distPerTime"]
+
+                # Note that deltaX is in the rotated coord system.
+                deltaX = int(deltaT*velocity)
+                if trainDict["direction"] == "west": deltaX = -deltaX
+                trainDict["deltaX"] = deltaX
+                trainDict["coord"]["xRoute"] += deltaX
+                trainDict["timeEnRoute"] += deltaT
                 trainDict["timeEnRoute"] = round(trainDict["timeEnRoute"], 2)
+                print("distance via timeEnRoute: ", trainDict["timeEnRoute"]*velocity)
                 transTime = routeCls.routes[trainDict["currentLoc"]]["transTime"]
-                if mVars.prms["dbgTrnProc"]: self.printTrnEnRoute(trainDict, routeNam, transTime, variance)
+                if mVars.prms["dbgTrnProc"]: self.printTrnEnRoute(trainDict, routeNam, transTime, variance, deltaX)
                 
-                disp.drawTrain(trnName)
+                coordObj.xRoute2xPlot(routeNam, trainNam)
+                disp.drawTrain(trainNam)
                 match trainDict["direction"]:
                     case "east":
-                        if trainDict["xLoc"] >= routeCls.routes[routeNam]["x1"]:
-                            self.procTrnStop(trainDict, trnName)
+                        if trainDict["coord"]["xPlot"] >= routeCls.routes[routeNam]["x1"]:
+                            self.procTrnStop(trainDict, trainNam)
                     case "west":
-                        if trainDict["xLoc"] <= routeCls.routes[routeNam]["x0"]:
-                            self.procTrnStop(trainDict, trnName)
+                        if trainDict["coord"]["xPlot"] <= routeCls.routes[routeNam]["x0"]:
+                            self.procTrnStop(trainDict, trainNam)
                                                 
                     
             case "ready2Leave":
-                #fills nextLoc with the route it is taking out of currentLoc
-                #self.fillNextLoc(trainDict["currentLoc"], trainDict) 
-                print("train: ", trnName, " switching to enroute status")
+                print("train: ", trainNam, " switching to enroute status")
                 trainDict["status"] = "enroute"
-                disp.drawTrain(trnName)
+                disp.drawTrain(trainNam)
+                #loc = trainDB.trains[trainNam]["departStop"]
+                #if loc != "":
+                #    locProcObj.rmTrnFrmLoc(loc, trainNam)
                 pass
             case "building"|"built":
                 #procssing done in locProc
@@ -147,16 +159,16 @@ class trnProc:
             case "stop":
                 pass
          
-    def printTrnEnRoute(self, trainDict, routeNam, transTime, variance):
+    def printTrnEnRoute(self, trainDict, routeNam, transTime, variance, deltaX):
         if mVars.prms["dbgTrnProc"]: print("trainCalcs: train: ", 
         trainDict["trainNum"], "route: ", routeNam, 
         ", origin: ", trainDict["origLoc"], ", dest:", trainDict["finalLoc"], 
         ", direction: ", trainDict["direction"], ", transTime:", transTime, 
         ", timeEnRoute: ", trainDict["timeEnRoute"], 
-        ", variance: ", variance)
+        ", variance: ", variance, ", dist this step: ", deltaX)
 
             
-    def procTrnStop(self, trainDict, trnName):
+    def procTrnStop(self, trainDict, trainNam):
         disp = dispItems()
         routeNam = trainDict["currentLoc"]
         routeStem = routeCls.routes[routeNam]
@@ -165,8 +177,9 @@ class trnProc:
 
         stopLoc = trainDict["nextLoc"]
         trainDict["currentLoc"] = stopLoc
-        print("train: ", trnName, "entering terminal: ", stopLoc, "trainDict: ", trainDict)
-        print("train: ", trnName, "consistNum: ", consistNum, 
+        trainDict["departStop"] = stopLoc
+        print("train: ", trainNam, "entering terminal: ", stopLoc, "trainDict: ", trainDict)
+        print("train: ", trainNam, "consistNum: ", consistNum, 
               "contents: ", trainDB.consists[consistNam])
         
         #actions are executed in terminals/yards/switch areas
@@ -198,10 +211,10 @@ class trnProc:
                 trainDict["timeEnRoute"] = 0
                 self.updateTrain4Stop(stopLoc, trainDict)
 
-        disp.drawTrain(trnName)
-        locs.locDat[trainDict["currentLoc"]]["trains"].append(trnName)
+        disp.drawTrain(trainNam)
+        locs.locDat[trainDict["currentLoc"]]["trains"].append(trainNam)
         try:
-            index = routeStem["trains"].index(trnName)
+            index = routeStem["trains"].index(trainNam)
         except:
             pass
         

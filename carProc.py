@@ -21,7 +21,7 @@ class carProc():
         #print("carSelDict: ", carSelDict)
         if availCars != 0:
             for keys in carSelDict.keys():
-                carSelList[idx] = carSelDict[keys]/availCars
+                carSelList[idx] = round(carSelDict[keys]/availCars, 2)
                 idx +=1
         return carSelList, availCars
         

@@ -74,13 +74,15 @@ class dispSim():
                     x1 = route["x1"]
                     y0 = route["y0"]
                     y1 = route["y1"]
-                    yLoc = (y0 + y1)/2
+                    yRoute = (y0 + y1)/2
                     xLocTxt = (x0 + x1)/2
                     gui.C.create_line(
-                        x0, yLoc, x1, yLoc
+                        x0, y0, x1, y1
                     )
+                    xOffset = 0
+                    if y0 != y1: xOffset = 20
                     gui.C.create_text(
-                        xLocTxt, yLoc+10,
+                        xLocTxt+xOffset, yRoute+10,
                         text=guiDict[item]["text"]
                     )
                     #self.initTrnTxtFrame(route)

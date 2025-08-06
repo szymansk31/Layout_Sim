@@ -23,7 +23,7 @@ class classCars():
     def initClassPrms(self, loc, train):
         #form destination list
         self.thisLocDests = locProcObj.locDests(loc)
-        self.rate = mVars.geometry[loc]["classRate"]
+        self.rate = locs.locDat[loc]["classRate"]
         
         #form train and location dict stems
         self.locStem = locs.locDat[loc]
@@ -47,7 +47,7 @@ class classCars():
     def selCar(self, thisTrack):            
         carSel, availCars = carProcObj.carTypeSel(thisTrack)
         print(\
-            ", selected cartypes: ", carSel, ", availCars: ", availCars)
+            "selected cartypes: ", carSel, ", availCars: ", availCars)
         carClassType = ""
         if availCars > 0:
             carClassType = carProcObj.randomCar(carSel)
@@ -65,11 +65,13 @@ class classCars():
             case "yard":
                 if trainDest in self.locStem["tracks"]:
                     thisTrack = self.locStem["tracks"][trainDest]
+                    desTrkTots = self.locStem["destTrkTots"]
                 else:
                     availCars = 0
                     return availCars, trainDest
             case "swArea":
                 thisTrack = locs.locDat[loc]["industries"][indus]["pickups"]
+                desTrkTots = self.locStem["indusTots"]
         print("track2Train: track ", trainDest)     
         availCars, carClassType = self.selCar(thisTrack)
         if availCars <= 0: 
@@ -79,14 +81,14 @@ class classCars():
             self.printClassInfo(self.track2Train.__name__, thisTrack,
                 trainDest)
         
-        #if self.locStem["trackTots"][trainDest] == 0: return
+        #if self.locStem["destTrkTots"][trainDest] == 0: return
         carsClassed = 0
         while ((carsClassed < self.rate) and (availCars > 0)):
             availCars, carClassType = self.selCar(thisTrack)
             carsClassed +=1
             if thisTrack[carClassType] >0:
                 thisTrack[carClassType] -=1
-                self.locStem["trackTots"][trackNam] -=1
+                desTrkTots[trackNam] -=1
                 self.consistStem[trainDest][carClassType] +=1
                 self.trainStem["numCars"] +=1
                 availCars -=1
@@ -137,10 +139,10 @@ class classCars():
         match self.type:
             case "yard":
                 destTrkSel = self.randomTrack(weights)
-                trackTots = locs.locDat[loc]["trackTots"][destTrkSel]
+                destTrkTots = locs.locDat[loc]["destTrkTots"][destTrkSel]
                 destTrack = locs.locDat[loc]["tracks"][destTrkSel]
             case "swArea":
-                trackTots = locs.locDat[loc]["trackTots"]["offspot"]
+                destTrkTots = locs.locDat[loc]["numOffspot"]
                 destTrack = locs.locDat[loc]["offspot"]
                 
         print("train2Track: train ", train)
@@ -156,7 +158,7 @@ class classCars():
             if self.consistStem[loc][carClassType] >0:
                 self.consistStem[loc][carClassType] -=1
                 self.trainStem["numCars"] -=1
-                trackTots +=1
+                destTrkTots +=1
                 destTrack[carClassType] +=1
                 availCars -=1
             
@@ -216,7 +218,7 @@ class classCars():
                 indusStem[indus]["spot"][carClassType] -=1
                # destTrack = self.randomTrack(weights)
                 # add to indus track total
-                locs.locDat[loc]["trackTots"][indus] +=1
+                locs.locDat[loc]["indusTots"][indus] +=1
                 nSpotAvail -=1
                 availCars -=1
                 # next block removes a carClassType from avail to switch list

@@ -75,8 +75,8 @@ class swCalcs():
                     # as no action needed by train crew (modulo dispatch call)
                     if trainNam not in trainDB.ydTrains["continue"]:
                         trainDB.ydTrains["continue"].append(trainNam)
-
-                    self.locProcObj.startTrain("continue", loc, trainNam)
+                    # train never entered ydTrains, so no need to remove
+                    self.locProcObj.startTrain(loc, trainNam)
         
     def switchCalcs(self, loc):
         self.dispObj.dispTrnLocDat(loc)
@@ -107,7 +107,7 @@ class swCalcs():
                 # train no longer has cars
                 # remove train name from trainDB.ydTrains and locs.locData
                 self.cleanup(loc, train, "dropPickup")
-                self.locProcObj.startTrain("dropPickup", loc, train)
+                self.locProcObj.startTrain(loc, train)
 
 
     def rdCrwSw(self, loc, train):
@@ -137,7 +137,7 @@ class swCalcs():
             except:
                 print("all industries have been switched")
                 self.cleanup(loc, ydTrainNam, "rdCrwSw")
-                self.locProcObj.startTrain("rdCrwSw", loc, ydTrainNam)
+                self.locProcObj.startTrain(loc, ydTrainNam)
                 return
 
         print("industry: ", industry)
@@ -193,6 +193,9 @@ class swCalcs():
         # remove stop from consist
         consistNam = trainDB.getConNam(ydTrainNam)
         trainDB.consists[consistNam]["stops"].pop(loc)
+        # remove from ydTrains action list
+        self.locProcObj.rmTrnFrmActions(action, loc, ydTrainNam)
+
         # clear action data from display
         self.dispObj.clearActionDat(loc)
 
