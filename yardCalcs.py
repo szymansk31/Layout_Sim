@@ -16,8 +16,9 @@ class ydCalcs():
         #self.weights = [0.18, 0.18, 0.18, 0.18, 0.1]
         self.weights = [0.33, 0.33, 0.33, 0, 0]
         #self.weights = [0, 0, 0, 0, 0]
-        from locProc import locProc
+        from locProc import locProc, locBase
         self.locProcObj = locProc()
+        self.locBaseObj = locBase()
         from classCars import classCars
         self.classObj = classCars()
         from display import dispItems
@@ -41,9 +42,12 @@ class ydCalcs():
             numTrains.update(
                 {action: len(trainDB.ydTrains[action])
                 })
+        """
+        Decision about building a train now determined by schedule
         # if a track has enough cars to build a train, then that increases weight of buildTrain
         numCars, maxCarTrk = self.ready2Build(loc)
         if (numCars>0) and (numTrains["buildTrain"] == 0): numTrains["buildTrain"] = 1
+        """
         totTrains = sum(numTrains[action] for action in numTrains)
         idx = 0
         print("numTrains list, totTrains: ", numTrains, ",", totTrains)
@@ -52,6 +56,7 @@ class ydCalcs():
                 self.weights[idx] = numTrains[action]/totTrains*weightPortion
                 idx +=1
         if mVars.prms["dbgYdProc"]: print("action weights are: ", self.weights)
+        return totTrains
         
     def cars2Class(self, loc):
         cars2Class = 0
@@ -67,12 +72,14 @@ class ydCalcs():
         locs.locDat[loc]["cars2Class"] = cars2Class
 
     def yardMaster(self, loc):
-        self.setWeights(loc)
+        totTrains = self.setWeights(loc)
+        if totTrains == 0: 
+            print("\nLocation: ", loc, " no trains to classify")
+            return
         choice = random.choices(self.actionList, weights=self.weights, k=1)
         choice = ''.join(choice)
+        if trainDB.ydTrains["swTrain"]: choice = "swTrain"  #always first priority
         if mVars.prms["dbgYdProc"]: print("\nchoice: ", choice)
-        self.cars2Class(loc)
-        self.dispObj.dispTrnLocDat(loc)
         
         if locs.locDat[loc]["startMisc"]:
             while locs.locDat[loc]["startMisc"] < endMisc:
@@ -96,6 +103,9 @@ class ydCalcs():
                 locs.locDat[loc]["startMisc"] = mVars.time
                 endMisc = locs.locDat[loc]["startMisc"] + mVars.prms["miscWaitTime"]
                 pass
+        self.cars2Class(loc)
+        self.dispObj.dispTrnLocDat(loc)
+        
 
     def brkDownTrain(self, loc):
         if trainDB.ydTrains["brkDnTrn"]:
@@ -108,8 +118,8 @@ class ydCalcs():
                 # train no longer has cars
                 # remove train name from trainDB.ydTrains and locs.locData
                 locs.locDat[loc]["trnCnts"]["brkDown"] += 1
-                self.locProcObj.rmTrnFrmActions("brkDnTrn", loc, ydTrainNam)
-                self.locProcObj.rmTrnFrmLoc(loc, ydTrainNam)
+                self.locBaseObj.rmTrnFrmActions("brkDnTrn", loc, ydTrainNam)
+                self.locBaseObj.rmTrnFrmLoc(loc, ydTrainNam)
                 trainDB.trains.pop(ydTrainNam)
 
         if mVars.prms["dbgYdProc"]: 
@@ -120,30 +130,28 @@ class ydCalcs():
 
 
         
-    def buildTrain(self, loc):
-        #if mVars.prms["dbgYdProc"]: print("buildTrain: number of cars available: ", numCarsAvail)
-        
+    def buildTrain(self, loc):   
+        from trainProc import trainInit
+        trainInitObj = trainInit()
         # yard has no train undergoing build
-        if not trainDB.ydTrains["buildTrain"]:
-            
-            self.buildNewTrain(loc)
-            
-            
+        ydTrainNam = ''.join(trainDB.ydTrains["buildTrain"])    
+        if ydTrainNam not in trainDB.trains:
+            trainInitObj.initNewTrain(loc, ydTrainNam)
+            return
+         
         # yard has a train already building; add cars to it
         # single train is allowed to build in a yard
-        else:    
-            ydTrainNam = ''.join(trainDB.ydTrains["buildTrain"])    
-            # dummy input is "indus" 
-            availCars, trainDest = self.classObj.track2Train(loc, "", ydTrainNam)
-            trainStem = trainDB.trains[ydTrainNam]
-            self.dispObj.dispActionDat(loc, "buildTrain", ydTrainNam)
+        # dummy input is "indus" 
+        availCars, trainDest = self.classObj.track2Train(loc, "", ydTrainNam)
+        trainStem = trainDB.trains[ydTrainNam]
+        self.dispObj.dispActionDat(loc, "buildTrain", ydTrainNam)
 
-            if trainStem["numCars"] >= mVars.prms["trainSize"]*0.7:
-                # train has reached max size
-                trainStem["status"] = "built"
-                locs.locDat[loc]["trnCnts"]["built"] += 1
+        if trainStem["numCars"] >= mVars.prms["trainSize"]*0.7:
+            # train has reached max size
+            trainStem["status"] = "built"
+            locs.locDat[loc]["trnCnts"]["built"] += 1
 
-                #self.locProcObj.startTrain("buildTrain", loc, ydTrainNam)
+            #self.locProcObj.startTrain("buildTrain", loc, ydTrainNam)
 
     def ready2Build(self, loc):
         import copy
@@ -185,42 +193,6 @@ class ydCalcs():
         
         return
                             
-    def buildNewTrain(self, loc):
-        from trainProc import trainParams
-
-        numCars, maxCarTrk = self.ready2Build(loc)
-        if numCars != 0:            
-            trainObj = trainParams()
-            trnName, conName = trainObj.newTrain()
-            
-            nextLoc, numstops, stops = self.setStops(loc, maxCarTrk)
-            print("train: ", trnName, ", stops: ", stops)
-            trainDB.trains[trnName].update( {
-                "status": "building",
-                "origLoc": loc,
-                "nextLoc": nextLoc,
-                "currentLoc": loc,
-                "finalLoc": maxCarTrk,
-                "numStops": numstops,
-                "departStop": loc,
-                "stops": stops,
-                "color": trainParams.colors()           
-                    })
-            # consist gets stops that have cars to drop, not those where
-            # the train continues through.  Pickups are triggered by
-            # "dropPickup" status in that location and will add to consists
-            trainDB.consists[conName].update({
-                "stops": {maxCarTrk:{"box": 0, "tank": 0,"rfr": 0, "hop": 0, 
-                "gons": 0, "flats": 0}  }
-            })
-            
-            print("new train: ", trnName, ": ", trainDB.trains[trnName])
-            print("new consist: ", conName, ":", trainDB.consists[conName])
-            trainDB.ydTrains["buildTrain"].append(trnName)
-            locs.locDat[loc]["trains"].append(trnName)
-            return
-
-    
             
     def swTrain(self, loc):
         # remove cars from train and save on tracks
@@ -264,7 +236,7 @@ class ydCalcs():
                 locs.locDat[loc]["trn4Action"] = [d for d in locStem if "swTrain" not in d]
                 if mVars.prms["dbgYdProc"]: print("trn4Action:", 
                         locs.locDat[loc]["trn4Action"])
-                self.locProcObj.rmTrnFrmActions("swTrain", loc, ydTrainNam)
+                self.locBaseObj.rmTrnFrmActions("swTrain", loc, ydTrainNam)
                 self.locProcObj.startTrain(loc, ydTrainNam)
         
         pass

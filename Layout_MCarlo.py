@@ -4,7 +4,7 @@ import tkinter as tk
 import sys
 from tkinter import ttk
 from stateVars import locs, trainDB, routeCls, stVarSaves
-from trainProc import trainParams, trnProc
+from trainProc import trainInit, trnProc
 from display import dispItems
 from outputMethods import printMethods
 trnProcObj = trnProc()
@@ -16,6 +16,8 @@ printObj = printMethods()
 class mainMethods():
     
     def __init__(self):
+        from locProc import locProc, locBase
+        self.locProcObj = locProc()
         pass
 
 #=================================================
@@ -53,7 +55,7 @@ class mainMethods():
                 if mVars.prms["dbgLoop"]: print ("\nAbout to process: ", 
                     loc)
 
-                locProcObj.locCalcs(locs.locDat, loc)
+                self.locProcObj.locCalcs(locs.locDat, loc)
             stVarObj.incSavIDX()
             mVars.time +=1
 
@@ -132,9 +134,9 @@ carProcObj = carProc()
 #carProcObj.procCarInfo(carDict)
 
 #dynamic info for each location
-from locProc import locProc
-locProcObj = locProc()
-locProcObj.initLocDicts()
+from locProc import locProc, locBase
+locBaseObj = locBase()
+locBaseObj.initLocDicts()
 
 # from gui.py
 dispObj = dispSim()
@@ -146,6 +148,9 @@ displayObj.initLocDisp()
 from startingTrains import trainFromFile
 startTrainObj = trainFromFile()
 startTrainObj.readTrain()
+from dispatch import schedProc
+schedProcObj = schedProc()
+schedProcObj.initSchedule()
 
 #setup control buttons
 mainObj = mainMethods()

@@ -2,11 +2,11 @@
 from fileProc import readFiles
 from stateVars import trainDB, locs, routeCls
 from mainVars import mVars
-from trainProc import trainParams
+from trainProc import trainInit
 from display import dispItems
 from gui import gui
 from coords import transForms
-from locProc import locProc
+from locProc import locProc, locBase
 
 files = readFiles()
 
@@ -21,7 +21,7 @@ class trainFromFile():
         self.conName = next(iter(consist))
         
     def readTrain(self):
-        trainProcObj = trainParams()
+        trainProcObj = trainInit()
         coordObj = transForms()
         locProcObj = locProc()
         trainDict = files.readFile("startingTrainFile")
@@ -29,9 +29,10 @@ class trainFromFile():
         trainDB.consists.update(self.consist)
         for train in trainDict:
             print("\nTrain: ", train)
+            trainDB.strtTrns.append(train)
             currLoc = trainDict[train]["currentLoc"]
 
-            trainDict[train]["color"] = trainParams.colors()
+            trainDict[train]["color"] = trainInit.colors()
             #print("color for init train: ", trainDict[train]["color"])
 
             print("adding initial consist")
@@ -59,7 +60,7 @@ class trainFromFile():
                 coordObj.xRoute2xPlot(currLoc, train)
                 #trainDB.trains[train]["coord"]["yPlot"] -= gui.guiDict["locDims"]["height"]*0.25
             else: 
-                locs.locDat[currLoc]["trains"].append(train)
+                locBase.addTrn2Loc(currLoc, train)
             print("starting train: ", trainDB.trains[train])
             dispObj = dispItems()
             dispObj.drawTrain(train)

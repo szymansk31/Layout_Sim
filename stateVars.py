@@ -7,6 +7,7 @@ from datetime import datetime
 #=================================================
 class dspCh():
     dspchDat = {}
+    sched = {}
     
     pass
 #=================================================
@@ -23,6 +24,7 @@ class trainDB():
     trains = {}
     consists = {}
     ydTrains = {}
+    strtTrns = []
     
     def __init__(self):
         pass

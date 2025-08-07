@@ -3,14 +3,14 @@ import tkinter as tk
 from mainVars import mVars
 from fileProc import readFiles
 from display import dispItems
-from locProc import locProc
+from locProc import locProc, locBase
 from coords import transForms
 from stateVars import locs, trainDB, routeCls
 np.set_printoptions(precision=2, suppress=True) 
 
 
 #=================================================
-class trainParams():
+class trainInit():
     trnHeight = 10
     trnLength = 20
     colorIDX = 0
@@ -42,6 +42,8 @@ class trainParams():
         self.trainNam = next(iter(train))
     def dict2ConNam(self, consist):
         self.conName = next(iter(consist))
+    def addTrn2TrainDB(trainDict):
+        trainDB.trains.update(trainDict)
 
     def numCars(self, train):
         consistNam = trainDB.getConNam(train)
@@ -51,10 +53,11 @@ class trainParams():
             numCars += sum(consist["stops"][loc].values())
         return numCars
             
-    def newTrain(self):
+    def newTrain(self, newTrainNam):
         newTrain = {}
-        newTrainNum = trainDB.numTrains+1
-        newTrainNam = "train"+str(newTrainNum)
+        #newTrainNum = trainDB.numTrains+1
+        newTrainNum = newTrainNam[5:]
+        #newTrainNam = "train"+str(newTrainNum)
         newConsistNum = trainDB.numConsists+1 
         newConsistNam = "consist"+str(newConsistNum)
         tmpTrain = self.files.readFile("trainFile")
@@ -62,10 +65,11 @@ class trainParams():
         newTrain[newTrainNam] = tmpTrain.pop("trnProtype")
         newTrain[newTrainNam]["trainNum"] = newTrainNum
         newTrain[newTrainNam]["consistNum"] = newConsistNum
+        newTrain[newTrainNam]["numCars"] = 0
         newTrain[newTrainNam]["trnRectTag"] = newTrainNam+"RectTag"
         newTrain[newTrainNam]["trnNumTag"] = newTrainNam+"NumTag"
         newTrain[newTrainNam]["trnLabelTag"] = newTrainNam+"LabelTag"
-        newTrain[newTrainNam]["startTime"] = mVars.time
+        #newTrain[newTrainNam]["startTime"] = mVars.time
     
         print("newTrain: partial dict: ", newTrain)
         trainDB.trains.update(newTrain)
@@ -73,7 +77,7 @@ class trainParams():
         self.newConsist(newConsistNum, newTrainNum)
         trainDB.numTrains +=1
         trainDB.numConsists +=1
-        return newTrainNam, newConsistNam
+        return newConsistNam
     
     def newConsist(self, newConsistNum, newTrainNum):
         newConNam = "consist"+str(newConsistNum)
@@ -90,6 +94,43 @@ class trainParams():
         })
         return 
 
+    def initNewTrain(self, loc, newTrainNam):
+        conName = self.newTrain(newTrainNam)
+        
+        #nextLoc, numstops, stops = self.setStops(loc, maxCarTrk)
+        stops = trainDB.trains[newTrainNam]["stops"]
+        numStops = 0
+        for stopLoc in stops:
+            numStops += 1 
+        nextLoc = next(iter(stops))
+        print("train: ", newTrainNam, ", stops: ", stops)
+        trainDB.trains[newTrainNam].update( {
+            "status": "building",
+            "origLoc": loc,
+            "nextLoc": nextLoc,
+            "currentLoc": loc,
+            "finalLoc": stopLoc,
+            "numStops": numStops,
+            "departStop": loc,
+            "stops": stops,
+            "color": trainInit.colors()           
+                })
+        # consist gets stops that have cars to drop, not those where
+        # the train continues through.  Pickups are triggered by
+        # "dropPickup" status in that location and will add to consists
+        for conStop in stops:
+            tmpDict = {conStop: {"box": 0, "tank": 0,"rfr": 0, "hop": 0, 
+            "gons": 0, "flats": 0}}
+        trainDB.consists[conName].update({
+            "stops": tmpDict
+        })
+        
+        print("new train: ", newTrainNam, ": ", trainDB.trains[newTrainNam])
+        print("new consist: ", conName, ":", trainDB.consists[conName])
+        trainDB.ydTrains["buildTrain"].append(newTrainNam)
+        return
+
+    
 
   
 class trnProc:    
@@ -102,7 +143,6 @@ class trnProc:
 
     def trainCalcs(self, trainDict, trainNam):
         disp = dispItems()
-        locProcObj = locProc()
         coordObj = transForms()
 
         match trainDict["status"]:
@@ -142,7 +182,7 @@ class trnProc:
                 disp.drawTrain(trainNam)
                 #loc = trainDB.trains[trainNam]["departStop"]
                 #if loc != "":
-                #    locProcObj.rmTrnFrmLoc(loc, trainNam)
+                #    locBaseObj.rmTrnFrmLoc(loc, trainNam)
                 pass
             case "building"|"built":
                 #procssing done in locProc
@@ -170,6 +210,7 @@ class trnProc:
             
     def procTrnStop(self, trainDict, trainNam):
         disp = dispItems()
+        locBaseObj = locBase()
         routeNam = trainDict["currentLoc"]
         routeStem = routeCls.routes[routeNam]
         consistNum = trainDict["consistNum"]
@@ -212,7 +253,7 @@ class trnProc:
                 self.updateTrain4Stop(stopLoc, trainDict)
 
         disp.drawTrain(trainNam)
-        locs.locDat[trainDict["currentLoc"]]["trains"].append(trainNam)
+        locBase.addTrn2Loc(stopLoc, trainNam)
         try:
             index = routeStem["trains"].index(trainNam)
         except:

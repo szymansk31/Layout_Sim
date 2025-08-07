@@ -16,8 +16,9 @@ class swCalcs():
         #self.weights = [0.18, 0.18, 0.18, 0.18, 0.1]
         self.weights = [0.3, 0.3, 0.3, 0, 0]
         #self.weights = [0, 0, 0, 0, 0]
-        from locProc import locProc
+        from locProc import locProc, locBase
         self.locProcObj = locProc()
+        self.locBaseObj = locBase()
         from classCars import classCars
         self.classObj = classCars()
         from display import dispItems
@@ -194,7 +195,7 @@ class swCalcs():
         consistNam = trainDB.getConNam(ydTrainNam)
         trainDB.consists[consistNam]["stops"].pop(loc)
         # remove from ydTrains action list
-        self.locProcObj.rmTrnFrmActions(action, loc, ydTrainNam)
+        self.locBaseObj.rmTrnFrmActions(action, loc, ydTrainNam)
 
         # clear action data from display
         self.dispObj.clearActionDat(loc)

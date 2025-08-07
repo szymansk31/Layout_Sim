@@ -3,6 +3,7 @@ import numpy as np
 from mainVars import mVars
 from stateVars import locs, trainDB, routeCls
 from display import dispItems
+from dispatch import schedProc
 from yardCalcs import ydCalcs
 from swCalcs import swCalcs
 from stagCalcs import stCalcs
@@ -13,12 +14,10 @@ np.set_printoptions(precision=2, suppress=True)
 
 dbgLocal = 1     
 #=================================================
-class locProc():
+class locBase():
     
     def __init__(self):
         pass
-    
-    #classmethod:
     
     def initLocDicts(self):
         from fileProc import readFiles
@@ -41,7 +40,7 @@ class locProc():
             case "swArea":
                 trackStem = locStem["industries"]
         for trackNam in locStem["destTrkTots"]:
-            print("\n Location: ", loc, "destination: ", trackNam)
+            #print("\n Location: ", loc, "destination: ", trackNam)
             if trackNam not in trackStem: continue
             match type:
                 case "yard":
@@ -66,11 +65,40 @@ class locProc():
             thisLocDests.append(dest)
         return thisLocDests
 
+    def rmTrnFrmActions(self, action, loc, ydTrainNam):
+        dispObj = dispItems()
+        # remove train from ydTrains and location
+        print("rmTrnFrmActions: trainDB.ydTrains: ", trainDB.ydTrains)
+        index = trainDB.ydTrains[action].index(ydTrainNam)
+        trainDB.ydTrains[action].pop(index)
+        if dbgLocal: print("after removal: trainDB.ydTrains: ", trainDB.ydTrains, 
+                "\n trains[ydTrainNam]: ", trainDB.trains[ydTrainNam])
+        # clear action data from display
+        dispObj.clearActionDat(loc)
+    
+    def rmTrnFrmLoc(self, loc, trainNam):  
+        index = locs.locDat[loc]["trains"].index(trainNam)
+        locs.locDat[loc]["trains"].pop(index)
+
+    def addTrn2Loc(loc, trainNam):  
+        locs.locDat[loc]["trains"].append(trainNam)
+
+    
+#=================================================
+class locProc():
+    
+    def __init__(self):
+        pass
+    
+    #classmethod:
+    
     def printydTrains(self):
         if mVars.prms["dbgYdProc"]: print("trains analyzed: trainDB.ydTrains: ",
                     trainDB.ydTrains)
         
     def locCalcs(self, locStem, loc):
+        locBaseObj = locBase()
+        schedProcObj = schedProc()
         ydCalcObj = ydCalcs()
         swAreaObj = swCalcs()
         stagCalcObj = stCalcs()
@@ -78,11 +106,12 @@ class locProc():
         if mVars.prms["dbgYdProc"]: 
             print("\nentering locCalcs: location: ", loc, ", locDat: ", locs.locDat[loc])
 
-        self.countCars(loc)
+        locBaseObj.countCars(loc)
 
         match locStem[loc]["type"]:
             case "yard":
                 self.analyzeTrains(loc)
+                schedProcObj.fetchLocSchedItem(loc)
                 self.printydTrains()
                 ydCalcObj.yardMaster(loc)
             case "swArea":
@@ -156,7 +185,7 @@ class locProc():
 
     def startTrain(self, loc, ydTrainNam):
         # setup train
-        from trainProc import trainParams
+        from trainProc import trainInit
         dispObj = dispItems()
         coordObj = transForms()
 
@@ -188,11 +217,11 @@ class locProc():
                 self.setTrnCoord(trainStem["currentLoc"], trainStem)                
                 coordObj.xRoute2xPlot(route4newTrn, ydTrainNam)
                 eastXPlot = gui.guiDict[loc]["x1"]
-                westXPlot = gui.guiDict[loc]["x0"] - trainParams.trnLength
+                westXPlot = gui.guiDict[loc]["x0"] - trainInit.trnLength
                 eastYPlot = gui.guiDict[leftObj]["y0"] - gui.guiDict["locDims"]["height"]*0.25
 
                 if trainStem["direction"] == "west": 
-                    trainStem["coord"]["xPlot"] -= trainParams.trnLength
+                    trainStem["coord"]["xPlot"] -= trainInit.trnLength
                     westXPlotTransform = trainStem["coord"]["xPlot"]
                     print("westXPlot no transform: ", westXPlot, ", with transform: ", 
                         westXPlotTransform)
@@ -212,21 +241,6 @@ class locProc():
         if mVars.prms["dbgYdProc"]: print("train",ydTrainNam," starting: "
             ,trainStem, ",\n")
             #route: ", routeCls.routes[route4newTrn])
-
-    def rmTrnFrmActions(self, action, loc, ydTrainNam):
-        dispObj = dispItems()
-        # remove train from ydTrains and location
-        print("rmTrnFrmActions: trainDB.ydTrains: ", trainDB.ydTrains)
-        index = trainDB.ydTrains[action].index(ydTrainNam)
-        trainDB.ydTrains[action].pop(index)
-        if dbgLocal: print("after removal: trainDB.ydTrains: ", trainDB.ydTrains, 
-                "\n trains[ydTrainNam]: ", trainDB.trains[ydTrainNam])
-        # clear action data from display
-        dispObj.clearActionDat(loc)
-    
-    def rmTrnFrmLoc(self, loc, tranNam):  
-        index = locs.locDat[loc]["trains"].index(tranNam)
-        locs.locDat[loc]["trains"].pop(index)
 
     def setTrnCoord(self, currLoc, trainStem):
 

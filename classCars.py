@@ -3,11 +3,12 @@
 import random
 from mainVars import mVars
 from stateVars import locs, trainDB, routeCls
-from locProc import locProc
+from locProc import locProc, locBase
 from carProc import carProc
 from display import dispItems
 
 locProcObj = locProc()
+locBaseObj = locBase()
 carProcObj = carProc()
 dispObj    = dispItems()
 
@@ -22,7 +23,7 @@ class classCars():
     
     def initClassPrms(self, loc, train):
         #form destination list
-        self.thisLocDests = locProcObj.locDests(loc)
+        self.thisLocDests = locBaseObj.locDests(loc)
         self.rate = locs.locDat[loc]["classRate"]
         
         #form train and location dict stems
