@@ -2,7 +2,7 @@ import random
 from enum import Enum
 import numpy as np
 from mainVars import mVars
-from stateVars import locs, trainDB, routeCls
+from stateVars import locs, dspCh, trainDB, routeCls
 
 np.set_printoptions(precision=2, suppress=True) 
 
@@ -32,7 +32,7 @@ class ydCalcs():
         SERVINDUS    = 3
         MISC         = 4
 
-    def setWeights(self, loc):
+    def setWeights(self):
         action_e = ydCalcs.Action_e
         totTrains = 0
         numTrains = {}
@@ -72,7 +72,7 @@ class ydCalcs():
         locs.locDat[loc]["cars2Class"] = cars2Class
 
     def yardMaster(self, loc):
-        totTrains = self.setWeights(loc)
+        totTrains = self.setWeights()
         if totTrains == 0: 
             print("\nLocation: ", loc, " no trains to classify")
             return
@@ -128,30 +128,29 @@ class ydCalcs():
             #if dbgLocal: print("this location destTrkTots: ", locs.locDat[loc]["destTrkTots"])
             pass
 
-
         
     def buildTrain(self, loc):   
         from trainProc import trainInit
-        trainInitObj = trainInit()
+        trainInitObj = trainInit() 
+        ydTrainNam = trainDB.ydTrains["buildTrain"][0]
         # yard has no train undergoing build
-        ydTrainNam = ''.join(trainDB.ydTrains["buildTrain"])    
-        if ydTrainNam not in trainDB.trains:
+        if trainDB.trains[ydTrainNam]["status"] == "init":
             trainInitObj.initNewTrain(loc, ydTrainNam)
-            return
-         
-        # yard has a train already building; add cars to it
-        # single train is allowed to build in a yard
-        # dummy input is "indus" 
-        availCars, trainDest = self.classObj.track2Train(loc, "", ydTrainNam)
-        trainStem = trainDB.trains[ydTrainNam]
-        self.dispObj.dispActionDat(loc, "buildTrain", ydTrainNam)
+            trainDB.trains[ydTrainNam]["status"] = "building"
+        else:
+            # yard has a train already building; add cars to it
+            # single train is allowed to build in a yard
+            # dummy input is "indus" 
+            availCars, trainDest = self.classObj.track2Train(loc, "", ydTrainNam)
+            trainStem = trainDB.trains[ydTrainNam]
+            self.dispObj.dispActionDat(loc, "buildTrain", ydTrainNam)
 
-        if trainStem["numCars"] >= mVars.prms["trainSize"]*0.7:
-            # train has reached max size
-            trainStem["status"] = "built"
-            locs.locDat[loc]["trnCnts"]["built"] += 1
+            if trainStem["numCars"] >= mVars.prms["trainSize"]*0.7:
+                # train has reached max size
+                trainStem["status"] = "built"
+                locs.locDat[loc]["trnCnts"]["built"] += 1
 
-            #self.locProcObj.startTrain("buildTrain", loc, ydTrainNam)
+                #self.locProcObj.startTrain("buildTrain", loc, ydTrainNam)
 
     def ready2Build(self, loc):
         import copy

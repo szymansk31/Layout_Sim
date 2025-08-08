@@ -29,8 +29,6 @@ class schedProc():
                 trainDB.trains[train]["startTime"],
                 "status":
                 trainDB.trains[train]["status"],
-                "action":
-                trainDB.trains[train]["status"],
                 "finalLoc": 
                 trainDB.trains[train]["finalLoc"],
                 "origLoc": 
@@ -52,9 +50,8 @@ class schedProc():
         for train in dspCh.sched:
             if (loc == dspCh.sched[train]["origLoc"]) and \
                 (mVars.time >= dspCh.sched[train]["startTime"]):
-                action = dspCh.sched[train]["action"]
-                trainDB.ydTrains[action].append(train)
-                locBase.addTrn2Loc(loc, train)
+                locBase.addTrn2Loc_rt(loc, dspCh.sched[train], train)
+                trainDB.trains[train] = dspCh.sched[train]
                 return
             pass
     

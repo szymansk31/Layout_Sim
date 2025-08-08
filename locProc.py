@@ -80,8 +80,13 @@ class locBase():
         index = locs.locDat[loc]["trains"].index(trainNam)
         locs.locDat[loc]["trains"].pop(index)
 
-    def addTrn2Loc(loc, trainNam):  
-        locs.locDat[loc]["trains"].append(trainNam)
+    def addTrn2Loc_rt(loc, trainStem, trainNam): 
+        if "route" in trainStem["currentLoc"]:
+            routeCls.routes[trainStem["currentLoc"]]["trains"].append(trainNam)
+            return
+        else:
+            locs.locDat[loc]["trains"].append(trainNam)
+            return
 
     
 #=================================================
@@ -108,10 +113,10 @@ class locProc():
 
         locBaseObj.countCars(loc)
 
+        schedProcObj.fetchLocSchedItem(loc)
         match locStem[loc]["type"]:
             case "yard":
                 self.analyzeTrains(loc)
-                schedProcObj.fetchLocSchedItem(loc)
                 self.printydTrains()
                 ydCalcObj.yardMaster(loc)
             case "swArea":
@@ -142,7 +147,7 @@ class locProc():
                     # the yard crew; hence a yard action
                     if trainNam not in trainDB.ydTrains["swTrain"]:
                         trainDB.ydTrains["swTrain"].append(trainNam)
-                case "building":
+                case "building"|"init":
                     # for yards, not switch areas
                     if trainNam not in trainDB.ydTrains["buildTrain"]:
                         trainDB.ydTrains["buildTrain"].append(trainNam)

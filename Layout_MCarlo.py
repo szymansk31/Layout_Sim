@@ -27,8 +27,6 @@ class mainMethods():
         print("mVars.time: ", mVars.time, "maxtime: ", mVars.prms["maxTime"])
         while mVars.time <= mVars.prms["maxTime"]:
             # save state variables and statistics for this time step
-            stVarObj.savStats()
-            stVarObj.saveStVars()
             displayObj.updateTimer()
             print("\nmVars.time: ", mVars.time, ", savIDX: ", stVarSaves.savIDX)
             if mVars.wait:
@@ -56,6 +54,8 @@ class mainMethods():
                     loc)
 
                 self.locProcObj.locCalcs(locs.locDat, loc)
+            stVarObj.savStats()
+            stVarObj.saveStVars()
             stVarObj.incSavIDX()
             mVars.time +=1
 

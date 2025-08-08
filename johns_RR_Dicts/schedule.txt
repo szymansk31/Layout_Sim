@@ -1,7 +1,8 @@
 {
 "train6": {
     "origLoc":"pgh",
-    "action":"buildTrain",
+    "currentLoc":"pgh",
+    "status":"init",
     "startTime": 8,
     "stops": {
         "Kiski": {"action": "dropPickup"},
@@ -11,7 +12,8 @@
     },
 "train7": {
     "origLoc":"Kiski",
-    "action":"buildTrain",
+    "currentLoc":"Kiski",
+    "status":"init",
     "startTime": 2,
     "stops": {
         "OilCity": {"action": "dropPickup"},
@@ -20,7 +22,8 @@
     },      
 "train8": {
     "origLoc":"OilCity", 
-    "action":"buildTrain",
+    "currentLoc":"OilCity", 
+    "status":"init",
     "startTime": 0,
     "stops": {
     "OilCity": {"action": "terminate"}

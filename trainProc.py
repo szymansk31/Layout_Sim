@@ -5,7 +5,7 @@ from fileProc import readFiles
 from display import dispItems
 from locProc import locProc, locBase
 from coords import transForms
-from stateVars import locs, trainDB, routeCls
+from stateVars import locs, dspCh, trainDB, routeCls
 np.set_printoptions(precision=2, suppress=True) 
 
 
@@ -16,7 +16,7 @@ class trainInit():
     colorIDX = 0
     colorList = ["red", "green", "yellow", "orange", "purple1", "dodger blue", "deep pink",
                  "lawn green", "goldenrod", "OrangeRed2", "magenta2", "RoyalBlue1"]
-    trnStatusList = ["enroute", "ready2Leave", "building", "built", "terminate", "rdCrwSw",
+    trnStatusList = ["enroute", "ready2Leave", "init", "building", "built", "terminate", "rdCrwSw",
                      "dropPickup", "continue", "turn", "misc", "stop"]
 
 
@@ -184,7 +184,7 @@ class trnProc:
                 #if loc != "":
                 #    locBaseObj.rmTrnFrmLoc(loc, trainNam)
                 pass
-            case "building"|"built":
+            case "building"|"built"|"init":
                 #procssing done in locProc
                 pass
         # the following are status states for a train
