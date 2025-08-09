@@ -185,8 +185,8 @@ class locProc():
         for routeNam in routeCls.routes:
             loc = ''.join(loc)
             dest = ''.join(nextLoc)
-            #if dbgLocal: print("routNam: ", routeNam, " loc: ", loc, 
-            #    " nextLoc: ", dest, "route: ", routeCls.routes[routeNam])
+            if dbgLocal: print("routNam: ", routeNam, " loc: ", loc, 
+                " nextLoc: ", dest, "route: ", routeCls.routes[routeNam])
             if (loc in routeCls.routes[routeNam].values()) and \
                 (dest in routeCls.routes[routeNam].values()):
                 return routeNam
@@ -196,6 +196,7 @@ class locProc():
         from trainInit import trainInit
         dispObj = dispItems()
         coordObj = transForms()
+        locBaseObj = locBase()
 
         trainStem = trainDB.trains[ydTrainNam]
         dest = trainDB.trains[ydTrainNam]["nextLoc"]
@@ -227,7 +228,7 @@ class locProc():
                 eastXPlot = gui.guiDict[loc]["x1"]
                 westXPlot = gui.guiDict[loc]["x0"] - trainInit.trnLength
                 eastYPlot = gui.guiDict[leftObj]["y0"] - gui.guiDict["locDims"]["height"]*0.25
-
+                """
                 if trainStem["direction"] == "west": 
                     trainStem["coord"]["xPlot"] -= trainInit.trnLength
                     westXPlotTransform = trainStem["coord"]["xPlot"]
@@ -239,9 +240,9 @@ class locProc():
                         trainStem["coord"]["xPlot"])
                     print("eastYPlot no transform: ", eastYPlot, ", with transform: ", 
                         trainStem["coord"]["yPlot"])
-
+                """
                 #print("trainStem: ", trainStem, ", original dict: ", trainDB.trains[ydTrainNam])
-                self.rmTrnFrmLoc(loc, ydTrainNam)
+                locBaseObj.rmTrnFrmLoc(loc, ydTrainNam)
                 dispObj.drawTrain(ydTrainNam)
             case "none":
                 trainStem["status"] = "stop"

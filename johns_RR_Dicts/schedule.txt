@@ -2,6 +2,7 @@
 "train6": {
     "origLoc":"pgh",
     "currentLoc":"pgh",
+    "finalLoc": "NStaging",
     "status":"init",
     "startTime": 8,
     "stops": {
@@ -13,6 +14,7 @@
 "train7": {
     "origLoc":"Kiski",
     "currentLoc":"Kiski",
+    "finalLoc": "NStaging",
     "status":"init",
     "startTime": 2,
     "stops": {
@@ -23,10 +25,11 @@
 "train8": {
     "origLoc":"OilCity", 
     "currentLoc":"OilCity", 
+    "finalLoc": "ErieRRStaging",
     "status":"init",
     "startTime": 0,
     "stops": {
-    "OilCity": {"action": "terminate"}
+    "ErieRRStaging": {"action": "terminate"}
             }
     }
 }

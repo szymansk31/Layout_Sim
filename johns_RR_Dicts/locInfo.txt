@@ -97,8 +97,8 @@
         "gons": 1, "flats": 3},
         "NStaging"    :{"box": 0, "tank": 1, "rfr": 2, "hop": 0, 
         "gons": 1, "flats": 1},
-        "ErieRRStaging"   :{"box": 0, "tank": 0, "rfr": 0, "hop": 0, 
-        "gons": 0, "flats": 0},
+        "ErieRRStaging"   :{"box": 2, "tank": 3, "rfr": 0, "hop": 2, 
+        "gons": 1, "flats": 0},
         "industries"   :{"box": 0, "tank": 0, "rfr": 0, "hop": 0, 
         "gons": 0, "flats": 0}
     },

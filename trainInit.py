@@ -1,8 +1,6 @@
 
-from mainVars import mVars
 from fileProc import readFiles
 from display import dispItems
-from locProc import locProc, locBase
 from coords import transForms
 from stateVars import locs, dspCh, trainDB, routeCls
 
@@ -73,81 +71,48 @@ class trainInit():
         trainDB.numConsists +=1
         return newConsistNam
     
-    def initNewTrain(self, loc, newTrainNam):
-        conName = self.newTrain(newTrainNam)
-        
-        #nextLoc, numstops, stops = self.setStops(loc, maxCarTrk)
-        stops = trainDB.trains[newTrainNam]["stops"]
-        numStops = 0
-        for stopLoc in stops:
-            numStops += 1 
-        nextLoc = next(iter(stops))
-        print("train: ", newTrainNam, ", stops: ", stops)
-        trainDB.trains[newTrainNam].update( {
-            "status": "building",
-            "origLoc": loc,
-            "nextLoc": nextLoc,
-            "currentLoc": loc,
-            "finalLoc": stopLoc,
-            "numStops": numStops,
-            "departStop": loc,
-            "stops": stops,
-            "color": trainInit.colors()           
-                })
-        # consist gets stops that have cars to drop, not those where
-        # the train continues through.  Pickups are triggered by
-        # "dropPickup" status in that location and will add to consists
-        tmpDict = {}
-        for conStop in stops:
-            tmpDict.update({conStop: {"box": 0, "tank": 0,"rfr": 0, "hop": 0, 
-            "gons": 0, "flats": 0}})
-        trainDB.consists[conName].update({
-            "stops": tmpDict
-        })
-        
-        print("new train: ", newTrainNam, ": ", trainDB.trains[newTrainNam])
-        print("new consist: ", conName, ":", trainDB.consists[conName])
-        #trainDB.ydTrains["buildTrain"].append(newTrainNam)
-        return
 
     def fillTrnDicts(self, loc, trainNam):
         
-        numStops, stops, lastStop = self.calcStops(trainNam)
-        nextLoc = next(iter(stops))
+        finalLoc = trainDB.trains[trainNam]["finalLoc"]
+        numStops, stops, nextLoc = self.calcStops(loc, finalLoc, trainNam)
         print("train: ", trainNam, ", stops: ", stops)
-        currentLoc = loc if loc != "unknown" else loc
+        conNam = self.calcConsist(stops, trainNam)
+        numCars = self.numCars(trainNam)
+        self.addTags(trainNam)
         trainDB.trains[trainNam].update( {
-            "status": "building",
-         #sched files need to have these two locs set right
+            "trainNum": trainNam[5:],
+            "consistNum": conNam[7:],
+            "numCars": numCars,
+        #    "status": "building",
+         #sched files need to have these three locs set right
         #    "origLoc": origLoc,  
         #    "currentLoc": loc,
+        #    "finalLoc": lastStop,
             "departStop": loc,  # by def'n the loc
             "nextLoc": nextLoc,
-            "finalLoc": lastStop,
             "numStops": numStops,
             "stops": stops,
             "color": trainInit.colors()           
                 })
         
-        conNam = self.calcConsist(stops, trainNam)
         print("new train: ", trainNam, ": ", trainDB.trains[trainNam])
         print("new consist: ", conNam, ":", trainDB.consists[conNam])
         trainDB.numTrains +=1
 
         return
 
-    def calcStops(self, trainNam):
-        #stops are given in sched files
+    def calcStops(self, loc, finalLoc, trainNam):
+        #stops defined in sched files, but may be blank
         stops = trainDB.trains[trainNam]["stops"]
         numStops = 0
         if stops != None:
             for stopLoc in stops:
                 numStops += 1 
-
-            return numStops, stops, stopLoc   
+            nextLoc = next(iter(stops))
         else:
-            numStops, stops = self.setStops(loc, dest)  
-        #calculate stops   
+            numStops, stops, nextLoc = self.findStops(loc, finalLoc)  
+        return numStops, stops, nextLoc   
 
     def calcConsist(self, stops, trainNam):
         # consist gets stops that have cars to drop, not those where
@@ -164,7 +129,7 @@ class trainInit():
                 pass
             else:
                 # consist can be calculated from stops
-                # provided in sched file
+                # provided in sched file and updated in trainDB.consists
                 tmpDict = {}
                 for consistStop in stops:
                     tmpDict.update({consistStop: {"box": 0, "tank": 0,"rfr": 0, "hop": 0, 
@@ -173,6 +138,7 @@ class trainInit():
                     "stops": tmpDict
                 })
             trainDB.numConsists +=1
+            trainDB.trains[trainNam]["consistNum"] = newConsistNum
         else:
             consistNum = trainDB.trains[trainNam]["consistNum"]
             conNam = "consist"+str(consistNum)
@@ -200,7 +166,7 @@ class trainInit():
         trainStem["trnNumTag"] = trainNam+"NumTag"
         trainStem["trnLabelTag"] = trainNam+"LabelTag"
 
-    def setStops(self, loc, dest):
+    def findStops(self, loc, dest):
         from gui import gui
         stops = {}
         testLoc = loc
@@ -210,7 +176,7 @@ class trainInit():
             if dest in locs.locDat[testLoc]["adjLocNames"].values():
                 stops.update({dest: {"action": "terminate"}})
                 numStops +=1
-                return nextLoc, numStops, stops
+                return numStops, stops, nextLoc
 
             if gui.guiDict[dest]["x0"] < gui.guiDict[loc]["x0"]:
                 tmpStop = locs.locDat[testLoc]["adjLocNames"]["W"]

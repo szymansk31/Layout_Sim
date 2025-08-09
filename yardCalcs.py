@@ -135,7 +135,7 @@ class ydCalcs():
         ydTrainNam = trainDB.ydTrains["buildTrain"][0]
         # yard has no train undergoing build
         if trainDB.trains[ydTrainNam]["status"] == "init":
-            trainInitObj.initNewTrain(loc, ydTrainNam)
+            #trainInitObj.fillTrnDicts(loc, ydTrainNam)
             trainDB.trains[ydTrainNam]["status"] = "building"
         else:
             # yard has a train already building; add cars to it

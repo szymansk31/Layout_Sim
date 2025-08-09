@@ -4,10 +4,8 @@ import tkinter as tk
 import sys
 from tkinter import ttk
 from stateVars import locs, trainDB, routeCls, stVarSaves
-from trainProc import trnProc
 from display import dispItems
 from outputMethods import printMethods
-trnProcObj = trnProc()
 displayObj = dispItems()
 stVarObj = stVarSaves()
 printObj = printMethods()
@@ -16,8 +14,10 @@ printObj = printMethods()
 class mainMethods():
     
     def __init__(self):
-        from locProc import locProc, locBase
+        from locProc import locProc
         self.locProcObj = locProc()
+        from trainProc import trnProc
+        self.trnProcObj = trnProc()
         pass
 
 #=================================================
@@ -44,7 +44,7 @@ class mainMethods():
             for train in trainDB.trains:
                 if mVars.time >= trainDB.trains[train]["startTime"]:
                     printObj.printTrainInfo(train)
-                    trnProcObj.trainCalcs(trainDB.trains[train], train)
+                    self.trnProcObj.trainCalcs(trainDB.trains[train], train)
             if count == maxCount:
                 print("routes: ", routeCls.routes)
                 count = 0

@@ -125,7 +125,7 @@ class trnProc:
                 self.updateTrain4Stop(stopLoc, trainDict)
 
         disp.drawTrain(trainNam)
-        locBase.addTrn2Loc_rt(stopLoc, trainNam)
+        locBase.addTrn2Loc_rt(stopLoc, trainDict, trainNam)
         try:
             index = routeStem["trains"].index(trainNam)
         except:

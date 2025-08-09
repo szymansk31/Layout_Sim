@@ -30,6 +30,7 @@ class schedProc():
                 (mVars.time >= dspCh.sched[trainNam]["startTime"]):
                 locBase.addTrn2Loc_rt(loc, dspCh.sched[trainNam], trainNam)
                 self.baseTrnDict(trainNam)
+                dspCh.sched.pop(trainNam)
                 trainInitObj.fillTrnDicts(loc, trainNam)
                 return
             pass
@@ -37,13 +38,14 @@ class schedProc():
     def baseTrnDict(self, trainNam):
         protoTrnDict = files.readFile("trainFile")
         #make sure train has all required keys, but no trainNam
-        protoTrnDict.pop("trnProtype")
+        tmpTrain = protoTrnDict.pop("trnProtype")
         #overwrite proto values with vals from schedule
-        protoTrnDict.update(dspCh.sched[trainNam])
+        tmpTrain.update(dspCh.sched[trainNam])
+        print("baseTrnDict: protoTrnDict: ", tmpTrain)
         #trainDB key=train gets currently known info 
         # (may not be complete depending on detail in sched file
         # and starting trains file)
-        trainDB.trains[trainNam] = protoTrnDict
+        trainDB.trains[trainNam] = tmpTrain
         
     
 #=================================================
