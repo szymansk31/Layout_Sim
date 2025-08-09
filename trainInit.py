@@ -115,7 +115,7 @@ class trainInit():
         numStops, stops, lastStop = self.calcStops(trainNam)
         nextLoc = next(iter(stops))
         print("train: ", trainNam, ", stops: ", stops)
-        currentLoc = loc if loc != "unknown" else 
+        currentLoc = loc if loc != "unknown" else loc
         trainDB.trains[trainNam].update( {
             "status": "building",
          #sched files need to have these two locs set right
@@ -144,7 +144,9 @@ class trainInit():
             for stopLoc in stops:
                 numStops += 1 
 
-            return numStops, stops, stopLoc     
+            return numStops, stops, stopLoc   
+        else:
+            numStops, stops = self.setStops(loc, dest)  
         #calculate stops   
 
     def calcConsist(self, stops, trainNam):
@@ -198,3 +200,27 @@ class trainInit():
         trainStem["trnNumTag"] = trainNam+"NumTag"
         trainStem["trnLabelTag"] = trainNam+"LabelTag"
 
+    def setStops(self, loc, dest):
+        from gui import gui
+        stops = {}
+        testLoc = loc
+        nextLoc = dest
+        numStops = 0
+        while 1:
+            if dest in locs.locDat[testLoc]["adjLocNames"].values():
+                stops.update({dest: {"action": "terminate"}})
+                numStops +=1
+                return nextLoc, numStops, stops
+
+            if gui.guiDict[dest]["x0"] < gui.guiDict[loc]["x0"]:
+                tmpStop = locs.locDat[testLoc]["adjLocNames"]["W"]
+                stops[tmpStop] = dict(action = "continue")
+                numStops +=1
+            else:
+                tmpStop = locs.locDat[testLoc]["adjLocNames"]["E"]
+                stops[tmpStop] = dict(action = "continue")
+                numStops +=1
+            if numStops == 1: nextLoc = tmpStop
+            testLoc = tmpStop    
+        
+        return

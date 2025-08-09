@@ -167,31 +167,6 @@ class ydCalcs():
             return trackList[maxCarTrk], maxCarTrk
         else: return 0,""
         
-    def setStops(self, loc, dest):
-        from gui import gui
-        stops = {}
-        testLoc = loc
-        nextLoc = dest
-        numStops = 0
-        while 1:
-            if dest in locs.locDat[testLoc]["adjLocNames"].values():
-                stops.update({dest: {"action": "terminate"}})
-                numStops +=1
-                return nextLoc, numStops, stops
-
-            if gui.guiDict[dest]["x0"] < gui.guiDict[loc]["x0"]:
-                tmpStop = locs.locDat[testLoc]["adjLocNames"]["W"]
-                stops[tmpStop] = dict(action = "continue")
-                numStops +=1
-            else:
-                tmpStop = locs.locDat[testLoc]["adjLocNames"]["E"]
-                stops[tmpStop] = dict(action = "continue")
-                numStops +=1
-            if numStops == 1: nextLoc = tmpStop
-            testLoc = tmpStop    
-        
-        return
-                            
             
     def swTrain(self, loc):
         # remove cars from train and save on tracks
