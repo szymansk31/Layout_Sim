@@ -4,7 +4,7 @@ import tkinter as tk
 import sys
 from tkinter import ttk
 from stateVars import locs, trainDB, routeCls, stVarSaves
-from trainProc import trainInit, trnProc
+from trainProc import trnProc
 from display import dispItems
 from outputMethods import printMethods
 trnProcObj = trnProc()

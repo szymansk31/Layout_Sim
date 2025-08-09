@@ -1,10 +1,14 @@
 import random
 import numpy as np
 from mainVars import mVars
-from trainInit import trainInit
 from stateVars import locs, dspCh, trainDB, routeCls
+from display import dispItems
+from yardCalcs import ydCalcs
+from swCalcs import swCalcs
+from stagCalcs import stCalcs
+from gui import gui
 from fileProc import readFiles
-files = readFiles()
+
 np.set_printoptions(precision=2, suppress=True) 
 
 
@@ -18,33 +22,38 @@ class schedProc():
     
     def initSchedule(self):
         # include starting trains
+        for train in trainDB.strtTrns:
+            dspCh.sched[train] = \
+                    {
+                "startTime":
+                trainDB.trains[train]["startTime"],
+                "status":
+                trainDB.trains[train]["status"],
+                "finalLoc": 
+                trainDB.trains[train]["finalLoc"],
+                "origLoc": 
+                trainDB.trains[train]["origLoc"],
+                "currentLoc": 
+                trainDB.trains[train]["currentLoc"],
+                "nextLoc": 
+                trainDB.trains[train]["nextLoc"],
+                "stops":
+                trainDB.trains[train]["stops"]
+                    }
 
+        files = readFiles()
         dspCh.sched.update(files.readFile("scheduleFile"))
         print("\ninitSchedule: starting trains: ", dspCh.sched)
 
     def fetchLocSchedItem(self, loc):
         from locProc import locBase
-        trainInitObj = trainInit()
-        for trainNam in dspCh.sched:
-            if (loc == dspCh.sched[trainNam]["origLoc"]) and \
-                (mVars.time >= dspCh.sched[trainNam]["startTime"]):
-                locBase.addTrn2Loc_rt(loc, dspCh.sched[trainNam], trainNam)
-                self.baseTrnDict(trainNam)
-                trainInitObj.fillTrnDicts(loc, trainNam)
+        for train in dspCh.sched:
+            if (loc == dspCh.sched[train]["origLoc"]) and \
+                (mVars.time >= dspCh.sched[train]["startTime"]):
+                locBase.addTrn2Loc_rt(loc, dspCh.sched[train], train)
+                trainDB.trains[train] = dspCh.sched[train]
                 return
             pass
-        
-    def baseTrnDict(self, trainNam):
-        protoTrnDict = files.readFile("trainFile")
-        #make sure train has all required keys, but no trainNam
-        protoTrnDict.pop("trnProtype")
-        #overwrite proto values with vals from schedule
-        protoTrnDict.update(dspCh.sched[trainNam])
-        #trainDB key=train gets currently known info 
-        # (may not be complete depending on detail in sched file
-        # and starting trains file)
-        trainDB.trains[trainNam] = protoTrnDict
-        
     
 #=================================================
 class dspchProc():

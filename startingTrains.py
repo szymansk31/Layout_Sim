@@ -2,7 +2,7 @@
 from fileProc import readFiles
 from stateVars import trainDB, locs, routeCls
 from mainVars import mVars
-from trainProc import trainInit
+from trainInit import trainInit
 from display import dispItems
 from gui import gui
 from coords import transForms
@@ -21,7 +21,7 @@ class trainFromFile():
         self.conName = next(iter(consist))
         
     def readTrain(self):
-        trainProcObj = trainInit()
+        trainInitObj = trainInit()
         coordObj = transForms()
         locProcObj = locProc()
         trainDict = files.readFile("startingTrainFile")
@@ -52,7 +52,7 @@ class trainFromFile():
             print("newTain dict in startingTrains: ", newTrain)
             print("with consist: ", consistNam, ", contents: ", self.consist[consistNam])
             trainDB.trains.update(newTrain)
-            trainDB.trains[train]["numCars"] = trainProcObj.numCars(train)
+            trainDB.trains[train]["numCars"] = trainInitObj.numCars(train)
 
             if "route" in currLoc:
                 routeCls.routes[currLoc]["trains"].append(train)
@@ -60,7 +60,7 @@ class trainFromFile():
                 coordObj.xRoute2xPlot(currLoc, train)
                 #trainDB.trains[train]["coord"]["yPlot"] -= gui.guiDict["locDims"]["height"]*0.25
             else: 
-                locBase.addTrn2Loc(currLoc, train)
+                locBase.addTrn2Loc_rt(currLoc, train)
             print("starting train: ", trainDB.trains[train])
             dispObj = dispItems()
             dispObj.drawTrain(train)

@@ -81,8 +81,11 @@ class locBase():
         locs.locDat[loc]["trains"].pop(index)
 
     def addTrn2Loc_rt(loc, trainStem, trainNam): 
+        coordObj = transForms()
         if "route" in trainStem["currentLoc"]:
             routeCls.routes[trainStem["currentLoc"]]["trains"].append(trainNam)
+            # fill trainDB with xPlot and yPlot, the canvas/screen coords
+            coordObj.xRoute2xPlot(loc, trainNam)
             return
         else:
             locs.locDat[loc]["trains"].append(trainNam)
@@ -190,7 +193,7 @@ class locProc():
 
     def startTrain(self, loc, ydTrainNam):
         # setup train
-        from trainProc import trainInit
+        from trainInit import trainInit
         dispObj = dispItems()
         coordObj = transForms()
 

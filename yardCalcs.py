@@ -130,7 +130,7 @@ class ydCalcs():
 
         
     def buildTrain(self, loc):   
-        from trainProc import trainInit
+        from trainInit import trainInit
         trainInitObj = trainInit() 
         ydTrainNam = trainDB.ydTrains["buildTrain"][0]
         # yard has no train undergoing build
