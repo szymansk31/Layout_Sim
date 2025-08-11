@@ -174,8 +174,8 @@ class ydCalcs():
         # until all cars removed for this stop 
         
         # find out what train is being switched or add new one
-        locStem = locs.locDat[loc]["trn4Action"]
-        found = [d for d in locStem if "swTrain" in d]
+        #locStem = locs.locDat[loc]["trn4Action"]
+        #found = [d for d in locStem if "swTrain" in d]
         
         """
         if trainDB.ydTrains["swTrain"] == "":
@@ -195,25 +195,23 @@ class ydCalcs():
         if ydCalcs.ready2Pickup == 0:
             availCars = self.classObj.train2Track(loc, ydTrainNam)
             if availCars == 0:
-                trainStem = trainDB.trains[ydTrainNam]
-                trainStem["stops"].pop(loc)
-                consistNum = trainStem["consistNum"]
-                consistNam = "consist"+str(consistNum)
-                trainDB.consists[consistNam]["stops"].pop(loc)
-                if mVars.prms["dbgYdProc"]: print("swTrain: train:", ydTrainNam, 
-                    " trainDict: ", trainStem)
+                consistNam = trainDB.getConNam(ydTrainNam)
+                if mVars.prms["dbgYdProc"]: print("swTrain: finished spotting \
+                    cars for train:", ydTrainNam, " remaing cars: ", 
+                    trainDB.consists[consistNam])
                 ydCalcs.ready2Pickup = 1
         # add cars to train until train is max size
         else:
             availCars, trainDest = self.classObj.track2Train(loc, "", ydTrainNam)
-            if trainDB.trains[ydTrainNam]["numCars"] >= mVars.prms["trainSize"]*1.2:
+            if trainDB.trains[ydTrainNam]["numCars"] >= mVars.prms["trainSize"]*0.7:
                 # train has reached max size
                 # train no longer has pickups or drops
                 # start train to nextLoc, if there are more stops and
                 # remove train name from locs.locData
+                ydCalcs.ready2Pickup = 0
                 locs.locDat[loc]["trnCnts"]["switched"] += 1
-
-                self.locBaseObj.rmTrnFrmActions("swTrain", loc, ydTrainNam)
+                
+                self.locBaseObj.cleanupSwAction(loc, ydTrainNam, "swTrain")
                 self.locProcObj.startTrain(loc, ydTrainNam)
         
         pass

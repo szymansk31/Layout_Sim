@@ -91,6 +91,25 @@ class locBase():
             locs.locDat[loc]["trains"].append(trainNam)
             return
 
+    def cleanupSwAction(self, loc, ydTrainNam, action):
+        dispObj = dispItems()
+        locActionStem = locs.locDat[loc]["trn4Action"]            
+        index = [i for i, d in enumerate(locActionStem)\
+            if action in d]
+        if index:
+            locActionStem.pop(index[0])
+        trainStem = trainDB.trains[ydTrainNam]
+        # remove stop from train
+        trainStem["stops"].pop(loc)
+        # remove stop from consist
+        consistNam = trainDB.getConNam(ydTrainNam)
+        trainDB.consists[consistNam]["stops"].pop(loc)
+        # remove from ydTrains action list
+        self.rmTrnFrmActions(action, loc, ydTrainNam)
+
+        # clear action data from display
+        dispObj.clearActionDat(loc)
+
     
 #=================================================
 class locProc():

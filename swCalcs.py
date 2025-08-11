@@ -107,7 +107,7 @@ class swCalcs():
             #if availCars == 0:
                 # train no longer has cars
                 # remove train name from trainDB.ydTrains and locs.locData
-                self.cleanup(loc, train, "dropPickup")
+                self.locBaseObj.cleanupSwAction(loc, train, "dropPickup")
                 self.locProcObj.startTrain(loc, train)
 
 
@@ -137,7 +137,7 @@ class swCalcs():
                 locActionStem.append({"industry": industry})
             except:
                 print("all industries have been switched")
-                self.cleanup(loc, ydTrainNam, "rdCrwSw")
+                self.locBaseObj.cleanupSwAction(loc, ydTrainNam, "rdCrwSw")
                 self.locProcObj.startTrain(loc, ydTrainNam)
                 return
 
@@ -182,21 +182,3 @@ class swCalcs():
                     " trainDict: ", trainDB.trains[ydTrainNam],
                     ", locAction: ", locActionStem)
         
-    def cleanup(self, loc, ydTrainNam, action):
-        locActionStem = locs.locDat[loc]["trn4Action"]            
-        index = [i for i, d in enumerate(locActionStem)\
-            if action in d]
-        if index:
-            locActionStem.pop(index[0])
-        trainStem = trainDB.trains[ydTrainNam]
-        # remove stop from train
-        trainStem["stops"].pop(loc)
-        # remove stop from consist
-        consistNam = trainDB.getConNam(ydTrainNam)
-        trainDB.consists[consistNam]["stops"].pop(loc)
-        # remove from ydTrains action list
-        self.locBaseObj.rmTrnFrmActions(action, loc, ydTrainNam)
-
-        # clear action data from display
-        self.dispObj.clearActionDat(loc)
-
