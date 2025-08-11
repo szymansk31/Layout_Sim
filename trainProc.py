@@ -14,7 +14,7 @@ class trnProc:
         pass
     
     def trainCalcs(self, trainDict, trainNam):
-        disp = dispItems()
+        dispObj = dispItems()
         coordObj = transForms()
 
         match trainDict["status"]:
@@ -38,7 +38,7 @@ class trnProc:
                 if mVars.prms["dbgTrnProc"]: self.printTrnEnRoute(trainDict, routeNam, transTime, variance, deltaX)
                 
                 coordObj.xRoute2xPlot(routeNam, trainNam)
-                disp.drawTrain(trainNam)
+                dispObj.drawTrain(trainNam)
                 match trainDict["direction"]:
                     case "east":
                         if trainDict["coord"]["xPlot"] >= routeCls.routes[routeNam]["x1"]:
@@ -51,7 +51,7 @@ class trnProc:
             case "ready2Leave":
                 print("train: ", trainNam, " switching to enroute status")
                 trainDict["status"] = "enroute"
-                disp.drawTrain(trainNam)
+                dispObj.drawTrain(trainNam)
                 #loc = trainDB.trains[trainNam]["departStop"]
                 #if loc != "":
                 #    locBaseObj.rmTrnFrmLoc(loc, trainNam)
@@ -81,7 +81,7 @@ class trnProc:
 
             
     def procTrnStop(self, trainDict, trainNam):
-        disp = dispItems()
+        dispObj = dispItems()
         locBaseObj = locBase()
         routeNam = trainDict["currentLoc"]
         routeStem = routeCls.routes[routeNam]
@@ -101,6 +101,7 @@ class trnProc:
             case "terminate":
                 trainDict["status"] = "terminate"
                 trainDict["timeEnRoute"] = 0
+                dispObj.clearRouteTrnRecs(trainNam)
                 pass
             case "rdCrwSw": 
                 from swCalcs import swCalcs
@@ -124,7 +125,7 @@ class trnProc:
                 trainDict["timeEnRoute"] = 0
                 self.updateTrain4Stop(stopLoc, trainDict)
 
-        disp.drawTrain(trainNam)
+        dispObj.drawTrain(trainNam)
         locBase.addTrn2Loc_rt(stopLoc, trainDict, trainNam)
         try:
             index = routeStem["trains"].index(trainNam)

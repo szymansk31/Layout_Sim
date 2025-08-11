@@ -143,14 +143,15 @@ class ydCalcs():
             # dummy input is "indus" 
             availCars, trainDest = self.classObj.track2Train(loc, "", ydTrainNam)
             trainStem = trainDB.trains[ydTrainNam]
-            self.dispObj.dispActionDat(loc, "buildTrain", ydTrainNam)
 
             if trainStem["numCars"] >= mVars.prms["trainSize"]*0.7:
                 # train has reached max size
                 trainStem["status"] = "built"
                 locs.locDat[loc]["trnCnts"]["built"] += 1
+                self.locBaseObj.rmTrnFrmActions("buildTrain", loc, ydTrainNam)
 
                 #self.locProcObj.startTrain("buildTrain", loc, ydTrainNam)
+            self.dispObj.dispActionDat(loc, "buildTrain", ydTrainNam)
 
     def ready2Build(self, loc):
         import copy
@@ -175,16 +176,20 @@ class ydCalcs():
         # find out what train is being switched or add new one
         locStem = locs.locDat[loc]["trn4Action"]
         found = [d for d in locStem if "swTrain" in d]
-        if not found:
+        
+        """
+        if trainDB.ydTrains["swTrain"] == "":
             # no trains are undergoing swTrain
             ydTrainNam = random.choice(trainDB.ydTrains.get("swTrain"))
             locStem.append({"swTrain": ydTrainNam})
         else:
             entry = next(iter(locStem))
             ydTrainNam = entry["swTrain"]
-            
-        print("ydtrainNam: ", ydTrainNam, "ready2Pickup: ", ydCalcs.ready2Pickup,
-              "trn4Action: ", locs.locDat[loc]["trn4Action"])
+        """    
+        # take first train under swTrain action; this will
+        # continue to be switched until completed
+        ydTrainNam = trainDB.ydTrains["swTrain"][0]
+        print("ydtrainNam: ", ydTrainNam, "ready2Pickup: ", ydCalcs.ready2Pickup)
         self.dispObj.dispActionDat(loc, "swTrain", ydTrainNam)
 
         if ydCalcs.ready2Pickup == 0:
@@ -207,9 +212,7 @@ class ydCalcs():
                 # start train to nextLoc, if there are more stops and
                 # remove train name from locs.locData
                 locs.locDat[loc]["trnCnts"]["switched"] += 1
-                locs.locDat[loc]["trn4Action"] = [d for d in locStem if "swTrain" not in d]
-                if mVars.prms["dbgYdProc"]: print("trn4Action:", 
-                        locs.locDat[loc]["trn4Action"])
+
                 self.locBaseObj.rmTrnFrmActions("swTrain", loc, ydTrainNam)
                 self.locProcObj.startTrain(loc, ydTrainNam)
         

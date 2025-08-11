@@ -136,7 +136,8 @@ class locProc():
             
     def analyzeTrains(self, loc):
         trainDB.ydTrains = {"brkDnTrn": [], "buildTrain": [], "swTrain": [], "rdCrwSw": [], "continue": []}
-
+        from display import dispItems
+        dispItemsObj = dispItems()
         # train status leads to actions by the yard crew or
         # the train crew.  Train actions are the same name as
         # the corresponding train status string
@@ -168,11 +169,12 @@ class locProc():
                     locs.locDat[loc]["trnCnts"]["passThru"] += 1
                     self.startTrain(loc, trainNam)
                 case "built":
-                    startTime = locs.locDat[loc]["bldTrnDepTimes"][0]
+                    startTime = trainDB.trains[trainNam]["startTime"]
                     if mVars.time >= startTime:
                         locs.locDat[loc]["trnCnts"]["started"] += 1
                         locs.locDat[loc]["bldTrnDepTimes"].pop(0)
                         nextLoc = trainDB.trains[trainNam]["nextLoc"]
+                        #dispItemsObj.clearTrnRecs(trainNam)
                         print(trainNam, ": with start time ", startTime,
                               " in loc: ", loc, 
                               " built and leaving for (nextLoc): ", 
@@ -243,6 +245,7 @@ class locProc():
                 """
                 #print("trainStem: ", trainStem, ", original dict: ", trainDB.trains[ydTrainNam])
                 locBaseObj.rmTrnFrmLoc(loc, ydTrainNam)
+                dispObj.clearActionTrnRecs(loc, ydTrainNam)
                 dispObj.drawTrain(ydTrainNam)
             case "none":
                 trainStem["status"] = "stop"
