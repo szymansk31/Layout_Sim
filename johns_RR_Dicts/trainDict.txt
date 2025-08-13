@@ -9,6 +9,7 @@
 "currentLoc": "unkown",
 "nextLoc": "unkown",
 "direction": "",
+"locArrTime": 0,
 "startTime": 0, 
 "coord": {
     "xTrnInit": 0,

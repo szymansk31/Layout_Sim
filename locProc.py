@@ -9,6 +9,9 @@ from swCalcs import swCalcs
 from stagCalcs import stCalcs
 from gui import gui
 from coords import transForms
+from dispatch import rtCaps
+        
+
 np.set_printoptions(precision=2, suppress=True) 
 
 
@@ -81,9 +84,13 @@ class locBase():
         locs.locDat[loc]["trains"].pop(index)
 
     def addTrn2Loc_rt(loc, trainStem, trainNam): 
+        rtCapsObj = rtCaps()
         coordObj = transForms()
-        if "route" in trainStem["currentLoc"]:
-            routeCls.routes[trainStem["currentLoc"]]["trains"].append(trainNam)
+        currentLoc = trainStem["currentLoc"]
+        if "route" in currentLoc:
+            routeStem = routeCls.routes[currentLoc] 
+            #routeCls.routes[trainStem["currentLoc"]]["trains"].append(trainNam)
+            rtCapsObj.fillTrnsOnRoute(currentLoc, trainNam)
             # fill trainDB with xPlot and yPlot, the canvas/screen coords
             coordObj.xRoute2xPlot(loc, trainNam)
             return
@@ -98,12 +105,15 @@ class locBase():
             if action in d]
         if index:
             locActionStem.pop(index[0])
-        trainStem = trainDB.trains[ydTrainNam]
-        # remove stop from train
-        trainStem["stops"].pop(loc)
-        # remove stop from consist
-        consistNam = trainDB.getConNam(ydTrainNam)
-        trainDB.consists[consistNam]["stops"].pop(loc)
+        try:
+            trainStem = trainDB.trains[ydTrainNam]
+            # remove stop from train
+            trainStem["stops"].pop(loc)
+            # remove stop from consist
+            consistNam = trainDB.getConNam(ydTrainNam)
+            trainDB.consists[consistNam]["stops"].pop(loc)
+        except:
+            pass
         # remove from ydTrains action list
         self.rmTrnFrmActions(action, loc, ydTrainNam)
 
@@ -129,12 +139,14 @@ class locProc():
         ydCalcObj = ydCalcs()
         swAreaObj = swCalcs()
         stagCalcObj = stCalcs()
+        rtCapsObj = rtCaps()
 
         if mVars.prms["dbgYdProc"]: 
             print("\nentering locCalcs: location: ", loc, ", locDat: ", locs.locDat[loc])
 
         locBaseObj.countCars(loc)
-
+        rtCapsObj.updateRtSlots()
+        print("rtCaps.rtCap: ", rtCaps.rtCap)
         schedProcObj.fetchLocSchedItem(loc)
         match locStem[loc]["type"]:
             case "yard":
@@ -218,6 +230,7 @@ class locProc():
         dispObj = dispItems()
         coordObj = transForms()
         locBaseObj = locBase()
+        rtCapsObj = rtCaps()
 
         trainStem = trainDB.trains[ydTrainNam]
         dest = trainDB.trains[ydTrainNam]["nextLoc"]
@@ -229,7 +242,7 @@ class locProc():
 
                 leftObj = routeCls.routes[route4newTrn]["leftObj"].strip()
                 rtObj = routeCls.routes[route4newTrn]["rtObj"].strip()
-                routeCls.routes[route4newTrn]["trains"].append(ydTrainNam)
+                #routeCls.routes[route4newTrn]["trains"].append(ydTrainNam)
                 if loc == leftObj: 
                     trainStem["direction"] = "east"
                 elif loc == rtObj:
@@ -239,6 +252,7 @@ class locProc():
                             , rtObj,"loc: ", loc, "direction: ", trainStem["direction"])
                     trainStem["status"] = "stop"
                     
+                rtCapsObj.fillTrnsOnRoute(route4newTrn, ydTrainNam)
                 trainStem["firstDispTrn"] = 1
                 trainStem["currentLoc"] = route4newTrn
                 

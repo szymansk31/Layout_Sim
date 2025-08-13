@@ -37,6 +37,7 @@
 	},
     "bldTrnDepTimes": [5, 10, 25, 30],
     "trn4Action":[],
+    "ready2Pickup": 0,
     "classRate": 2,
     "routes": []
 },
@@ -51,7 +52,7 @@
         "gons": 1, "flats": 1},
         "OilCity"    :{"box": 3, "tank": 2, "rfr": 5, "hop": 5, 
         "gons": 1, "flats": 3},
-        "NStaging"    :{"box": 0, "tank": 1, "rfr": 2, "hop": 0, 
+        "NStaging"    :{"box": 6, "tank": 1, "rfr": 2, "hop": 2, 
         "gons": 1, "flats": 1},
         "industries"   :{"box": 0, "tank": 0, "rfr": 0, "hop": 0, 
         "gons": 0, "flats": 0}
@@ -80,6 +81,7 @@
 	},
     "bldTrnDepTimes": [5, 10, 25, 30],
     "trn4Action":[],
+    "ready2Pickup": 0,
     "classRate": 2,
     "routes": []
 },
@@ -126,6 +128,7 @@
 	},
     "bldTrnDepTimes": [5, 10, 25, 30],
     "trn4Action":[],
+    "ready2Pickup": 0,
     "classRate": 2,
     "routes": []
 },
@@ -160,6 +163,7 @@
 	},
     "bldTrnDepTimes": [],
     "trn4Action":[],
+    "ready2Pickup": 0,
     "classRate": 2,
     "routes": []
 },
@@ -194,6 +198,7 @@
 	},
     "bldTrnDepTimes": [1, 5],
     "trn4Action":[],
+    "ready2Pickup": 0,
     "classRate": 2,
     "routes": []
 }

@@ -7,6 +7,7 @@ from display import dispItems
 from gui import gui
 from coords import transForms
 from locProc import locProc, locBase
+from dispatch import rtCaps
 
 files = readFiles()
 
@@ -24,6 +25,7 @@ class trainFromFile():
         trainInitObj = trainInit()
         coordObj = transForms()
         locProcObj = locProc()
+        rtCapsObj = rtCaps()
         trainDict = files.readFile("startingTrainFile")
         self.consistFromFile(files, "startingConsistFile")
         trainDB.consists.update(self.consist)
@@ -55,7 +57,8 @@ class trainFromFile():
             trainDB.trains[train]["numCars"] = trainInitObj.numCars(train)
 
             if "route" in currLoc:
-                routeCls.routes[currLoc]["trains"].append(train)
+                #routeCls.routes[currLoc]["trains"].append(train)
+                rtCapsObj.fillTrnsOnRoute(currLoc, train)
                 # fill trainDB with xPlot and yPlot, the canvas/screen coords
                 coordObj.xRoute2xPlot(currLoc, train)
                 #trainDB.trains[train]["coord"]["yPlot"] -= gui.guiDict["locDims"]["height"]*0.25

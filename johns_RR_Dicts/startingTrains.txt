@@ -9,6 +9,8 @@
 "currentLoc": "route1",
 "nextLoc": "Kiski",
 "direction": "east",
+"locArrTime": 0,
+"lastDepTime": 0,
 "startTime": 3, 
 "coord": {
     "xTrnInit": 0.5,
@@ -43,6 +45,8 @@
 "currentLoc": "route2",
 "nextLoc": "OilCity",
 "direction": "east",
+"locArrTime": 0,
+"lastDepTime": 0,
 "startTime": 2, 
 "coord": {
     "xTrnInit": 0.2,
@@ -76,6 +80,8 @@
 "currentLoc": "route4",
 "nextLoc": "OilCity",
 "direction": "east",
+"locArrTime": 0,
+"lastDepTime": 0,
 "startTime": 0, 
 "coord": {
     "xTrnInit": 0,
@@ -108,6 +114,8 @@
 "currentLoc": "route1",
 "nextLoc": "Kiski",
 "direction": "east",
+"locArrTime": 0,
+"lastDepTime": 0,
 "startTime": 5, 
 "coord": {
     "xTrnInit": 0,

@@ -9,7 +9,6 @@ np.set_printoptions(precision=2, suppress=True)
 dbgLocal = 1          
 class ydCalcs():
     startMisc = 0
-    ready2Pickup = 0
 
     def __init__(self):
         self.actionList = ["brkDnTrn", "buildTrain", "swTrain", "servIndus", "misc"]
@@ -189,26 +188,34 @@ class ydCalcs():
         # take first train under swTrain action; this will
         # continue to be switched until completed
         ydTrainNam = trainDB.ydTrains["swTrain"][0]
-        print("ydtrainNam: ", ydTrainNam, "ready2Pickup: ", ydCalcs.ready2Pickup)
+        locs.locDat[loc]["ready2Pickup"] = locs.locDat[loc]["ready2Pickup"]
+        print("ydtrainNam: ", ydTrainNam, "ready2Pickup: ", locs.locDat[loc]["ready2Pickup"])
         self.dispObj.dispActionDat(loc, "swTrain", ydTrainNam)
 
-        if ydCalcs.ready2Pickup == 0:
+        if locs.locDat[loc]["ready2Pickup"] == 0:
             availCars = self.classObj.train2Track(loc, ydTrainNam)
             if availCars == 0:
+                # remove stop from train
+                trainDB.trains[ydTrainNam]["stops"].pop(loc)
+                # remove stop from consist
                 consistNam = trainDB.getConNam(ydTrainNam)
+                trainDB.consists[consistNam]["stops"].pop(loc)
                 if mVars.prms["dbgYdProc"]: print("swTrain: finished spotting \
                     cars for train:", ydTrainNam, " remaing cars: ", 
                     trainDB.consists[consistNam])
-                ydCalcs.ready2Pickup = 1
+                locs.locDat[loc]["ready2Pickup"] = 1
         # add cars to train until train is max size
         else:
             availCars, trainDest = self.classObj.track2Train(loc, "", ydTrainNam)
-            if trainDB.trains[ydTrainNam]["numCars"] >= mVars.prms["trainSize"]*0.7:
-                # train has reached max size
+            numCars = trainDB.trains[ydTrainNam]["numCars"]
+            locArrTime = trainDB.trains[ydTrainNam]["locArrTime"]
+            if (numCars >= mVars.prms["trainSize"]*1.2) or\
+                ((mVars.time - locArrTime) >= mVars.prms["mxTrnDwlTim"]):
+                # train has reached max size or max dwell time
                 # train no longer has pickups or drops
                 # start train to nextLoc, if there are more stops and
                 # remove train name from locs.locData
-                ydCalcs.ready2Pickup = 0
+                locs.locDat[loc]["ready2Pickup"] = 0
                 locs.locDat[loc]["trnCnts"]["switched"] += 1
                 
                 self.locBaseObj.cleanupSwAction(loc, ydTrainNam, "swTrain")

@@ -9,7 +9,7 @@ class fileNames:
             "paramFile": "paramDict.txt",
             "guiFile": mVars.prms["dictDirect"] + "/guiInfo.txt",
             "layoutGeomFile": mVars.prms["dictDirect"] + "/layoutGeom.txt",
-            "dspchDatFile": mVars.prms["dictDirect"] + "/dispatchDat.txt",
+            "routeCapFile": mVars.prms["dictDirect"] + "/routeCap.txt",
             "scheduleFile": mVars.prms["dictDirect"] + "/schedule.txt",
             "locationFile": mVars.prms["dictDirect"] + "/locInfo.txt",
             "routeFile": mVars.prms["dictDirect"] + "/routeDict.txt",

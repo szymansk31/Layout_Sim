@@ -6,6 +6,7 @@ from display import dispItems
 from locProc import locProc, locBase
 from coords import transForms
 from stateVars import locs, dspCh, trainDB, routeCls
+from dispatch import rtCaps
 np.set_printoptions(precision=2, suppress=True) 
   
 class trnProc:    
@@ -83,12 +84,14 @@ class trnProc:
     def procTrnStop(self, trainDict, trainNam):
         dispObj = dispItems()
         locBaseObj = locBase()
+        rtCapsObj = rtCaps()
         routeNam = trainDict["currentLoc"]
         routeStem = routeCls.routes[routeNam]
         consistNum = trainDict["consistNum"]
         consistNam = "consist"+str(consistNum)
 
         stopLoc = trainDict["nextLoc"]
+        trainDict["locArrTime"] = mVars.time
         trainDict["currentLoc"] = stopLoc
         trainDict["departStop"] = stopLoc
         print("train: ", trainNam, "entering terminal: ", stopLoc, "trainDict: ", trainDict)
@@ -133,7 +136,8 @@ class trnProc:
             pass
         
         #remove train from that route
-        routeStem["trains"].pop(index)
+        rtCapsObj.remTrnsOnRoute(routeNam, trainNam)
+        #routeStem["trains"].pop(index)
         #gui.C.delete(routeStem["trnLabelTag"])
         mVars.numOpBusy -=1
 

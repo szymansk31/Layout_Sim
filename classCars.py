@@ -53,36 +53,60 @@ class classCars():
         if availCars > 0:
             carClassType = carProcObj.randomCar(carSel)
         return availCars, carClassType
+    
+    def selTracks(self, loc, trainNam):
+        stops = trainDB.trains[trainNam]["stops"]
+        conNam = trainDB.getConNam(trainNam)
+        nCarsStop = {}
+        for stop in stops:
+            if stop != loc:
+                nCarsDest = sum(trainDB.consists[conNam]["stops"][stop].values())
+                nCarsStop.update({stop: nCarsDest})
+        print("nCarsStop: ", nCarsStop)
+        #nCarsStop = [{stop, sum()}\
+        #    for stop in stops if stop != loc]
+        numCars = trainDB.trains[trainNam]["numCars"]
+        sumCars = sum(nCarsStop.values())
+        print("any size difference?: numCars vs sum(nCarStop)", numCars, sumCars)
+        nCarMax = mVars.prms["trainSize"]*1.2 - sumCars
+        #nCarsStop = [{stop, nCarMax-nCarsStop[stop]} for stop in nCarsStop]
+        destFewestCars = min(nCarsStop, key=nCarsStop.get)
+        if locs.locDat[loc]["destTrkTots"][destFewestCars] > 0:
+            return destFewestCars
+        return 
         
-    def track2Train(self, loc, indus, train):
+    def track2Train(self, loc, indus, trainNam):
         # initialize common params
-        self.ydTrainNam = train
-        self.initClassPrms(loc, train)
+        self.ydTrainNam = trainNam
+        self.initClassPrms(loc, trainNam)
         
-        trainDest = self.trainStem["finalLoc"]
-        trackNam = trainDest
+        #trainDest = self.trainStem["finalLoc"]
+        #trackNam = trainDest
+        trackNam = self.selTracks(loc, trainNam)
         if self.type == "swArea": trackNam = indus
         match self.type:
             case "yard":
-                if trainDest in self.locStem["tracks"]:
-                    thisTrack = self.locStem["tracks"][trainDest]
+                if trackNam != None:
+                    #thisTrack = self.locStem["tracks"][trainDest]
+                    thisTrack = self.locStem["tracks"][trackNam]
+                    #trainDest = trackNam
                     desTrkTots = self.locStem["destTrkTots"]
                 else:
                     availCars = 0
-                    return availCars, trainDest
+                    return availCars, trackNam
             case "swArea":
                 thisTrack = locs.locDat[loc]["industries"][indus]["pickups"]
                 desTrkTots = self.locStem["indusTots"]
-        print("track2Train: track ", trainDest)     
+        print("track2Train: track ", trackNam)     
         availCars, carClassType = self.selCar(thisTrack)
         if availCars <= 0: 
             print("no more cars available in yard")
-            return availCars, trainDest
+            return availCars, trackNam
         if mVars.prms["dbgYdProc"]:
             self.printClassInfo(self.track2Train.__name__, thisTrack,
-                trainDest)
+                trackNam)
         
-        #if self.locStem["destTrkTots"][trainDest] == 0: return
+        #if self.locStem["destTrkTots"][trackNam] == 0: return
         carsClassed = 0
         while ((carsClassed < self.rate) and (availCars > 0)):
             availCars, carClassType = self.selCar(thisTrack)
@@ -90,21 +114,21 @@ class classCars():
             if thisTrack[carClassType] >0:
                 thisTrack[carClassType] -=1
                 desTrkTots[trackNam] -=1
-                self.consistStem[trainDest][carClassType] +=1
+                self.consistStem[trackNam][carClassType] +=1
                 self.trainStem["numCars"] +=1
                 availCars -=1
             
         try:
-        #    trainDB.consists[self.consistNum]["stops"][loc] = self.consistStem[trainDest]
-        #    self.locStem["tracks"][trainDest] = thisTrack
+        #    trainDB.consists[self.consistNum]["stops"][loc] = self.consistStem[trackNam]
+        #    self.locStem["tracks"][trackNam] = thisTrack
             pass
         except:
             pass
         if mVars.prms["dbgYdProc"]: print("buildTrain: after build step, consist : ", 
-                self.consistStem[trainDest],
+                self.consistStem[trackNam],
                 "\ntrack contents: ", thisTrack)
         
-        return availCars, trainDest
+        return availCars, trackNam
 
     def randomTrack(self, weights):
         return ''.join(random.choices(self.thisLocDests, weights))

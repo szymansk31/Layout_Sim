@@ -132,7 +132,7 @@ class stVarSaves():
             statFile.write("===============================\n")
             statFile.write("time step: " + str(mVars.time))
             for loc in locs.locDat:
-                statFile.write("\n\n---------------------------")
+                statFile.write("\n---------------------------")
                 statFile.write("\ntime step: " + str(mVars.time))
                 statFile.write("\nLocation: " + loc)
                 statFile.write("\nDestination, #cars     \n")
@@ -158,7 +158,7 @@ class stVarSaves():
                     consistNum = trainDB.trains[train]["consistNum"]
                     consistNam = "consist"+str(consistNum)
                     stopStem = trainDB.consists[consistNam]["stops"]
-                    statFile.write("\n\n" + train + ":")
+                    statFile.write("\n" + train + " stops:")
                     trnStopStem = trainDB.trains[train]["stops"]
                     for stop in trnStopStem:
                         statFile.write("\n"+ stop \
@@ -167,9 +167,10 @@ class stVarSaves():
                         numCars = sum(stopStem[stop].values())
                         statFile.write("\n"+ stop +": #cars: "+\
                             str(numCars) + str(stopStem[stop]))
+                    statFile.write("\n")
 
             for route in routeCls.routes:
-                statFile.write("\n\n---------------------------\n")
+                statFile.write("\n---------------------------\n")
                 statFile.write("\ntime step: " + str(mVars.time))
                 statFile.write("\nroute: " + route)
                 statFile.write("\nTrain and consist:     ")
@@ -178,10 +179,10 @@ class stVarSaves():
                     consistNum = trainDB.trains[train]["consistNum"]
                     consistNam = "consist"+str(consistNum)
                     stopStem = trainDB.consists[consistNam]["stops"]
-                    statFile.write("\n" + train + ":")
+                    statFile.write("\n" + train + " stops:")
                     for stop in stopStem:
                         statFile.write("\n" + stop + ": " + str(stopStem[stop]))
-                        
+                    statFile.write("\n")
             statFile.flush()
 
         
