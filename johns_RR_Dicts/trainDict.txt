@@ -8,6 +8,7 @@
 "finalLoc": "unkown",
 "currentLoc": "unkown",
 "nextLoc": "unkown",
+"rtToEnter": "",
 "direction": "",
 "locArrTime": 0,
 "startTime": 0, 

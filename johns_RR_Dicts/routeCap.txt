@@ -1,33 +1,37 @@
 {
 "route1": {
-"numEastTrns": 0,
-"numWestTrns": 0,
+"Q": [],
+"nEastTns": 0,
+"nWestTns": 0,
 "totTrns": 0,
-"sameDirMonoCap": 2, "sameDirBiCap": 1, "oppoDirCap": 0,
+"samNoOpoCap": 2, "samOppoCap": 1, "oppoDirCap": 0,
 "eastSlots": 0,
 "westSlots": 0
 },
 "route2": {
-"numEastTrns": 0,
-"numWestTrns": 0,
+"Q": [],
+"nEastTns": 0,
+"nWestTns": 0,
 "totTrns": 0,
-"sameDirMonoCap": 3, "sameDirBiCap": 2, "oppoDirCap": 1,
+"samNoOpoCap": 3, "samOppoCap": 2, "oppoDirCap": 1,
 "eastSlots": 0,
 "westSlots": 0
 },
 "route3": {
-"numEastTrns": 0,
-"numWestTrns": 0,
+"Q": [],
+"nEastTns": 0,
+"nWestTns": 0,
 "totTrns": 0,
-"sameDirMonoCap": 1, "sameDirBiCap": 1, "oppoDirCap": 2,
+"samNoOpoCap": 1, "samOppoCap": 1, "oppoDirCap": 2,
 "eastSlots": 0,
 "westSlots": 0
 },
 "route4": {
-"numEastTrns": 0,
-"numWestTrns": 0,
+"Q": [],
+"nEastTns": 0,
+"nWestTns": 0,
 "totTrns": 0,
-"sameDirMonoCap": 1, "sameDirBiCap": 0, "oppoDirCap": 0,
+"samNoOpoCap": 1, "samOppoCap": 0, "oppoDirCap": 0,
 "eastSlots": 0,
 "westSlots": 0
 }

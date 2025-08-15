@@ -10,6 +10,7 @@ from stagCalcs import stCalcs
 from gui import gui
 from coords import transForms
 from dispatch import rtCaps
+from outputMethods import printMethods
         
 
 np.set_printoptions(precision=2, suppress=True) 
@@ -140,13 +141,15 @@ class locProc():
         swAreaObj = swCalcs()
         stagCalcObj = stCalcs()
         rtCapsObj = rtCaps()
+        printObj = printMethods()
 
         if mVars.prms["dbgYdProc"]: 
             print("\nentering locCalcs: location: ", loc, ", locDat: ", locs.locDat[loc])
 
         locBaseObj.countCars(loc)
         rtCapsObj.updateRtSlots()
-        print("rtCaps.rtCap: ", rtCaps.rtCap)
+        #print("rtCaps.rtCap: ", rtCaps.rtCap)
+        printObj.printRtCaps()
         schedProcObj.fetchLocSchedItem(loc)
         match locStem[loc]["type"]:
             case "yard":
@@ -168,7 +171,7 @@ class locProc():
     def analyzeTrains(self, loc):
         trainDB.ydTrains = {"brkDnTrn": [], "buildTrain": [], "swTrain": [], "rdCrwSw": [], "continue": []}
         from display import dispItems
-        dispItemsObj = dispItems()
+
         # train status leads to actions by the yard crew or
         # the train crew.  Train actions are the same name as
         # the corresponding train status string
@@ -224,71 +227,76 @@ class locProc():
                 (dest in routeCls.routes[routeNam].values()):
                 return routeNam
 
+    def setRtTrnPrms(self, loc, ydTrainNam):
+        # setup train
+        trainStem = trainDB.trains[ydTrainNam]
+        dest = trainDB.trains[ydTrainNam]["nextLoc"]
+        if dest != "":
+            # setup new route
+            route4newTrn = self.findRoutes(loc, ydTrainNam)
+            trainStem["rtToEnter"] = route4newTrn
+            leftObj = routeCls.routes[route4newTrn]["leftObj"].strip()
+            rtObj = routeCls.routes[route4newTrn]["rtObj"].strip()
+            #routeCls.routes[route4newTrn]["trains"].append(ydTrainNam)
+            if loc == leftObj: 
+                trainStem["direction"] = "east"
+            elif loc == rtObj:
+                trainStem["direction"] = "west"
+            else: 
+                print("no route found", ydTrainNam,  "leftObj: ", leftObj, "rtObj: "
+                        , rtObj,"loc: ", loc, "direction: ", trainStem["direction"])
+                trainStem["status"] = "stop"
+        return 
+                    
+
     def startTrain(self, loc, ydTrainNam):
         # setup train
-        from trainInit import trainInit
         dispObj = dispItems()
         coordObj = transForms()
         locBaseObj = locBase()
         rtCapsObj = rtCaps()
-
+        
         trainStem = trainDB.trains[ydTrainNam]
-        dest = trainDB.trains[ydTrainNam]["nextLoc"]
-        match dest:
-            case dest if dest != "none":
-                trainStem["status"] = "ready2Leave"
-                # setup new route
-                route4newTrn = self.findRoutes(loc, ydTrainNam)
-
-                leftObj = routeCls.routes[route4newTrn]["leftObj"].strip()
-                rtObj = routeCls.routes[route4newTrn]["rtObj"].strip()
-                #routeCls.routes[route4newTrn]["trains"].append(ydTrainNam)
-                if loc == leftObj: 
-                    trainStem["direction"] = "east"
-                elif loc == rtObj:
-                    trainStem["direction"] = "west"
-                else: 
-                    print("no route found", ydTrainNam,  "leftObj: ", leftObj, "rtObj: "
-                            , rtObj,"loc: ", loc, "direction: ", trainStem["direction"])
-                    trainStem["status"] = "stop"
-                    
-                rtCapsObj.fillTrnsOnRoute(route4newTrn, ydTrainNam)
-                trainStem["firstDispTrn"] = 1
-                trainStem["currentLoc"] = route4newTrn
+        trainStem["status"] = "ready2Leave"
+        routeNam = trainStem["rtToEnter"]
                 
-                #sets initial coords in rotated system    
-                trainStem["coord"]["xTrnInit"] = 0  # train starting at location
-                self.setTrnCoord(trainStem["currentLoc"], trainStem)                
-                coordObj.xRoute2xPlot(route4newTrn, ydTrainNam)
-                eastXPlot = gui.guiDict[loc]["x1"]
-                westXPlot = gui.guiDict[loc]["x0"] - trainInit.trnLength
-                eastYPlot = gui.guiDict[leftObj]["y0"] - gui.guiDict["locDims"]["height"]*0.25
-                """
-                if trainStem["direction"] == "west": 
-                    trainStem["coord"]["xPlot"] -= trainInit.trnLength
-                    westXPlotTransform = trainStem["coord"]["xPlot"]
-                    print("westXPlot no transform: ", westXPlot, ", with transform: ", 
-                        westXPlotTransform)
-                else:
-                    print("test of coord transform: \neastXPlot no transform: ", 
-                        eastXPlot, ", with transform: ", 
-                        trainStem["coord"]["xPlot"])
-                    print("eastYPlot no transform: ", eastYPlot, ", with transform: ", 
-                        trainStem["coord"]["yPlot"])
-                """
-                #print("trainStem: ", trainStem, ", original dict: ", trainDB.trains[ydTrainNam])
-                locBaseObj.rmTrnFrmLoc(loc, ydTrainNam)
-                dispObj.clearActionTrnRecs(loc, ydTrainNam)
-                dispObj.drawTrain(ydTrainNam)
-            case "none":
-                trainStem["status"] = "stop"
+        rtCapsObj.fillTrnsOnRoute(routeNam, ydTrainNam)
+        trainStem["firstDispTrn"] = 1
+        trainStem["currentLoc"] = routeNam
+        
+        #sets initial coords in rotated system    
+        trainStem["coord"]["xTrnInit"] = 0  # train starting at location
+        self.setTrnCoord(trainStem["currentLoc"], trainStem)                
+        coordObj.xRoute2xPlot(routeNam, ydTrainNam)
+        #print("trainStem: ", trainStem, ", original dict: ", trainDB.trains[ydTrainNam])
+        locBaseObj.rmTrnFrmLoc(loc, ydTrainNam)
+        dispObj.clearActionTrnRecs(loc, ydTrainNam)
+        dispObj.drawTrain(ydTrainNam)
                 
         if mVars.prms["dbgYdProc"]: print("train",ydTrainNam," starting: "
             ,trainStem, ",\n")
             #route: ", routeCls.routes[route4newTrn])
 
-    def setTrnCoord(self, currLoc, trainStem):
+    def printCoords(self):
+        """
+        eastXPlot = gui.guiDict[loc]["x1"]
+        westXPlot = gui.guiDict[loc]["x0"] - trainInit.trnLength
+        eastYPlot = gui.guiDict[leftObj]["y0"] - gui.guiDict["locDims"]["height"]*0.25
+        if trainStem["direction"] == "west": 
+            trainStem["coord"]["xPlot"] -= trainInit.trnLength
+            westXPlotTransform = trainStem["coord"]["xPlot"]
+            print("westXPlot no transform: ", westXPlot, ", with transform: ", 
+                westXPlotTransform)
+        else:
+            print("test of coord transform: \neastXPlot no transform: ", 
+                eastXPlot, ", with transform: ", 
+                trainStem["coord"]["xPlot"])
+            print("eastYPlot no transform: ", eastYPlot, ", with transform: ", 
+                trainStem["coord"]["yPlot"])
+        """
+        pass
 
+    def setTrnCoord(self, currLoc, trainStem):
         routeLen = routeCls.routes[currLoc]["rtLength"]
         trainStem["coord"]["yRoute"] = 0 # by definition rotated coord system is
             # along xRoute axis

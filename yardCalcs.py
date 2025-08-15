@@ -148,7 +148,7 @@ class ydCalcs():
                 trainStem["status"] = "built"
                 locs.locDat[loc]["trnCnts"]["built"] += 1
                 self.locBaseObj.rmTrnFrmActions("buildTrain", loc, ydTrainNam)
-
+                self.locProcObj.setRtTrnPrms(loc, ydTrainNam)
                 #self.locProcObj.startTrain("buildTrain", loc, ydTrainNam)
             self.dispObj.dispActionDat(loc, "buildTrain", ydTrainNam)
 

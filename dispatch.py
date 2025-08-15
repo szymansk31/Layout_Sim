@@ -55,6 +55,7 @@ class dspchProc():
     def __init__(self):
         pass
     
+#=================================================
 class rtCaps():
     rtCap = {}
     
@@ -73,75 +74,68 @@ class rtCaps():
             rtStem = rtCaps.rtCap[route]
             eastSlots = 0
             westSlots = 0
-            numEast = rtStem["numEastTrns"]
-            numWest = rtStem["numWestTrns"]
+            numEast = rtStem["nEastTns"]
+            numWest = rtStem["nWestTns"]
             if numEast == 0 and numWest == 0:
-                eastSlots = max(rtStem["sameDirMonoCap"], 0)
+                eastSlots = max(rtStem["samNoOpoCap"], 0)
                 westSlots = eastSlots
             elif numEast != 0 and numWest == 0:
-                eastSlots = max(rtStem["sameDirMonoCap"] - numEast, 0)
+                eastSlots = max(rtStem["samNoOpoCap"] - numEast, 0)
                 westSlots = max(rtStem["oppoDirCap"] - numWest, 0)
             elif numEast == 0 and numWest != 0:
-                westSlots = max(rtStem["sameDirMonoCap"] - numWest, 0)
+                westSlots = max(rtStem["samNoOpoCap"] - numWest, 0)
                 eastSlots = max(rtStem["oppoDirCap"] - numEast, 0)
             elif numEast != 0 and numWest != 0:
-                if (numEast < rtStem["sameDirBiCap"]) and \
+                if (numEast < rtStem["samOppoCap"]) and \
                     (numWest <= rtStem["oppoDirCap"]):
-                    eastSlots = max(rtStem["sameDirBiCap"] - numEast, 0)
+                    eastSlots = max(rtStem["samOppoCap"] - numEast, 0)
                     westSlots = max(rtStem["oppoDirCap"] - numWest, 0)
-                elif (numWest < rtStem["sameDirBiCap"]) and \
+                elif (numWest < rtStem["samOppoCap"]) and \
                     (numEast <= rtStem["oppoDirCap"]):
-                    westSlots = max(rtStem["sameDirBiCap"] - numWest, 0)
+                    westSlots = max(rtStem["samOppoCap"] - numWest, 0)
                     eastSlots = max(rtStem["oppoDirCap"] - numEast, 0)
 
             rtStem["eastSlots"] = eastSlots
             rtStem["westSlots"] = westSlots                    
 
-    def updateRtSlots2(self):
-        for route in rtCaps.rtCap:
-            # trains already on the route
-            rtStem = rtCaps.rtCap[route]
-            numEast = rtStem["numEastTrns"]
-            numWest = rtStem["numWestTrns"]
-            biDirBit = False
-            biDirBit = True
-            if numEast == 0 and numWest == 0:
-                eastSlots = max(rtStem["sameDirMonoCap"], 0)
-                westSlots = eastSlots
-                eastSlots = max(rtStem[False]["sameDirCap"] - numEast, 0)
-                westSlots = max(rtStem[False]["sameDirCap"] - numWest, 0)
-            elif numEast != 0 and numWest == 0:
-                eastSlots = max(rtStem["sameDirMonoCap"] - numEast, 0)
-                westSlots = max(rtStem["oppoDirCap"] - numWest, 0)
-                eastSlots = max(rtStem[False]["sameDirCap"] - numEast, 0)
-                westSlots = max(rtStem[True]["oppoDirCap"] - numWest, 0)
-            elif numEast == 0 and numWest != 0 :
-                westSlots = max(rtStem["sameDirMonoCap"] - numWest, 0)
-                eastSlots = max(rtStem["oppoDirCap"] - numEast, 0)
-                eastSlots = max(rtStem[True]["oppoDirCap"] - numEast, 0)
-                westSlots = max(rtStem[False]["sameDirCap"] - numWest, 0)
-            elif numEast != 0 and numWest != 0:
-                if (numEast < rtStem["sameDirBiCap"]) and \
-                    (numWest <= rtStem["oppoDirCap"]):
-                    eastSlots = max(rtStem["sameDirBiCap"] - numEast, 0)
-                    westSlots = max(rtStem["oppoDirCap"] - numWest, 0)
-                elif (numWest < rtStem["sameDirBiCap"]) and \
-                    (numEast <= rtStem["oppoDirCap"]):
-                    WestSlots = max(rtStem["sameDirBiCap"] - numWest, 0)
-                    eastSlots = max(rtStem["oppoDirCap"] - numEast, 0)
-                eastSlots = max(rtStem[True]["oppoDirCap"] - numEast, 0)
-                westSlots = max(rtStem[True]["oppoDirCap"] - numWest, 0)
+    def addTrn2RouteQ(self, route, trainNam):
+        rtCaps.rtCap[route]["Q"].append(trainNam)
+        
+    def remTrnFrmRouteQ(self, route, trainNam):
+        rtCapStem = rtCaps.rtCap[route]["Q"]
+        try:
+            index = rtCapStem.index(trainNam)
+            rtCapStem.pop(index)
+        except:
+            pass
 
-            rtStem["biDir"]                    
+    def checkRtSlots(self, loc, trainNam):
+        trainStem = trainDB.trains[trainNam]
+        routeNam = trainStem["rtToEnter"]
+        routeStem = rtCaps.rtCap[routeNam]
+        dir = trainStem["direction"]
+        if dir == "east":
+            if routeStem["eastSlots"] >0:
+                routeStem["eastSlots"] -=1
+                
+            
+            rtStem["westSlots"] = westSlots                    
+
+        #look at train's requested dir, route
+        # if slot available, and arrival track
+        # available, put on route
+        
+        return openSlot
+        
 
     def fillTrnsOnRoute(self, routeNam, trainNam):
         routeStem = routeCls.routes[routeNam]["trains"]
         routeStem.append(trainNam)
         dir = trainDB.trains[trainNam]["direction"]
         if "ea" in dir:
-            rtCaps.rtCap[routeNam]["numEastTrns"] +=1
+            rtCaps.rtCap[routeNam]["nEastTns"] +=1
         else:
-            rtCaps.rtCap[routeNam]["numWestTrns"] +=1
+            rtCaps.rtCap[routeNam]["nWestTns"] +=1
        
     def remTrnsOnRoute(self, routeNam, trainNam):
         routeStem = routeCls.routes[routeNam]["trains"]
@@ -152,13 +146,12 @@ class rtCaps():
             pass
         
         dir = trainDB.trains[trainNam]["direction"]
-        numEast = rtCaps.rtCap[routeNam]["numEastTrns"]
-        numWest = rtCaps.rtCap[routeNam]["numWestTrns"]
+        numEast = rtCaps.rtCap[routeNam]["nEastTns"]
+        numWest = rtCaps.rtCap[routeNam]["nWestTns"]
         if dir == "east":
             num = max(numEast -1, 0)
-            rtCaps.rtCap[routeNam]["numEastTrns"] = num
+            rtCaps.rtCap[routeNam]["nEastTns"] = num
         else:
             num = max(numWest -1, 0)
-            rtCaps.rtCap[routeNam]["numWestTrns"] = num
+            rtCaps.rtCap[routeNam]["nWestTns"] = num
         
-       

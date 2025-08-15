@@ -173,6 +173,7 @@ class stVarSaves():
                 statFile.write("\n---------------------------\n")
                 statFile.write("\ntime step: " + str(mVars.time))
                 statFile.write("\nroute: " + route)
+                self.printObj.writeRtCaps(statFile, route)
                 statFile.write("\nTrain and consist:     ")
                 for train in routeCls.routes[route]["trains"]:
                     self.printObj.writeTrainInfo(statFile, train)
