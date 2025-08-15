@@ -23,12 +23,14 @@ class swCalcs():
         self.classObj = classCars()
         from display import dispItems
         self.dispObj = dispItems()
+        from dispatch import rtCaps
+        self.rtCapsObj = rtCaps()
         
 
     class Action_e(Enum):
         DROPPICKUP   = 0
         rdCrwSw   = 1
-        READY2LEAVE  = 2
+        wait4Clearance  = 2
         TURN         = 3
         MISC         = 4
 
@@ -54,7 +56,7 @@ class swCalcs():
         if mVars.prms["dbgYdProc"]: print("action weights are: ", self.weights)
         
     def swAnalyzeTrains(self, loc):
-        trainDB.ydTrains = {"dropPickup": [], "rdCrwSw": [], "ready2Leave": [], "turn": []}
+        trainDB.ydTrains = {"dropPickup": [], "rdCrwSw": [], "wait4Clearance": [], "turn": []}
 
         # train status leads to actions by the yard crew or
         # the train crew.  Train actions are the same name as
@@ -67,9 +69,9 @@ class swCalcs():
                 case "rdCrwSw":
                     if trainNam not in trainDB.ydTrains["rdCrwSw"]:
                         trainDB.ydTrains["rdCrwSw"].append(trainNam)
-                case "ready2Leave":
-                    if trainNam not in trainDB.ydTrains["ready2Leave"]:
-                        trainDB.ydTrains["ready2Leave"].append(trainNam)
+                case "wait4Clearance":
+                    if trainNam not in trainDB.ydTrains["wait4Clearance"]:
+                        trainDB.ydTrains["wait4Clearance"].append(trainNam)
                 case "continue":
                     # May have a call to 
                     # dispatcher eventually, so process "continue" here 
@@ -98,20 +100,21 @@ class swCalcs():
             trainsWorking +=1
             if trainsWorking == 2: return
 
-    def dropPickup(self, loc, train):
+    def dropPickup(self, loc, trainNam):
         # drop cars for this stop
-        availCars = self.classObj.train2Track(loc, train)
+        availCars = self.classObj.train2Track(loc, trainNam)
         if availCars == 0:
             # pickup cars earmarked for final location
-            #availCars = self.classObj.track2Train(loc, train)
+            #availCars = self.classObj.track2Train(loc, trainNam)
             #if availCars == 0:
                 # train no longer has cars
                 # remove train name from trainDB.ydTrains and locs.locData
-                self.locBaseObj.cleanupSwAction(loc, train, "dropPickup")
-                self.locProcObj.startTrain(loc, train)
+                self.locProcObj.setRtTrnPrms(loc, trainNam)
+                self.locBaseObj.cleanupSwAction(loc, trainNam, "dropPickup")
+                self.locProcObj.startTrain(loc, trainNam)
 
 
-    def rdCrwSw(self, loc, train):
+    def rdCrwSw(self, loc, trainNam):
         # prepare for multiple trains in a swArea
         # first see if a train is already switching
         if len(trainDB.ydTrains["rdCrwSw"]) == 0: return
@@ -137,6 +140,7 @@ class swCalcs():
                 locActionStem.append({"industry": industry})
             except:
                 print("all industries have been switched")
+                self.locProcObj.setRtTrnPrms(loc, ydTrainNam)
                 self.locBaseObj.cleanupSwAction(loc, ydTrainNam, "rdCrwSw")
                 self.locProcObj.startTrain(loc, ydTrainNam)
                 return

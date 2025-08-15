@@ -215,6 +215,7 @@ class ydCalcs():
                 # train no longer has pickups or drops
                 # start train to nextLoc, if there are more stops and
                 # remove train name from locs.locData
+                self.locProcObj.setRtTrnPrms(loc, ydTrainNam)
                 locs.locDat[loc]["ready2Pickup"] = 0
                 locs.locDat[loc]["trnCnts"]["switched"] += 1
                 

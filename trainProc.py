@@ -49,7 +49,7 @@ class trnProc:
                             self.procTrnStop(trainDict, trainNam)
                                                 
                     
-            case "ready2Leave":
+            case "wait4Clearance":
                 print("train: ", trainNam, " switching to enroute status")
                 trainDict["status"] = "enroute"
                 dispObj.drawTrain(trainNam)

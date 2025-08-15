@@ -110,21 +110,24 @@ class rtCaps():
             pass
 
     def checkRtSlots(self, loc, trainNam):
-        trainStem = trainDB.trains[trainNam]
-        routeNam = trainStem["rtToEnter"]
-        routeStem = rtCaps.rtCap[routeNam]
-        dir = trainStem["direction"]
-        if dir == "east":
-            if routeStem["eastSlots"] >0:
-                routeStem["eastSlots"] -=1
-                
-            
-            rtStem["westSlots"] = westSlots                    
-
         #look at train's requested dir, route
         # if slot available, and arrival track
         # available, put on route
-        
+        trainStem = trainDB.trains[trainNam]
+        routeNam = trainStem["rtToEnter"]
+        rtStem = rtCaps.rtCap[routeNam]
+        dir = trainStem["direction"]
+        if dir == "east":
+            if rtStem["eastSlots"] >0:
+                rtStem["eastSlots"] -=1
+                openSlot = True
+            else: openSlot = False
+        elif dir == "west":
+            if rtStem["westSlots"] >0:
+                rtStem["westSlots"] -=1
+                openSlot = True
+            else: openSlot = False
+                
         return openSlot
         
 

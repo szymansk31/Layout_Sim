@@ -170,7 +170,7 @@ class locProc():
             
     def analyzeTrains(self, loc):
         trainDB.ydTrains = {"brkDnTrn": [], "buildTrain": [], "swTrain": [], "rdCrwSw": [], "continue": []}
-        from display import dispItems
+        rtCapsObj = rtCaps()
 
         # train status leads to actions by the yard crew or
         # the train crew.  Train actions are the same name as
@@ -204,9 +204,9 @@ class locProc():
                     self.startTrain(loc, trainNam)
                 case "built":
                     startTime = trainDB.trains[trainNam]["startTime"]
-                    if mVars.time >= startTime:
+                    if (mVars.time >= startTime) and rtCapsObj.checkRtSlots:
                         locs.locDat[loc]["trnCnts"]["started"] += 1
-                        locs.locDat[loc]["bldTrnDepTimes"].pop(0)
+                        #locs.locDat[loc]["bldTrnDepTimes"].pop(0)
                         nextLoc = trainDB.trains[trainNam]["nextLoc"]
                         #dispItemsObj.clearTrnRecs(trainNam)
                         print(trainNam, ": with start time ", startTime,
@@ -257,7 +257,7 @@ class locProc():
         rtCapsObj = rtCaps()
         
         trainStem = trainDB.trains[ydTrainNam]
-        trainStem["status"] = "ready2Leave"
+        trainStem["status"] = "wait4Clearance"
         routeNam = trainStem["rtToEnter"]
                 
         rtCapsObj.fillTrnsOnRoute(routeNam, ydTrainNam)
@@ -266,10 +266,12 @@ class locProc():
         
         #sets initial coords in rotated system    
         trainStem["coord"]["xTrnInit"] = 0  # train starting at location
-        self.setTrnCoord(trainStem["currentLoc"], trainStem)                
+        self.setTrnCoord(trainStem["currentLoc"], trainStem)  
+        # xPlot and yPlot are in the screen coord system              
         coordObj.xRoute2xPlot(routeNam, ydTrainNam)
         #print("trainStem: ", trainStem, ", original dict: ", trainDB.trains[ydTrainNam])
         locBaseObj.rmTrnFrmLoc(loc, ydTrainNam)
+        # remove train rectangles above the location rectangle
         dispObj.clearActionTrnRecs(loc, ydTrainNam)
         dispObj.drawTrain(ydTrainNam)
                 
