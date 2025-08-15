@@ -7,7 +7,7 @@ from mainVars import mVars
 #=================================================
 class gui():
     root = tk.Tk() 
-    C = Canvas(root, height=550, width=1600, bg="lightgray")
+    C = Canvas(root, height=350, width=1300, bg="lightgray")
     #subCanvas = Canvas(root, height=100, width=100, bg="white")
     objects = []
     guiDict = {}
@@ -16,7 +16,7 @@ class gui():
     def __init__(self):
         gui.root.title("Layout Simulation")
         # Adjust size 
-        gui.root.geometry( "1600x550" ) 
+        gui.root.geometry( "1300x350" ) 
         gui.C.pack()
 
     def preProcGui(self):

@@ -1,0 +1,36 @@
+{
+"train6": {
+    "origLoc":"pgh",
+    "currentLoc":"pgh",
+    "finalLoc": "NStaging",
+    "status":"init",
+    "startTime": 8,
+    "stops": {
+        "Kiski": {"action": "dropPickup"},
+        "OilCity": {"action": "dropPickup"},
+        "NStaging": {"action": "terminate"}
+            }
+    },
+"train7": {
+    "origLoc":"Kiski",
+    "currentLoc":"Kiski",
+    "finalLoc": "NStaging",
+    "status":"init",
+    "startTime": 2,
+    "stops": {
+        "OilCity": {"action": "dropPickup"},
+        "NStaging": {"action": "terminate"}
+            }
+    },      
+"train8": {
+    "origLoc":"OilCity", 
+    "currentLoc":"OilCity", 
+    "finalLoc": "ErieRRStaging",
+    "status":"init",
+    "startTime": 0,
+    "stops": {
+    "ErieRRStaging": {"action": "terminate"}
+            }
+    }
+}
+

@@ -1,14 +1,16 @@
 
 from mainVars import mVars
 from stateVars import trainDB
+from dispatch import rtCaps
 
 class printMethods():
     
     def __init__(self):
+        self.rtCapsObj =rtCaps() 
         pass
 
-    def printTrainInfo(self, train):
-        trainStem = trainDB.trains[train]
+    def printTrainInfo(self, trainNam):
+        trainStem = trainDB.trains[trainNam]
         numCars = trainStem["numCars"]
         currentLoc = trainStem["currentLoc"]
         nextLoc = trainStem["nextLoc"]
@@ -17,14 +19,14 @@ class printMethods():
         status = trainStem["status"]
         direction = trainStem["direction"]
         if mVars.prms["dbgLoop"]: print (
-            "Before proc: ", train, ", #cars: ", numCars,
+            "Before proc: ", trainNam, ", #cars: ", numCars,
             "currL: ", currentLoc, ", nextL: ", nextLoc, 
             ", origL: ", origLoc, 
             ", finL: ", finalLoc, ", dir: ", direction,
             "status: ", status)
 
-    def writeTrainInfo(self, file, train):
-        trainStem = trainDB.trains[train]
+    def writeTrainInfo(self, file, trainNam):
+        trainStem = trainDB.trains[trainNam]
         numCars = trainStem["numCars"]
         currentLoc = trainStem["currentLoc"]
         nextLoc = trainStem["nextLoc"]
@@ -34,9 +36,18 @@ class printMethods():
         direction = trainStem["direction"]
         if mVars.prms["dbgLoop"]: 
             file.write (
-            "\nStart of Time Step: " + train + ", #cars: " + str(numCars) + 
+            "\nStart of Time Step: " + trainNam + ", #cars: " + str(numCars) + 
             ", currL: " + currentLoc + ", nextL: " + nextLoc + 
             ", origL: " + origLoc + 
             ", finL: " + finalLoc + ", dir: " + direction + 
             ", status: " + status)
 
+    def printRtCaps(self):
+        print("\nrtCaps.rtCap: ")
+        for route in rtCaps.rtCap:
+            print(route, ": ", rtCaps.rtCap[route])
+            
+    def writeRtCaps(self, file, route):
+        file.write("\nrtCaps.rtCap: ")
+        file.write("\n" + route + ": " +  str(rtCaps.rtCap[route]))
+       

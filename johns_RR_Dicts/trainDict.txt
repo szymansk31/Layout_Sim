@@ -1,14 +1,16 @@
 {
 "trnProtype": {
-"trainNum": 1,
-"consistNum": 10,
+"trainNum": 0,
+"consistNum": 0,
 "numCars": 0,
-"status": "enroute",
-"origLoc": "yard1",
-"finalLoc": "swArea1",
-"currentLoc": "route1",
-"nextLoc": "swArea1",
+"status": "unkown",
+"origLoc": "unkown",
+"finalLoc": "unkown",
+"currentLoc": "unkown",
+"nextLoc": "unkown",
+"rtToEnter": "",
 "direction": "",
+"locArrTime": 0,
 "startTime": 0, 
 "coord": {
     "xTrnInit": 0,
@@ -26,9 +28,7 @@
 "numStops": 0,
 "departStop": "",
 "stops": {
-    "yard1": {"action": "dropPickup"},
-    "swArea1": {"action": "terminate"}
-},
+    },
 "color": "blue"
 }
 }

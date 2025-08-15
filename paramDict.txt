@@ -3,6 +3,7 @@
     "maxTime": 40,
     "timeStep": 1,
     "trainSize": 10,
+    "mxTrnDwlTim": 10,
     "numOperators": 5,
     "miscWaitTime": 3,
     "maxSaves": 10,

@@ -2,11 +2,12 @@
 from fileProc import readFiles
 from stateVars import trainDB, locs, routeCls
 from mainVars import mVars
-from trainProc import trainParams
+from trainInit import trainInit
 from display import dispItems
 from gui import gui
 from coords import transForms
-from locProc import locProc
+from locProc import locProc, locBase
+from dispatch import rtCaps
 
 files = readFiles()
 
@@ -21,17 +22,19 @@ class trainFromFile():
         self.conName = next(iter(consist))
         
     def readTrain(self):
-        trainProcObj = trainParams()
+        trainInitObj = trainInit()
         coordObj = transForms()
         locProcObj = locProc()
+        rtCapsObj = rtCaps()
         trainDict = files.readFile("startingTrainFile")
         self.consistFromFile(files, "startingConsistFile")
         trainDB.consists.update(self.consist)
         for train in trainDict:
             print("\nTrain: ", train)
+            trainDB.strtTrns.append(train)
             currLoc = trainDict[train]["currentLoc"]
 
-            trainDict[train]["color"] = trainParams.colors()
+            trainDict[train]["color"] = trainInit.colors()
             #print("color for init train: ", trainDict[train]["color"])
 
             print("adding initial consist")
@@ -51,15 +54,16 @@ class trainFromFile():
             print("newTain dict in startingTrains: ", newTrain)
             print("with consist: ", consistNam, ", contents: ", self.consist[consistNam])
             trainDB.trains.update(newTrain)
-            trainDB.trains[train]["numCars"] = trainProcObj.numCars(train)
+            trainDB.trains[train]["numCars"] = trainInitObj.numCars(train)
 
             if "route" in currLoc:
-                routeCls.routes[currLoc]["trains"].append(train)
+                #routeCls.routes[currLoc]["trains"].append(train)
+                rtCapsObj.fillTrnsOnRoute(currLoc, train)
                 # fill trainDB with xPlot and yPlot, the canvas/screen coords
                 coordObj.xRoute2xPlot(currLoc, train)
                 #trainDB.trains[train]["coord"]["yPlot"] -= gui.guiDict["locDims"]["height"]*0.25
             else: 
-                locs.locDat[currLoc]["trains"].append(train)
+                locBase.addTrn2Loc_rt(currLoc, train)
             print("starting train: ", trainDB.trains[train])
             dispObj = dispItems()
             dispObj.drawTrain(train)

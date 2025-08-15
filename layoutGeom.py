@@ -2,7 +2,6 @@
 import math
 from mainVars import *
 from stateVars import locs, routeCls
-from trainProc import trainParams
 from gui import gui    
 from coords import transForms
 

@@ -14,8 +14,9 @@ class stCalcs():
     def __init__(self):
         self.weights = [0.3, 0.3, 0.3, 0, 0]
         #self.weights = [0, 0, 0, 0, 0]
-        from locProc import locProc
+        from locProc import locProc, locBase
         self.locProcObj = locProc()
+        self.locBaseObj = locBase()
         from classCars import classCars
         self.classObj = classCars()
         from display import dispItems
@@ -25,29 +26,29 @@ class stCalcs():
 
     def staging(self, loc):
         
-        for train in trainDB.ydTrains["ready2Leave"]:
+        for train in trainDB.ydTrains["wait4Clearance"]:
             if mVars.time == trainDB.trains[train]["startTime"]:
                 nextLoc = trainDB.trains[train]["nextLoc"]
 
                 print("in staging: nextLoc: ", nextLoc)
                 locs.locDat[loc]["trnCnts"]["started"] += 1
 
-                self.locProcObj.rmTrnFrmActions("ready2Leave", loc, train)
+                self.locBaseObj.rmTrnFrmActions("wait4Clearance", loc, train)
                 self.locProcObj.startTrain(loc, train)
                 
         self.dispObj.dispTrnLocDat(loc)
                 
     def stAnalyzeTrains(self, loc):
-        trainDB.ydTrains = {"ready2Leave": [], "terminated": [], "turn": []}
+        trainDB.ydTrains = {"wait4Clearance": [], "terminated": [], "turn": []}
 
         # train status leads to actions by the yard crew or
         # the train crew.  Train actions are the same name as
         # the corresponding train status string
         for trainNam in locs.locDat[loc]["trains"]:
             match trainDB.trains[trainNam]["status"]:
-                case "ready2Leave":
-                    if trainNam not in trainDB.ydTrains["ready2Leave"]:
-                        trainDB.ydTrains["ready2Leave"].append(trainNam)
+                case "wait4Clearance":
+                    if trainNam not in trainDB.ydTrains["wait4Clearance"]:
+                        trainDB.ydTrains["wait4Clearance"].append(trainNam)
                 case "terminate":
                     if trainNam not in trainDB.ydTrains["terminated"]:
                         trainDB.ydTrains["terminated"].append(trainNam)
