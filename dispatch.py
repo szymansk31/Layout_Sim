@@ -28,7 +28,7 @@ class schedProc():
         for trainNam in dspCh.sched:
             if (loc == dspCh.sched[trainNam]["origLoc"]) and \
                 (mVars.time >= dspCh.sched[trainNam]["startTime"]):
-                locBase.addTrn2Loc_rt(loc, dspCh.sched[trainNam], trainNam)
+                locBase.addTrn2LocOrRt(loc, dspCh.sched[trainNam], trainNam)
                 self.baseTrnDict(trainNam)
                 dspCh.sched.pop(trainNam)
                 trainInitObj.fillTrnDicts(loc, trainNam)
@@ -109,7 +109,7 @@ class rtCaps():
         except:
             pass
 
-    def checkRtSlots(self, loc, trainNam):
+    def checkRtSlots(self, trainNam):
         #look at train's requested dir, route
         # if slot available, and arrival track
         # available, put on route
@@ -135,9 +135,9 @@ class rtCaps():
         routeStem = routeCls.routes[routeNam]["trains"]
         routeStem.append(trainNam)
         dir = trainDB.trains[trainNam]["direction"]
-        if "ea" in dir:
+        if dir == "east":
             rtCaps.rtCap[routeNam]["nEastTns"] +=1
-        else:
+        elif dir == "west":
             rtCaps.rtCap[routeNam]["nWestTns"] +=1
        
     def remTrnsOnRoute(self, routeNam, trainNam):
@@ -154,7 +154,7 @@ class rtCaps():
         if dir == "east":
             num = max(numEast -1, 0)
             rtCaps.rtCap[routeNam]["nEastTns"] = num
-        else:
+        elif dir == "west":
             num = max(numWest -1, 0)
             rtCaps.rtCap[routeNam]["nWestTns"] = num
         

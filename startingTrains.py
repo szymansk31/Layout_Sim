@@ -16,57 +16,50 @@ class trainFromFile():
     def __init__(self):
         pass
     
-    def dict2TrnNam(self, train):
-        self.trnName = next(iter(train))
+    def dict2TrnNam(self, trainNam):
+        self.trnName = next(iter(trainNam))
     def dict2ConNam(self, consist):
         self.conName = next(iter(consist))
         
     def readTrain(self):
         trainInitObj = trainInit()
         coordObj = transForms()
+        locBaseObj = locBase()
         locProcObj = locProc()
         rtCapsObj = rtCaps()
         trainDict = files.readFile("startingTrainFile")
         self.consistFromFile(files, "startingConsistFile")
         trainDB.consists.update(self.consist)
-        for train in trainDict:
-            print("\nTrain: ", train)
-            trainDB.strtTrns.append(train)
-            currLoc = trainDict[train]["currentLoc"]
+        for trainNam in trainDict:
+            print("\nTrain: ", trainNam)
+            trainDB.strtTrns.append(trainNam)
+            currLoc = trainDict[trainNam]["currentLoc"]
 
-            trainDict[train]["color"] = trainInit.colors()
+            trainDict[trainNam]["color"] = trainInit.colors()
             #print("color for init train: ", trainDict[train]["color"])
 
             print("adding initial consist")
-            trainDict[train]["trnRectTag"] = train+"RectTag"
-            trainDict[train]["trnNumTag"] = train+"NumTag"
-            trainDict[train]["trnLabelTag"] = train+"LabelTag"
-            consistNum = trainDict[train]["consistNum"]
+            trainDict[trainNam]["trnRectTag"] = trainNam+"RectTag"
+            trainDict[trainNam]["trnNumTag"] = trainNam+"NumTag"
+            trainDict[trainNam]["trnLabelTag"] = trainNam+"LabelTag"
+            consistNum = trainDict[trainNam]["consistNum"]
             consistNam = "consist"+str(consistNum)
 
-            if "route" in currLoc:
-                locProcObj.setTrnCoord(currLoc, trainDict[train])
             #self.consist[self.conName]["trainNum"] = trainDict[train]["trainNum"]
             #trainDict[train]["consistNum"] = self.consist[self.conName]["consistNum"]
             newTrain = {}
-            newTrain[train] = trainDict[train]
+            newTrain[trainNam] = trainDict[trainNam]
 
             print("newTain dict in startingTrains: ", newTrain)
             print("with consist: ", consistNam, ", contents: ", self.consist[consistNam])
             trainDB.trains.update(newTrain)
-            trainDB.trains[train]["numCars"] = trainInitObj.numCars(train)
+            trainDB.trains[trainNam]["numCars"] = trainInitObj.numCars(trainNam)
 
-            if "route" in currLoc:
-                #routeCls.routes[currLoc]["trains"].append(train)
-                rtCapsObj.fillTrnsOnRoute(currLoc, train)
-                # fill trainDB with xPlot and yPlot, the canvas/screen coords
-                coordObj.xRoute2xPlot(currLoc, train)
-                #trainDB.trains[train]["coord"]["yPlot"] -= gui.guiDict["locDims"]["height"]*0.25
-            else: 
-                locBase.addTrn2Loc_rt(currLoc, train)
-            print("starting train: ", trainDB.trains[train])
+            locBaseObj.addTrn2LocOrRt(currLoc, trainNam)
+            rtCapsObj.addTrn2RouteQ(currLoc, trainNam)
+            print("starting train: ", trainDB.trains[trainNam])
             dispObj = dispItems()
-            dispObj.drawTrain(train)
+            dispObj.drawTrain(trainNam)
         return 
 
     def consistFromFile(self, files, fkey):

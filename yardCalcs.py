@@ -148,8 +148,6 @@ class ydCalcs():
                 trainStem["status"] = "built"
                 locs.locDat[loc]["trnCnts"]["built"] += 1
                 self.locBaseObj.rmTrnFrmActions("buildTrain", loc, ydTrainNam)
-                self.locProcObj.setRtTrnPrms(loc, ydTrainNam)
-                #self.locProcObj.startTrain("buildTrain", loc, ydTrainNam)
             self.dispObj.dispActionDat(loc, "buildTrain", ydTrainNam)
 
     def ready2Build(self, loc):
@@ -215,7 +213,6 @@ class ydCalcs():
                 # train no longer has pickups or drops
                 # start train to nextLoc, if there are more stops and
                 # remove train name from locs.locData
-                self.locProcObj.setRtTrnPrms(loc, ydTrainNam)
                 locs.locDat[loc]["ready2Pickup"] = 0
                 locs.locDat[loc]["trnCnts"]["switched"] += 1
                 

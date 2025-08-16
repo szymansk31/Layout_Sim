@@ -49,7 +49,7 @@ class trnProc:
                             self.procTrnStop(trainDict, trainNam)
                                                 
                     
-            case "wait4Clearance":
+            case "wait4Clrnce":
                 print("train: ", trainNam, " switching to enroute status")
                 trainDict["status"] = "enroute"
                 dispObj.drawTrain(trainNam)
@@ -83,10 +83,8 @@ class trnProc:
             
     def procTrnStop(self, trainDict, trainNam):
         dispObj = dispItems()
-        locBaseObj = locBase()
         rtCapsObj = rtCaps()
         routeNam = trainDict["currentLoc"]
-        routeStem = routeCls.routes[routeNam]
         consistNum = trainDict["consistNum"]
         consistNam = "consist"+str(consistNum)
 
@@ -129,16 +127,11 @@ class trnProc:
                 self.updateTrain4Stop(stopLoc, trainDict)
 
         dispObj.drawTrain(trainNam)
-        locBase.addTrn2Loc_rt(stopLoc, trainDict, trainNam)
-        try:
-            index = routeStem["trains"].index(trainNam)
-        except:
-            pass
-        
+        locBase.addTrn2LocOrRt(stopLoc, trainDict, trainNam)
+
         #remove train from that route
         rtCapsObj.remTrnsOnRoute(routeNam, trainNam)
         #routeStem["trains"].pop(index)
-        #gui.C.delete(routeStem["trnLabelTag"])
         mVars.numOpBusy -=1
 
     def updateTrain4Stop(self, stopLoc, trainDict):

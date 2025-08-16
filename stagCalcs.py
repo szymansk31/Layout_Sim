@@ -26,29 +26,29 @@ class stCalcs():
 
     def staging(self, loc):
         
-        for train in trainDB.ydTrains["wait4Clearance"]:
+        for train in trainDB.ydTrains["wait4Clrnce"]:
             if mVars.time == trainDB.trains[train]["startTime"]:
                 nextLoc = trainDB.trains[train]["nextLoc"]
 
                 print("in staging: nextLoc: ", nextLoc)
                 locs.locDat[loc]["trnCnts"]["started"] += 1
 
-                self.locBaseObj.rmTrnFrmActions("wait4Clearance", loc, train)
+                self.locBaseObj.rmTrnFrmActions("wait4Clrnce", loc, train)
                 self.locProcObj.startTrain(loc, train)
                 
         self.dispObj.dispTrnLocDat(loc)
                 
     def stAnalyzeTrains(self, loc):
-        trainDB.ydTrains = {"wait4Clearance": [], "terminated": [], "turn": []}
+        trainDB.ydTrains = {"wait4Clrnce": [], "terminated": [], "turn": []}
 
         # train status leads to actions by the yard crew or
         # the train crew.  Train actions are the same name as
         # the corresponding train status string
         for trainNam in locs.locDat[loc]["trains"]:
             match trainDB.trains[trainNam]["status"]:
-                case "wait4Clearance":
-                    if trainNam not in trainDB.ydTrains["wait4Clearance"]:
-                        trainDB.ydTrains["wait4Clearance"].append(trainNam)
+                case "wait4Clrnce":
+                    if trainNam not in trainDB.ydTrains["wait4Clrnce"]:
+                        trainDB.ydTrains["wait4Clrnce"].append(trainNam)
                 case "terminate":
                     if trainNam not in trainDB.ydTrains["terminated"]:
                         trainDB.ydTrains["terminated"].append(trainNam)
