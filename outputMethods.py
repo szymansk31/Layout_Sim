@@ -1,6 +1,6 @@
 
 from mainVars import mVars
-from stateVars import trainDB
+from stateVars import trainDB, routeCls
 from dispatch import rtCaps
 
 class printMethods():
@@ -45,9 +45,13 @@ class printMethods():
     def printRtCaps(self):
         print("\nrtCaps.rtCap: ")
         for route in rtCaps.rtCap:
-            print(route, ": ", rtCaps.rtCap[route])
+            print(route, ": ", "trains: ", 
+                  routeCls.routes[route]["trains"],
+                  rtCaps.rtCap[route])
             
     def writeRtCaps(self, file, route):
         file.write("\nrtCaps.rtCap: ")
-        file.write("\n" + route + ": " +  str(rtCaps.rtCap[route]))
+        file.write("\n" + route + ": " +  \
+            "trains: " + str(routeCls.routes[route]["trains"]) + \
+            str(rtCaps.rtCap[route]))
        

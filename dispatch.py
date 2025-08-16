@@ -24,11 +24,13 @@ class schedProc():
 
     def fetchLocSchedItem(self, loc):
         from locProc import locBase
+        locBaseObj = locBase()
         trainInitObj = trainInit()
         for trainNam in dspCh.sched:
             if (loc == dspCh.sched[trainNam]["origLoc"]) and \
                 (mVars.time >= dspCh.sched[trainNam]["startTime"]):
-                locBase.addTrn2LocOrRt(loc, dspCh.sched[trainNam], trainNam)
+                locBaseObj.addTrn2LocOrRt(loc, dspCh.sched[trainNam], 
+                        trainNam)
                 self.baseTrnDict(trainNam)
                 dspCh.sched.pop(trainNam)
                 trainInitObj.fillTrnDicts(loc, trainNam)
@@ -131,30 +133,3 @@ class rtCaps():
         return openSlot
         
 
-    def fillTrnsOnRoute(self, routeNam, trainNam):
-        routeStem = routeCls.routes[routeNam]["trains"]
-        routeStem.append(trainNam)
-        dir = trainDB.trains[trainNam]["direction"]
-        if dir == "east":
-            rtCaps.rtCap[routeNam]["nEastTns"] +=1
-        elif dir == "west":
-            rtCaps.rtCap[routeNam]["nWestTns"] +=1
-       
-    def remTrnsOnRoute(self, routeNam, trainNam):
-        routeStem = routeCls.routes[routeNam]["trains"]
-        try:
-            index = routeStem.index(trainNam)
-            routeStem.pop(index)
-        except:
-            pass
-        
-        dir = trainDB.trains[trainNam]["direction"]
-        numEast = rtCaps.rtCap[routeNam]["nEastTns"]
-        numWest = rtCaps.rtCap[routeNam]["nWestTns"]
-        if dir == "east":
-            num = max(numEast -1, 0)
-            rtCaps.rtCap[routeNam]["nEastTns"] = num
-        elif dir == "west":
-            num = max(numWest -1, 0)
-            rtCaps.rtCap[routeNam]["nWestTns"] = num
-        

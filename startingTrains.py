@@ -54,9 +54,8 @@ class trainFromFile():
             print("with consist: ", consistNam, ", contents: ", self.consist[consistNam])
             trainDB.trains.update(newTrain)
             trainDB.trains[trainNam]["numCars"] = trainInitObj.numCars(trainNam)
-
-            locBaseObj.addTrn2LocOrRt(currLoc, trainNam)
-            rtCapsObj.addTrn2RouteQ(currLoc, trainNam)
+            origLoc = trainDict[trainNam]["origLoc"]
+            locProcObj.startTrain(origLoc, trainNam)
             print("starting train: ", trainDB.trains[trainNam])
             dispObj = dispItems()
             dispObj.drawTrain(trainNam)

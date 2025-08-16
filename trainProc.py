@@ -12,11 +12,13 @@ np.set_printoptions(precision=2, suppress=True)
 class trnProc:    
     
     def __init__(self):
+        self.locBaseObj = locBase()
         pass
     
     def trainCalcs(self, trainDict, trainNam):
         dispObj = dispItems()
         coordObj = transForms()
+        rtCapsObj = rtCaps()
 
         match trainDict["status"]:
             case "enroute":
@@ -49,13 +51,17 @@ class trnProc:
                             self.procTrnStop(trainDict, trainNam)
                                                 
                     
-            case "wait4Clrnce":
+            case "wait4Clrnce" if rtCapsObj.checkRtSlots(trainNam):
                 print("train: ", trainNam, " switching to enroute status")
                 trainDict["status"] = "enroute"
+                trainDict["currentLoc"] = trainDict["rtToEnter"]
+                self.locBaseObj.fillTrnsOnRoute(trainDict["currentLoc"], trainNam)
+                # remove train rectangles above the location rectangle
                 dispObj.drawTrain(trainNam)
-                #loc = trainDB.trains[trainNam]["departStop"]
-                #if loc != "":
-                #    locBaseObj.rmTrnFrmLoc(loc, trainNam)
+                loc = trainDB.trains[trainNam]["departStop"]
+                if loc != "":
+                    self.locBaseObj.rmTrnFrmLoc(loc, trainNam)
+                    dispObj.clearActionTrnRecs(loc, trainNam)
                 pass
             case "building"|"built"|"init":
                 #procssing done in locProc
@@ -90,6 +96,7 @@ class trnProc:
 
         stopLoc = trainDict["nextLoc"]
         trainDict["locArrTime"] = mVars.time
+        trainDict["rtToEnter"] = ""
         trainDict["currentLoc"] = stopLoc
         trainDict["departStop"] = stopLoc
         print("train: ", trainNam, "entering terminal: ", stopLoc, "trainDict: ", trainDict)
@@ -127,10 +134,10 @@ class trnProc:
                 self.updateTrain4Stop(stopLoc, trainDict)
 
         dispObj.drawTrain(trainNam)
-        locBase.addTrn2LocOrRt(stopLoc, trainDict, trainNam)
+        self.locBaseObj.addTrn2LocOrRt(stopLoc, trainDict, trainNam)
 
         #remove train from that route
-        rtCapsObj.remTrnsOnRoute(routeNam, trainNam)
+        self.locBaseObj.remTrnsOnRoute(routeNam, trainNam)
         #routeStem["trains"].pop(index)
         mVars.numOpBusy -=1
 

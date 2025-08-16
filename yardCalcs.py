@@ -216,8 +216,8 @@ class ydCalcs():
                 locs.locDat[loc]["ready2Pickup"] = 0
                 locs.locDat[loc]["trnCnts"]["switched"] += 1
                 
-                self.locBaseObj.cleanupSwAction(loc, ydTrainNam, "swTrain")
                 self.locProcObj.startTrain(loc, ydTrainNam)
+                self.locBaseObj.cleanupSwAction(loc, ydTrainNam, "swTrain")
         
         pass
     def servIndus(self, loc):
