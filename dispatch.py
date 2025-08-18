@@ -101,7 +101,8 @@ class rtCaps():
             rtStem["westSlots"] = westSlots                    
 
     def addTrn2RouteQ(self, route, trainNam):
-        rtCaps.rtCap[route]["Q"].append(trainNam)
+        if trainNam not in rtCaps.rtCap[route]["Q"]:
+            rtCaps.rtCap[route]["Q"].append(trainNam)
         
     def remTrnFrmRouteQ(self, route, trainNam):
         rtCapStem = rtCaps.rtCap[route]["Q"]

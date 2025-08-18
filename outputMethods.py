@@ -36,7 +36,7 @@ class printMethods():
         direction = trainStem["direction"]
         if mVars.prms["dbgLoop"]: 
             file.write (
-            "\nStart of Time Step: " + trainNam + ", #cars: " + str(numCars) + 
+            "\nStart of main loop: " + trainNam + ", #cars: " + str(numCars) + 
             ", currL: " + currentLoc + ", nextL: " + nextLoc + 
             ", origL: " + origLoc + 
             ", finL: " + finalLoc + ", dir: " + direction + 

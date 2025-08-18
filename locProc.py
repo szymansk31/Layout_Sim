@@ -121,7 +121,7 @@ class locBase():
     def addTrn2LocOrRt(self, loc, trainStem, trainNam): 
         coordObj = transForms()
         rtToEnter = ""
-        if dspCh.sched[trainNam]["status"] != "init":
+        if trainStem["status"] != "init":
             rtToEnter = trainStem["rtToEnter"]
         if "route" in rtToEnter:
             self.setTrnCoord(loc, trainNam)
@@ -315,7 +315,7 @@ class locProc():
             #train not on route to start
             trainStem["coord"]["xTrnInit"] = 0  
         locBaseObj.addTrn2LocOrRt(routeNam, trainStem, trainNam)
-        rtCapsObj.addTrn2RouteQ(routeNam, trainNam)
+        #rtCapsObj.addTrn2RouteQ(routeNam, trainNam)
         trainStem["firstDispTrn"] = 1
         
         #print("trainStem: ", trainStem, ", original dict: ", trainDB.trains[trainNam])

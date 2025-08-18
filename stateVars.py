@@ -47,6 +47,7 @@ class stVarSaves():
     savydtrains =   {}
     savroutes   =   {}
     savIDX    =   0
+    statFile  = ""
     
     def __init__(self):
         self.savNames = {
@@ -127,19 +128,20 @@ class stVarSaves():
         now = datetime.now()
         date_time = now.strftime("%m_%d_at_%H%M")
         fileName = "output/stats_" + date_time + ".txt"
+        stVarSaves.statFile = fileName
         with open (fileName, "a") as statFile:
             statFile.write("\n\n===============================")
             statFile.write("===============================\n")
-            statFile.write("time step: " + str(mVars.time))
+            statFile.write("Time step: " + str(mVars.time))
             for loc in locs.locDat:
                 statFile.write("\n---------------------------")
                 statFile.write("\ntime step: " + str(mVars.time))
                 statFile.write("\nLocation: " + loc)
-                statFile.write("\nDestination, #cars     \n")
+                statFile.write("\nDestination, #cars:    ")
                 locStem = locs.locDat[loc]
                 for dest in locStem["destTrkTots"]:
                     numCars = locStem["destTrkTots"][dest]
-                    statFile.write("  " + dest + "    " + str(numCars))
+                    statFile.write(dest + "  " + str(numCars))
                 text = "\n# Cars: " + str(locStem["totCars"])
                 if locStem["type"] != "staging":
                     text +=  ", class: " + str(locStem["cars2Class"])
@@ -186,4 +188,3 @@ class stVarSaves():
                     statFile.write("\n")
             statFile.flush()
 
-        

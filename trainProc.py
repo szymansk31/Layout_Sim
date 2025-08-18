@@ -63,6 +63,10 @@ class trnProc:
                     self.locBaseObj.rmTrnFrmLoc(loc, trainNam)
                     dispObj.clearActionTrnRecs(loc, trainNam)
                 pass
+            case "wait4Clrnce" if not rtCapsObj.checkRtSlots(trainNam):
+                rtCapsObj.addTrn2RouteQ(trainDict["rtToEnter"], trainNam)
+                
+                pass
             case "building"|"built"|"init":
                 #procssing done in locProc
                 pass
