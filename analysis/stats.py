@@ -16,32 +16,49 @@ class analyTimeSeries():
     
     def readTimeSeries(self):
         #filename = sys.argv[1]
-        filename = "output/timeSeries_08_18_at_2000.txt"
+        filename = "output/timeSeries_08_18_at_2128.txt"
         with open (filename, "r") as inFile:
             for line in inFile: 
-                print("input line: ", line)
                 if line != "\n":
                     tmpDict = ast.literal_eval(line)
+                    if isinstance(tmpDict, tuple): tmpDict = tmpDict[0]
                     timeKey = next(iter(tmpDict))
                     print("timeKey: ", timeKey)
-                    self.timeSrsDict[timeKey] = tmpDict
-                    print("next line in dict: ", self.timeSrsDict)
+                    self.timeSrsDict[timeKey] = tmpDict.pop(timeKey)
+                    #print("next line in dict: ", self.timeSrsDict)
 
         #print("input dict: ", self.timeSrsDict)
 
     def plotTimeSeries(self):
         timeList = []
+        nCars = {}
         nCarsPgh = []
+        nCarsKiski = []
+        legend = []
+        for loc in self.timeSrsDict["time0"]:
+            nCars[loc] = []
+            legend.append(loc)
+        print("nCars: ", nCars)
         for time in self.timeSrsDict:
             
-            timeList.append(time)
+            timeList.append(time[4:])
             nCarsPgh.append(self.timeSrsDict[time]["pgh"]["nCars"])
+            nCarsKiski.append(self.timeSrsDict[time]["Kiski"]["nCars"])
+            for loc in self.timeSrsDict[time]:
+                nCars[loc]
+                nCars[loc].append(self.timeSrsDict[time][loc]["nCars"])
             #plt.plot(time, thr, color='k')  
             #plt.plot(time, drawBar/2000, color='b')
             #plt.plot(time, mph, color='r')
-            #plt.legend(["Cutoff", "Throttle", "Drawbar", "mph"])
-        plt.figure()
-        plt.bar(timeList, nCarsPgh, color='g')  
+        plt.figure(figsize=[8,4])
+        plt.plot(timeList, nCarsPgh, color='g')  
+        plt.plot(timeList, nCarsKiski, color='r')  
+        plt.show(block=False)
+        
+        plt.figure(figsize=[8,4])
+        for loc in nCars:
+            plt.plot(timeList, nCars[loc])
+        plt.legend(legend,loc='lower left')
         plt.show(block=False)
         plt.show()
 

@@ -83,7 +83,7 @@ class statSave():
                 locStem = locs.locDat[loc]
                 for dest in locStem["destTrkTots"]:
                     numCars = locStem["destTrkTots"][dest]
-                    statFile.write(dest + "  " + str(numCars))
+                    statFile.write(dest + "  " + str(numCars) + "  ")
                 text = "\n# Cars: " + str(locStem["totCars"])
                 if locStem["type"] != "staging":
                     text +=  ", class: " + str(locStem["cars2Class"])
