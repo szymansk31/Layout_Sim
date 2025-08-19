@@ -5,9 +5,10 @@ import sys
 from tkinter import ttk
 from stateVars import locs, trainDB, routeCls, stVarSaves
 from display import dispItems
-from outputMethods import printMethods
+from outputMethods import printMethods, statSave
 displayObj = dispItems()
 stVarObj = stVarSaves()
+statSaveObj = statSave()
 printObj = printMethods()
          
 #=================================================
@@ -54,7 +55,8 @@ class mainMethods():
                     loc)
 
                 self.locProcObj.locCalcs(locs.locDat, loc)
-            stVarObj.savStats()
+            statSaveObj.savStats()
+            statSaveObj.timeSeries()
             stVarObj.saveStVars()
             stVarObj.incSavIDX()
             mVars.time +=1

@@ -43,6 +43,10 @@ class locBase():
                 trackStem = locStem["tracks"]
             case "swArea":
                 trackStem = locStem["industries"]
+        if type == "staging":
+            for train in locStem["trains"]:
+                locStem["totCars"] += trainDB.trains[train]["numCars"]
+            return
         for trackNam in locStem["destTrkTots"]:
             #print("\n Location: ", loc, "destination: ", trackNam)
             if trackNam not in trackStem: continue
