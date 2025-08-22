@@ -3,10 +3,10 @@ import tkinter as tk
 from mainVars import mVars
 from fileProc import readFiles
 from display import dispItems
-from locProc import locProc, locBase
+from locBase import locBase
 from coords import transForms
 from stateVars import locs, dspCh, trainDB, routeCls
-from dispatch import rtCaps
+from routeCalcs import rtCaps
 np.set_printoptions(precision=2, suppress=True) 
   
 class trnProc:    

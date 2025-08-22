@@ -16,14 +16,15 @@ class swCalcs():
         #self.weights = [0.18, 0.18, 0.18, 0.18, 0.1]
         self.weights = [0.3, 0.3, 0.3, 0, 0]
         #self.weights = [0, 0, 0, 0, 0]
-        from locProc import locProc, locBase
+        from locProc import locProc
         self.locProcObj = locProc()
+        from locBase import locBase
         self.locBaseObj = locBase()
         from classCars import classCars
         self.classObj = classCars()
         from display import dispItems
         self.dispObj = dispItems()
-        from dispatch import rtCaps
+        from routeCalcs import rtCaps
         self.rtCapsObj = rtCaps()
         
 

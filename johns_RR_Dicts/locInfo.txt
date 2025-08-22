@@ -7,7 +7,7 @@
     "time2Class": 0,
     "Qs": {
         "arrvs": [{"train": {"estArrTime": 0, "action": "", "nCars4ThisLoc":0}}],
-        "departs": [{"train": {"schedTimeOut": 0, "status": "", "rtToEnter":""}}],
+        "departs": [{"train": {"startTime": 0, "status": "", "rtToEnter":""}}],
         "builds": [{"train": {"numCars": 0, "numCars2Add": 0, "status": "", "rtToEnter":""}}]
     
     }
@@ -77,7 +77,7 @@
     "time2Class": 0,
     "Qs": {
         "arrvs": [{"train": {"estArrTime": 0, "action": "", "nCars4ThisLoc":0, "destTrack": ""}}],
-        "departs": [{"train": {"schedTimeOut": 0, "status": "", "rtToEnter":""}}],
+        "departs": [{"train": {"startTime": 0, "status": "", "rtToEnter":""}}],
         "builds": [{"train": {"numCars": 0, "numCars2Add": 0, "status": "", "rtToEnter":""}}]
     
     }
@@ -138,7 +138,7 @@
     "time2Class": 0,
     "Qs": {
         "arrvs": [{"train": {"estArrTime": 0, "action": "", "nCars4ThisLoc":0, "destTrack": ""}}],
-        "departs": [{"train": {"schedTimeOut": 0, "status": "", "rtToEnter":""}}],
+        "departs": [{"train": {"startTime": 0, "status": "", "rtToEnter":""}}],
         "builds": [{"train": {"numCars": 0, "numCars2Add": 0, "status": "", "rtToEnter":""}}]
     
     }
@@ -202,7 +202,7 @@
     "time2Class": 0,
     "Qs": {
         "arrvs": [{"train": {"estArrTime": 0, "action": "", "nCars4ThisLoc":0, "destTrack": ""}}],
-        "departs": [{"train": {"schedTimeOut": 0, "status": "", "rtToEnter":""}}],
+        "departs": [{"train": {"startTime": 0, "status": "", "rtToEnter":""}}],
         "builds": [{"train": {"numCars": 0, "numCars2Add": 0, "status": "", "rtToEnter":""}}]
     
     }
@@ -256,7 +256,7 @@
     "time2Class": 0,
     "Qs": {
         "arrvs": [{"train": {"estArrTime": 0, "action": "", "nCars4ThisLoc":0, "destTrack": ""}}],
-        "departs": [{"train": {"schedTimeOut": 0, "status": "", "rtToEnter":""}}],
+        "departs": [{"train": {"startTime": 0, "status": "", "rtToEnter":""}}],
         "builds": [{"train": {"numCars": 0, "numCars2Add": 0, "status": "", "rtToEnter":""}}]
     
     }

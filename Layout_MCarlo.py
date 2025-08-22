@@ -128,7 +128,7 @@ gui.guiDict = files.readFile("guiFile")
 guiObj.preProcGui()
 routeGeomObj.initRoutes(gui.guiDict)
 
-from dispatch import rtCaps
+from routeCalcs import rtCaps
 rtCapsObj = rtCaps()
 rtCapsObj.initRouteCaps()
 
@@ -140,7 +140,7 @@ carProcObj = carProc()
 #carProcObj.procCarInfo(carDict)
 
 #dynamic info for each location
-from locProc import locProc, locBase
+from locBase import locBase
 locBaseObj = locBase()
 locBaseObj.initLocDicts()
 

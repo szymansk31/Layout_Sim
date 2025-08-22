@@ -6,8 +6,9 @@ from trainInit import trainInit
 from display import dispItems
 from gui import gui
 from coords import transForms
-from locProc import locProc, locBase
-from dispatch import rtCaps
+from locProc import locProc
+from locBase import locBase
+from routeCalcs import rtCaps
 
 files = readFiles()
 
