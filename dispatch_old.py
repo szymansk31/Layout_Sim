@@ -50,7 +50,7 @@ class schedProc():
         for train in dspCh.sched:
             if (loc == dspCh.sched[train]["origLoc"]) and \
                 (mVars.time >= dspCh.sched[train]["startTime"]):
-                locBase.addTrn2Loc_rt(loc, dspCh.sched[train], train)
+                locBase.addTrn2LocOrRt(loc, dspCh.sched[train], train)
                 trainDB.trains[train] = dspCh.sched[train]
                 return
             pass

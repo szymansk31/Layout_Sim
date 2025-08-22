@@ -3,124 +3,21 @@ import numpy as np
 from mainVars import mVars
 from stateVars import locs, trainDB, routeCls
 from display import dispItems
-from dispatch import schedProc
+from dispatch import schedProc, dspCh
 from yardCalcs import ydCalcs
 from swCalcs import swCalcs
 from stagCalcs import stCalcs
 from gui import gui
 from coords import transForms
-from dispatch import rtCaps
+from routeCalcs import routeCalcs, rtCaps
 from outputMethods import printMethods
+from locBase import locBase
         
 
 np.set_printoptions(precision=2, suppress=True) 
 
 
 dbgLocal = 1     
-#=================================================
-class locBase():
-    
-    def __init__(self):
-        pass
-    
-    def initLocDicts(self):
-        from fileProc import readFiles
-        files = readFiles()
-        print("initializing location dicts: ")
-        locs.locDat = files.readFile("locationFile")
-        for loc in locs.locDat:
-            self.countCars(loc)
-            locs.locDat[loc]["locTrnRectID"] = loc+"TrnRectID"
-            locs.locDat[loc]["locTrnNumID"] = loc+"TrnNumID"
-            locs.locDat[loc]["locRectID"] = loc+"RectID"
-        
-    def countCars(self, loc):
-        locStem = locs.locDat[loc]
-        type = locs.locDat[loc]["type"]
-        locStem["totCars"] = 0
-        match type:
-            case "yard":
-                trackStem = locStem["tracks"]
-            case "swArea":
-                trackStem = locStem["industries"]
-        for trackNam in locStem["destTrkTots"]:
-            #print("\n Location: ", loc, "destination: ", trackNam)
-            if trackNam not in trackStem: continue
-            match type:
-                case "yard":
-                    locStem["destTrkTots"][trackNam] = sum(trackStem[trackNam].values())
-                    locStem["totCars"] += locStem["destTrkTots"][trackNam]
-                case "swArea":
-                    if trackNam == "offspot": 
-                        locStem["numOffspot"] = sum(locs.locDat[loc]["offspot"].values())
-                        continue
-                    locStem["indusTots"][trackNam] = \
-                        sum(trackStem[trackNam]["pickups"].values()) + \
-                        sum(trackStem[trackNam]["leave"].values())
-                    locStem["totCars"] += locStem["indusTots"][trackNam]
-                    locStem["totCars"] += locStem["numOffspot"]
-                    
-        #print("countCars: ", locStem)
-                        
-
-    def locDests(self, loc):
-        thisLocDests = []
-        for dest in locs.locDat[loc]["destTrkTots"]:
-            thisLocDests.append(dest)
-        return thisLocDests
-
-    def rmTrnFrmActions(self, action, loc, ydTrainNam):
-        dispObj = dispItems()
-        # remove train from ydTrains and location
-        print("rmTrnFrmActions: trainDB.ydTrains: ", trainDB.ydTrains)
-        index = trainDB.ydTrains[action].index(ydTrainNam)
-        trainDB.ydTrains[action].pop(index)
-        if dbgLocal: print("after removal: trainDB.ydTrains: ", trainDB.ydTrains, 
-                "\n trains[ydTrainNam]: ", trainDB.trains[ydTrainNam])
-        # clear action data from display
-        dispObj.clearActionDat(loc)
-    
-    def rmTrnFrmLoc(self, loc, trainNam):  
-        index = locs.locDat[loc]["trains"].index(trainNam)
-        locs.locDat[loc]["trains"].pop(index)
-
-    def addTrn2Loc_rt(loc, trainStem, trainNam): 
-        rtCapsObj = rtCaps()
-        coordObj = transForms()
-        currentLoc = trainStem["currentLoc"]
-        if "route" in currentLoc:
-            routeStem = routeCls.routes[currentLoc] 
-            #routeCls.routes[trainStem["currentLoc"]]["trains"].append(trainNam)
-            rtCapsObj.fillTrnsOnRoute(currentLoc, trainNam)
-            # fill trainDB with xPlot and yPlot, the canvas/screen coords
-            coordObj.xRoute2xPlot(loc, trainNam)
-            return
-        else:
-            locs.locDat[loc]["trains"].append(trainNam)
-            return
-
-    def cleanupSwAction(self, loc, ydTrainNam, action):
-        dispObj = dispItems()
-        locActionStem = locs.locDat[loc]["trn4Action"]            
-        index = [i for i, d in enumerate(locActionStem)\
-            if action in d]
-        if index:
-            locActionStem.pop(index[0])
-        try:
-            trainStem = trainDB.trains[ydTrainNam]
-            # remove stop from train
-            trainStem["stops"].pop(loc)
-            # remove stop from consist
-            consistNam = trainDB.getConNam(ydTrainNam)
-            trainDB.consists[consistNam]["stops"].pop(loc)
-        except:
-            pass
-        # remove from ydTrains action list
-        self.rmTrnFrmActions(action, loc, ydTrainNam)
-
-        # clear action data from display
-        dispObj.clearActionDat(loc)
-
     
 #=================================================
 class locProc():
@@ -204,7 +101,7 @@ class locProc():
                     self.startTrain(loc, trainNam)
                 case "built":
                     startTime = trainDB.trains[trainNam]["startTime"]
-                    if (mVars.time >= startTime) and rtCapsObj.checkRtSlots:
+                    if (mVars.time >= startTime):
                         locs.locDat[loc]["trnCnts"]["started"] += 1
                         #locs.locDat[loc]["bldTrnDepTimes"].pop(0)
                         nextLoc = trainDB.trains[trainNam]["nextLoc"]
@@ -215,67 +112,34 @@ class locProc():
                               nextLoc)
                         self.startTrain(loc, trainNam)
         
-                
-    def findRoutes(self, loc, ydTrainNam):
-        nextLoc = trainDB.trains[ydTrainNam]["nextLoc"]
-        for routeNam in routeCls.routes:
-            loc = ''.join(loc)
-            dest = ''.join(nextLoc)
-            if dbgLocal: print("routNam: ", routeNam, " loc: ", loc, 
-                " nextLoc: ", dest, "route: ", routeCls.routes[routeNam])
-            if (loc in routeCls.routes[routeNam].values()) and \
-                (dest in routeCls.routes[routeNam].values()):
-                return routeNam
 
-    def setRtTrnPrms(self, loc, ydTrainNam):
-        # setup train
-        trainStem = trainDB.trains[ydTrainNam]
-        dest = trainDB.trains[ydTrainNam]["nextLoc"]
-        if dest != "":
-            # setup new route
-            route4newTrn = self.findRoutes(loc, ydTrainNam)
-            trainStem["rtToEnter"] = route4newTrn
-            leftObj = routeCls.routes[route4newTrn]["leftObj"].strip()
-            rtObj = routeCls.routes[route4newTrn]["rtObj"].strip()
-            #routeCls.routes[route4newTrn]["trains"].append(ydTrainNam)
-            if loc == leftObj: 
-                trainStem["direction"] = "east"
-            elif loc == rtObj:
-                trainStem["direction"] = "west"
-            else: 
-                print("no route found", ydTrainNam,  "leftObj: ", leftObj, "rtObj: "
-                        , rtObj,"loc: ", loc, "direction: ", trainStem["direction"])
-                trainStem["status"] = "stop"
-        return 
-                    
-
-    def startTrain(self, loc, ydTrainNam):
+    def startTrain(self, loc, trainNam):
         # setup train
         dispObj = dispItems()
         coordObj = transForms()
         locBaseObj = locBase()
         rtCapsObj = rtCaps()
         
-        trainStem = trainDB.trains[ydTrainNam]
-        trainStem["status"] = "wait4Clearance"
+        trainStem = trainDB.trains[trainNam]
+        trainStem["status"] = "wait4Clrnce"
+        if trainStem["rtToEnter"] == "":
+            locBaseObj.findRtPrms(loc, trainNam)
         routeNam = trainStem["rtToEnter"]
-                
-        rtCapsObj.fillTrnsOnRoute(routeNam, ydTrainNam)
+        #trainStem["currentLoc"] = routeNam
+               
+        #sets initial coords in rotated system 
+        if (trainStem["coord"]["xTrnInit"] == 0) or\
+            (trainStem["coord"]["xTrnInit"]) == None:
+            #train not on route to start
+            trainStem["coord"]["xTrnInit"] = 0  
+        locBaseObj.addTrn2LocOrRt(routeNam, trainStem, trainNam)
+        #rtCapsObj.addTrn2RouteQ(routeNam, trainNam)
         trainStem["firstDispTrn"] = 1
-        trainStem["currentLoc"] = routeNam
         
-        #sets initial coords in rotated system    
-        trainStem["coord"]["xTrnInit"] = 0  # train starting at location
-        self.setTrnCoord(trainStem["currentLoc"], trainStem)  
-        # xPlot and yPlot are in the screen coord system              
-        coordObj.xRoute2xPlot(routeNam, ydTrainNam)
-        #print("trainStem: ", trainStem, ", original dict: ", trainDB.trains[ydTrainNam])
-        locBaseObj.rmTrnFrmLoc(loc, ydTrainNam)
-        # remove train rectangles above the location rectangle
-        dispObj.clearActionTrnRecs(loc, ydTrainNam)
-        dispObj.drawTrain(ydTrainNam)
+        #print("trainStem: ", trainStem, ", original dict: ", trainDB.trains[trainNam])
+        dispObj.drawTrain(trainNam)
                 
-        if mVars.prms["dbgYdProc"]: print("train",ydTrainNam," starting: "
+        if mVars.prms["dbgYdProc"]: print("train",trainNam," starting: "
             ,trainStem, ",\n")
             #route: ", routeCls.routes[route4newTrn])
 
@@ -297,14 +161,4 @@ class locProc():
                 trainStem["coord"]["yPlot"])
         """
         pass
-
-    def setTrnCoord(self, currLoc, trainStem):
-        routeLen = routeCls.routes[currLoc]["rtLength"]
-        trainStem["coord"]["yRoute"] = 0 # by definition rotated coord system is
-            # along xRoute axis
-        xRoute = trainStem["coord"]["xTrnInit"]*routeLen
-        if trainStem["direction"] == "west":
-                xRoute = -xRoute
-        trainStem["coord"]["xRoute"] = xRoute    
-        return 
 

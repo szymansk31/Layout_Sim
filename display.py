@@ -183,12 +183,12 @@ class dispItems():
             for train in ydtrains[action]:
                 dispList["actions"][action]["trains"].append(train)
 
-        dispList["actions"]["wait4Clearance"] = dict(trains= [], y= y0 - 25)
+        dispList["actions"]["wait4Clrnce"] = dict(trains= [], y= y0 - 25)
         dispList["actions"]["built"] = dict(trains = [], y = y0 - 10)
         tmp = locs.locDat[loc]["trains"]
         for train in tmp:
-            if trainDB.trains[train]["status"] == "wait4Clearance":
-                dispList["actions"]["wait4Clearance"]["trains"].append(train)
+            if trainDB.trains[train]["status"] == "wait4Clrnce":
+                dispList["actions"]["wait4Clrnce"]["trains"].append(train)
             if trainDB.trains[train]["status"] == "built":
                 dispList["actions"]["built"]["trains"].append(train)
         print("dispList: ", dispList)

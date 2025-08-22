@@ -1,7 +1,9 @@
 
 from mainVars import mVars
-from stateVars import trainDB
-from dispatch import rtCaps
+from stateVars import locs, trainDB, routeCls
+from routeCalcs import rtCaps
+from datetime import datetime
+import json
 
 class printMethods():
     
@@ -36,7 +38,7 @@ class printMethods():
         direction = trainStem["direction"]
         if mVars.prms["dbgLoop"]: 
             file.write (
-            "\nStart of Time Step: " + trainNam + ", #cars: " + str(numCars) + 
+            "\nStart of main loop: " + trainNam + ", #cars: " + str(numCars) + 
             ", currL: " + currentLoc + ", nextL: " + nextLoc + 
             ", origL: " + origLoc + 
             ", finL: " + finalLoc + ", dir: " + direction + 
@@ -45,9 +47,137 @@ class printMethods():
     def printRtCaps(self):
         print("\nrtCaps.rtCap: ")
         for route in rtCaps.rtCap:
-            print(route, ": ", rtCaps.rtCap[route])
+            print(route, ": ", "trains: ", 
+                  routeCls.routes[route]["trains"],
+                  rtCaps.rtCap[route])
             
     def writeRtCaps(self, file, route):
         file.write("\nrtCaps.rtCap: ")
-        file.write("\n" + route + ": " +  str(rtCaps.rtCap[route]))
+        file.write("\n" + route + ": " +  \
+            "trains: " + str(routeCls.routes[route]["trains"]) + \
+            str(rtCaps.rtCap[route]))
        
+class statSave():
+    statFile  = ""
+    timeFile  = ""
+    timeSeries = {}
+
+    def __init__(self):
+        self.printObj = printMethods()
+        pass
+
+    def savStats(self):
+        now = datetime.now()
+        date_time = now.strftime("%m_%d_at_%H%M")
+        fileName = "output/stats_" + date_time + ".txt"
+        statSave.statFile = fileName
+        with open (fileName, "a") as statFile:
+            statFile.write("\n\n===============================")
+            statFile.write("===============================\n")
+            statFile.write("Time step: " + str(mVars.time))
+            for loc in locs.locDat:
+                statFile.write("\n---------------------------")
+                statFile.write("\ntime step: " + str(mVars.time))
+                statFile.write("\nLocation: " + loc)
+                statFile.write("\nDestination, #cars:    ")
+                locStem = locs.locDat[loc]
+                for dest in locStem["destTrkTots"]:
+                    numCars = locStem["destTrkTots"][dest]
+                    statFile.write(dest + "  " + str(numCars) + "  ")
+                text = "\n# Cars: " + str(locStem["totCars"])
+                if locStem["type"] != "staging":
+                    text +=  ", class: " + str(locStem["cars2Class"])
+                statFile.write(text)
+                text = "\ntrains built: " + str(locStem["trnCnts"]["built"]) +\
+                    "; started: " + str(locStem["trnCnts"]["started"]) +\
+                    "; switched: " + str(locStem["trnCnts"]["switched"]) +\
+                    "; brkDown: " + str(locStem["trnCnts"]["brkDown"]) +\
+                    "; passThru: " + str(locStem["trnCnts"]["passThru"])
+                statFile.write(text)
+ 
+                statFile.write("\nTrain and consist:     ")
+
+                for train in locStem["trains"]:
+                    self.printObj.writeTrainInfo(statFile, train)
+                    consistNum = trainDB.trains[train]["consistNum"]
+                    consistNam = "consist"+str(consistNum)
+                    stopStem = trainDB.consists[consistNam]["stops"]
+                    statFile.write("\n" + train + " stops:")
+                    trnStopStem = trainDB.trains[train]["stops"]
+                    for stop in trnStopStem:
+                        statFile.write("\n"+ stop \
+                             + str(trnStopStem[stop]))
+                    for stop in stopStem:
+                        numCars = sum(stopStem[stop].values())
+                        statFile.write("\n"+ stop +": #cars: "+\
+                            str(numCars) + str(stopStem[stop]))
+                    statFile.write("\n")
+
+            for route in routeCls.routes:
+                statFile.write("\n---------------------------\n")
+                statFile.write("\ntime step: " + str(mVars.time))
+                statFile.write("\nroute: " + route)
+                self.printObj.writeRtCaps(statFile, route)
+                statFile.write("\nTrain and consist:     ")
+                for train in routeCls.routes[route]["trains"]:
+                    self.printObj.writeTrainInfo(statFile, train)
+                    consistNum = trainDB.trains[train]["consistNum"]
+                    consistNam = "consist"+str(consistNum)
+                    stopStem = trainDB.consists[consistNam]["stops"]
+                    statFile.write("\n" + train + " stops:")
+                    for stop in stopStem:
+                        statFile.write("\n" + stop + ": " + str(stopStem[stop]))
+                    statFile.write("\n")
+            statFile.flush()
+
+    def timeSeries(self):
+        now = datetime.now()
+        date_time = now.strftime("%m_%d_at_%H%M")
+        fileName = "output/timeSeries_" + date_time + ".txt"
+        statSave.timeFile = fileName
+        timeKey = "time" + str(mVars.time)
+        varDict = {}
+        varDict[timeKey] = {}
+        with open (fileName, "a") as timeFile:
+            for loc in locs.locDat:
+                tmpDict = {}
+                locStem = locs.locDat[loc]
+                carCountDict = {"nCars": locStem["totCars"]}
+                if locStem["type"] != "staging":
+                    carCountDict["class"] = locStem["cars2Class"]
+                tmpDict.update(carCountDict)
+                destDict = {}
+                for dest in locStem["destTrkTots"]:
+                    numCars = locStem["destTrkTots"][dest]
+                    destDict.update({dest: numCars})
+                tmpDict.update(destDict)
+                trnCnts = {"built":  locStem["trnCnts"]["built"],
+                    "started":  locStem["trnCnts"]["started"],
+                    "switched":  locStem["trnCnts"]["switched"],
+                    "brkDown":  locStem["trnCnts"]["brkDown"],
+                    "passThru":  locStem["trnCnts"]["passThru"]}
+                tmpDict.update(trnCnts)
+                varDict[timeKey][loc] = tmpDict
+
+            #timeFile.write("{")
+            if timeKey != "time0": timeFile.write(",")
+            timeFile.write("\n" + str(varDict))
+            #json.dump(varDict, timeFile)
+"""
+            for route in routeCls.routes:
+                timeFile.write("\n---------------------------\n")
+                timeFile.write("\ntime step: " + str(mVars.time))
+                timeFile.write("\nroute: " + route)
+                self.printObj.writeRtCaps(timeFile, route)
+                timeFile.write("\nTrain and consist:     ")
+                for train in routeCls.routes[route]["trains"]:
+                    self.printObj.writeTrainInfo(timeFile, train)
+                    consistNum = trainDB.trains[train]["consistNum"]
+                    consistNam = "consist"+str(consistNum)
+                    stopStem = trainDB.consists[consistNam]["stops"]
+                    timeFile.write("\n" + train + " stops:")
+                    for stop in stopStem:
+                        timeFile.write("\n" + stop + ": " + str(stopStem[stop]))
+                    timeFile.write("\n")
+            timeFile.flush()
+"""

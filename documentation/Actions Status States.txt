@@ -7,8 +7,8 @@ How are trains initialized and started?
     by which track has the most cars.
 4. For case 3, the train is created in the yard with a status of "built".  Start time
     is taken from a start time list given in the input deck.  
-5. Further for case 3, the train status changes from "built" to "wait4Clearance" by
-    yardCalcs.py.  TrainProc takes over status processing, turning "wait4Clearance" 
+5. Further for case 3, the train status changes from "built" to "wait4Clrnce" by
+    yardCalcs.py.  TrainProc takes over status processing, turning "wait4Clrnce" 
     into "enroute".
 
 
@@ -19,14 +19,14 @@ the train.
 
 Alternatively, a "switch" or "turn" status results in an action by the road crew:
 "rdCrwSw" in ydTrains
-    trnStatusList = ["enroute", "wait4Clearance", "building", "built", "terminate", "switch"
+    trnStatusList = ["enroute", "wait4Clrnce", "building", "built", "terminate", "switch"
                      "dropPickup", "continue", "turn", "misc", "stop"]
 
 In trainProc:
         match trainDict["status"]:
             case "enroute":
 
-            case "wait4Clearance":
+            case "wait4Clrnce":
                 trainDict["status"] = "enroute"
                 disp.drawTrain(trnName)
                 pass

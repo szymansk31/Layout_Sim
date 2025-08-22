@@ -11,6 +11,7 @@
 "rtToEnter": "",
 "direction": "",
 "locArrTime": 0,
+"estArrTime": 0, 
 "startTime": 0, 
 "coord": {
     "xTrnInit": 0,

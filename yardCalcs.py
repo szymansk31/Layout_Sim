@@ -15,8 +15,9 @@ class ydCalcs():
         #self.weights = [0.18, 0.18, 0.18, 0.18, 0.1]
         self.weights = [0.33, 0.33, 0.33, 0, 0]
         #self.weights = [0, 0, 0, 0, 0]
-        from locProc import locProc, locBase
+        from locProc import locProc
         self.locProcObj = locProc()
+        from locBase import locBase
         self.locBaseObj = locBase()
         from classCars import classCars
         self.classObj = classCars()
@@ -148,8 +149,6 @@ class ydCalcs():
                 trainStem["status"] = "built"
                 locs.locDat[loc]["trnCnts"]["built"] += 1
                 self.locBaseObj.rmTrnFrmActions("buildTrain", loc, ydTrainNam)
-                self.locProcObj.setRtTrnPrms(loc, ydTrainNam)
-                #self.locProcObj.startTrain("buildTrain", loc, ydTrainNam)
             self.dispObj.dispActionDat(loc, "buildTrain", ydTrainNam)
 
     def ready2Build(self, loc):
@@ -215,12 +214,11 @@ class ydCalcs():
                 # train no longer has pickups or drops
                 # start train to nextLoc, if there are more stops and
                 # remove train name from locs.locData
-                self.locProcObj.setRtTrnPrms(loc, ydTrainNam)
                 locs.locDat[loc]["ready2Pickup"] = 0
                 locs.locDat[loc]["trnCnts"]["switched"] += 1
                 
-                self.locBaseObj.cleanupSwAction(loc, ydTrainNam, "swTrain")
                 self.locProcObj.startTrain(loc, ydTrainNam)
+                self.locBaseObj.cleanupSwAction(loc, ydTrainNam, "swTrain")
         
         pass
     def servIndus(self, loc):

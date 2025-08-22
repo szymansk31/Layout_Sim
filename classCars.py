@@ -3,7 +3,8 @@
 import random
 from mainVars import mVars
 from stateVars import locs, trainDB, routeCls
-from locProc import locProc, locBase
+from locProc import locProc
+from locBase import locBase
 from carProc import carProc
 from display import dispItems
 
