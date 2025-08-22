@@ -56,12 +56,12 @@ class trnProc:
                 print("train: ", trainNam, " switching to enroute status")
                 trainDict["status"] = "enroute"
                 trainDict["currentLoc"] = trainDict["rtToEnter"]
-                self.locMgmt.fillTrnsOnRoute(trainDict["currentLoc"], trainNam)
+                self.locMgmtObj.fillTrnsOnRoute(trainDict["currentLoc"], trainNam)
                 # remove train rectangles above the location rectangle
                 dispObj.drawTrain(trainNam)
                 loc = trainDB.trains[trainNam]["departStop"]
                 if loc != "":
-                    self.locMgmt.rmTrnFrmLoc(loc, trainNam)
+                    self.locMgmtObj.rmTrnFrmLoc(loc, trainNam)
                     dispObj.clearActionTrnRecs(loc, trainNam)
                 pass
             case "wait4Clrnce" if not rtCapsObj.checkRtSlots(trainNam):
@@ -139,10 +139,10 @@ class trnProc:
                 self.updateTrain4Stop(stopLoc, trainDict)
 
         dispObj.drawTrain(trainNam)
-        self.locMgmt.addTrn2LocOrRt(stopLoc, trainDict, trainNam)
+        self.locMgmtObj.addTrn2LocOrRt(stopLoc, trainDict, trainNam)
 
         #remove train from that route
-        self.locMgmt.remTrnsOnRoute(routeNam, trainNam)
+        self.locMgmtObj.remTrnsOnRoute(routeNam, trainNam)
         #routeStem["trains"].pop(index)
         mVars.numOpBusy -=1
 

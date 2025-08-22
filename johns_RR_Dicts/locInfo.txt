@@ -10,7 +10,7 @@
         "departs": [{"train": {"startTime": 0, "status": "", "rtToEnter":""}}],
         "builds": [{"train": {"numCars": 0, "numCars2Add": 0, "status": "", "rtToEnter":""}}]
     
-    }
+    },
     "tracks": {
         "Kiski"   :{"box": 4, "tank": 2, "rfr": 3, "hop": 8, 
         "gons": 0, "flats": 0},
@@ -37,7 +37,7 @@
         "track7" : {"funcs": ["arrival", "depart"], "train": "", 
             "maxCars": 0, "currCars": 0, "status": "mt"},
         "track8" : {"funcs": ["arrival", "depart"], "train": "", 
-            "maxCars": 0, "currCars": 0, "status": "mt"},
+            "maxCars": 0, "currCars": 0, "status": "mt"}
    },
     "numArrTrks": 2,
     "numDepTrks": 3,
@@ -80,7 +80,7 @@
         "departs": [{"train": {"startTime": 0, "status": "", "rtToEnter":""}}],
         "builds": [{"train": {"numCars": 0, "numCars2Add": 0, "status": "", "rtToEnter":""}}]
     
-    }
+    },
     "tracks": {
         "pgh"    :{"box": 2, "tank": 3, "rfr": 3, "hop": 0, 
         "gons": 1, "flats": 1},
@@ -141,7 +141,7 @@
         "departs": [{"train": {"startTime": 0, "status": "", "rtToEnter":""}}],
         "builds": [{"train": {"numCars": 0, "numCars2Add": 0, "status": "", "rtToEnter":""}}]
     
-    }
+    },
     "tracks": {
         "pgh"    :{"box": 2, "tank": 3, "rfr": 3, "hop": 0, 
         "gons": 1, "flats": 1},
@@ -205,7 +205,7 @@
         "departs": [{"train": {"startTime": 0, "status": "", "rtToEnter":""}}],
         "builds": [{"train": {"numCars": 0, "numCars2Add": 0, "status": "", "rtToEnter":""}}]
     
-    }
+    },
     "trackPrms": {
         "track1" : {"funcs": ["classify", "depart"], "train": "", 
             "maxCars": 0, "currCars": 0, "status": "mt"},
@@ -259,7 +259,7 @@
         "departs": [{"train": {"startTime": 0, "status": "", "rtToEnter":""}}],
         "builds": [{"train": {"numCars": 0, "numCars2Add": 0, "status": "", "rtToEnter":""}}]
     
-    }
+    },
     "trackPrms": {
         "track1" : {"funcs": ["classify", "depart"], "train": "", 
             "maxCars": 0, "currCars": 0, "status": "mt"},
