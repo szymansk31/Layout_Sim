@@ -11,7 +11,7 @@ from gui import gui
 from coords import transForms
 from routeCalcs import routeCalcs, rtCaps
 from outputMethods import printMethods
-from locBase import locBase
+from locBase import locBase, Qmgmt, locMgmt
         
 
 np.set_printoptions(precision=2, suppress=True) 
@@ -67,7 +67,6 @@ class locProc():
             
     def analyzeTrains(self, loc):
         trainDB.ydTrains = {"brkDnTrn": [], "buildTrain": [], "swTrain": [], "rdCrwSw": [], "continue": []}
-        rtCapsObj = rtCaps()
 
         # train status leads to actions by the yard crew or
         # the train crew.  Train actions are the same name as
@@ -116,14 +115,12 @@ class locProc():
     def startTrain(self, loc, trainNam):
         # setup train
         dispObj = dispItems()
-        coordObj = transForms()
-        locBaseObj = locBase()
-        rtCapsObj = rtCaps()
+        locMgmtObj = locMgmt()
         
         trainStem = trainDB.trains[trainNam]
         trainStem["status"] = "wait4Clrnce"
         if trainStem["rtToEnter"] == "":
-            locBaseObj.findRtPrms(loc, trainNam)
+            locMgmtObj.findRtPrms(loc, trainNam)
         routeNam = trainStem["rtToEnter"]
         #trainStem["currentLoc"] = routeNam
                
@@ -132,7 +129,7 @@ class locProc():
             (trainStem["coord"]["xTrnInit"]) == None:
             #train not on route to start
             trainStem["coord"]["xTrnInit"] = 0  
-        locBaseObj.addTrn2LocOrRt(routeNam, trainStem, trainNam)
+        locMgmtObj.addTrn2LocOrRt(routeNam, trainStem, trainNam)
         #rtCapsObj.addTrn2RouteQ(routeNam, trainNam)
         trainStem["firstDispTrn"] = 1
         

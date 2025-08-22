@@ -22,13 +22,13 @@ class schedProc():
         print("\ninitSchedule: starting trains: ", dspCh.sched)
 
     def fetchLocSchedItem(self, loc):
-        from locBase import locBase
-        locBaseObj = locBase()
+        from locBase import locBase, Qmgmt, locMgmt
+        locMgmtObj = locMgmt()
         trainInitObj = trainInit()
         for trainNam in dspCh.sched:
             if (loc == dspCh.sched[trainNam]["origLoc"]) and \
                 (mVars.time >= dspCh.sched[trainNam]["startTime"]):
-                locBaseObj.addTrn2LocOrRt(loc, dspCh.sched[trainNam], 
+                locMgmtObj.addTrn2LocOrRt(loc, dspCh.sched[trainNam], 
                         trainNam)
                 self.baseTrnDict(trainNam)
                 dspCh.sched.pop(trainNam)

@@ -1,4 +1,3 @@
-import random
 import numpy as np
 from mainVars import mVars
 from stateVars import locs, trainDB, routeCls
@@ -10,11 +9,8 @@ from stagCalcs import stCalcs
 from gui import gui
 from coords import transForms
 from routeCalcs import routeCalcs, rtCaps
-from outputMethods import printMethods
         
-
 np.set_printoptions(precision=2, suppress=True) 
-
 
 dbgLocal = 1     
 #=================================================
@@ -71,7 +67,13 @@ class locBase():
         for dest in locs.locDat[loc]["destTrkTots"]:
             thisLocDests.append(dest)
         return thisLocDests
-
+    
+#=================================================
+class Qmgmt():
+    
+    def __init__(self):
+        pass
+    
     def initLocQs(self, loc):
         # remove placeholder/prototype of each Q from input files
         QStem = locs.locDat[loc]["Qs"]
@@ -140,7 +142,12 @@ class locBase():
         index = [idx for idx, d in enumerate(QStem) if trainNam in d]
         QStem.pop(index[0])
         
-                     
+#=================================================
+class locMgmt():
+    
+    def __init__(self):
+        pass
+                   
     def rmTrnFrmActions(self, action, loc, trainNam):
         dispObj = dispItems()
         # remove train from ydTrains and location

@@ -1,4 +1,3 @@
-import random
 import numpy as np
 from mainVars import mVars
 from stateVars import locs, trainDB, routeCls
@@ -9,10 +8,8 @@ from swCalcs import swCalcs
 from stagCalcs import stCalcs
 from gui import gui
 from coords import transForms
-from outputMethods import printMethods
 from fileProc import readFiles
 files = readFiles()
-    
 
 np.set_printoptions(precision=2, suppress=True) 
 

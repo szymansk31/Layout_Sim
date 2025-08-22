@@ -3,7 +3,7 @@ import tkinter as tk
 from mainVars import mVars
 from fileProc import readFiles
 from display import dispItems
-from locBase import locBase
+from locBase import locBase, Qmgmt, locMgmt
 from coords import transForms
 from stateVars import locs, dspCh, trainDB, routeCls
 from routeCalcs import rtCaps
@@ -13,6 +13,7 @@ class trnProc:
     
     def __init__(self):
         self.locBaseObj = locBase()
+        self.locMgmtObj = locMgmt()
         pass
     
     def trainCalcs(self, trainDict, trainNam):
@@ -55,12 +56,12 @@ class trnProc:
                 print("train: ", trainNam, " switching to enroute status")
                 trainDict["status"] = "enroute"
                 trainDict["currentLoc"] = trainDict["rtToEnter"]
-                self.locBaseObj.fillTrnsOnRoute(trainDict["currentLoc"], trainNam)
+                self.locMgmt.fillTrnsOnRoute(trainDict["currentLoc"], trainNam)
                 # remove train rectangles above the location rectangle
                 dispObj.drawTrain(trainNam)
                 loc = trainDB.trains[trainNam]["departStop"]
                 if loc != "":
-                    self.locBaseObj.rmTrnFrmLoc(loc, trainNam)
+                    self.locMgmt.rmTrnFrmLoc(loc, trainNam)
                     dispObj.clearActionTrnRecs(loc, trainNam)
                 pass
             case "wait4Clrnce" if not rtCapsObj.checkRtSlots(trainNam):
@@ -138,10 +139,10 @@ class trnProc:
                 self.updateTrain4Stop(stopLoc, trainDict)
 
         dispObj.drawTrain(trainNam)
-        self.locBaseObj.addTrn2LocOrRt(stopLoc, trainDict, trainNam)
+        self.locMgmt.addTrn2LocOrRt(stopLoc, trainDict, trainNam)
 
         #remove train from that route
-        self.locBaseObj.remTrnsOnRoute(routeNam, trainNam)
+        self.locMgmt.remTrnsOnRoute(routeNam, trainNam)
         #routeStem["trains"].pop(index)
         mVars.numOpBusy -=1
 

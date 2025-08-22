@@ -163,21 +163,3 @@ class statSave():
             if timeKey != "time0": timeFile.write(",")
             timeFile.write("\n" + str(varDict))
             #json.dump(varDict, timeFile)
-"""
-            for route in routeCls.routes:
-                timeFile.write("\n---------------------------\n")
-                timeFile.write("\ntime step: " + str(mVars.time))
-                timeFile.write("\nroute: " + route)
-                self.printObj.writeRtCaps(timeFile, route)
-                timeFile.write("\nTrain and consist:     ")
-                for train in routeCls.routes[route]["trains"]:
-                    self.printObj.writeTrainInfo(timeFile, train)
-                    consistNum = trainDB.trains[train]["consistNum"]
-                    consistNam = "consist"+str(consistNum)
-                    stopStem = trainDB.consists[consistNam]["stops"]
-                    timeFile.write("\n" + train + " stops:")
-                    for stop in stopStem:
-                        timeFile.write("\n" + stop + ": " + str(stopStem[stop]))
-                    timeFile.write("\n")
-            timeFile.flush()
-"""

@@ -17,8 +17,9 @@ class ydCalcs():
         #self.weights = [0, 0, 0, 0, 0]
         from locProc import locProc
         self.locProcObj = locProc()
-        from locBase import locBase
+        from locBase import locBase, Qmgmt, locMgmt
         self.locBaseObj = locBase()
+        self.locMgmt = locMgmt()
         from classCars import classCars
         self.classObj = classCars()
         from display import dispItems
@@ -118,8 +119,8 @@ class ydCalcs():
                 # train no longer has cars
                 # remove train name from trainDB.ydTrains and locs.locData
                 locs.locDat[loc]["trnCnts"]["brkDown"] += 1
-                self.locBaseObj.rmTrnFrmActions("brkDnTrn", loc, ydTrainNam)
-                self.locBaseObj.rmTrnFrmLoc(loc, ydTrainNam)
+                self.locMgmt.rmTrnFrmActions("brkDnTrn", loc, ydTrainNam)
+                self.locMgmt.rmTrnFrmLoc(loc, ydTrainNam)
                 trainDB.trains.pop(ydTrainNam)
 
         if mVars.prms["dbgYdProc"]: 
@@ -148,7 +149,7 @@ class ydCalcs():
                 # train has reached max size
                 trainStem["status"] = "built"
                 locs.locDat[loc]["trnCnts"]["built"] += 1
-                self.locBaseObj.rmTrnFrmActions("buildTrain", loc, ydTrainNam)
+                self.locMgmt.rmTrnFrmActions("buildTrain", loc, ydTrainNam)
             self.dispObj.dispActionDat(loc, "buildTrain", ydTrainNam)
 
     def ready2Build(self, loc):
@@ -218,7 +219,7 @@ class ydCalcs():
                 locs.locDat[loc]["trnCnts"]["switched"] += 1
                 
                 self.locProcObj.startTrain(loc, ydTrainNam)
-                self.locBaseObj.cleanupSwAction(loc, ydTrainNam, "swTrain")
+                self.locMgmt.cleanupSwAction(loc, ydTrainNam, "swTrain")
         
         pass
     def servIndus(self, loc):
