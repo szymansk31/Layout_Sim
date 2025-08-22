@@ -1,18 +1,44 @@
 {
 "pgh": {
     "type":"yard",
-    "destTrkTots": {"Kiski": 0, "OilCity": 0, "NStaging":0},
+    "destTrkTots": {"Kiski": 0, "OilCity": 0, "NStaging":0, "NewKenLocal":0},
     "totCars": 0,
     "cars2Class": 0,
     "time2Class": 0,
+    "Qs": {
+        "arrvs": [{"train": {"estArrTime": 0, "action": "", "nCars4ThisLoc":0}}],
+        "departs": [{"train": {"schedTimeOut": 0, "status": "", "rtToEnter":""}}],
+        "builds": [{"train": {"numCars": 0, "numCars2Add": 0, "status": "", "rtToEnter":""}}]
+    
+    }
     "tracks": {
         "Kiski"   :{"box": 4, "tank": 2, "rfr": 3, "hop": 8, 
         "gons": 0, "flats": 0},
         "OilCity"    :{"box": 3, "tank": 0, "rfr": 1, "hop": 0, 
         "gons": 4, "flats": 3},
         "NStaging"    :{"box": 1, "tank": 3, "rfr": 3, "hop": 0, 
-        "gons": 1, "flats": 3}
+        "gons": 1, "flats": 3},
+        "NewKenLocal" :{"box": 1, "tank": 1, "rfr": 2, "hop": 0, 
+        "gons": 1, "flats": 0}
     },
+    "trackPrms": {
+        "track2" : {"funcs": ["arrival"], "train": "",
+            "maxCars": 0, "currCars": 0, "status": "mt"},
+        "track3" : {"funcs": ["arrival", "depart"], "train": "", 
+            "maxCars": 0, "currCars": 0, "status": "mt"},
+        "Kiski" : {"funcs": ["classify", "depart"], "train": "", 
+            "maxCars": 0, "currCars": 0, "status": "mt"},
+        "OilCity" : {"funcs": ["classify", "depart"], "train": "", 
+            "maxCars": 0, "currCars": 0, "status": "mt"},
+        "NStaging" : {"funcs": ["classify", "depart"], "train": "", 
+            "maxCars": 0, "currCars": 0, "status": "mt"},
+        "NewKenLocal" : {"funcs": ["classify", "depart"], "train": "", 
+            "maxCars": 0, "currCars": 0, "status": "mt"},
+        "track7" : {"funcs": ["arrival", "depart"], "train": "", 
+            "maxCars": 0, "currCars": 0, "status": "mt"},
+        "track8" : {"funcs": ["arrival", "depart"], "train": "", 
+            "maxCars": 0, "currCars": 0, "status": "mt"},
+   },
     "numArrTrks": 2,
     "numDepTrks": 3,
     "numAdjLocs": 1,
@@ -49,6 +75,12 @@
     "totCars": 0,
     "cars2Class": 0,
     "time2Class": 0,
+    "Qs": {
+        "arrvs": [{"train": {"estArrTime": 0, "action": "", "nCars4ThisLoc":0, "destTrack": ""}}],
+        "departs": [{"train": {"schedTimeOut": 0, "status": "", "rtToEnter":""}}],
+        "builds": [{"train": {"numCars": 0, "numCars2Add": 0, "status": "", "rtToEnter":""}}]
+    
+    }
     "tracks": {
         "pgh"    :{"box": 2, "tank": 3, "rfr": 3, "hop": 0, 
         "gons": 1, "flats": 1},
@@ -59,6 +91,14 @@
         "industries"   :{"box": 0, "tank": 0, "rfr": 0, "hop": 0, 
         "gons": 0, "flats": 0}
     },
+    "trackPrms": {
+        "pgh" : {"funcs": ["classify", "depart"], "train": "",
+            "maxCars": 0, "currCars": 0, "status": "mt"},
+        "OilCity" : {"funcs": ["classify", "depart"], "train": "",
+            "maxCars": 0, "currCars": 0, "status": "mt"},
+        "NStaging" : {"funcs": ["classify", "depart"], "train": "",
+            "maxCars": 0, "currCars": 0, "status": "mt"}
+   },
     "numArrTrks": 2,
     "numDepTrks": 3,
     "numAdjLocs": 2,
@@ -96,6 +136,12 @@
     "totCars": 0,
     "cars2Class": 0,
     "time2Class": 0,
+    "Qs": {
+        "arrvs": [{"train": {"estArrTime": 0, "action": "", "nCars4ThisLoc":0, "destTrack": ""}}],
+        "departs": [{"train": {"schedTimeOut": 0, "status": "", "rtToEnter":""}}],
+        "builds": [{"train": {"numCars": 0, "numCars2Add": 0, "status": "", "rtToEnter":""}}]
+    
+    }
     "tracks": {
         "pgh"    :{"box": 2, "tank": 3, "rfr": 3, "hop": 0, 
         "gons": 1, "flats": 1},
@@ -108,6 +154,16 @@
         "industries"   :{"box": 0, "tank": 0, "rfr": 0, "hop": 0, 
         "gons": 0, "flats": 0}
     },
+    "trackPrms": {
+        "pgh" : {"funcs": ["classify", "depart"], "train": "",
+            "maxCars": 0, "currCars": 0, "status": "mt"},
+        "Kiski" : {"funcs": ["classify", "depart"], "train": "",
+            "maxCars": 0, "currCars": 0, "status": "mt"},
+        "NStaging" : {"funcs": ["classify", "depart"], "train": "",
+            "maxCars": 0, "currCars": 0, "status": "mt"},
+        "ErieRRStaging" : {"funcs": ["classify", "depart"], "train": "",
+            "maxCars": 0, "currCars": 0, "status": "mt"}
+   },
     "numArrTrks": 1,
     "numDepTrks": 1,
     "numAdjLocs": 3,
@@ -144,7 +200,24 @@
     "totCars": 0,
     "cars2Class": 0,
     "time2Class": 0,
-    "tracks": {},
+    "Qs": {
+        "arrvs": [{"train": {"estArrTime": 0, "action": "", "nCars4ThisLoc":0, "destTrack": ""}}],
+        "departs": [{"train": {"schedTimeOut": 0, "status": "", "rtToEnter":""}}],
+        "builds": [{"train": {"numCars": 0, "numCars2Add": 0, "status": "", "rtToEnter":""}}]
+    
+    }
+    "trackPrms": {
+        "track1" : {"funcs": ["classify", "depart"], "train": "", 
+            "maxCars": 0, "currCars": 0, "status": "mt"},
+        "track2" : {"funcs": ["classify", "depart"], "train": "",
+            "maxCars": 0, "currCars": 0, "status": "mt"},
+        "track3" : {"funcs": ["classify", "depart"], "train": "",
+            "maxCars": 0, "currCars": 0, "status": "mt"},
+        "track4" : {"funcs": ["classify", "depart"], "train": "",
+            "maxCars": 0, "currCars": 0, "status": "mt"},
+        "track5" : {"funcs": ["classify", "depart"], "train": "",
+            "maxCars": 0, "currCars": 0, "status": "mt"}
+   },
     "numArrTrks": 5,
     "numDepTrks": 0,
     "numAdjLocs": 1,
@@ -181,8 +254,24 @@
     "totCars": 0,
     "cars2Class": 0,
     "time2Class": 0,
-    "tracks": {},
+    "Qs": {
+        "arrvs": [{"train": {"estArrTime": 0, "action": "", "nCars4ThisLoc":0, "destTrack": ""}}],
+        "departs": [{"train": {"schedTimeOut": 0, "status": "", "rtToEnter":""}}],
+        "builds": [{"train": {"numCars": 0, "numCars2Add": 0, "status": "", "rtToEnter":""}}]
+    
+    }
+    "trackPrms": {
+        "track1" : {"funcs": ["classify", "depart"], "train": "", 
+            "maxCars": 0, "currCars": 0, "status": "mt"},
+        "track2" : {"funcs": ["classify", "depart"], "train": "", 
+            "maxCars": 0, "currCars": 0, "status": "mt"},
+        "track3" : {"funcs": ["classify", "depart"], "train": "", 
+            "maxCars": 0, "currCars": 0, "status": "mt"},
+        "track4" : {"funcs": ["classify", "depart"], "train": "", 
+            "maxCars": 0, "currCars": 0, "status": "mt"}
+   },
     "numArrTrks": 4,
+    "availArrTrks": 0,
     "numDepTrks": 0,
     "numAdjLocs": 1,
     "adjLocNames": {"E":"OilCity"},

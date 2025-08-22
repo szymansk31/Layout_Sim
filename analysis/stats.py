@@ -16,7 +16,7 @@ class analyTimeSeries():
     
     def readTimeSeries(self):
         #filename = sys.argv[1]
-        filename = "output/timeSeries_08_18_at_2128.txt"
+        filename = "output/timeSeries_08_20_at_2027.txt"
         with open (filename, "r") as inFile:
             for line in inFile: 
                 if line != "\n":
@@ -59,6 +59,7 @@ class analyTimeSeries():
         for loc in nCars:
             plt.plot(timeList, nCars[loc])
         plt.legend(legend,loc='lower left')
+        plt.xticks(np.arange(0, 80, 5))
         plt.show(block=False)
         plt.show()
 

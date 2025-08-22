@@ -51,12 +51,10 @@ class schedProc():
         
     
 #=================================================
-class dspchProc():
-    routeCap = {}
-    
-    def __init__(self):
-        pass
-    
+
+
+
+
 #=================================================
 class rtCaps():
     rtCap = {}

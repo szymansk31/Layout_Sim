@@ -11,6 +11,7 @@ from gui import gui
 from coords import transForms
 from dispatch import dspCh, rtCaps
 from outputMethods import printMethods
+from routeCalcs import routeCalcs
         
 
 np.set_printoptions(precision=2, suppress=True) 
@@ -21,6 +22,7 @@ dbgLocal = 1
 class locBase():
     
     def __init__(self):
+        self.routeCalcsObj = routeCalcs()
         pass
     
     def initLocDicts(self):
@@ -72,7 +74,47 @@ class locBase():
         for dest in locs.locDat[loc]["destTrkTots"]:
             thisLocDests.append(dest)
         return thisLocDests
+    
+    def checkLocArrDepSlots(self, loc):
+        for route in routeCls.routes:
+            for trainNam in routeCls.routes[route]["trains"]:
+                self.routeCalcsObj.calcTrnArrivalTime(route)
+                estArrTime = trainDB.trains[trainNam]["estArrTime"]
+                if estArrTime - mVars.time <= mVars.prms["arrTimDelta"]:
+                    self.addTrn2ArrvsQ(self, loc, trainNam)
 
+        for loc in locs.locDat[loc]:
+            pass
+            
+    def initLocArrDepSlots(self, loc):
+        for loc in locs.locDat:
+            locStem = locs.locDat[loc]
+            for track in locStem["trackPrms"]:
+                if "arrival" in locStem["trackPrms"][track]["funcs"]:
+                    locStem["numArrTrks"] += 1
+                if "depart" in locStem["trackPrms"][track]["funcs"]:
+                    locStem["numDepTrks"] += 1
+                    
+    def addTrain2ArrTrack(self, loc, trainNam):
+        
+        pass
+                
+    def addTrn2ArrvsQ(self, loc, trainNam):
+        from stateVars import trainDB
+        conNam = trainDB.getConNam(trainNam)
+        trainStem = trainDB.trains[trainNam]
+        nCars4ThisLoc = sum(trainDB.consists[conNam]["stops"][loc].values())
+        locs.locDat[loc]["Qs"]["arrvs"].append({ \
+            trainNam: {"estArrTime": trainStem["estArrTime"],
+            "action": trainStem["stops"][loc]["action"],
+            "nCars4ThisLoc": nCars4ThisLoc}})
+
+    def remTrnArrvsQ(self, loc, trainNam):
+        QStem = locs.locDat[loc]["Qs"]["arrvs"]
+        index = [idx for idx, d in enumerate(QStem) if trainNam in d]
+        QStem.pop(index[0])
+        
+                     
     def rmTrnFrmActions(self, action, loc, trainNam):
         dispObj = dispItems()
         # remove train from ydTrains and location

@@ -11,6 +11,7 @@
 "rtToEnter": "route1",
 "direction": "east",
 "locArrTime": 0,
+"estArrTime": 0, 
 "lastDepTime": 0,
 "startTime": 3, 
 "coord": {
@@ -48,6 +49,7 @@
 "rtToEnter": "route2",
 "direction": "east",
 "locArrTime": 0,
+"estArrTime": 0, 
 "lastDepTime": 0,
 "startTime": 2, 
 "coord": {
@@ -84,6 +86,7 @@
 "rtToEnter": "route4",
 "direction": "east",
 "locArrTime": 0,
+"estArrTime": 0, 
 "lastDepTime": 0,
 "startTime": 0, 
 "coord": {
@@ -119,6 +122,7 @@
 "rtToEnter": "route1",
 "direction": "east",
 "locArrTime": 0,
+"estArrTime": 0, 
 "lastDepTime": 0,
 "startTime": 5, 
 "coord": {

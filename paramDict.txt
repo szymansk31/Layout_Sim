@@ -1,6 +1,6 @@
 {
     "dictDirect": "johns_RR_Dicts",
-    "maxTime": 40,
+    "maxTime": 75,
     "timeStep": 1,
     "trainSize": 10,
     "mxTrnDwlTim": 10,
