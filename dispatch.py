@@ -2,6 +2,7 @@ import numpy as np
 from mainVars import mVars
 from trainInit import trainInit
 from stateVars import locs, dspCh, trainDB, routeCls
+from locBase import locBase, Qmgmt, locMgmt
 from fileProc import readFiles
 files = readFiles()
 np.set_printoptions(precision=2, suppress=True) 
@@ -50,7 +51,51 @@ class schedProc():
         
     
 #=================================================
+#=================================================
+class clearTrnCalcs():
+    
+    def __init__(self):
+        self.locBaseObj = locBase()
+        self.QmgmtObj = Qmgmt()
+        pass
+                   
+    def mainDispatch(self):
+        # look at all trains on routes and
+        # determine if they will soon reach a loc
+        self.QmgmtObj.calcArrivTrns()
+        self.QmgmtObj.sortArrvQ()
+        self.assnArrTrks()
+        # are 
 
+    def clearTrn(self, loc, trainNam):
+        pass
+    
+    def assnArrTrks(self):
+        for loc in locs.locDat:
+            trkStem = locs.locDat[loc]["trkPrms"]
+            
+            QStem = locs.locDat[loc]["Qs"]["arrivals"]
+            for trainNam in QStem:
+                estArrTime = QStem[trainNam]["estArrTime"]
+                for track in trkStem:
+                    if (trkStem[track]["funcs"] == "arrival"):
+                        match trkStem[track]["status"]:
+                            case "unAssnd":
+                                trkStem[track]["train"] = trainNam
+                                trkStem[track]["status"] = "assnd"
+                                QStem["arrTrk"] = track
+                                break
+                            case "assnd" if self.checkDepTime(loc, track, estArrTime):
+                                trkStem[track]["status"] = "assnAtDep"
+                                QStem["arrTrk"] = track
+                                
+                                    
+                print("no arrival track available for train: ", trainNam, " in loc: ", loc)
 
-
-
+    def checkDepTime(self, loc, track, estArrTime):
+        QStem = locs.locDat[loc]["Qs"]["departs"]
+        estDepTime = [QStem[tNam]["estDepTime"] \
+            for tNam in QStem if track == QStem[tNam]["depTrk"]]
+        if estArrTime > estDepTime: return True
+        
+    

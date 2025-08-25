@@ -1,12 +1,6 @@
 import numpy as np
 from mainVars import mVars
 from stateVars import locs, trainDB, routeCls
-from display import dispItems
-from dispatch import schedProc, dspCh
-from yardCalcs import ydCalcs
-from swCalcs import swCalcs
-from stagCalcs import stCalcs
-from gui import gui
 from coords import transForms
 from fileProc import readFiles
 files = readFiles()
@@ -31,8 +25,7 @@ class routeCalcs():
                 dist2Go = routeStem["rtLength"] - \
                     trainStem["coord"]["xRoute"]
                 time2Go = abs(dist2Go)/routeStem["distPerTime"]
-                arrivalTime = mVars.time + time2Go
-                trainStem["estArrTime"] = arrivalTime
+                trainStem["estArrTime"] = round(mVars.time + time2Go, 2)
                 
                 
 #=================================================

@@ -19,6 +19,8 @@ class mainMethods():
         self.locProcObj = locProc()
         from trainProc import trnProc
         self.trnProcObj = trnProc()
+        from dispatch import clearTrnCalcs
+        self.dispchObj = clearTrnCalcs()
         pass
 
 #=================================================
@@ -30,6 +32,7 @@ class mainMethods():
             # save state variables and statistics for this time step
             displayObj.updateTimer()
             print("\nmVars.time: ", mVars.time, ", savIDX: ", stVarSaves.savIDX)
+            self.dispchObj.mainDispatch()
             if mVars.wait:
                 print("waiting....")
                 self.step_button.wait_variable(self.var)
@@ -41,7 +44,7 @@ class mainMethods():
                 self.var.set(0)
                 print("\nafter step back: mVars.time: ", mVars.time
                     , ", savIDX: ", stVarSaves.savIDX)
-    
+
             for train in trainDB.trains:
                 if mVars.time >= trainDB.trains[train]["startTime"]:
                     printObj.printTrainInfo(train)

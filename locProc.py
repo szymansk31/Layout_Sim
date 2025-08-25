@@ -125,10 +125,10 @@ class locProc():
         #trainStem["currentLoc"] = routeNam
                
         #sets initial coords in rotated system 
-        if (trainStem["coord"]["xTrnInit"] == 0) or\
-            (trainStem["coord"]["xTrnInit"]) == None:
+        #if (trainStem["coord"]["xTrnInit"] == 0) or\
+        #    (trainStem["coord"]["xTrnInit"]) == None:
             #train not on route to start
-            trainStem["coord"]["xTrnInit"] = 0  
+        #trainStem["coord"]["xTrnInit"] = 0  
         locMgmtObj.addTrn2LocOrRt(routeNam, trainStem, trainNam)
         #rtCapsObj.addTrn2RouteQ(routeNam, trainNam)
         trainStem["firstDispTrn"] = 1

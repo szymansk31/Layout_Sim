@@ -19,6 +19,8 @@ class locs():
 class trainDB():
     numTrains = 5
     numConsists = 15
+    avgSwTime = 10
+    avgContTime = 3
 
     trains = {}
     consists = {}

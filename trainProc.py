@@ -13,6 +13,7 @@ class trnProc:
     
     def __init__(self):
         self.locBaseObj = locBase()
+        self.locQmgmtObj = Qmgmt()
         self.locMgmtObj = locMgmt()
         pass
     
@@ -104,6 +105,8 @@ class trnProc:
         trainDict["rtToEnter"] = ""
         trainDict["currentLoc"] = stopLoc
         trainDict["departStop"] = stopLoc
+        self.locQmgmtObj.remTrnLocQ(stopLoc, "arrivals", trainNam)
+        trainDict["coord"]["xTrnInit"] = 0 # reset for next route
         print("train: ", trainNam, "entering terminal: ", stopLoc, "trainDict: ", trainDict)
         print("train: ", trainNam, "consistNum: ", consistNum, 
               "contents: ", trainDB.consists[consistNam])
@@ -114,12 +117,15 @@ class trnProc:
             case "terminate":
                 trainDict["status"] = "terminate"
                 trainDict["timeEnRoute"] = 0
+                trainDict["estDepTime"] = mVars.time + trainDB.avgSwTime
                 dispObj.clearRouteTrnRecs(trainNam)
                 pass
             case "rdCrwSw": 
                 from swCalcs import swCalcs
                 # switch town with road train
                 trainDict["status"] = "rdCrwSw"
+                trainDict["timeEnRoute"] = 0
+                trainDict["estDepTime"] = mVars.time + trainDB.avgSwTime
                 # setup list of industries when first entering swArea
                 swCalcs.indusIter = iter(locs.locDat[stopLoc]["industries"])
                 self.updateTrain4Stop(stopLoc, trainDict)
@@ -130,12 +136,14 @@ class trnProc:
                 # train crew at other locations
                 trainDict["status"] = "dropPickup"
                 trainDict["timeEnRoute"] = 0
+                trainDict["estDepTime"] = mVars.time + trainDB.avgSwTime
                 self.updateTrain4Stop(stopLoc, trainDict)
                 pass
             case "continue":
                 #no action at this stop - continue to nextLoc
                 trainDict["status"] = "continue"
                 trainDict["timeEnRoute"] = 0
+                trainDict["estDepTime"] = mVars.time + trainDB.avgContTime
                 self.updateTrain4Stop(stopLoc, trainDict)
 
         dispObj.drawTrain(trainNam)
