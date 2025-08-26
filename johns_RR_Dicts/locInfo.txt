@@ -9,7 +9,7 @@
         "arrivals": [{"train": {"estArrTime": 0, 
 		"action": "", "arrTrk": "", "nCars4ThisLoc": 0}}],
         "departs": [{"train": {"estDeptTime": 0, 
-		"status": "", "depTrk": "", rtToEnter":""}}],
+		"status": "", "depTrk": "", "rtToEnter":""}}],
         "builds": [{"train": {"numCars": 0, 
 		"numCars2Add": 0, "status": "", "rtToEnter":""}}]
     },
@@ -85,7 +85,7 @@
         "arrivals": [{"train": {"estArrTime": 0, 
 		"action": "", "arrTrk": "", "nCars4ThisLoc": 0}}],
         "departs": [{"train": {"estDeptTime": 0, 
-		"status": "", "depTrk": "", rtToEnter":""}}],
+		"status": "", "depTrk": "", "rtToEnter":""}}],
         "builds": [{"train": {"numCars": 0, 
 		"numCars2Add": 0, "status": "", "rtToEnter":""}}]
     
@@ -159,7 +159,7 @@
         "arrivals": [{"train": {"estArrTime": 0, 
 		"action": "", "arrTrk": "", "nCars4ThisLoc": 0}}],
         "departs": [{"train": {"estDeptTime": 0, 
-		"status": "", "depTrk": "", rtToEnter":""}}],
+		"status": "", "depTrk": "", "rtToEnter":""}}],
         "builds": [{"train": {"numCars": 0, 
 		"numCars2Add": 0, "status": "", "rtToEnter":""}}]
     
@@ -177,6 +177,10 @@
         "gons": 0, "flats": 0}
     },
     "trkPrms": {
+        "arrival1" : {"funcs": ["arrival"], "train": "",
+            "maxCars": 0, "currCars": 0, "status": "unAssnd"},
+        "arrival2" : {"funcs": ["arrival"], "train": "",
+            "maxCars": 0, "currCars": 0, "status": "unAssnd"},
         "pgh" : {"funcs": ["classify", "depart"], "train": "",
             "maxCars": 0, "currCars": 0, "status": "unAssnd"},
         "Kiski" : {"funcs": ["classify", "depart"], "train": "",
@@ -230,7 +234,7 @@
         "arrivals": [{"train": {"estArrTime": 0, 
 		"action": "", "arrTrk": "", "nCars4ThisLoc": 0}}],
         "departs": [{"train": {"estDeptTime": 0, 
-		"status": "", "depTrk": "", rtToEnter":""}}],
+		"status": "", "depTrk": "", "rtToEnter":""}}],
         "builds": [{"train": {"numCars": 0, 
 		"numCars2Add": 0, "status": "", "rtToEnter":""}}]
     
@@ -288,9 +292,12 @@
     "cars2Class": 0,
     "time2Class": 0,
     "Qs": {
-        "arrivals": [{"train": {"estArrTime": 0, "action": "", "arrTrk": 0, "nCars4ThisLoc":0}}],
-        "departs": [{"train": {"estDeptTime": 0, "status": "", "rtToEnter":""}}],
-        "builds": [{"train": {"numCars": 0, "numCars2Add": 0, "status": "", "rtToEnter":""}}]
+        "arrivals": [{"train": {"estArrTime": 0, 
+		"action": "", "arrTrk": "", "nCars4ThisLoc": 0}}],
+        "departs": [{"train": {"estDeptTime": 0, 
+		"status": "", "depTrk": "", "rtToEnter":""}}],
+        "builds": [{"train": {"numCars": 0, 
+		"numCars2Add": 0, "status": "", "rtToEnter":""}}]
     
     },
     "trkPrms": {

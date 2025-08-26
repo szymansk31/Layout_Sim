@@ -106,7 +106,7 @@ class Qmgmt():
                 estArrTime = trainDB.trains[trainNam]["estArrTime"]
                 loc = trainDB.trains[trainNam]["nextLoc"]
                 #if estArrTime - mVars.time <= mVars.prms["arrTimDelta"]:
-                self.addTrn2LocQ(loc, "arrivals", trainNam)
+                self.addTrn2LocQ(loc, "arrivals", trainNam, "")
                 
     def sortArrvQ(self):
         import operator
@@ -127,8 +127,9 @@ class Qmgmt():
                 locStem[track]["status"] = "full"
                 locs.locDat[loc]["trkCounts"]["openArrTrks"] -=1
         pass
-                
-    def addTrn2LocQ(self, loc, QNam, trainNam):
+    
+    # track is an optional input if known           
+    def addTrn2LocQ(self, loc, QNam, trainNam, track):
         if any(trainNam in d for d in locs.locDat[loc]["Qs"][QNam]): return
         from stateVars import trainDB
         conNam = trainDB.getConNam(trainNam)
@@ -140,12 +141,13 @@ class Qmgmt():
                 locs.locDat[loc]["Qs"]["arrivals"].append({ \
                     trainNam: {"estArrTime": trainStem["estArrTime"],
                     "action": trainStem["stops"][loc]["action"],
-                    "arrTrack": 0,
+                    "arrTrk": track,
                     "nCars4ThisLoc": nCars4ThisLoc}})
             case "departs":
                 locs.locDat[loc]["Qs"]["departs"].append({ \
-                    trainNam: {"startTime": trainStem["startTime"],
+                    trainNam: {"estDeptTime": trainStem["estDeptTime"],
                     "status": trainStem["status"],
+                    "depTrk": track,
                     "rtToEnter": trainStem["rtToEnter"]}})
             case "builds":
                 numCars2Add = mVars.prms["trainSize"] - trainStem["numCars"]

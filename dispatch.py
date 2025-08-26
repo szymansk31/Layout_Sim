@@ -75,27 +75,35 @@ class clearTrnCalcs():
             trkStem = locs.locDat[loc]["trkPrms"]
             
             QStem = locs.locDat[loc]["Qs"]["arrivals"]
-            for trainNam in QStem:
-                estArrTime = QStem[trainNam]["estArrTime"]
+            idx = -1
+            for QDict in QStem:
+                idx +=1
+                trainNam = next(iter(QDict))
+                estArrTime = QDict[trainNam]["estArrTime"]
+                if QDict[trainNam]["arrTrk"] != "": continue
                 for track in trkStem:
-                    if (trkStem[track]["funcs"] == "arrival"):
+                    if ("arrival" in trkStem[track]["funcs"]):
                         match trkStem[track]["status"]:
                             case "unAssnd":
                                 trkStem[track]["train"] = trainNam
                                 trkStem[track]["status"] = "assnd"
-                                QStem["arrTrk"] = track
+                                QStem[idx][trainNam]["arrTrk"] = track
                                 break
                             case "assnd" if self.checkDepTime(loc, track, estArrTime):
                                 trkStem[track]["status"] = "assnAtDep"
-                                QStem["arrTrk"] = track
+                                QStem[idx][trainNam]["arrTrk"] = track
+                print("no arrival track available for train: ", trainNam, " in loc: ", loc)
                                 
                                     
-                print("no arrival track available for train: ", trainNam, " in loc: ", loc)
 
     def checkDepTime(self, loc, track, estArrTime):
         QStem = locs.locDat[loc]["Qs"]["departs"]
-        estDepTime = [QStem[tNam]["estDepTime"] \
-            for tNam in QStem if track == QStem[tNam]["depTrk"]]
-        if estArrTime > estDepTime: return True
+        estDepTime = [QStem[idx][next(iter(QDict))]["estDepTime"] \
+            for idx, QDict in enumerate(QStem) if track in QDict]
+        # no train on this track (not in "departs" Q), but assigned
+        # to incoming train - therefore return false
+        if len(estDepTime) == 0: return False
+        if estArrTime > estDepTime[0]: return True
+        else: return False
         
     

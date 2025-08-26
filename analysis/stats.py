@@ -15,8 +15,8 @@ class analyTimeSeries():
         pass
     
     def readTimeSeries(self):
-        #filename = sys.argv[1]
-        filename = "output/timeSeries_08_20_at_2027.txt"
+        filename = sys.argv[1]
+        #filename = "output/timeSeries_08_20_at_2027.txt"
         with open (filename, "r") as inFile:
             for line in inFile: 
                 if line != "\n":
@@ -35,7 +35,8 @@ class analyTimeSeries():
         nCarsPgh = []
         nCarsKiski = []
         legend = []
-        for loc in self.timeSrsDict["time0"]:
+        firstTimeStep = next(iter(self.timeSrsDict))
+        for loc in self.timeSrsDict[firstTimeStep]:
             nCars[loc] = []
             legend.append(loc)
         print("nCars: ", nCars)

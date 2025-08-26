@@ -105,6 +105,7 @@ class trnProc:
         trainDict["rtToEnter"] = ""
         trainDict["currentLoc"] = stopLoc
         trainDict["departStop"] = stopLoc
+        arrTrk = locs.locDat[stopLoc]["Qs"]["arrivals"][trainNam]["arrTrk"]
         self.locQmgmtObj.remTrnLocQ(stopLoc, "arrivals", trainNam)
         trainDict["coord"]["xTrnInit"] = 0 # reset for next route
         print("train: ", trainNam, "entering terminal: ", stopLoc, "trainDict: ", trainDict)
@@ -146,6 +147,7 @@ class trnProc:
                 trainDict["estDepTime"] = mVars.time + trainDB.avgContTime
                 self.updateTrain4Stop(stopLoc, trainDict)
 
+        self.locQmgmtObj.addTrn2LocQ(stopLoc, "departs", trainNam, arrTrk)
         dispObj.drawTrain(trainNam)
         self.locMgmtObj.addTrn2LocOrRt(stopLoc, trainDict, trainNam)
 
