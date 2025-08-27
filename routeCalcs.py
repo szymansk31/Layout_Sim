@@ -12,11 +12,38 @@ class routeInit():
     def __init__(self):
         pass
     
-class routeCalcs():
+class routeMgmt():
     
     def __init__(self):
         pass
     
+    def fillTrnsOnRoute(self, routeNam, trainNam):
+        routeStem = routeCls.routes[routeNam]["trains"]
+        routeStem.append(trainNam)
+        dir = trainDB.trains[trainNam]["direction"]
+        if dir == "east":
+            rtCaps.rtCap[routeNam]["nEastTns"] +=1
+        elif dir == "west":
+            rtCaps.rtCap[routeNam]["nWestTns"] +=1
+       
+    def remTrnsOnRoute(self, routeNam, trainNam):
+        routeStem = routeCls.routes[routeNam]["trains"]
+        try:
+            index = routeStem.index(trainNam)
+            routeStem.pop(index)
+        except:
+            pass
+        
+        dir = trainDB.trains[trainNam]["direction"]
+        numEast = rtCaps.rtCap[routeNam]["nEastTns"]
+        numWest = rtCaps.rtCap[routeNam]["nWestTns"]
+        if dir == "east":
+            num = max(numEast -1, 0)
+            rtCaps.rtCap[routeNam]["nEastTns"] = num
+        elif dir == "west":
+            num = max(numWest -1, 0)
+            rtCaps.rtCap[routeNam]["nWestTns"] = num
+        
     def calcTrnArrivalTime(self, route):
         for route in routeCls.routes:
             routeStem = routeCls.routes[route]

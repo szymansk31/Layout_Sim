@@ -10,6 +10,7 @@
 "nextLoc": "unknown",
 "rtToEnter": "",
 "direction": "",
+"arrTrk": "",
 "locArrTime": 0,
 "estArrTime": 0, 
 "estDepTime": 0,

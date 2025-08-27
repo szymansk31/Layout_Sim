@@ -29,7 +29,7 @@ class schedProc():
         for trainNam in dspCh.sched:
             if (loc == dspCh.sched[trainNam]["origLoc"]) and \
                 (mVars.time >= dspCh.sched[trainNam]["startTime"]):
-                locMgmtObj.addTrn2LocOrRt(loc, dspCh.sched[trainNam], 
+                locMgmtObj.placeTrain(loc, dspCh.sched[trainNam], 
                         trainNam)
                 self.baseTrnDict(trainNam)
                 dspCh.sched.pop(trainNam)
@@ -85,15 +85,27 @@ class clearTrnCalcs():
                     if ("arrival" in trkStem[track]["funcs"]):
                         match trkStem[track]["status"]:
                             case "unAssnd":
-                                trkStem[track]["train"] = trainNam
-                                trkStem[track]["status"] = "assnd"
-                                QStem[idx][trainNam]["arrTrk"] = track
+                                self.addTrain2ArrTrack(loc, track, trainNam)
                                 break
                             case "assnd" if self.checkDepTime(loc, track, estArrTime):
                                 trkStem[track]["status"] = "assnAtDep"
                                 QStem[idx][trainNam]["arrTrk"] = track
                 print("no arrival track available for train: ", trainNam, " in loc: ", loc)
                                 
+    def addTrain2ArrTrack(self, loc, track, trainNam):
+        QStem = locs.locDat[loc]["Qs"]["arrivals"]
+        idx = [idx for idx, QDict in enumerate(QStem) if track in QDict]
+        locStem = locs.locDat[loc]["trkPrms"]
+        trnStem = trainDB.trains[trainNam]
+        
+        locStem[track]["train"] = trainNam
+        locStem[track]["status"] = "assnd"
+        trnStem["arrTrk"] = track
+        QStem[idx][trainNam]["arrTrk"] = track
+
+        locs.locDat[loc]["trkCounts"]["openArrTrks"] -=1
+        pass
+    
                                     
 
     def checkDepTime(self, loc, track, estArrTime):

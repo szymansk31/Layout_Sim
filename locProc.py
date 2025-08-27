@@ -9,7 +9,7 @@ from swCalcs import swCalcs
 from stagCalcs import stCalcs
 from gui import gui
 from coords import transForms
-from routeCalcs import routeCalcs, rtCaps
+from routeCalcs import routeMgmt, rtCaps
 from outputMethods import printMethods
 from locBase import locBase, Qmgmt, locMgmt
         
@@ -129,7 +129,7 @@ class locProc():
         #    (trainStem["coord"]["xTrnInit"]) == None:
             #train not on route to start
         #trainStem["coord"]["xTrnInit"] = 0  
-        locMgmtObj.addTrn2LocOrRt(routeNam, trainStem, trainNam)
+        locMgmtObj.placeTrain(routeNam, trainStem, trainNam)
         #rtCapsObj.addTrn2RouteQ(routeNam, trainNam)
         trainStem["firstDispTrn"] = 1
         

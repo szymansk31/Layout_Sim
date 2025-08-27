@@ -3,7 +3,7 @@ from mainVars import mVars
 from stateVars import locs, trainDB, routeCls
 from display import dispItems
 from coords import transForms
-from routeCalcs import routeCalcs, rtCaps
+from routeCalcs import routeMgmt, rtCaps
         
 np.set_printoptions(precision=2, suppress=True) 
 
@@ -12,7 +12,7 @@ dbgLocal = 1
 class locBase():
     
     def __init__(self):
-        self.routeCalcsObj = routeCalcs()
+        self.routeMgmtObj = routeMgmt()
         pass
     
     def initLocDicts(self):
@@ -71,7 +71,7 @@ class locBase():
 class Qmgmt():
     
     def __init__(self):
-        self.routeCalcsObj = routeCalcs()
+        self.routeMgmtObj = routeMgmt()
         pass
     
     def initLocQs(self):
@@ -102,7 +102,7 @@ class Qmgmt():
     def calcArrivTrns(self):
         for route in routeCls.routes:
             for trainNam in routeCls.routes[route]["trains"]:
-                self.routeCalcsObj.calcTrnArrivalTime(route)
+                self.routeMgmtObj.calcTrnArrivalTime(route)
                 estArrTime = trainDB.trains[trainNam]["estArrTime"]
                 loc = trainDB.trains[trainNam]["nextLoc"]
                 #if estArrTime - mVars.time <= mVars.prms["arrTimDelta"]:
@@ -118,16 +118,6 @@ class Qmgmt():
             locs.locDat[loc]["Qs"]["arrivals"] = sorted(tmpList, key=getTimVal)
             print("loc: ", loc, locs.locDat[loc]["Qs"]["arrivals"])   
             
-    def addTrain2ArrTrack(self, loc, trainNam):
-        locStem = locs.locDat[loc]["trkPrms"]
-        for track in locStem:
-            if ("arrv" in locStem[track]["funcs"]) and \
-                (locStem[track]["status"] == "mt"):
-                locStem[track]["train"] = trainNam
-                locStem[track]["status"] = "full"
-                locs.locDat[loc]["trkCounts"]["openArrTrks"] -=1
-        pass
-    
     # track is an optional input if known           
     def addTrn2LocQ(self, loc, QNam, trainNam, track):
         if any(trainNam in d for d in locs.locDat[loc]["Qs"][QNam]): return
@@ -147,7 +137,7 @@ class Qmgmt():
                 locs.locDat[loc]["Qs"]["departs"].append({ \
                     trainNam: {"estDeptTime": trainStem["estDeptTime"],
                     "status": trainStem["status"],
-                    "depTrk": track,
+  #=================================================                  "depTrk": track,
                     "rtToEnter": trainStem["rtToEnter"]}})
             case "builds":
                 numCars2Add = mVars.prms["trainSize"] - trainStem["numCars"]
@@ -162,16 +152,12 @@ class Qmgmt():
         index = [idx for idx, d in enumerate(QStem) if trainNam in d]
         QStem.pop(index[0])
         
-#=================================================
-class test123():
-    
-    def __init__(self):
-        pass
-                   
+
 #=================================================
 class locMgmt():
     
     def __init__(self):
+        self.rtCapsObj = rtCaps()
         pass
                    
     def rmTrnFrmActions(self, action, loc, trainNam):
@@ -195,35 +181,8 @@ class locMgmt():
         except:
             pass
         
-    def fillTrnsOnRoute(self, routeNam, trainNam):
-        routeStem = routeCls.routes[routeNam]["trains"]
-        routeStem.append(trainNam)
-        dir = trainDB.trains[trainNam]["direction"]
-        if dir == "east":
-            rtCaps.rtCap[routeNam]["nEastTns"] +=1
-        elif dir == "west":
-            rtCaps.rtCap[routeNam]["nWestTns"] +=1
-       
-    def remTrnsOnRoute(self, routeNam, trainNam):
-        routeStem = routeCls.routes[routeNam]["trains"]
-        try:
-            index = routeStem.index(trainNam)
-            routeStem.pop(index)
-        except:
-            pass
-        
-        dir = trainDB.trains[trainNam]["direction"]
-        numEast = rtCaps.rtCap[routeNam]["nEastTns"]
-        numWest = rtCaps.rtCap[routeNam]["nWestTns"]
-        if dir == "east":
-            num = max(numEast -1, 0)
-            rtCaps.rtCap[routeNam]["nEastTns"] = num
-        elif dir == "west":
-            num = max(numWest -1, 0)
-            rtCaps.rtCap[routeNam]["nWestTns"] = num
-        
 
-    def addTrn2LocOrRt(self, loc, trainStem, trainNam): 
+    def placeTrain(self, loc, trainStem, trainNam): 
         coordObj = transForms()
         #if trainStem["status"] == "init":
         #    loc = trainStem["rtToEnter"]
@@ -231,6 +190,7 @@ class locMgmt():
             self.setTrnCoord(loc, trainNam)
             # fill trainDB with xPlot and yPlot, the canvas/screen coords
             coordObj.xRoute2xPlot(loc, trainNam)
+            self.rtCapsObj.addTrn2RouteQ(loc, trainNam)
             return
         else:
             locs.locDat[loc]["trains"].append(trainNam)
