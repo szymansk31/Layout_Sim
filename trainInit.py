@@ -4,6 +4,7 @@ from display import dispItems
 from coords import transForms
 from stateVars import locs, dspCh, trainDB, routeCls
 from locBase import locMgmt
+from routeCalcs import routeMgmt
 
 #=================================================
 class trainInit():
@@ -22,6 +23,7 @@ class trainInit():
         self.conName = ""
         self.files = readFiles()
         self.locMgmtObj = locMgmt()
+        self.rtMgmtObj = routeMgmt()
         pass
     
     @classmethod
@@ -96,6 +98,7 @@ class trainInit():
                 })
         
         self.locMgmtObj.findRtPrms(loc, trainNam)
+        self.rtMgmtObj.calcTrnArrTime(loc, trainNam)
         print("new train: ", trainNam, ": ", trainDB.trains[trainNam])
         print("new consist: ", conNam, ":", trainDB.consists[conNam])
         trainDB.numTrains +=1

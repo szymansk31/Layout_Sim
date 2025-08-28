@@ -135,7 +135,6 @@ class Qmgmt():
                 locs.locDat[loc]["Qs"]["departs"].append({ \
                     trainNam: {"estDeptTime": trainStem["estDeptTime"],
                     "status": trainStem["status"],
-  #=================================================                  "depTrk": track,
                     "rtToEnter": trainStem["rtToEnter"]}})
             case "builds":
                 numCars2Add = mVars.prms["trainSize"] - trainStem["numCars"]
