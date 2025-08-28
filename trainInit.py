@@ -98,7 +98,7 @@ class trainInit():
                 })
         
         self.locMgmtObj.findRtPrms(loc, trainNam)
-        self.rtMgmtObj.calcTrnArrTime(loc, trainNam)
+        self.rtMgmtObj.calcTrnArrTime("fillTrnDicts ", loc, trainNam)
         print("new train: ", trainNam, ": ", trainDB.trains[trainNam])
         print("new consist: ", conNam, ":", trainDB.consists[conNam])
         trainDB.numTrains +=1

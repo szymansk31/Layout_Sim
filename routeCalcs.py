@@ -17,7 +17,7 @@ class routeMgmt():
     def __init__(self):
         pass
     
-    def fillTrnsOnRoute(self, routeNam, trainNam):
+    def addTrn2Route(self, routeNam, trainNam):
         routeStem = routeCls.routes[routeNam]["trains"]
         if trainNam in routeStem: return
         routeStem.append(trainNam)
@@ -49,14 +49,15 @@ class routeMgmt():
         for route in routeCls.routes:
             routeStem = routeCls.routes[route]
             for trainNam in routeStem["trains"]:
-                self.calcTrnArrTime(route, trainNam)
+                self.calcTrnArrTime("trnArrTimes:route ", route, trainNam)
         for loc in locs.locDat:
-            locStem = locs.locDat[loc]
-            for trainNam in locStem["trains"]:
-                self.calcTrnArrTime(loc, trainNam)
+            QStem = locs.locDat[loc]["Qs"]["departs"]
+            for QDict in QStem:
+                trainNam = next(iter(QDict))
+                self.calcTrnArrTime("trnArrTimes:loc ", loc, trainNam)
 
-    def calcTrnArrTime(self, loc, trainNam):
-        print("calcTrnArrTime; loc: ", loc, " , trainNam: ", trainNam)
+    def calcTrnArrTime(self, callFunc, loc, trainNam):
+        print("calcTrnArrTime; called from: ", callFunc, " loc: ", loc, " , trainNam: ", trainNam)
         trainStem = trainDB.trains[trainNam]
         if "route" in loc:
             routeStem = routeCls.routes[loc]

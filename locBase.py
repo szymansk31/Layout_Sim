@@ -190,7 +190,7 @@ class locMgmt():
             # fill trainDB with xPlot and yPlot, the canvas/screen coords
             coordObj.xRoute2xPlot(loc, trainNam)
             self.rtCapsObj.addTrn2RouteQ(loc, trainNam)
-            self.rtMgmtObj.fillTrnsOnRoute(loc, trainNam)
+            self.rtMgmtObj.addTrn2Route(loc, trainNam)
             self.QmgmtObj.addTrn2LocQ(trainStem["nextLoc"], "arrivals", trainNam, "")
             return
         else:

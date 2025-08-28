@@ -60,7 +60,7 @@ class trnProc:
                 print("train: ", trainNam, " switching to enroute status")
                 trainDict["status"] = "enroute"
                 trainDict["currentLoc"] = trainDict["rtToEnter"]
-                self.rtMgmtObj.fillTrnsOnRoute(trainDict["currentLoc"], trainNam)
+                self.rtMgmtObj.addTrn2Route(trainDict["currentLoc"], trainNam)
                 # remove train rectangles above the location rectangle
                 self.dispObj.drawTrain(trainNam)
                 loc = trainDB.trains[trainNam]["departStop"]
