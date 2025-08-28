@@ -102,7 +102,7 @@ class Qmgmt():
     def calcArrivTrns(self):
         for route in routeCls.routes:
             for trainNam in routeCls.routes[route]["trains"]:
-                self.routeMgmtObj.calcTrnArrivalTime(route)
+                self.routeMgmtObj.trnArrivalTimes()
                 estArrTime = trainDB.trains[trainNam]["estArrTime"]
                 loc = trainDB.trains[trainNam]["nextLoc"]
                 #if estArrTime - mVars.time <= mVars.prms["arrTimDelta"]:

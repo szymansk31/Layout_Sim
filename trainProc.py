@@ -107,6 +107,7 @@ class trnProc:
             idx = [idx for idx, QDict in enumerate(QStem) if trainNam in QDict]
             arrTrk = QStem[idx[0]][trainNam]["arrTrk"]
             self.locQmgmtObj.remTrnLocQ(stopLoc, "arrivals", trainNam)
+        #    self.rtMgmtObj.remTrnsOnRoute(routeNam, trainNam)
         trainDict["coord"]["xTrnInit"] = 0 # reset for next route
         print("train: ", trainNam, "entering terminal: ", stopLoc, "trainDict: ", trainDict)
         print("train: ", trainNam, "consistNum: ", consistNum, 
