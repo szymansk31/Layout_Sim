@@ -109,7 +109,6 @@ class Qmgmt():
                 self.addTrn2LocQ(loc, "arrivals", trainNam, "")
                 
     def sortArrvQ(self):
-        import operator
         def getTimVal(subDict):
             for key, value in subDict.items():
                 return value["estArrTime"]
@@ -121,7 +120,6 @@ class Qmgmt():
     # track is an optional input if known           
     def addTrn2LocQ(self, loc, QNam, trainNam, track):
         if any(trainNam in d for d in locs.locDat[loc]["Qs"][QNam]): return
-        from stateVars import trainDB
         conNam = trainDB.getConNam(trainNam)
         trainStem = trainDB.trains[trainNam]
         
@@ -158,6 +156,8 @@ class locMgmt():
     
     def __init__(self):
         self.rtCapsObj = rtCaps()
+        self.rtMgmtObj = routeMgmt()
+        self.QmgmtObj = Qmgmt()
         pass
                    
     def rmTrnFrmActions(self, action, loc, trainNam):
@@ -191,6 +191,8 @@ class locMgmt():
             # fill trainDB with xPlot and yPlot, the canvas/screen coords
             coordObj.xRoute2xPlot(loc, trainNam)
             self.rtCapsObj.addTrn2RouteQ(loc, trainNam)
+            self.rtMgmtObj.fillTrnsOnRoute(loc, trainNam)
+            self.QmgmtObj.addTrn2LocQ(trainStem["nextLoc"], "arrivals", trainNam, "")
             return
         else:
             locs.locDat[loc]["trains"].append(trainNam)
@@ -219,14 +221,13 @@ class locMgmt():
                 (dest in routeCls.routes[routeNam].values()):
                 return routeNam
         
-    def findRtPrms(self, loc,  trainNam):
-        rtCapsObj = rtCaps()
+    def findRtPrms(self, loc, trainNam):
         # setup train
         trainStem = trainDB.trains[trainNam]
         dest = trainDB.trains[trainNam]["nextLoc"]
         if dest != "":
             # setup new route
-            route4newTrn = self.findRoutes(loc,  trainNam)
+            route4newTrn = self.findRoutes(loc, trainNam)
             trainStem["rtToEnter"] = route4newTrn
             leftObj = routeCls.routes[route4newTrn]["leftObj"].strip()
             rtObj = routeCls.routes[route4newTrn]["rtObj"].strip()

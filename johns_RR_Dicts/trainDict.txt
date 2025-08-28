@@ -13,7 +13,7 @@
 "arrTrk": "",
 "locArrTime": 0,
 "estArrTime": 0, 
-"estDepTime": 0,
+"estDeptTime": 0,
 "startTime": 0, 
 "coord": {
     "xTrnInit": 0,

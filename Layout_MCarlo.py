@@ -131,7 +131,7 @@ gui.guiDict = files.readFile("guiFile")
 guiObj.preProcGui()
 routeGeomObj.initRoutes(gui.guiDict)
 
-from routeMgmt import rtCaps
+from routeCalcs import rtCaps
 rtCapsObj = rtCaps()
 rtCapsObj.initRouteCaps()
 
@@ -156,7 +156,7 @@ displayObj.initLocDisp()
 
 from startingTrains import trainFromFile
 startTrainObj = trainFromFile()
-startTrainObj.readTrain()
+#startTrainObj.readTrain()
 from dispatch import schedProc
 schedProcObj = schedProc()
 schedProcObj.initSchedule()

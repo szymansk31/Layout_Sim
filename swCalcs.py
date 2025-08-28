@@ -25,7 +25,7 @@ class swCalcs():
         self.classObj = classCars()
         from display import dispItems
         self.dispObj = dispItems()
-        from routeMgmt import rtCaps
+        from routeCalcs import rtCaps
         self.rtCapsObj = rtCaps()
         
 

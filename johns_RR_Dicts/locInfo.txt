@@ -301,13 +301,13 @@
     
     },
     "trkPrms": {
-        "track1" : {"funcs": ["arrivals", "depart"], "train": "", 
+        "track1" : {"funcs": ["arrival", "depart"], "train": "", 
             "maxCars": 0, "currCars": 0, "status": "unAssnd"},
-        "track2" : {"funcs": ["arrivals", "depart"], "train": "", 
+        "track2" : {"funcs": ["arrival", "depart"], "train": "", 
             "maxCars": 0, "currCars": 0, "status": "unAssnd"},
-        "track3" : {"funcs": ["arrivals", "depart"], "train": "", 
+        "track3" : {"funcs": ["arrival", "depart"], "train": "", 
             "maxCars": 0, "currCars": 0, "status": "unAssnd"},
-        "track4" : {"funcs": ["arrivals", "depart"], "train": "", 
+        "track4" : {"funcs": ["arrival", "depart"], "train": "", 
             "maxCars": 0, "currCars": 0, "status": "unAssnd"}
    },
     "trkCounts": {

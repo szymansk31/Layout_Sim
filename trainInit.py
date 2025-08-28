@@ -3,7 +3,7 @@ from fileProc import readFiles
 from display import dispItems
 from coords import transForms
 from stateVars import locs, dspCh, trainDB, routeCls
-
+from locBase import locMgmt
 
 #=================================================
 class trainInit():
@@ -21,7 +21,7 @@ class trainInit():
         self.trainNam = ""
         self.conName = ""
         self.files = readFiles()
-
+        self.locMgmtObj = locMgmt()
         pass
     
     @classmethod
@@ -71,7 +71,6 @@ class trainInit():
         trainDB.numConsists +=1
         return newConsistNam
     
-
     def fillTrnDicts(self, loc, trainNam):
         
         finalLoc = trainDB.trains[trainNam]["finalLoc"]
@@ -96,6 +95,7 @@ class trainInit():
             "color": trainInit.colors()           
                 })
         
+        self.locMgmtObj.findRtPrms(loc, trainNam)
         print("new train: ", trainNam, ": ", trainDB.trains[trainNam])
         print("new consist: ", conNam, ":", trainDB.consists[conNam])
         trainDB.numTrains +=1

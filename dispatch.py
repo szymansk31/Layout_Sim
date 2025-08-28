@@ -4,6 +4,8 @@ from trainInit import trainInit
 from stateVars import locs, dspCh, trainDB, routeCls
 from locBase import locBase, Qmgmt, locMgmt
 from fileProc import readFiles
+from display import dispItems
+from routeCalcs import rtCaps, routeMgmt
 files = readFiles()
 np.set_printoptions(precision=2, suppress=True) 
 
@@ -14,26 +16,28 @@ dbgLocal = 1
 class schedProc():
 
     def __init__(self):
+        self.locMgmtObj = locMgmt()
+        self.trainInitObj = trainInit()
+        self.dispItemsObj = dispItems()
         pass
     
     def initSchedule(self):
         # include starting trains
-
+        dspCh.sched.update(files.readFile("startingTrainFile"))
+        trainDB.consists.update(files.readFile("startingConsistFile"))
         dspCh.sched.update(files.readFile("scheduleFile"))
         print("\ninitSchedule: starting trains: ", dspCh.sched)
 
     def fetchLocSchedItem(self, loc):
-        from locBase import locBase, Qmgmt, locMgmt
-        locMgmtObj = locMgmt()
-        trainInitObj = trainInit()
         for trainNam in dspCh.sched:
+            currentLoc = dspCh.sched[trainNam]["currentLoc"]
             if (loc == dspCh.sched[trainNam]["origLoc"]) and \
                 (mVars.time >= dspCh.sched[trainNam]["startTime"]):
-                locMgmtObj.placeTrain(loc, dspCh.sched[trainNam], 
-                        trainNam)
                 self.baseTrnDict(trainNam)
+                self.locMgmtObj.placeTrain(currentLoc, dspCh.sched[trainNam], 
+                        trainNam)
                 dspCh.sched.pop(trainNam)
-                trainInitObj.fillTrnDicts(loc, trainNam)
+                self.trainInitObj.fillTrnDicts(loc, trainNam)
                 return
             pass
         
@@ -57,6 +61,7 @@ class clearTrnCalcs():
     def __init__(self):
         self.locBaseObj = locBase()
         self.QmgmtObj = Qmgmt()
+        self.rtCapsObj = rtCaps()
         pass
                    
     def mainDispatch(self):
@@ -68,7 +73,14 @@ class clearTrnCalcs():
         # are 
 
     def clearTrn(self, loc, trainNam):
-        pass
+        QStem = locs.locDat[loc]["Qs"]["arrivals"]
+        arrTrkAssnd = False
+        QDict = [QDict for idx, QDict in enumerate(QStem) if trainNam in QDict]
+        rtClear = self.rtCapsObj.checkRtSlots(trainNam)
+        if QDict[0][trainNam]["arrTrk"] != "": arrTrkAssnd = True
+        print("clearTrn: rtClear = ", rtClear, " , arrTrkAssnd = ", arrTrkAssnd)
+        return rtClear and arrTrkAssnd
+        
     
     def assnArrTrks(self):
         for loc in locs.locDat:
@@ -90,18 +102,22 @@ class clearTrnCalcs():
                             case "assnd" if self.checkDepTime(loc, track, estArrTime):
                                 trkStem[track]["status"] = "assnAtDep"
                                 QStem[idx][trainNam]["arrTrk"] = track
-                print("no arrival track available for train: ", trainNam, " in loc: ", loc)
+                                break
+                if QDict[trainNam]["arrTrk"] == "":
+                    print("no arrival track available for train: ", trainNam, " in loc: ", loc)
                                 
     def addTrain2ArrTrack(self, loc, track, trainNam):
         QStem = locs.locDat[loc]["Qs"]["arrivals"]
-        idx = [idx for idx, QDict in enumerate(QStem) if track in QDict]
+        print("adding train ", trainNam, " to arr track: ", track, "in loc ", loc)
+        idx = [idx for idx, QDict in enumerate(QStem) if trainNam in QDict]
         locStem = locs.locDat[loc]["trkPrms"]
         trnStem = trainDB.trains[trainNam]
         
+        print("idx, QStem: ", idx, " ,", QStem)
         locStem[track]["train"] = trainNam
         locStem[track]["status"] = "assnd"
         trnStem["arrTrk"] = track
-        QStem[idx][trainNam]["arrTrk"] = track
+        QStem[idx[0]][trainNam]["arrTrk"] = track
 
         locs.locDat[loc]["trkCounts"]["openArrTrks"] -=1
         pass

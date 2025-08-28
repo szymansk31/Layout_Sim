@@ -12,7 +12,7 @@
 "direction": "east",
 "locArrTime": 0,
 "estArrTime": 0, 
-"lastDepTime": 0,
+"estDeptTime": 0,
 "startTime": 3, 
 "coord": {
     "xTrnInit": 0.5,
@@ -50,7 +50,7 @@
 "direction": "east",
 "locArrTime": 0,
 "estArrTime": 0, 
-"lastDepTime": 0,
+"estDeptTime": 0,
 "startTime": 2, 
 "coord": {
     "xTrnInit": 0.2,
@@ -87,7 +87,7 @@
 "direction": "east",
 "locArrTime": 0,
 "estArrTime": 0, 
-"lastDepTime": 0,
+"estDeptTime": 0,
 "startTime": 0, 
 "coord": {
     "xTrnInit": 0,
@@ -123,7 +123,7 @@
 "direction": "east",
 "locArrTime": 0,
 "estArrTime": 0, 
-"lastDepTime": 0,
+"estDeptTime": 0,
 "startTime": 5, 
 "coord": {
     "xTrnInit": 0,

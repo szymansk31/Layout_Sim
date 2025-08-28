@@ -19,6 +19,7 @@ class routeMgmt():
     
     def fillTrnsOnRoute(self, routeNam, trainNam):
         routeStem = routeCls.routes[routeNam]["trains"]
+        if trainNam in routeStem: return
         routeStem.append(trainNam)
         dir = trainDB.trains[trainNam]["direction"]
         if dir == "east":
@@ -53,7 +54,14 @@ class routeMgmt():
                     trainStem["coord"]["xRoute"]
                 time2Go = abs(dist2Go)/routeStem["distPerTime"]
                 trainStem["estArrTime"] = round(mVars.time + time2Go, 2)
-                
+        for loc in locs.locDat:
+            locStem = locs.locDat[loc]
+            for train in locStem["trains"]:
+                trainStem = trainDB.trains[train]
+                rtToEnter = trainStem["rtToEnter"]
+                dist2Go = routeCls.routes[rtToEnter]["rtLength"]
+                time2Go = abs(dist2Go)/routeStem["distPerTime"]
+                trainStem["estArrTime"] = round(mVars.time + time2Go, 2)
                 
 #=================================================
 class rtCaps():
@@ -114,6 +122,7 @@ class rtCaps():
         #look at train's requested dir, route
         # if slot available, and arrival track
         # available, put on route
+        openSlot = False
         trainStem = trainDB.trains[trainNam]
         routeNam = trainStem["rtToEnter"]
         rtStem = rtCaps.rtCap[routeNam]
