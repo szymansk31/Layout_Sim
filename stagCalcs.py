@@ -16,9 +16,8 @@ class stCalcs():
         #self.weights = [0, 0, 0, 0, 0]
         from locProc import locProc
         self.locProcObj = locProc()
-        from locBase import locBase, Qmgmt, locMgmt
+        from locBase import locBase
         self.locBaseObj = locBase()
-        self.locMgmtObj = locMgmt()
         from classCars import classCars
         self.classObj = classCars()
         from display import dispItems
@@ -35,7 +34,7 @@ class stCalcs():
                 print("in staging: nextLoc: ", nextLoc)
                 locs.locDat[loc]["trnCnts"]["started"] += 1
 
-                self.locMgmtObj.rmTrnFrmActions("wait4Clrnce", loc, train)
+                self.locBaseObj.rmTrnFrmActions("wait4Clrnce", loc, train)
                 self.locProcObj.startTrain(loc, train)
                 
         self.dispObj.dispTrnLocDat(loc)

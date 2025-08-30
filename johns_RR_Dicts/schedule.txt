@@ -31,18 +31,6 @@
     "stops": {
     "ErieRRStaging": {"action": "terminate"}
             }
-    },
-"train9": {
-    "origLoc":"OilCity",
-    "currentLoc":"OilCity",
-    "finalLoc": "pgh",
-    "status":"init",
-    "startTime": 10,
-    "stops": {
-        "Kiski": {"action": "dropPickup"},
-        "pgh": {"action": "terminate"}
-            }
-    }    
-
+    }
 }
 

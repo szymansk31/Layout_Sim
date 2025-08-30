@@ -65,6 +65,9 @@ class trnProc:
                 self.dispObj.drawTrain(trainNam)
                 loc = trainDB.trains[trainNam]["departStop"]
                 if loc != "":
+                    arrTrk = self.locQmgmtObj.readArrTrk(loc, trainNam)
+                    self.locQmgmtObj.remTrnLocQ(loc, "arrivals", trainNam)
+                    self.locQmgmtObj.remTrnArrTrk(loc, arrTrk, trainNam)
                     self.locMgmtObj.rmTrnFrmLoc(loc, trainNam)
                     self.dispObj.clearActionTrnRecs(loc, trainNam)
                 pass
@@ -106,8 +109,7 @@ class trnProc:
         if mVars.prms["useDispatch"] == True:
             idx = [idx for idx, QDict in enumerate(QStem) if trainNam in QDict]
             arrTrk = QStem[idx[0]][trainNam]["arrTrk"]
-            self.locQmgmtObj.remTrnLocQ(stopLoc, "arrivals", trainNam)
-        #    self.rtMgmtObj.remTrnsOnRoute(routeNam, trainNam)
+            self.rtMgmtObj.remTrnsOnRoute(routeNam, trainNam)
         trainDict["coord"]["xTrnInit"] = 0 # reset for next route
         print("train: ", trainNam, "entering terminal: ", stopLoc, "trainDict: ", trainDict)
         print("train: ", trainNam, "consistNum: ", consistNum, 
@@ -128,38 +130,38 @@ class trnProc:
                 trainDict["status"] = "rdCrwSw"
                 # setup list of industries when first entering swArea
                 swCalcs.indusIter = iter(locs.locDat[stopLoc]["industries"])
-                self.updateTrain4Stop(stopLoc, trainDict)
+                self.updateTrain4Stop(stopLoc, trainDict, trainNam, arrTrk)
                 pass
             case "dropPickup":
                 # no industry switching done, just car exchange
                 # switching typically done by yard crew at yards,
                 # train crew at other locations
                 trainDict["status"] = "dropPickup"
-                self.updateTrain4Stop(stopLoc, trainDict)
+                self.updateTrain4Stop(stopLoc, trainDict, trainNam, arrTrk)
                 pass
             case "continue":
                 #no action at this stop - continue to nextLoc
                 trainDict["status"] = "continue"
-                self.updateTrain4Stop(stopLoc, trainDict)
+                self.updateTrain4Stop(stopLoc, trainDict, trainNam, arrTrk)
 
-        self.locQmgmtObj.addTrn2LocQ(stopLoc, "departs", trainNam, arrTrk)
+        self.locMgmtObj.findRtPrms(stopLoc, trainNam)
         self.dispObj.drawTrain(trainNam)
         self.locMgmtObj.placeTrain(stopLoc, trainDict, trainNam)
 
-        #remove train from that route
-        self.rtMgmtObj.remTrnsOnRoute(routeNam, trainNam)
         #routeStem["trains"].pop(index)
         mVars.numOpBusy -=1
 
-    def updateTrain4Stop(self, stopLoc, trainDict):
+    def updateTrain4Stop(self, stopLoc, trainDict, trainNam, arrTrk):
         trainDict["numStops"] -=1
         if trainDict["numStops"] == 0: 
             trainDict["status"] = "terminate"
             return
         self.fillNextLoc(stopLoc, trainDict)
+
         trainDict["timeEnRoute"] = 0
         trainDict["estDeptTime"] = mVars.time + trainDB.avgContTime
-        pass
+        self.locQmgmtObj.addTrn2LocQ(stopLoc, "departs", trainNam, arrTrk)
+       
     
 
     def fillNextLoc(self, stopLoc, trainDict):        

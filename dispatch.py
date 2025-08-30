@@ -122,7 +122,6 @@ class clearTrnCalcs():
         locs.locDat[loc]["trkCounts"]["openArrTrks"] -=1
         pass
     
-                                    
 
     def checkDepTime(self, loc, track, estArrTime):
         QStem = locs.locDat[loc]["Qs"]["departs"]

@@ -1,9 +1,18 @@
+import random
 import numpy as np
 from mainVars import mVars
 from stateVars import locs, trainDB, routeCls
+from display import dispItems
+from dispatch import schedProc, dspCh
+from yardCalcs import ydCalcs
+from swCalcs import swCalcs
+from stagCalcs import stCalcs
+from gui import gui
 from coords import transForms
+from outputMethods import printMethods
 from fileProc import readFiles
 files = readFiles()
+    
 
 np.set_printoptions(precision=2, suppress=True) 
 
@@ -12,65 +21,22 @@ class routeInit():
     def __init__(self):
         pass
     
-class routeMgmt():
+class routeCalcs():
     
     def __init__(self):
-        self.rtCapsObj = rtCaps()
         pass
     
-    def addTrn2Route(self, routeNam, trainNam):
-        routeStem = routeCls.routes[routeNam]["trains"]
-        if trainNam in routeStem: return
-        routeStem.append(trainNam)
-        dir = trainDB.trains[trainNam]["direction"]
-        if dir == "east":
-            rtCaps.rtCap[routeNam]["nEastTns"] +=1
-        elif dir == "west":
-            rtCaps.rtCap[routeNam]["nWestTns"] +=1
-       
-    def remTrnsOnRoute(self, routeNam, trainNam):
-        routeStem = routeCls.routes[routeNam]["trains"]
-        try:
-            index = routeStem.index(trainNam)
-            routeStem.pop(index)
-        except:
-            pass
-        
-        self.rtCapsObj.remTrnFrmRouteQ(routeNam, trainNam)
-        dir = trainDB.trains[trainNam]["direction"]
-        numEast = rtCaps.rtCap[routeNam]["nEastTns"]
-        numWest = rtCaps.rtCap[routeNam]["nWestTns"]
-        if dir == "east":
-            num = max(numEast -1, 0)
-            rtCaps.rtCap[routeNam]["nEastTns"] = num
-        elif dir == "west":
-            num = max(numWest -1, 0)
-            rtCaps.rtCap[routeNam]["nWestTns"] = num
-        
-    def trnArrivalTimes(self):
+    def calcTrnArrivalTime(self, route):
         for route in routeCls.routes:
             routeStem = routeCls.routes[route]
-            for trainNam in routeStem["trains"]:
-                self.calcTrnArrTime("trnArrTimes:route ", route, trainNam)
-        for loc in locs.locDat:
-            QStem = locs.locDat[loc]["Qs"]["departs"]
-            for QDict in QStem:
-                trainNam = next(iter(QDict))
-                self.calcTrnArrTime("trnArrTimes:loc ", loc, trainNam)
-
-    def calcTrnArrTime(self, callFunc, loc, trainNam):
-        print("calcTrnArrTime; called from: ", callFunc, " loc: ", loc, " , trainNam: ", trainNam)
-        trainStem = trainDB.trains[trainNam]
-        if "route" in loc:
-            routeStem = routeCls.routes[loc]
-            dist2Go = routeStem["rtLength"] - \
-                trainStem["coord"]["xRoute"]
-        else:
-            rtToEnter = trainStem["rtToEnter"]
-            routeStem = routeCls.routes[rtToEnter]
-            dist2Go = routeCls.routes[rtToEnter]["rtLength"]
-        time2Go = abs(dist2Go)/routeStem["distPerTime"]
-        trainStem["estArrTime"] = round(mVars.time + time2Go, 2)
+            for train in routeStem["trains"]:
+                trainStem = trainDB.trains[train]
+                dist2Go = routeStem["rtLength"] - \
+                    trainStem["coord"]["xRoute"]
+                time2Go = abs(dist2Go)/routeStem["distPerTime"]
+                arrivalTime = mVars.time + time2Go
+                trainStem["estArrTime"] = arrivalTime
+                
                 
 #=================================================
 class rtCaps():
@@ -118,20 +84,7 @@ class rtCaps():
     def addTrn2RouteQ(self, route, trainNam):
         if trainNam not in rtCaps.rtCap[route]["Q"]:
             rtCaps.rtCap[route]["Q"].append(trainNam)
-
-        """        
-    def addTrn2ArrQ(self, route, trainNam):
-        trainStem = trainDB.trains[trainNam]
-        loc = trainStem["nextLoc"]
-        locStem = locs.locDat[loc]
-        locStem["Qs"]["arrivals"].append
-        stemLen = len(rtStem)
-        if trainNam not in rtCaps.rtCap[route]["Q"]:
-            rtStem.append(trainNam)
-            #map "estArrTime" for both route Q and 
-            rtCaps.rtCap[route]["Q"][stemLen][trainNam]["estArrTime"] =\
-                trainDB.trains[trainNam]["estArrTime"]
-        """ 
+        
     def remTrnFrmRouteQ(self, route, trainNam):
         rtCapStem = rtCaps.rtCap[route]["Q"]
         try:
@@ -144,7 +97,6 @@ class rtCaps():
         #look at train's requested dir, route
         # if slot available, and arrival track
         # available, put on route
-        openSlot = False
         trainStem = trainDB.trains[trainNam]
         routeNam = trainStem["rtToEnter"]
         rtStem = rtCaps.rtCap[routeNam]

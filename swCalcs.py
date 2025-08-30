@@ -18,9 +18,8 @@ class swCalcs():
         #self.weights = [0, 0, 0, 0, 0]
         from locProc import locProc
         self.locProcObj = locProc()
-        from locBase import locBase, Qmgmt, locMgmt
+        from locBase import locBase
         self.locBaseObj = locBase()
-        self.locMgmtObj = locMgmt()
         from classCars import classCars
         self.classObj = classCars()
         from display import dispItems
@@ -112,7 +111,7 @@ class swCalcs():
                 # train no longer has cars
                 # remove train name from trainDB.ydTrains and locs.locData
                 self.locProcObj.startTrain(loc, trainNam)
-                self.locMgmt.cleanupSwAction(loc, trainNam, "dropPickup")
+                self.locBaseObj.cleanupSwAction(loc, trainNam, "dropPickup")
 
 
     def rdCrwSw(self, loc, trainNam):
@@ -142,7 +141,7 @@ class swCalcs():
             except:
                 print("all industries have been switched")
                 self.locProcObj.startTrain(loc, ydTrainNam)
-                self.locMgmt.cleanupSwAction(loc, ydTrainNam, "rdCrwSw")
+                self.locBaseObj.cleanupSwAction(loc, ydTrainNam, "rdCrwSw")
                 return
 
         print("industry: ", industry)
