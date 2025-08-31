@@ -4,7 +4,7 @@ from display import dispItems
 from coords import transForms
 from stateVars import locs, dspCh, trainDB, routeCls
 from locBase import locMgmt
-from routeCalcs import routeMgmt
+from routeProc import routeMgmt
 
 #=================================================
 class trainInit():

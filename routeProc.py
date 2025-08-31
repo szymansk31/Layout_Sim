@@ -3,6 +3,8 @@ from mainVars import mVars
 from stateVars import locs, trainDB, routeCls
 from coords import transForms
 from fileProc import readFiles
+from trainProc import trnProc
+from outputMethods import printMethods, statSave
 files = readFiles()
 
 np.set_printoptions(precision=2, suppress=True) 
@@ -11,6 +13,25 @@ class routeInit():
     
     def __init__(self):
         pass
+    
+class rtProc():
+    
+    def __init__(self):
+        self.printObj = printMethods()
+        self.trnProcObj = trnProc()
+        pass
+    
+    def routeProc(self):
+        for routeNam in routeCls.routes:
+            rtStem = routeCls.routes[routeNam]
+            for trainNam in rtStem:
+                if mVars.time >= trainDB.trains[trainNam]["startTime"]:
+                    self.printObj.printTrainInfo(trainNam)
+                    self.trnProcObj.trainCalcs(trainDB.trains[trainNam], trainNam)
+        
+        pass
+    
+    
     
 class routeMgmt():
     

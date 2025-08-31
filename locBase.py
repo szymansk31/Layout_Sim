@@ -3,7 +3,7 @@ from mainVars import mVars
 from stateVars import locs, trainDB, routeCls
 from display import dispItems
 from coords import transForms
-from routeCalcs import routeMgmt, rtCaps
+from routeProc import routeMgmt, rtCaps
         
 np.set_printoptions(precision=2, suppress=True) 
 

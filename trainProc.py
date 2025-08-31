@@ -6,7 +6,7 @@ from display import dispItems
 from locBase import locBase, Qmgmt, locMgmt
 from coords import transForms
 from stateVars import locs, dspCh, trainDB, routeCls
-from routeCalcs import routeMgmt, rtCaps
+from routeProc import routeMgmt, rtCaps
 from dispatch import clearTrnCalcs
 np.set_printoptions(precision=2, suppress=True) 
   

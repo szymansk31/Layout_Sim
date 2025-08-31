@@ -9,7 +9,7 @@ from swCalcs import swCalcs
 from stagCalcs import stCalcs
 from gui import gui
 from coords import transForms
-from routeCalcs import routeMgmt, rtCaps
+from routeProc import routeMgmt, rtCaps
 from outputMethods import printMethods
 from locBase import locBase, Qmgmt, locMgmt
         
@@ -31,7 +31,7 @@ class locProc():
         if mVars.prms["dbgYdProc"]: print("trains analyzed: trainDB.ydTrains: ",
                     trainDB.ydTrains)
         
-    def locCalcs(self, locStem, loc):
+    def locCalcs(self, loc):
         locBaseObj = locBase()
         schedProcObj = schedProc()
         ydCalcObj = ydCalcs()
@@ -43,12 +43,13 @@ class locProc():
         if mVars.prms["dbgYdProc"]: 
             print("\nentering locCalcs: location: ", loc, ", locDat: ", locs.locDat[loc])
 
+        locStem = locs.locDat[loc]
         locBaseObj.countCars(loc)
         rtCapsObj.updateRtSlots()
         #print("rtCaps.rtCap: ", rtCaps.rtCap)
         printObj.printRtCaps()
         schedProcObj.fetchLocSchedItem(loc)
-        match locStem[loc]["type"]:
+        match locStem["type"]:
             case "yard":
                 self.analyzeTrains(loc)
                 self.printydTrains()

@@ -9,7 +9,7 @@ from swCalcs import swCalcs
 from stagCalcs import stCalcs
 from gui import gui
 from coords import transForms
-from routeCalcs import routeCalcs, rtCaps
+from routeProc import routeCalcs, rtCaps
 from outputMethods import printMethods
 from locBase import locBase
         

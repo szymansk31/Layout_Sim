@@ -5,7 +5,7 @@ from stateVars import locs, dspCh, trainDB, routeCls
 from locBase import locBase, Qmgmt, locMgmt
 from fileProc import readFiles
 from display import dispItems
-from routeCalcs import rtCaps, routeMgmt
+from routeProc import rtCaps, routeMgmt
 files = readFiles()
 np.set_printoptions(precision=2, suppress=True) 
 

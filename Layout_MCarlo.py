@@ -19,6 +19,8 @@ class mainMethods():
         self.locProcObj = locProc()
         from trainProc import trnProc
         self.trnProcObj = trnProc()
+        from routeProc import rtProc, routeMgmt, rtCaps
+        self.rtProcObj = rtProc()
         from dispatch import clearTrnCalcs
         self.dispchObj = clearTrnCalcs()
         pass
@@ -45,10 +47,7 @@ class mainMethods():
                 print("\nafter step back: mVars.time: ", mVars.time
                     , ", savIDX: ", stVarSaves.savIDX)
 
-            for train in trainDB.trains:
-                if mVars.time >= trainDB.trains[train]["startTime"]:
-                    printObj.printTrainInfo(train)
-                    self.trnProcObj.trainCalcs(trainDB.trains[train], train)
+            self.rtProcObj.routeProc()
             if count == maxCount:
                 print("routes: ", routeCls.routes)
                 count = 0
@@ -57,7 +56,7 @@ class mainMethods():
                 if mVars.prms["dbgLoop"]: print ("\nAbout to process: ", 
                     loc)
 
-                self.locProcObj.locCalcs(locs.locDat, loc)
+                self.locProcObj.locCalcs(loc)
             statSaveObj.savStats()
             statSaveObj.timeSeries()
             stVarObj.saveStVars()
@@ -131,7 +130,7 @@ gui.guiDict = files.readFile("guiFile")
 guiObj.preProcGui()
 routeGeomObj.initRoutes(gui.guiDict)
 
-from routeCalcs import rtCaps
+from routeProc import rtCaps
 rtCapsObj = rtCaps()
 rtCapsObj.initRouteCaps()
 
@@ -154,8 +153,8 @@ dispObj.drawLayout(gui.guiDict)
 # initialize dynamic action display in locations
 displayObj.initLocDisp()
 
-from startingTrains import trainFromFile
-startTrainObj = trainFromFile()
+#from startingTrains import trainFromFile
+#startTrainObj = trainFromFile()
 #startTrainObj.readTrain()
 from dispatch import schedProc
 schedProcObj = schedProc()
