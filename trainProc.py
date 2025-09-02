@@ -152,6 +152,7 @@ class trnProc:
         mVars.numOpBusy -=1
 
     def updateTrain4Stop(self, stopLoc, trainDict, trainNam, arrTrk):
+        self.locQmgmtObj.addTrn2LocQ(stopLoc, "working", trainNam, arrTrk)
         trainDict["numStops"] -=1
         if trainDict["numStops"] == 0: 
             trainDict["status"] = "terminate"
@@ -160,7 +161,6 @@ class trnProc:
 
         trainDict["timeEnRoute"] = 0
         trainDict["estDeptTime"] = mVars.time + trainDB.avgContTime
-        self.locQmgmtObj.addTrn2LocQ(stopLoc, "departs", trainNam, arrTrk)
        
     
 

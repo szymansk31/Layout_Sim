@@ -44,13 +44,6 @@ class printMethods():
             ", finL: " + finalLoc + ", dir: " + direction + 
             ", status: " + status)
 
-    def printRtCaps(self):
-        print("\nrtCaps.rtCap: ")
-        for route in rtCaps.rtCap:
-            print(route, ": ", "trains: ", 
-                  routeCls.routes[route]["trains"],
-                  rtCaps.rtCap[route])
-            
     def writeRtCaps(self, file, route):
         file.write("\nrtCaps.rtCap: ")
         file.write("\n" + route + ": " +  \

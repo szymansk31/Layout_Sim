@@ -19,6 +19,7 @@ class ydCalcs():
         self.locProcObj = locProc()
         from locBase import locBase, Qmgmt, locMgmt
         self.locBaseObj = locBase()
+        self.locQmgmtObj = Qmgmt()
         self.locMgmt = locMgmt()
         from classCars import classCars
         self.classObj = classCars()
@@ -131,8 +132,6 @@ class ydCalcs():
 
         
     def buildTrain(self, loc):   
-        from trainInit import trainInit
-        trainInitObj = trainInit() 
         ydTrainNam = trainDB.ydTrains["buildTrain"][0]
         # yard has no train undergoing build
         if trainDB.trains[ydTrainNam]["status"] == "init":

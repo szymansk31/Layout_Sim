@@ -23,7 +23,10 @@ dbgLocal = 1
 class locProc():
     
     def __init__(self):
-        pass
+        self.locQmgmtObj = Qmgmt()
+        self.locBaseObj = locBase()
+        self.schedProcObj = schedProc()
+       
     
     #classmethod:
     
@@ -32,23 +35,16 @@ class locProc():
                     trainDB.ydTrains)
         
     def locCalcs(self, loc):
-        locBaseObj = locBase()
-        schedProcObj = schedProc()
         ydCalcObj = ydCalcs()
         swAreaObj = swCalcs()
         stagCalcObj = stCalcs()
-        rtCapsObj = rtCaps()
-        printObj = printMethods()
 
         if mVars.prms["dbgYdProc"]: 
             print("\nentering locCalcs: location: ", loc, ", locDat: ", locs.locDat[loc])
 
         locStem = locs.locDat[loc]
-        locBaseObj.countCars(loc)
-        rtCapsObj.updateRtSlots()
-        #print("rtCaps.rtCap: ", rtCaps.rtCap)
-        printObj.printRtCaps()
-        schedProcObj.fetchLocSchedItem(loc)
+        self.locBaseObj.countCars(loc)
+        self.schedProcObj.fetchLocSchedItem(loc)
         match locStem["type"]:
             case "yard":
                 self.analyzeTrains(loc)
@@ -100,18 +96,23 @@ class locProc():
                     locs.locDat[loc]["trnCnts"]["passThru"] += 1
                     self.startTrain(loc, trainNam)
                 case "built":
-                    startTime = trainDB.trains[trainNam]["startTime"]
-                    if (mVars.time >= startTime):
-                        locs.locDat[loc]["trnCnts"]["started"] += 1
-                        #locs.locDat[loc]["bldTrnDepTimes"].pop(0)
-                        nextLoc = trainDB.trains[trainNam]["nextLoc"]
-                        #dispItemsObj.clearTrnRecs(trainNam)
-                        print(trainNam, ": with start time ", startTime,
-                              " in loc: ", loc, 
-                              " built and leaving for (nextLoc): ", 
-                              nextLoc)
-                        self.startTrain(loc, trainNam)
-        
+                    self.locQmgmtObj.addTrn2LocQ(loc, "working", trainNam, "")
+
+    def procWorkingQ(self, loc):
+        locStem = locs.locDat[loc]
+        self.locQmgmtObj.sortLocQ("working", "startTime")
+        for trainNam in locStem["Qs"]["working"]:
+            startTime = trainDB.trains[trainNam]["startTime"]
+            if (mVars.time >= startTime):
+                #locs.locDat[loc]["bldTrnDepTimes"].pop(0)
+                nextLoc = trainDB.trains[trainNam]["nextLoc"]
+                #dispItemsObj.clearTrnRecs(trainNam)
+                print(trainNam, ": with start time ", startTime,
+                        " in loc: ", loc, 
+                        " built and leaving for (nextLoc): ", 
+                        nextLoc)
+                self.startTrain(loc, trainNam)
+
 
     def startTrain(self, loc, trainNam):
         # setup train
@@ -136,6 +137,7 @@ class locProc():
         
         #print("trainStem: ", trainStem, ", original dict: ", trainDB.trains[trainNam])
         dispObj.drawTrain(trainNam)
+        locs.locDat[loc]["trnCnts"]["started"] += 1
                 
         if mVars.prms["dbgYdProc"]: print("train",trainNam," starting: "
             ,trainStem, ",\n")

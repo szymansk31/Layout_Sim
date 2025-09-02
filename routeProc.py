@@ -19,9 +19,13 @@ class rtProc():
     def __init__(self):
         self.printObj = printMethods()
         self.trnProcObj = trnProc()
+        self.rtCapsObj = rtCaps()
         pass
     
     def routeProc(self):
+        self.rtCapsObj.updateRtSlots()
+        self.rtCapsObj.printRtCaps()
+
         for routeNam in routeCls.routes:
             rtStem = routeCls.routes[routeNam]
             for trainNam in rtStem:
@@ -74,7 +78,7 @@ class routeMgmt():
             for trainNam in routeStem["trains"]:
                 self.calcTrnArrTime("trnArrTimes:route ", route, trainNam)
         for loc in locs.locDat:
-            QStem = locs.locDat[loc]["Qs"]["departs"]
+            QStem = locs.locDat[loc]["Qs"]["working"]
             for QDict in QStem:
                 trainNam = next(iter(QDict))
                 self.calcTrnArrTime("trnArrTimes:loc ", loc, trainNam)
@@ -106,6 +110,13 @@ class rtCaps():
                    
             pass
     
+    def printRtCaps(self):
+        print("\nrtCaps.rtCap: ")
+        for route in rtCaps.rtCap:
+            print(route, ": ", "trains: ", 
+                  routeCls.routes[route]["trains"],
+                  rtCaps.rtCap[route])
+            
     def updateRtSlots(self):
         for route in rtCaps.rtCap:
             # trains already on the route
@@ -140,19 +151,6 @@ class rtCaps():
         if trainNam not in rtCaps.rtCap[route]["Q"]:
             rtCaps.rtCap[route]["Q"].append(trainNam)
 
-        """        
-    def addTrn2ArrQ(self, route, trainNam):
-        trainStem = trainDB.trains[trainNam]
-        loc = trainStem["nextLoc"]
-        locStem = locs.locDat[loc]
-        locStem["Qs"]["arrivals"].append
-        stemLen = len(rtStem)
-        if trainNam not in rtCaps.rtCap[route]["Q"]:
-            rtStem.append(trainNam)
-            #map "estArrTime" for both route Q and 
-            rtCaps.rtCap[route]["Q"][stemLen][trainNam]["estArrTime"] =\
-                trainDB.trains[trainNam]["estArrTime"]
-        """ 
     def remTrnFrmRouteQ(self, route, trainNam):
         rtCapStem = rtCaps.rtCap[route]["Q"]
         try:

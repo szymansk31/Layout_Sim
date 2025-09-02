@@ -124,10 +124,10 @@ class clearTrnCalcs():
     
 
     def checkDepTime(self, loc, track, estArrTime):
-        QStem = locs.locDat[loc]["Qs"]["departs"]
+        QStem = locs.locDat[loc]["Qs"]["working"]
         estDepTime = [QStem[idx][next(iter(QDict))]["estDepTime"] \
             for idx, QDict in enumerate(QStem) if track in QDict]
-        # no train on this track (not in "departs" Q), but assigned
+        # no train on this track (not in "working" Q), but assigned
         # to incoming train - therefore return false
         if len(estDepTime) == 0: return False
         if estArrTime > estDepTime[0]: return True

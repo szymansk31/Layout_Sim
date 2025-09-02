@@ -108,14 +108,14 @@ class Qmgmt():
                 #if estArrTime - mVars.time <= mVars.prms["arrTimDelta"]:
                 self.addTrn2LocQ(loc, "arrivals", trainNam, "")
                 
-    def sortArrvQ(self):
+    def sortLocQ(self, QNam, sortVar):
         def getTimVal(subDict):
             for key, value in subDict.items():
-                return value["estArrTime"]
+                return value[sortVar]
         for loc in locs.locDat:
-            tmpList = locs.locDat[loc]["Qs"]["arrivals"]
-            locs.locDat[loc]["Qs"]["arrivals"] = sorted(tmpList, key=getTimVal)
-            print("loc: ", loc, locs.locDat[loc]["Qs"]["arrivals"])   
+            tmpList = locs.locDat[loc]["Qs"][QNam]
+            locs.locDat[loc]["Qs"][QNam] = sorted(tmpList, key=getTimVal)
+            print("loc: ", loc, " , Q: ", QNam, locs.locDat[loc]["Qs"][QNam])   
             
     # track is an optional input if known           
     def addTrn2LocQ(self, loc, QNam, trainNam, track):
@@ -131,8 +131,8 @@ class Qmgmt():
                     "action": trainStem["stops"][loc]["action"],
                     "arrTrk": track,
                     "nCars4ThisLoc": nCars4ThisLoc}})
-            case "departs":
-                locs.locDat[loc]["Qs"]["departs"].append({ \
+            case "working":
+                locs.locDat[loc]["Qs"]["working"].append({ \
                     trainNam: {"estDeptTime": trainStem["estDeptTime"],
                     "status": trainStem["status"],
                     "rtToEnter": trainStem["rtToEnter"]}})
