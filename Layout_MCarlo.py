@@ -47,16 +47,17 @@ class mainMethods():
                 print("\nafter step back: mVars.time: ", mVars.time
                     , ", savIDX: ", stVarSaves.savIDX)
 
+            for loc in locs.locDat:
+                if mVars.prms["dbgLoop"]: print ("\nAbout to process: ", 
+                    loc)
+                self.locProcObj.locCalcs(loc)
+                
             self.rtProcObj.routeProc()
             if count == maxCount:
                 print("routes: ", routeCls.routes)
                 count = 0
             count +=1
-            for loc in locs.locDat:
-                if mVars.prms["dbgLoop"]: print ("\nAbout to process: ", 
-                    loc)
-
-                self.locProcObj.locCalcs(loc)
+            
             statSaveObj.savStats()
             statSaveObj.timeSeries()
             stVarObj.saveStVars()

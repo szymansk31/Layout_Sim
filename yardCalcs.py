@@ -55,7 +55,7 @@ class ydCalcs():
         print("numTrains list, totTrains: ", numTrains, ",", totTrains)
         if totTrains != 0:
             for action in trainDB.ydTrains:
-                self.weights[idx] = numTrains[action]/totTrains*weightPortion
+                self.weights[idx] = round(numTrains[action]/totTrains*weightPortion, 2)
                 idx +=1
         if mVars.prms["dbgYdProc"]: print("action weights are: ", self.weights)
         return totTrains
@@ -147,6 +147,7 @@ class ydCalcs():
             if trainStem["numCars"] >= mVars.prms["trainSize"]*0.7:
                 # train has reached max size
                 trainStem["status"] = "built"
+                trainStem["estDeptTime"] = mVars.time
                 locs.locDat[loc]["trnCnts"]["built"] += 1
                 self.locMgmt.rmTrnFrmActions("buildTrain", loc, ydTrainNam)
             self.dispObj.dispActionDat(loc, "buildTrain", ydTrainNam)
@@ -217,7 +218,8 @@ class ydCalcs():
                 locs.locDat[loc]["ready2Pickup"] = 0
                 locs.locDat[loc]["trnCnts"]["switched"] += 1
                 
-                self.locProcObj.startTrain(loc, ydTrainNam)
+                #self.locProcObj.startTrain(loc, ydTrainNam)
+                self.locQmgmtObj.addTrn2LocQ(loc, "working", ydTrainNam, "")
                 self.locMgmt.cleanupSwAction(loc, ydTrainNam, "swTrain")
         
         pass

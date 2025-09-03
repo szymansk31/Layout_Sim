@@ -4,7 +4,7 @@
     "timeStep": 1,
     "useDispatch": 1,
     "trainSize": 10,
-    "mxTrnDwlTim": 10,
+    "mxTrnDwlTim": 20,
     "arrTimDelta": 3,
     "numOperators": 5,
     "miscWaitTime": 3,

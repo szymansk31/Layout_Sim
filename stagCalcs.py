@@ -18,6 +18,7 @@ class stCalcs():
         self.locProcObj = locProc()
         from locBase import locBase, Qmgmt, locMgmt
         self.locBaseObj = locBase()
+        self.locQmgmtObj = Qmgmt()
         self.locMgmtObj = locMgmt()
         from classCars import classCars
         self.classObj = classCars()
@@ -28,15 +29,16 @@ class stCalcs():
 
     def staging(self, loc):
         
-        for train in trainDB.ydTrains["wait4Clrnce"]:
-            if mVars.time == trainDB.trains[train]["startTime"]:
-                nextLoc = trainDB.trains[train]["nextLoc"]
+        for trainNam in trainDB.ydTrains["wait4Clrnce"]:
+            if mVars.time == trainDB.trains[trainNam]["startTime"]:
+                nextLoc = trainDB.trains[trainNam]["nextLoc"]
 
                 print("in staging: nextLoc: ", nextLoc)
                 locs.locDat[loc]["trnCnts"]["started"] += 1
 
-                self.locMgmtObj.rmTrnFrmActions("wait4Clrnce", loc, train)
-                self.locProcObj.startTrain(loc, train)
+                self.locMgmtObj.rmTrnFrmActions("wait4Clrnce", loc, trainNam)
+                self.locQmgmtObj.addTrn2LocQ(loc, "working", trainNam, "")
+                #self.locProcObj.startTrain(loc, trainNam)
                 
         self.dispObj.dispTrnLocDat(loc)
                 

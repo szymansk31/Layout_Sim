@@ -3,7 +3,6 @@ from mainVars import mVars
 from stateVars import locs, trainDB, routeCls
 from display import dispItems
 from coords import transForms
-from routeProc import routeMgmt, rtCaps
         
 np.set_printoptions(precision=2, suppress=True) 
 
@@ -12,6 +11,7 @@ dbgLocal = 1
 class locBase():
     
     def __init__(self):
+        from routeProc import routeMgmt, rtCaps
         self.routeMgmtObj = routeMgmt()
         pass
     
@@ -71,6 +71,7 @@ class locBase():
 class Qmgmt():
     
     def __init__(self):
+        from routeProc import routeMgmt, rtCaps
         self.routeMgmtObj = routeMgmt()
         pass
     
@@ -182,6 +183,7 @@ class Qmgmt():
 class locMgmt():
     
     def __init__(self):
+        from routeProc import routeMgmt, rtCaps
         self.rtCapsObj = rtCaps()
         self.rtMgmtObj = routeMgmt()
         self.QmgmtObj = Qmgmt()

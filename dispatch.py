@@ -2,10 +2,8 @@ import numpy as np
 from mainVars import mVars
 from trainInit import trainInit
 from stateVars import locs, dspCh, trainDB, routeCls
-from locBase import locBase, Qmgmt, locMgmt
 from fileProc import readFiles
 from display import dispItems
-from routeProc import rtCaps, routeMgmt
 files = readFiles()
 np.set_printoptions(precision=2, suppress=True) 
 
@@ -16,6 +14,7 @@ dbgLocal = 1
 class schedProc():
 
     def __init__(self):
+        from locBase import locBase, Qmgmt, locMgmt
         self.locMgmtObj = locMgmt()
         self.trainInitObj = trainInit()
         self.dispItemsObj = dispItems()
@@ -37,6 +36,7 @@ class schedProc():
                 self.trainInitObj.fillTrnDicts(loc, trainNam)
                 self.locMgmtObj.placeTrain(currentLoc, dspCh.sched[trainNam], 
                         trainNam)
+                self.dispItemsObj.drawTrain(trainNam)
                 dspCh.sched.pop(trainNam)
                 return
             pass
@@ -59,16 +59,20 @@ class schedProc():
 class clearTrnCalcs():
     
     def __init__(self):
+        from locBase import locBase, Qmgmt, locMgmt
+        self.locMgmtObj = locMgmt()
         self.locBaseObj = locBase()
         self.QmgmtObj = Qmgmt()
+        from routeProc import rtCaps, routeMgmt
         self.rtCapsObj = rtCaps()
         pass
                    
     def mainDispatch(self):
         # look at all trains on routes and
         # determine if they will soon reach a loc
+        self.rtCapsObj.printRtCaps()
         self.QmgmtObj.calcArrivTrns()
-        self.QmgmtObj.sortArrvQ()
+        self.QmgmtObj.sortLocQ("arrivals", "estArrTime")
         self.assnArrTrks()
         # are 
 

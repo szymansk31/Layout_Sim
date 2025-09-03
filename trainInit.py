@@ -1,10 +1,6 @@
 
 from fileProc import readFiles
-from display import dispItems
-from coords import transForms
 from stateVars import locs, dspCh, trainDB, routeCls
-from locBase import locMgmt
-from routeProc import routeMgmt
 
 #=================================================
 class trainInit():
@@ -22,7 +18,9 @@ class trainInit():
         self.trainNam = ""
         self.conName = ""
         self.files = readFiles()
+        from locBase import locMgmt
         self.locMgmtObj = locMgmt()
+        from routeProc import routeMgmt
         self.rtMgmtObj = routeMgmt()
         pass
     

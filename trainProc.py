@@ -2,24 +2,24 @@ import numpy as np
 import tkinter as tk
 from mainVars import mVars
 from fileProc import readFiles
-from display import dispItems
-from locBase import locBase, Qmgmt, locMgmt
-from coords import transForms
 from stateVars import locs, dspCh, trainDB, routeCls
-from routeProc import routeMgmt, rtCaps
-from dispatch import clearTrnCalcs
 np.set_printoptions(precision=2, suppress=True) 
   
 class trnProc:    
     
     def __init__(self):
+        from locBase import locBase, Qmgmt, locMgmt
         self.locBaseObj = locBase()
         self.locQmgmtObj = Qmgmt()
         self.locMgmtObj = locMgmt()
+        from routeProc import routeMgmt, rtCaps
         self.rtMgmtObj = routeMgmt()
         self.rtCapsObj = rtCaps()
+        from display import dispItems
         self.dispObj = dispItems()
+        from coords import transForms
         self.coordObj = transForms()
+        from dispatch import clearTrnCalcs
         self.clrTrnObj = clearTrnCalcs()
         pass
     
@@ -56,7 +56,7 @@ class trnProc:
                             self.procTrnStop(trainDict, trainNam)
                                                 
                     
-            case "wait4Clrnce" if self.clrTrnObj.clearTrn(trainDict["nextLoc"], trainNam):
+            case "wait4Clrnce" if mVars.prms["useDispatch"] == False:
                 print("train: ", trainNam, " switching to enroute status")
                 trainDict["status"] = "enroute"
                 trainDict["currentLoc"] = trainDict["rtToEnter"]
@@ -66,9 +66,13 @@ class trnProc:
                 loc = trainDB.trains[trainNam]["departStop"]
                 if loc != "":
                     arrTrk = self.locQmgmtObj.readArrTrk(loc, trainNam)
+                    #remove train from location arrivals Queue
                     self.locQmgmtObj.remTrnLocQ(loc, "arrivals", trainNam)
+                    #remove train from loc["trkPrms"]["arrTrk"]
                     self.locQmgmtObj.remTrnArrTrk(loc, arrTrk, trainNam)
+                    #remove train from loc["trains"] list
                     self.locMgmtObj.rmTrnFrmLoc(loc, trainNam)
+                    #remove train rectangle from action list above loc
                     self.dispObj.clearActionTrnRecs(loc, trainNam)
                 pass
             case "building"|"built"|"init":
@@ -130,6 +134,7 @@ class trnProc:
                 trainDict["status"] = "rdCrwSw"
                 # setup list of industries when first entering swArea
                 swCalcs.indusIter = iter(locs.locDat[stopLoc]["industries"])
+                trainDict["estDeptTime"] = mVars.time + trainDB.avgSwTime
                 self.updateTrain4Stop(stopLoc, trainDict, trainNam, arrTrk)
                 pass
             case "dropPickup":
@@ -137,11 +142,12 @@ class trnProc:
                 # switching typically done by yard crew at yards,
                 # train crew at other locations
                 trainDict["status"] = "dropPickup"
+                trainDict["estDeptTime"] = mVars.time + trainDB.avgSwTime
                 self.updateTrain4Stop(stopLoc, trainDict, trainNam, arrTrk)
-                pass
             case "continue":
                 #no action at this stop - continue to nextLoc
                 trainDict["status"] = "continue"
+                trainDict["estDeptTime"] = mVars.time + trainDB.avgContTime
                 self.updateTrain4Stop(stopLoc, trainDict, trainNam, arrTrk)
 
         self.locMgmtObj.findRtPrms(stopLoc, trainNam)
@@ -160,7 +166,6 @@ class trnProc:
         self.fillNextLoc(stopLoc, trainDict)
 
         trainDict["timeEnRoute"] = 0
-        trainDict["estDeptTime"] = mVars.time + trainDB.avgContTime
        
     
 
