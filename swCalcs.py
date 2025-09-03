@@ -82,8 +82,7 @@ class swCalcs():
                     if trainNam not in trainDB.ydTrains["continue"]:
                         trainDB.ydTrains["continue"].append(trainNam)
                     # train never entered ydTrains, so no need to remove
-                    self.locQmgmtObj.addTrn2LocQ(loc, "working", trainNam, "")
-                    #self.locProcObj.startTrain(loc, trainNam)
+                    self.locProcObj.startTrain(loc, trainNam)
         
     def switchCalcs(self, loc):
         self.dispObj.dispTrnLocDat(loc)
@@ -113,8 +112,7 @@ class swCalcs():
             #if availCars == 0:
                 # train no longer has cars
                 # remove train name from trainDB.ydTrains and locs.locData
-                #self.locProcObj.startTrain(loc, trainNam)
-                self.locQmgmtObj.addTrn2LocQ(loc, "working", trainNam, "")
+                self.locProcObj.startTrain(loc, trainNam)
                 self.locMgmtObj.cleanupSwAction(loc, trainNam, "dropPickup")
 
 
@@ -144,8 +142,7 @@ class swCalcs():
                 locActionStem.append({"industry": industry})
             except:
                 print("all industries have been switched")
-                #self.locProcObj.startTrain(loc, ydTrainNam)
-                self.locQmgmtObj.addTrn2LocQ(loc, "working", trainNam, "")
+                self.locProcObj.startTrain(loc, ydTrainNam)
                 self.locMgmtObj.cleanupSwAction(loc, ydTrainNam, "rdCrwSw")
                 return
 

@@ -97,7 +97,12 @@ class Qmgmt():
                     
 # trains already on routes get first priority to arrival slots
 # as opposed to trains being built at other locs for travel to this loc                
-    def checkLocArrDepSlots(self):
+    def calcDeptTimes(self):
+        for loc in locs.locDat:
+            locStem = locs.locDat[loc]
+            for trainNam in locStem["trains"]:
+                estDeptTime = mVars.time + trainDB.avgSwTime
+                trainDB.trains[trainNam]["estDeptTime"] = estDeptTime
         pass
                 
     def calcArrivTrns(self):

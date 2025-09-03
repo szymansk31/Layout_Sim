@@ -105,15 +105,12 @@ class routeMgmt():
             rtCaps.rtCap[routeNam]["nWestTns"] = num
         
     def trnArrivalTimes(self):
-        for route in routeCls.routes:
-            routeStem = routeCls.routes[route]
+        for routeNam in routeCls.routes:
+            routeStem = routeCls.routes[routeNam]
             for trainNam in routeStem["trains"]:
-                self.calcTrnArrTime("trnArrTimes:route ", route, trainNam)
-        for loc in locs.locDat:
-            QStem = locs.locDat[loc]["Qs"]["working"]
-            for QDict in QStem:
-                trainNam = next(iter(QDict))
-                self.calcTrnArrTime("trnArrTimes:loc ", loc, trainNam)
+                self.calcTrnArrTime("trnArrTimes:route ", routeNam, trainNam)
+            for trainNam in rtCaps.rtCap[routeNam]["Q"]:
+                self.calcTrnArrTime("trnArrTimes:loc ", routeNam, trainNam)
 
     def calcTrnArrTime(self, callFunc, loc, trainNam):
         print("calcTrnArrTime; called from: ", callFunc, " loc: ", loc, " , trainNam: ", trainNam)

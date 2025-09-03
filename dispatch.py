@@ -71,6 +71,7 @@ class clearTrnCalcs():
         # look at all trains on routes and
         # determine if they will soon reach a loc
         self.rtCapsObj.printRtCaps()
+        self.QmgmtObj.calcDeptTimes()
         self.QmgmtObj.calcArrivTrns()
         self.QmgmtObj.sortLocQ("arrivals", "estArrTime")
         self.assnArrTrks()
@@ -121,6 +122,7 @@ class clearTrnCalcs():
         locStem[track]["train"] = trainNam
         locStem[track]["status"] = "assnd"
         trnStem["arrTrk"] = track
+        trnStem["estDeptTime"] = trnStem["estArrTime"] + trainDB.avgSwTime
         QStem[idx[0]][trainNam]["arrTrk"] = track
 
         locs.locDat[loc]["trkCounts"]["openArrTrks"] -=1
@@ -128,13 +130,10 @@ class clearTrnCalcs():
     
 
     def checkDepTime(self, loc, track, estArrTime):
-        QStem = locs.locDat[loc]["Qs"]["working"]
-        estDepTime = [QStem[idx][next(iter(QDict))]["estDepTime"] \
-            for idx, QDict in enumerate(QStem) if track in QDict]
-        # no train on this track (not in "working" Q), but assigned
-        # to incoming train - therefore return false
-        if len(estDepTime) == 0: return False
-        if estArrTime > estDepTime[0]: return True
+        trainNam = locs.locDat[loc]["trkPrms"][track]["train"]
+        estDeptTime = trainDB.trains[trainNam]["estDeptTime"]
+        print("checking track:", track, ", assnd to train:", trainNam,"at loc:", loc, ", estArrTime: ", estArrTime, "for train departing: ", estDeptTime)
+        if estArrTime > estDeptTime: return True
         else: return False
         
     

@@ -48,7 +48,9 @@ class mainMethods():
                     , ", savIDX: ", stVarSaves.savIDX)
 
             for loc in locs.locDat:
-                if mVars.prms["dbgLoop"]: print ("\nAbout to process: ", 
+                print("\nmVars.time: ", mVars.time)
+
+                if mVars.prms["dbgLoop"]: print ("About to process: ", 
                     loc)
                 self.locProcObj.locCalcs(loc)
                 

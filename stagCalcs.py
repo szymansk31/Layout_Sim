@@ -37,8 +37,7 @@ class stCalcs():
                 locs.locDat[loc]["trnCnts"]["started"] += 1
 
                 self.locMgmtObj.rmTrnFrmActions("wait4Clrnce", loc, trainNam)
-                self.locQmgmtObj.addTrn2LocQ(loc, "working", trainNam, "")
-                #self.locProcObj.startTrain(loc, trainNam)
+                self.locProcObj.startTrain(loc, trainNam)
                 
         self.dispObj.dispTrnLocDat(loc)
                 

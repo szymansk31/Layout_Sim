@@ -45,8 +45,6 @@ class locProc():
         locStem = locs.locDat[loc]
         self.locBaseObj.countCars(loc)
         self.schedProcObj.fetchLocSchedItem(loc)
-        print("locCalcs; working Q: ", locStem["Qs"]["working"])
-        self.procWorkingQ(loc)
         match locStem["type"]:
             case "yard":
                 self.analyzeTrains(loc)
@@ -96,11 +94,21 @@ class locProc():
                     # dispatcher eventually, so process "continue" here 
                     # as no action needed by train crew (modulo dispatch call)
                     locs.locDat[loc]["trnCnts"]["passThru"] += 1
-                    #self.startTrain(loc, trainNam)
-                    self.locQmgmtObj.addTrn2LocQ(loc, "working", trainNam, "")
+                    self.startTrain(loc, trainNam)
 
                 case "built":
-                    self.locQmgmtObj.addTrn2LocQ(loc, "working", trainNam, "")
+                    startTime = trainDB.trains[trainNam]["startTime"]
+                    if (mVars.time >= startTime):
+                        locs.locDat[loc]["trnCnts"]["started"] += 1
+                        #locs.locDat[loc]["bldTrnDepTimes"].pop(0)
+                        nextLoc = trainDB.trains[trainNam]["nextLoc"]
+                        #dispItemsObj.clearTrnRecs(trainNam)
+                        print(trainNam, ": with start time ", startTime,
+                              " in loc: ", loc, 
+                              " built and leaving for (nextLoc): ", 
+                              nextLoc)
+                        self.startTrain(loc, trainNam)
+
 
     def procWorkingQ(self, loc):
         locStem = locs.locDat[loc]
@@ -128,16 +136,11 @@ class locProc():
         if trainStem["rtToEnter"] == "":
             self.locMgmtObj.findRtPrms(loc, trainNam)
         routeNam = trainStem["rtToEnter"]
-        #trainStem["currentLoc"] = routeNam
+        trainStem["estArrTime"] = mVars.time + routeCls.routes[routeNam]["transTime"]
                
-        #sets initial coords in rotated system 
-        #if (trainStem["coord"]["xTrnInit"] == 0) or\
-        #    (trainStem["coord"]["xTrnInit"]) == None:
-            #train not on route to start
-        #trainStem["coord"]["xTrnInit"] = 0  
         self.locMgmtObj.placeTrain(routeNam, trainStem, trainNam)
         self.locQmgmtObj.remTrnLocQ(loc, "working", trainNam)
-        self.rtCapsObj.addTrn2RouteQ(routeNam, trainNam)
+        #self.rtCapsObj.addTrn2RouteQ(routeNam, trainNam)
         trainStem["firstDispTrn"] = 1
         
         #print("trainStem: ", trainStem, ", original dict: ", trainDB.trains[trainNam])

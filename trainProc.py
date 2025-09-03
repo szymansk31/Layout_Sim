@@ -41,7 +41,8 @@ class trnProc:
                 trainDict["coord"]["xRoute"] += deltaX
                 trainDict["timeEnRoute"] += deltaT
                 trainDict["timeEnRoute"] = round(trainDict["timeEnRoute"], 2)
-                print("distance via timeEnRoute: ", trainDict["timeEnRoute"]*velocity)
+                distTot = round(trainDict["timeEnRoute"]*velocity, 2)
+                print("distance via timeEnRoute: ", distTot)
                 transTime = routeCls.routes[trainDict["currentLoc"]]["transTime"]
                 if mVars.prms["dbgTrnProc"]: self.printTrnEnRoute(trainDict, routeNam, transTime, variance, deltaX)
                 
@@ -158,7 +159,6 @@ class trnProc:
         mVars.numOpBusy -=1
 
     def updateTrain4Stop(self, stopLoc, trainDict, trainNam, arrTrk):
-        self.locQmgmtObj.addTrn2LocQ(stopLoc, "working", trainNam, arrTrk)
         trainDict["numStops"] -=1
         if trainDict["numStops"] == 0: 
             trainDict["status"] = "terminate"

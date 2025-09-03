@@ -218,8 +218,7 @@ class ydCalcs():
                 locs.locDat[loc]["ready2Pickup"] = 0
                 locs.locDat[loc]["trnCnts"]["switched"] += 1
                 
-                #self.locProcObj.startTrain(loc, ydTrainNam)
-                self.locQmgmtObj.addTrn2LocQ(loc, "working", ydTrainNam, "")
+                self.locProcObj.startTrain(loc, ydTrainNam)
                 self.locMgmt.cleanupSwAction(loc, ydTrainNam, "swTrain")
         
         pass
