@@ -12,7 +12,7 @@ class fileNames:
             "routeCapFile": mVars.prms["dictDirect"] + "/routeCap.txt",
             "scheduleFile": mVars.prms["dictDirect"] + "/schedule.txt",
             "locationFile": mVars.prms["dictDirect"] + "/locInfo.txt",
-            "routeFile": mVars.prms["dictDirect"] + "/routeDict.txt",
+            "routeProtoFile": mVars.prms["dictDirect"] + "/routeProtoDict.txt",
             "trainFile": mVars.prms["dictDirect"] + "/trainDict.txt",
             "carFile": mVars.prms["dictDirect"] + "/initCarDict.txt",
             "consistFile": mVars.prms["dictDirect"] + "/consist.txt",

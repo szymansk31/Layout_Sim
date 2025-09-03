@@ -28,7 +28,7 @@ class routeGeom():
         files = readFiles()
         print("\ninitializing route dicts: ")
 
-        tmpRoute = files.readFile("routeFile")
+        tmpRoute = files.readFile("routeProtoFile")
         routeProto = tmpRoute.pop("routeProto")
         for item in guiDict:
             newRoute = {}
@@ -84,7 +84,6 @@ class routeGeom():
     # no regard for direction, just want the lines between locs
     # train gui data is initialized in trnsOnRoutes
     def routeLine(self, rtNam, guiDict):
-        coordObj = transForms()
         xDist, yDist, lineLen = self.rtGeomCalcs(rtNam, guiDict)
         leftObj = guiDict[guiDict[rtNam]["leftObj"]]
         rtObj = guiDict[guiDict[rtNam]["rtObj"]]
