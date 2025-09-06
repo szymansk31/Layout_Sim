@@ -48,8 +48,6 @@ class trnProc:
                 
                 self.coordObj.xRoute2xPlot(routeNam, trainNam)
                 self.dispObj.drawTrain(trainNam)
-
-                self.checkArrTrk
                 match trainDict["direction"]:
                     case "east":
                         if trainDict["coord"]["xPlot"] >= routeCls.routes[routeNam]["x1"]:

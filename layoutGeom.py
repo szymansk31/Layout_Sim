@@ -44,13 +44,13 @@ class routeGeom():
 
             if mVars.prms["dbgGeom"]: print("\ninitRoutes: newRoute: ", routeCls.routes[routeNam])
             
-        locStem = locs.locDat
-        for loc in locStem:
-            if (loc == westObj) or (loc == eastObj):
-                rtList = locStem[loc].get("routes")
-                rtList.append(routeNam)
-                locStem[loc]["routes"] = rtList
-        if mVars.prms["dbgGeom"]: print("\ninitRoutes: locStem for loc: ", loc, "is", locStem[loc])
+            locStem = locs.locDat
+            for loc in locStem:
+                if (loc == westObj) or (loc == eastObj):
+                    rtList = locStem[loc].get("routes")
+                    rtList.append(routeNam)
+                    locStem[loc]["routes"] = rtList
+            if mVars.prms["dbgGeom"]: print("\ninitRoutes: locStem for loc: ", loc, "is", locStem[loc])
         return
 
     def trnsOnRoutes(self, routeDict, rtNam, guiDict):

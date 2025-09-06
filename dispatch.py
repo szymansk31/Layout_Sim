@@ -93,41 +93,48 @@ class clearTrnCalcs():
     def assnArrTrks(self):
         for loc in locs.locDat:
             trkStem = locs.locDat[loc]["trkPrms"]
-            
             QStem = locs.locDat[loc]["Qs"]["arrivals"]
             idx = -1
             for QDict in QStem:
                 idx +=1
                 print("assnArrTrk; loc:", loc, "QDict:", QDict)
-                trainNam = next(iter(QDict))
-                estArrTime = QDict[trainNam]["estArrTime"]
-                if QDict[trainNam]["arrTrk"] != "": continue
+                inComTrnNam = next(iter(QDict))
+                estArrTime = QDict[inComTrnNam]["estArrTime"]
+                if QDict[inComTrnNam]["arrTrk"] != "": continue
                 for track in trkStem:
                     if ("arrival" in trkStem[track]["funcs"]):
                         match trkStem[track]["status"]:
                             case "unAssnd":
-                                self.addTrain2ArrTrack(loc, track, trainNam)
+                                self.addTrain2ArrTrack(loc, track, inComTrnNam)
                                 break
                             case "assnd" if self.checkDepTime(loc, track, estArrTime):
                                 trkStem[track]["status"] = "assnAtDep"
-                                QStem[idx][trainNam]["arrTrk"] = track
+                                QStem[idx][inComTrnNam]["arrTrk"] = track
                                 break
-                if QDict[trainNam]["arrTrk"] == "":
-                    print("no arrival track available for train: ", trainNam, " in loc: ", loc)
+                            case "assnAtDep":
+                                #check if train approaching loc and arrTrk still blocked
+                                inComRoutes = trainDB.trains[inComTrnNam]["routes"]
+                                trnInLoc = trkStem[track]["train"]
+                                rtLength = routeCls.routes[inComRoutes[0]]["rtLength"]
+                                print("assnAtDep; loc:", loc, "inComRoutes", inComRoutes, "trnInLoc:", 
+                                      trnInLoc, "rtLength:",
+                                      rtLength)
+                if QDict[inComTrnNam]["arrTrk"] == "":
+                    print("no arrival track available for train: ", inComTrnNam, " in loc: ", loc)
                                 
-    def addTrain2ArrTrack(self, loc, track, trainNam):
+    def addTrain2ArrTrack(self, loc, arrTrk, trainNam):
         QStem = locs.locDat[loc]["Qs"]["arrivals"]
-        print("adding train ", trainNam, " to arr track: ", track, "in loc ", loc)
+        print("adding train ", trainNam, " to arr track: ", arrTrk, "in loc ", loc)
         idx = [idx for idx, QDict in enumerate(QStem) if trainNam in QDict]
         locStem = locs.locDat[loc]["trkPrms"]
         trnStem = trainDB.trains[trainNam]
         
         print("idx, QStem: ", idx, " ,", QStem)
-        locStem[track]["train"] = trainNam
-        locStem[track]["status"] = "assnd"
-        trnStem["arrTrk"] = track
+        locStem[arrTrk]["train"] = trainNam
+        locStem[arrTrk]["status"] = "assnd"
+        trnStem["arrTrk"] = arrTrk
         trnStem["estDeptTime"] = trnStem["estArrTime"] + trainDB.avgSwTime
-        QStem[idx[0]][trainNam]["arrTrk"] = track
+        QStem[idx[0]][trainNam]["arrTrk"] = arrTrk
 
         locs.locDat[loc]["trkCounts"]["openArrTrks"] -=1
         pass
