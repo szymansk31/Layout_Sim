@@ -67,8 +67,8 @@ class dispSim():
                     )
                 case "route":
                     #if routeCount < 2:
-                    # lftObjNam = guiDict[item]["leftObj"]
-                    # rtObjNam = guiDict[item]["rtObj"]
+                    # lftObjNam = guiDict[item]["westObj"]
+                    # eastObjNam = guiDict[item]["eastObj"]
                     route = routeCls.routes[item]
                     x0 = route["x0"]
                     x1 = route["x1"]

@@ -133,10 +133,6 @@ gui.guiDict = files.readFile("guiFile")
 guiObj.preProcGui()
 routeGeomObj.initRoutes(gui.guiDict)
 
-from routeProc import rtCaps
-rtCapsObj = rtCaps()
-rtCapsObj.initRouteCaps()
-
 
 #setup initial car distribution
 from carProc import carProc

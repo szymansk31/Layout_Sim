@@ -49,28 +49,6 @@ class trainInit():
             numCars += sum(consist["stops"][loc].values())
         return numCars
             
-    def newTrain(self, newTrainNam):
-        newTrain = {}
-        #newTrainNum = trainDB.numTrains+1
-        newTrainNum = newTrainNam[5:]
-        #newTrainNam = "train"+str(newTrainNum)
-        newConsistNum = trainDB.numConsists+1 
-        newConsistNam = "consist"+str(newConsistNum)
-        tmpTrain = self.files.readFile("trainFile")
-        
-        newTrain[newTrainNam] = tmpTrain.pop("trnProtype")
-        newTrain[newTrainNam]["trainNum"] = newTrainNum
-        newTrain[newTrainNam]["consistNum"] = newConsistNum
-        newTrain[newTrainNam]["numCars"] = 0
-    
-        print("newTrain: partial dict: ", newTrain)
-        trainDB.trains.update(newTrain)
-        
-        self.newConsist(newConsistNum, newTrainNum)
-        trainDB.numTrains +=1
-        trainDB.numConsists +=1
-        return newConsistNam
-    
     def fillTrnDicts(self, loc, trainNam):
         
         finalLoc = trainDB.trains[trainNam]["finalLoc"]

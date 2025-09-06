@@ -95,14 +95,19 @@ class Qmgmt():
                     locStem["trkCounts"]["openArrTrks"] += 1
 
                     
-# trains already on routes get first priority to arrival slots
-# as opposed to trains being built at other locs for travel to this loc                
     def calcDeptTimes(self):
         for loc in locs.locDat:
             locStem = locs.locDat[loc]
             for trainNam in locStem["trains"]:
                 estDeptTime = mVars.time + trainDB.avgSwTime
-                trainDB.trains[trainNam]["estDeptTime"] = estDeptTime
+                trainDB.trains[trainNam]["estDeptTime"] = round(estDeptTime, 2)
+        #calc estDeptTime for all trains enroute; calc above is
+        # for trains in locations being worked.  Unlike arrTime calcs
+        # trains in route Qs are still formally in a loc and caught above
+        for route in routeCls.routes:
+            for trainNam in routeCls.routes[route]["trains"]:
+                estArrTime = trainDB.trains[trainNam]["estArrTime"]
+                trainDB.trains[trainNam]["estDeptTime"] = round(estArrTime + trainDB.avgSwTime, 2)
         pass
                 
     def calcArrivTrns(self):
@@ -136,7 +141,8 @@ class Qmgmt():
                     trainNam: {"estArrTime": trainStem["estArrTime"],
                     "action": trainStem["stops"][loc]["action"],
                     "arrTrk": track,
-                    "nCars4ThisLoc": nCars4ThisLoc}})
+                    "nCars4ThisLoc": nCars4ThisLoc,
+                    "estDeptTime": trainStem["estDeptTime"]}})
             case "working":
                 locs.locDat[loc]["Qs"]["working"].append({ \
                     trainNam: {"estDeptTime": trainStem["estDeptTime"],
@@ -158,6 +164,30 @@ class Qmgmt():
         except:
             return
         
+    def updateArrvQs(self):
+        for loc in locs.locDat:
+            QStem = locs.locDat[loc]["Qs"]["arrivals"]
+            for QDict in QStem:
+                trainNam = next(iter(QDict))
+                self.updateLocQ(loc, "arrivals", trainNam)
+
+    def updateLocQ(self, loc, QNam, trainNam):
+        if not any(trainNam in d for d in locs.locDat[loc]["Qs"][QNam]): return
+        conNam = trainDB.getConNam(trainNam)
+        trainStem = trainDB.trains[trainNam]
+        
+        match QNam:
+            case "arrivals":
+                QStem = locs.locDat[loc]["Qs"]["arrivals"]
+                #nCars4ThisLoc = sum(trainDB.consists[conNam]["stops"][loc].values())
+                index = [idx for idx, d in enumerate(QStem) if trainNam in d]
+                locs.locDat[loc]["Qs"]["arrivals"][index[0]][trainNam].update({ \
+                    "estArrTime": trainStem["estArrTime"],
+                    #"action": trainStem["stops"][loc]["action"],
+                    #"arrTrk": trainStem["arrTrk"],
+                    #"nCars4ThisLoc": nCars4ThisLoc,
+                    "estDeptTime": trainStem["estDeptTime"]})
+
     def readArrTrk(self, loc, trainNam):
         QStem = locs.locDat[loc]["Qs"]["arrivals"]
         index = [idx for idx, d in enumerate(QStem) if trainNam in d]
@@ -231,6 +261,7 @@ class locMgmt():
             return
         else:
             locs.locDat[loc]["trains"].append(trainNam)
+            self.QmgmtObj.updateLocQ(loc, "arrivals", trainNam)
             return
 
     def setTrnCoord(self, currLoc, trainNam):
@@ -264,16 +295,16 @@ class locMgmt():
             # setup new route
             route4newTrn = self.findRoutes(loc, trainNam)
             trainStem["rtToEnter"] = route4newTrn
-            leftObj = routeCls.routes[route4newTrn]["leftObj"].strip()
-            rtObj = routeCls.routes[route4newTrn]["rtObj"].strip()
+            westObj = routeCls.routes[route4newTrn]["westObj"].strip()
+            eastObj = routeCls.routes[route4newTrn]["eastObj"].strip()
             #routeCls.routes[route4newTrn]["trains"].append( trainNam)
-            if loc == leftObj: 
+            if loc == westObj: 
                 trainStem["direction"] = "east"
-            elif loc == rtObj:
+            elif loc == eastObj:
                 trainStem["direction"] = "west"
             else: 
-                print("no route found",  trainNam,  "leftObj: ", leftObj, "rtObj: "
-                        , rtObj,"loc: ", loc, "direction: ", trainStem["direction"])
+                print("no route found",  trainNam,  "westObj: ", westObj, "eastObj: "
+                        , eastObj,"loc: ", loc, "direction: ", trainStem["direction"])
                 trainStem["status"] = "stop"
         return 
                     

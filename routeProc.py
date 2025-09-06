@@ -43,13 +43,15 @@ class rtProc():
                     self.trnProcObj.trainCalcs(trainDB.trains[trainNam], trainNam)
         
     def procRouteQ(self, routeNam):
-        rtStem = rtCaps.rtCap[routeNam]["Q"]
+        rtStem = routeCls.routes[routeNam]["Q"]
         for trainNam in rtStem:
             trnStem = trainDB.trains[trainNam]
             if (trnStem["status"] == "wait4Clrnce") and \
                 (self.clrTrnObj.clearTrn(trnStem["nextLoc"], trainNam)):
                 trnStem["status"] = "enroute"
                 trnStem["currentLoc"] = trnStem["rtToEnter"]
+                trnStem["estDeptTime"] = trnStem["estArrTime"] + trainDB.avgSwTime   
+
                 self.rtMgmtObj.addTrn2Route(trnStem["currentLoc"], trainNam)
                 self.rtCapsObj.remTrnFrmRouteQ(routeNam, trainNam)
                 self.dispObj.drawTrain(trainNam)
@@ -81,9 +83,9 @@ class routeMgmt():
         routeStem.append(trainNam)
         dir = trainDB.trains[trainNam]["direction"]
         if dir == "east":
-            rtCaps.rtCap[routeNam]["nEastTns"] +=1
+            routeCls.routes[routeNam]["capacity"]["nEastTns"] +=1
         elif dir == "west":
-            rtCaps.rtCap[routeNam]["nWestTns"] +=1
+            routeCls.routes[routeNam]["capacity"]["nWestTns"] +=1
        
     def remTrnsOnRoute(self, routeNam, trainNam):
         routeStem = routeCls.routes[routeNam]["trains"]
@@ -95,21 +97,21 @@ class routeMgmt():
         
         self.rtCapsObj.remTrnFrmRouteQ(routeNam, trainNam)
         dir = trainDB.trains[trainNam]["direction"]
-        numEast = rtCaps.rtCap[routeNam]["nEastTns"]
-        numWest = rtCaps.rtCap[routeNam]["nWestTns"]
+        numEast = routeCls.routes[routeNam]["capacity"]["nEastTns"]
+        numWest = routeCls.routes[routeNam]["capacity"]["nWestTns"]
         if dir == "east":
             num = max(numEast -1, 0)
-            rtCaps.rtCap[routeNam]["nEastTns"] = num
+            routeCls.routes[routeNam]["capacity"]["nEastTns"] = num
         elif dir == "west":
             num = max(numWest -1, 0)
-            rtCaps.rtCap[routeNam]["nWestTns"] = num
+            routeCls.routes[routeNam]["capacity"]["nWestTns"] = num
         
     def trnArrivalTimes(self):
         for routeNam in routeCls.routes:
             routeStem = routeCls.routes[routeNam]
             for trainNam in routeStem["trains"]:
                 self.calcTrnArrTime("trnArrTimes:route ", routeNam, trainNam)
-            for trainNam in rtCaps.rtCap[routeNam]["Q"]:
+            for trainNam in routeCls.routes[routeNam]["Q"]:
                 self.calcTrnArrTime("trnArrTimes:loc ", routeNam, trainNam)
 
     def calcTrnArrTime(self, callFunc, loc, trainNam):
@@ -133,23 +135,18 @@ class rtCaps():
     def __init__(self):
         pass
     
-    def initRouteCaps(self):
-        rtCaps.rtCap = files.readFile("routeCapFile")
-        for route in rtCaps.rtCap:
-                   
-            pass
-    
     def printRtCaps(self):
-        print("\nrtCaps.rtCap: ")
-        for route in rtCaps.rtCap:
+        print("\nroute capacities: ")
+        for route in routeCls.routes:
             print(route, ":", "trains on route:", 
                   routeCls.routes[route]["trains"],
-                  rtCaps.rtCap[route])
+                  routeCls.routes[route]["Q"],
+                  routeCls.routes[route]["capacity"])
             
     def updateRtSlots(self):
-        for route in rtCaps.rtCap:
+        for route in routeCls.routes:
             # trains already on the route
-            rtStem = rtCaps.rtCap[route]
+            rtStem = routeCls.routes[route]["capacity"]
             eastSlots = 0
             westSlots = 0
             numEast = rtStem["nEastTns"]
@@ -177,11 +174,11 @@ class rtCaps():
             rtStem["westSlots"] = westSlots                    
 
     def addTrn2RouteQ(self, route, trainNam):
-        if trainNam not in rtCaps.rtCap[route]["Q"]:
-            rtCaps.rtCap[route]["Q"].append(trainNam)
+        if trainNam not in routeCls.routes[route]["Q"]:
+            routeCls.routes[route]["Q"].append(trainNam)
 
     def remTrnFrmRouteQ(self, route, trainNam):
-        rtCapStem = rtCaps.rtCap[route]["Q"]
+        rtCapStem = routeCls.routes[route]["Q"]
         try:
             index = rtCapStem.index(trainNam)
             rtCapStem.pop(index)
@@ -195,7 +192,7 @@ class rtCaps():
         openSlot = False
         trainStem = trainDB.trains[trainNam]
         routeNam = trainStem["rtToEnter"]
-        rtStem = rtCaps.rtCap[routeNam]
+        rtStem = routeCls.routes[routeNam]["capacity"]
         dir = trainStem["direction"]
         if dir == "east":
             if rtStem["eastSlots"] >0:

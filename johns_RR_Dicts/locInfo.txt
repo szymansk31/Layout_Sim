@@ -7,7 +7,7 @@
     "time2Class": 0,
     "Qs": {
         "arrivals": [{"train": {"estArrTime": 0, 
-		    "action": "", "arrTrk": "", "nCars4ThisLoc": 0}}],
+		    "action": "", "arrTrk": "", "nCars4ThisLoc": 0, "estDeptTime":0}}],
         "working": [{"train": {"estDeptTime": 0, 
 		    "status": "", "depTrk": "", "rtToEnter":""}}],
         "builds": [{"train": {"numCars": 0, 
@@ -83,7 +83,7 @@
     "time2Class": 0,
     "Qs": {
         "arrivals": [{"train": {"estArrTime": 0, 
-		    "action": "", "arrTrk": "", "nCars4ThisLoc": 0}}],
+		    "action": "", "arrTrk": "", "nCars4ThisLoc": 0, "estDeptTime":0}}],
         "working": [{"train": {"estDeptTime": 0, 
 		    "status": "", "depTrk": "", "rtToEnter":""}}],
         "builds": [{"train": {"numCars": 0, 
@@ -157,7 +157,7 @@
     "time2Class": 0,
     "Qs": {
         "arrivals": [{"train": {"estArrTime": 0, 
-		    "action": "", "arrTrk": "", "nCars4ThisLoc": 0}}],
+		    "action": "", "arrTrk": "", "nCars4ThisLoc": 0, "estDeptTime":0}}],
         "working": [{"train": {"estDeptTime": 0, 
 		    "status": "", "depTrk": "", "rtToEnter":""}}],
         "builds": [{"train": {"numCars": 0, 
@@ -232,7 +232,7 @@
     "time2Class": 0,
     "Qs": {
         "arrivals": [{"train": {"estArrTime": 0, 
-		    "action": "", "arrTrk": "", "nCars4ThisLoc": 0}}],
+		    "action": "", "arrTrk": "", "nCars4ThisLoc": 0, "estDeptTime":0}}],
         "working": [{"train": {"estDeptTime": 0, 
 		    "status": "", "depTrk": "", "rtToEnter":""}}],
         "builds": [{"train": {"numCars": 0, 
@@ -293,7 +293,7 @@
     "time2Class": 0,
     "Qs": {
         "arrivals": [{"train": {"estArrTime": 0, 
-		    "action": "", "arrTrk": "", "nCars4ThisLoc": 0}}],
+		    "action": "", "arrTrk": "", "nCars4ThisLoc": 0, "estDeptTime":0}}],
         "working": [{"train": {"estDeptTime": 0, 
 		    "status": "", "depTrk": "", "rtToEnter":""}}],
         "builds": [{"train": {"numCars": 0, 

@@ -34,7 +34,7 @@ class schedProc():
                 (mVars.time >= dspCh.sched[trainNam]["startTime"]):
                 self.baseTrnDict(trainNam)
                 self.trainInitObj.fillTrnDicts(loc, trainNam)
-                self.locMgmtObj.placeTrain(currentLoc, dspCh.sched[trainNam], 
+                self.locMgmtObj.placeTrain(currentLoc, trainDB.trains[trainNam], 
                         trainNam)
                 self.dispItemsObj.drawTrain(trainNam)
                 dspCh.sched.pop(trainNam)
@@ -73,6 +73,7 @@ class clearTrnCalcs():
         self.rtCapsObj.printRtCaps()
         self.QmgmtObj.calcDeptTimes()
         self.QmgmtObj.calcArrivTrns()
+        self.QmgmtObj.updateArrvQs()
         self.QmgmtObj.sortLocQ("arrivals", "estArrTime")
         self.assnArrTrks()
         # are 
@@ -86,6 +87,8 @@ class clearTrnCalcs():
         print("clearTrn: rtClear = ", rtClear, " , arrTrkAssnd = ", arrTrkAssnd)
         return rtClear and arrTrkAssnd
         
+# trains already on routes get first priority to arrival slots
+# as opposed to trains being built at other locs for travel to this loc                
     
     def assnArrTrks(self):
         for loc in locs.locDat:
@@ -95,6 +98,7 @@ class clearTrnCalcs():
             idx = -1
             for QDict in QStem:
                 idx +=1
+                print("assnArrTrk; loc:", loc, "QDict:", QDict)
                 trainNam = next(iter(QDict))
                 estArrTime = QDict[trainNam]["estArrTime"]
                 if QDict[trainNam]["arrTrk"] != "": continue
@@ -128,6 +132,7 @@ class clearTrnCalcs():
         locs.locDat[loc]["trkCounts"]["openArrTrks"] -=1
         pass
     
+
 
     def checkDepTime(self, loc, track, estArrTime):
         trainNam = locs.locDat[loc]["trkPrms"][track]["train"]

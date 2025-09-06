@@ -137,7 +137,6 @@ class locProc():
             self.locMgmtObj.findRtPrms(loc, trainNam)
         routeNam = trainStem["rtToEnter"]
         trainStem["estArrTime"] = mVars.time + routeCls.routes[routeNam]["transTime"]
-               
         self.locMgmtObj.placeTrain(routeNam, trainStem, trainNam)
         self.locQmgmtObj.remTrnLocQ(loc, "working", trainNam)
         #self.rtCapsObj.addTrn2RouteQ(routeNam, trainNam)
@@ -155,7 +154,7 @@ class locProc():
         """
         eastXPlot = gui.guiDict[loc]["x1"]
         westXPlot = gui.guiDict[loc]["x0"] - trainInit.trnLength
-        eastYPlot = gui.guiDict[leftObj]["y0"] - gui.guiDict["locDims"]["height"]*0.25
+        eastYPlot = gui.guiDict[westObj]["y0"] - gui.guiDict["locDims"]["height"]*0.25
         if trainStem["direction"] == "west": 
             trainStem["coord"]["xPlot"] -= trainInit.trnLength
             westXPlotTransform = trainStem["coord"]["xPlot"]
