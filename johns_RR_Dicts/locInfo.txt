@@ -7,11 +7,7 @@
     "time2Class": 0,
     "Qs": {
         "arrivals": [{"train": {"estArrTime": 0, 
-		    "action": "", "arrTrk": "", "nCars4ThisLoc": 0, "estDeptTime":0}}],
-        "working": [{"train": {"estDeptTime": 0, 
-		    "status": "", "depTrk": "", "rtToEnter":""}}],
-        "builds": [{"train": {"numCars": 0, 
-		    "numCars2Add": 0, "status": "", "rtToEnter":""}}]
+		    "action": "", "arrTrk": "", "nCars4ThisLoc": 0, "estDeptTime":0}}]
     },
     "tracks": {
         "Kiski"   :{"box": 4, "tank": 2, "rfr": 3, "hop": 8, 
@@ -63,11 +59,11 @@
     "startMisc": 0,
     "trains": [],
     "trnCnts": {
-	"built": 0,
-	"started": 0,
-	"switched": 0,
-	"brkDown": 0,
-	"passThru": 0
+        "built": 0,
+        "started": 0,
+        "switched": 0,
+        "brkDown": 0,
+        "passThru": 0
 	},
     "bldTrnDepTimes": [5, 10, 25, 30],
     "trn4Action":[],
@@ -83,11 +79,7 @@
     "time2Class": 0,
     "Qs": {
         "arrivals": [{"train": {"estArrTime": 0, 
-		    "action": "", "arrTrk": "", "nCars4ThisLoc": 0, "estDeptTime":0}}],
-        "working": [{"train": {"estDeptTime": 0, 
-		    "status": "", "depTrk": "", "rtToEnter":""}}],
-        "builds": [{"train": {"numCars": 0, 
-		    "numCars2Add": 0, "status": "", "rtToEnter":""}}]
+		    "action": "", "arrTrk": "", "nCars4ThisLoc": 0, "estDeptTime":0}}]
     
     },
     "tracks": {
@@ -136,11 +128,11 @@
     "startMisc": 0,
     "trains": [],
     "trnCnts": {
-	"built": 0,
-	"started": 0,
-	"switched": 0,
-	"brkDown": 0,
-	"passThru": 0
+        "built": 0,
+        "started": 0,
+        "switched": 0,
+        "brkDown": 0,
+        "passThru": 0
 	},
     "bldTrnDepTimes": [5, 10, 25, 30],
     "trn4Action":[],
@@ -157,11 +149,7 @@
     "time2Class": 0,
     "Qs": {
         "arrivals": [{"train": {"estArrTime": 0, 
-		    "action": "", "arrTrk": "", "nCars4ThisLoc": 0, "estDeptTime":0}}],
-        "working": [{"train": {"estDeptTime": 0, 
-		    "status": "", "depTrk": "", "rtToEnter":""}}],
-        "builds": [{"train": {"numCars": 0, 
-		    "numCars2Add": 0, "status": "", "rtToEnter":""}}]
+		    "action": "", "arrTrk": "", "nCars4ThisLoc": 0, "estDeptTime":0}}]
     
     },
     "tracks": {
@@ -212,11 +200,11 @@
     "startMisc": 0,
     "trains": [],
     "trnCnts": {
-	"built": 0,
-	"started": 0,
-	"switched": 0,
-	"brkDown": 0,
-	"passThru": 0
+        "built": 0,
+        "started": 0,
+        "switched": 0,
+        "brkDown": 0,
+        "passThru": 0
 	},
     "bldTrnDepTimes": [5, 10, 25, 30],
     "trn4Action":[],
@@ -232,12 +220,7 @@
     "time2Class": 0,
     "Qs": {
         "arrivals": [{"train": {"estArrTime": 0, 
-		    "action": "", "arrTrk": "", "nCars4ThisLoc": 0, "estDeptTime":0}}],
-        "working": [{"train": {"estDeptTime": 0, 
-		    "status": "", "depTrk": "", "rtToEnter":""}}],
-        "builds": [{"train": {"numCars": 0, 
-		    "numCars2Add": 0, "status": "", "rtToEnter":""}}]
-    
+		    "action": "", "arrTrk": "", "nCars4ThisLoc": 0, "estDeptTime":0}}]
     },
     "trkPrms": {
         "track1" : {"funcs": ["arrival", "depart"], "train": "", 
@@ -273,11 +256,11 @@
     "startMisc": 0,
     "trains": [],
     "trnCnts": {
-	"built": 0,
-	"started": 0,
-	"switched": 0,
-	"brkDown": 0,
-	"passThru": 0
+        "built": 0,
+        "started": 0,
+        "switched": 0,
+        "brkDown": 0,
+        "passThru": 0
 	},
     "bldTrnDepTimes": [],
     "trn4Action":[],
@@ -293,12 +276,7 @@
     "time2Class": 0,
     "Qs": {
         "arrivals": [{"train": {"estArrTime": 0, 
-		    "action": "", "arrTrk": "", "nCars4ThisLoc": 0, "estDeptTime":0}}],
-        "working": [{"train": {"estDeptTime": 0, 
-		    "status": "", "depTrk": "", "rtToEnter":""}}],
-        "builds": [{"train": {"numCars": 0, 
-		    "numCars2Add": 0, "status": "", "rtToEnter":""}}]
-    
+		    "action": "", "arrTrk": "", "nCars4ThisLoc": 0, "estDeptTime":0}}]
     },
     "trkPrms": {
         "track1" : {"funcs": ["arrival", "depart"], "train": "", 
@@ -333,11 +311,11 @@
     "startMisc": 0,
     "trains": [],
     "trnCnts": {
-	"built": 0,
-	"started": 0,
-	"switched": 0,
-	"brkDown": 0,
-	"passThru": 0
+        "built": 0,
+        "started": 0,
+        "switched": 0,
+        "brkDown": 0,
+        "passThru": 0
 	},
     "bldTrnDepTimes": [1, 5],
     "trn4Action":[],

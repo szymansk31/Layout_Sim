@@ -7,11 +7,6 @@ files = readFiles()
 
 np.set_printoptions(precision=2, suppress=True) 
 
-class routeInit():
-    
-    def __init__(self):
-        pass
-    
 class rtProc():
     
     def __init__(self):
@@ -63,10 +58,11 @@ class rtProc():
         if loc != "":
             arrTrk = self.locQmgmtObj.readArrTrk(loc, trainNam)
             #remove train from location arrivals Queue
-            self.locQmgmtObj.remTrnLocQ(loc, "arrivals", trainNam)
+            self.locQmgmtObj.remTrnLocQ(loc, trainNam)
             #remove train from loc["trkPrms"]["arrTrk"]
             self.locQmgmtObj.remTrnArrTrk(loc, arrTrk, trainNam)
-            #remove train from loc["trains"] list
+            #remove train from loc["trains"] list and
+            #arrival Q
             self.locMgmtObj.rmTrnFrmLoc(loc, trainNam)
             #remove train rectangle from action list above loc
             self.dispObj.clearActionTrnRecs(loc, trainNam)
@@ -136,10 +132,10 @@ class rtCaps():
         pass
     
     def printRtCaps(self):
-        print("\nroute capacities: ")
+        print("\nroute data: ")
         for route in routeCls.routes:
             print(route, ":", "trains on route:", 
-                  routeCls.routes[route]["trains"],
+                  routeCls.routes[route]["trains"], "routeQ:", 
                   routeCls.routes[route]["Q"],
                   routeCls.routes[route]["capacity"])
             

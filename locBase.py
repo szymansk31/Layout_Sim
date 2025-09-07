@@ -156,8 +156,8 @@ class Qmgmt():
                     "status": trainStem["status"],
                     "rtToEnter": trainStem["rtToEnter"]}})
 
-    def remTrnLocQ(self, loc, QNam, trainNam):
-        QStem = locs.locDat[loc]["Qs"][QNam]
+    def remTrnLocQ(self, loc, trainNam):
+        QStem = locs.locDat[loc]["Qs"]["arrivals"]
         index = [idx for idx, d in enumerate(QStem) if trainNam in d]
         try:
             QStem.pop(index[0])
@@ -173,7 +173,6 @@ class Qmgmt():
 
     def updateLocQ(self, loc, QNam, trainNam):
         if not any(trainNam in d for d in locs.locDat[loc]["Qs"][QNam]): return
-        conNam = trainDB.getConNam(trainNam)
         trainStem = trainDB.trains[trainNam]
         
         match QNam:
@@ -242,6 +241,7 @@ class locMgmt():
         try:
             index = locs.locDat[loc]["trains"].index(trainNam)
             locs.locDat[loc]["trains"].pop(index)
+            self.QmgmtObj.remTrnLocQ(loc, trainNam)
         except:
             print("cannot remove train ", trainNam, " from loc ", loc)
             pass
@@ -331,4 +331,25 @@ class locMgmt():
         # clear action data from display
         dispObj.clearActionDat(loc)
 
-    
+    def printLocData(self, loc):
+        locStem = locs.locDat[loc]
+        subDict = {}
+
+        for key, value in locStem.items():
+            subDict[key] = value
+            if key == "cars2Class": break
+        print(loc, subDict)
+        print("arrival Q:", locStem["Qs"])
+        print("trains:", locStem["trains"])
+        print("routes:", locStem["routes"])
+        try:
+            for trkContents in locStem["tracks"]:
+                print(trkContents)
+        except:
+            pass
+        for trackNam in locStem["trkPrms"]:
+            print(trackNam, ":", locStem["trkPrms"][trackNam])
+        print("trkCounts:", locStem["trkCounts"])
+        
+        print("trnCnts:", locStem["trnCnts"])
+

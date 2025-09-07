@@ -101,27 +101,47 @@ class clearTrnCalcs():
                 inComTrnNam = next(iter(QDict))
                 estArrTime = QDict[inComTrnNam]["estArrTime"]
                 if QDict[inComTrnNam]["arrTrk"] != "": continue
-                for track in trkStem:
-                    if ("arrival" in trkStem[track]["funcs"]):
-                        match trkStem[track]["status"]:
+                for trackNam in trkStem:
+                    if ("arrival" in trkStem[trackNam]["funcs"]):
+                        match trkStem[trackNam]["status"]:
                             case "unAssnd":
-                                self.addTrain2ArrTrack(loc, track, inComTrnNam)
+                                self.addTrain2ArrTrack(loc, trackNam, inComTrnNam)
                                 break
-                            case "assnd" if self.checkDepTime(loc, track, estArrTime):
-                                trkStem[track]["status"] = "assnAtDep"
-                                QStem[idx][inComTrnNam]["arrTrk"] = track
+                            case "assnd" if self.checkDepTime(loc, trackNam, estArrTime):
+                                trkStem[trackNam]["status"] = "assnAtDep"
+                                QStem[idx][inComTrnNam]["arrTrk"] = trackNam
                                 break
                             case "assnAtDep":
-                                #check if train approaching loc and arrTrk still blocked
-                                inComRoutes = trainDB.trains[inComTrnNam]["routes"]
-                                trnInLoc = trkStem[track]["train"]
-                                rtLength = routeCls.routes[inComRoutes[0]]["rtLength"]
-                                print("assnAtDep; loc:", loc, "inComRoutes", inComRoutes, "trnInLoc:", 
-                                      trnInLoc, "rtLength:",
-                                      rtLength)
+                                self.procAssnAtDep(loc, trkStem, trackNam, inComTrnNam)
+                                break
                 if QDict[inComTrnNam]["arrTrk"] == "":
                     print("no arrival track available for train: ", inComTrnNam, " in loc: ", loc)
                                 
+    def procAssnAtDep(self, loc, trkStem, trackNam, inComTrnNam):
+        #check if train approaching loc and arrTrk still blocked
+
+        trnOnArrTrk = trkStem[trackNam]["train"]
+        inComTrnStem = trainDB.trains[inComTrnNam]
+        inComTrnLoc = inComTrnStem["currentLoc"]
+        if "route" not in inComTrnLoc: return
+        
+        rtLength = routeCls.routes[inComTrnLoc]["rtLength"]
+        fracRtRemaining = 1 - inComTrnStem["coords"]["xRoute"]/rtLength
+        if fracRtRemaining <= 0.25:
+            rtTransTime = routeCls.routes[inComTrnLoc]["transTime"]
+            timeRemaining = fracRtRemaining*rtTransTime
+            estArrTime = mVars.time + timeRemaining
+            if self.checkDepTime(loc, trackNam, estArrTime):
+                print("assnAtDep; loc:", loc, "incoming route", inComTrnLoc, "trnOnArrTrk:", 
+                    trnOnArrTrk, "rtLength:", rtLength, "incoming train status:",
+                    inComTrnStem["status"])
+                if inComTrnStem["status"] == "waitOnRoute":
+                    inComTrnStem["status"] = "enroute"
+                return
+            else: 
+                inComTrnStem["status"] = "waitOnRoute"
+                return
+
     def addTrain2ArrTrack(self, loc, arrTrk, trainNam):
         QStem = locs.locDat[loc]["Qs"]["arrivals"]
         print("adding train ", trainNam, " to arr track: ", arrTrk, "in loc ", loc)
@@ -142,9 +162,9 @@ class clearTrnCalcs():
 
 
     def checkDepTime(self, loc, track, estArrTime):
-        trainNam = locs.locDat[loc]["trkPrms"][track]["train"]
-        estDeptTime = trainDB.trains[trainNam]["estDeptTime"]
-        print("checking track:", track, ", assnd to train:", trainNam,"at loc:", loc, ", estArrTime: ", estArrTime, "for train departing: ", estDeptTime)
+        trnOnArrTrk = locs.locDat[loc]["trkPrms"][track]["train"]
+        estDeptTime = trainDB.trains[trnOnArrTrk]["estDeptTime"]
+        print("checking track:", track, ", assnd to train:", trnOnArrTrk,"at loc:", loc, ", estArrTime: ", estArrTime, "for train departing: ", estDeptTime)
         if estArrTime > estDeptTime: return True
         else: return False
         

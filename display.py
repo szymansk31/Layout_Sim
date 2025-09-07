@@ -124,7 +124,7 @@ class dispItems():
         else:
             gui.C.itemconfigure(locStem["locObjID"], text=text, font=("Arial", 8))
 
-        self.dispTrnRecs(locStem, loc, ydTrains, numTrns)
+        self.dispTrnActnRecs(locStem, loc, ydTrains, numTrns)
 
     def clearActionDat(self, loc):
         text = ''
@@ -164,7 +164,7 @@ class dispItems():
         gui.C.delete(trainStem["trnRectTag"])
         gui.C.delete(trainStem["trnNumTag"])
  
-    def dispTrnRecs(self, locStem, loc, ydtrains, numTrns):        
+    def dispTrnActnRecs(self, locStem, loc, ydtrains, numTrns):        
         actionIter = iter(trainDB.ydTrains)
         action1 = next(actionIter)
         action2 = next(actionIter)

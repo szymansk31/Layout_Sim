@@ -20,7 +20,7 @@ class ydCalcs():
         from locBase import locBase, Qmgmt, locMgmt
         self.locBaseObj = locBase()
         self.locQmgmtObj = Qmgmt()
-        self.locMgmt = locMgmt()
+        self.locMgmtObj = locMgmt()
         from classCars import classCars
         self.classObj = classCars()
         from display import dispItems
@@ -113,6 +113,7 @@ class ydCalcs():
         if trainDB.ydTrains["brkDnTrn"]:
             ydTrainNam = random.choice(trainDB.ydTrains.get("brkDnTrn"))
             print("ydtrainNam: ", ydTrainNam)
+            self.dispObj.clearRouteTrnRecs(ydTrainNam)
             self.dispObj.dispActionDat(loc, "brkDnTrn", ydTrainNam)
 
             availCars = self.classObj.train2Track(loc, ydTrainNam)
@@ -120,8 +121,13 @@ class ydCalcs():
                 # train no longer has cars
                 # remove train name from trainDB.ydTrains and locs.locData
                 locs.locDat[loc]["trnCnts"]["brkDown"] += 1
-                self.locMgmt.rmTrnFrmActions("brkDnTrn", loc, ydTrainNam)
-                self.locMgmt.rmTrnFrmLoc(loc, ydTrainNam)
+                self.locMgmtObj.rmTrnFrmActions("brkDnTrn", loc, ydTrainNam)
+                #remove train from loc["trkPrms"]["arrTrk"]
+                arrTrk = self.locQmgmtObj.readArrTrk(loc, ydTrainNam)
+                self.locQmgmtObj.remTrnArrTrk(loc, arrTrk, ydTrainNam)
+                #remove train from loc["trains"] list and
+                #arrival Q
+                self.locMgmtObjObj.rmTrnFrmLoc(loc, ydTrainNam)
                 trainDB.trains.pop(ydTrainNam)
 
         if mVars.prms["dbgYdProc"]: 
@@ -149,7 +155,7 @@ class ydCalcs():
                 trainStem["status"] = "built"
                 trainStem["estDeptTime"] = mVars.time
                 locs.locDat[loc]["trnCnts"]["built"] += 1
-                self.locMgmt.rmTrnFrmActions("buildTrain", loc, ydTrainNam)
+                self.locMgmtObj.rmTrnFrmActions("buildTrain", loc, ydTrainNam)
             self.dispObj.dispActionDat(loc, "buildTrain", ydTrainNam)
 
     def ready2Build(self, loc):
@@ -209,7 +215,7 @@ class ydCalcs():
             availCars, trainDest = self.classObj.track2Train(loc, "", ydTrainNam)
             numCars = trainDB.trains[ydTrainNam]["numCars"]
             locArrTime = trainDB.trains[ydTrainNam]["locArrTime"]
-            if (numCars >= mVars.prms["trainSize"]*1.2) or\
+            if (numCars >= mVars.prms["trainSize"]*0.7) or\
                 ((mVars.time - locArrTime) >= mVars.prms["mxTrnDwlTim"]):
                 # train has reached max size or max dwell time
                 # train no longer has pickups or drops
@@ -219,7 +225,7 @@ class ydCalcs():
                 locs.locDat[loc]["trnCnts"]["switched"] += 1
                 
                 self.locProcObj.startTrain(loc, ydTrainNam)
-                self.locMgmt.cleanupSwAction(loc, ydTrainNam, "swTrain")
+                self.locMgmtObj.cleanupSwAction(loc, ydTrainNam, "swTrain")
         
         pass
     def servIndus(self, loc):

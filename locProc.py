@@ -40,7 +40,8 @@ class locProc():
         self.stagCalcObj = stCalcs()
 
         if mVars.prms["dbgYdProc"]: 
-            print("\nentering locCalcs: location: ", loc, ", locDat: ", locs.locDat[loc])
+            print("\nentering locCalcs: location: ", loc)
+            self.locMgmtObj.printLocData(loc)
 
         locStem = locs.locDat[loc]
         self.locBaseObj.countCars(loc)
@@ -138,7 +139,7 @@ class locProc():
         routeNam = trainStem["rtToEnter"]
         trainStem["estArrTime"] = mVars.time + routeCls.routes[routeNam]["transTime"]
         self.locMgmtObj.placeTrain(routeNam, trainStem, trainNam)
-        self.locQmgmtObj.remTrnLocQ(loc, "working", trainNam)
+        self.locQmgmtObj.remTrnLocQ(loc, trainNam)
         #self.rtCapsObj.addTrn2RouteQ(routeNam, trainNam)
         trainStem["firstDispTrn"] = 1
         

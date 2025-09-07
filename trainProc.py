@@ -56,7 +56,8 @@ class trnProc:
                         if trainDict["coord"]["xPlot"] <= routeCls.routes[routeNam]["x0"]:
                             self.procTrnStop(trainDict, trainNam)
                                                 
-                    
+            case "waitOnRoute":
+                pass
             case "wait4Clrnce" if mVars.prms["useDispatch"] == False:
                 print("train: ", trainNam, " switching to enroute status")
                 trainDict["status"] = "enroute"
@@ -68,7 +69,7 @@ class trnProc:
                 if loc != "":
                     arrTrk = self.locQmgmtObj.readArrTrk(loc, trainNam)
                     #remove train from location arrivals Queue
-                    self.locQmgmtObj.remTrnLocQ(loc, "arrivals", trainNam)
+                    self.locQmgmtObj.remTrnLocQ(loc, trainNam)
                     #remove train from loc["trkPrms"]["arrTrk"]
                     self.locQmgmtObj.remTrnArrTrk(loc, arrTrk, trainNam)
                     #remove train from loc["trains"] list
@@ -127,7 +128,7 @@ class trnProc:
                 trainDict["status"] = "terminate"
                 trainDict["timeEnRoute"] = 0
                 trainDict["estDeptTime"] = mVars.time + trainDB.avgSwTime
-                self.dispObj.clearRouteTrnRecs(trainNam)
+                #self.dispObj.clearRouteTrnRecs(trainNam)
                 pass
             case "rdCrwSw": 
                 from swCalcs import swCalcs

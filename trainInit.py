@@ -9,7 +9,8 @@ class trainInit():
     colorIDX = 0
     colorList = ["red", "green", "yellow", "orange", "purple1", "dodger blue", "deep pink",
                  "lawn green", "goldenrod", "OrangeRed2", "magenta2", "RoyalBlue1"]
-    trnStatusList = ["enroute", "wait4Clrnce", "init", "building", "built", "terminate", "rdCrwSw",
+    trnStatusList = ["enroute", "wait4Clrnce", "waitOnRoute", "init", "building", "built", 
+                     "terminate", "rdCrwSw",
                      "dropPickup", "continue", "turn", "misc", "stop"]
 
 
