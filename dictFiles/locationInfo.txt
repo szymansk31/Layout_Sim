@@ -27,7 +27,7 @@
     "locTrnNumID": "",
     "startMisc": 0,
     "trains": [],
-    "bldTrnDepTimes": [15, 20, 25, 30],
+    "bldTrnTimes": [15, 20, 25, 30],
     "trn4Action":[]
 },
 "swArea1": {
@@ -58,7 +58,7 @@
     "locTrnNumID": "",
     "startMisc": 0,
     "trains": [],
-    "bldTrnDepTimes": [15, 20, 25, 30],
+    "bldTrnTimes": [15, 20, 25, 30],
     "trn4Action":[]
 },
 "yard2": {
@@ -87,7 +87,7 @@
     "locTrnNumID": "",
     "startMisc": 0,
     "trains": [],
-    "bldTrnDepTimes": [15, 20, 25, 30],
+    "bldTrnTimes": [15, 20, 25, 30],
     "trn4Action":[]
 },
 "staging1": {
@@ -109,7 +109,7 @@
     "locTrnNumID": "",
     "startMisc": 0,
     "trains": [],
-    "bldTrnDepTimes": [],
+    "bldTrnTimes": [],
     "trn4Action":[]
 }
 }

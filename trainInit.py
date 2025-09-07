@@ -78,7 +78,6 @@ class trainInit():
         self.rtMgmtObj.calcTrnArrTime("fillTrnDicts ", loc, trainNam)
         print("new train: ", trainNam, ": ", trainDB.trains[trainNam])
         print("new consist: ", conNam, ":", trainDB.consists[conNam])
-        trainDB.numTrains +=1
 
         return
 
@@ -86,7 +85,7 @@ class trainInit():
         #stops defined in sched files, but may be blank
         stops = trainDB.trains[trainNam]["stops"]
         numStops = 0
-        if stops != None:
+        if stops != {}:
             for stopLoc in stops:
                 numStops += 1 
             nextLoc = next(iter(stops))

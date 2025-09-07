@@ -44,29 +44,16 @@ class rtProc():
             if (trnStem["status"] == "wait4Clrnce") and \
                 (self.clrTrnObj.clearTrn(trnStem["nextLoc"], trainNam)):
                 trnStem["status"] = "enroute"
+                currentLoc = trnStem["currentLoc"]
                 trnStem["currentLoc"] = trnStem["rtToEnter"]
                 trnStem["estDeptTime"] = trnStem["estArrTime"] + trainDB.avgSwTime   
 
                 self.rtMgmtObj.addTrn2Route(trnStem["currentLoc"], trainNam)
                 self.rtCapsObj.remTrnFrmRouteQ(routeNam, trainNam)
                 self.dispObj.drawTrain(trainNam)
-                self.cleanTrnFromLoc(trainNam)
+                self.locMgmtObj.cleanTrnFromLoc(currentLoc, trainNam)
                 print(trainNam, "added to route", routeNam, "with enroute status")
          
-    def cleanTrnFromLoc(self, trainNam):
-        loc = trainDB.trains[trainNam]["departStop"]
-        if loc != "":
-            arrTrk = self.locQmgmtObj.readArrTrk(loc, trainNam)
-            #remove train from location arrivals Queue
-            self.locQmgmtObj.remTrnLocQ(loc, trainNam)
-            #remove train from loc["trkPrms"]["arrTrk"]
-            self.locQmgmtObj.remTrnArrTrk(loc, arrTrk, trainNam)
-            #remove train from loc["trains"] list and
-            #arrival Q
-            self.locMgmtObj.rmTrnFrmLoc(loc, trainNam)
-            #remove train rectangle from action list above loc
-            self.dispObj.clearActionTrnRecs(loc, trainNam)
-    
 class routeMgmt():
     
     def __init__(self):

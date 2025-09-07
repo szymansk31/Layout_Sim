@@ -221,6 +221,8 @@ class locMgmt():
         self.rtCapsObj = rtCaps()
         self.rtMgmtObj = routeMgmt()
         self.QmgmtObj = Qmgmt()
+        from display import dispItems
+        self.dispObj = dispItems()
         pass
                    
     def rmTrnFrmActions(self, action, loc, trainNam):
@@ -281,7 +283,7 @@ class locMgmt():
         for routeNam in routeCls.routes:
             loc = ''.join(loc)
             dest = ''.join(nextLoc)
-            if dbgLocal: print("routNam: ", routeNam, " loc: ", loc, 
+            if dbgLocal and 0: print("routNam: ", routeNam, " loc: ", loc, 
                 " nextLoc: ", dest, "route: ", routeCls.routes[routeNam])
             if (loc in routeCls.routes[routeNam].values()) and \
                 (dest in routeCls.routes[routeNam].values()):
@@ -308,6 +310,18 @@ class locMgmt():
                 trainStem["status"] = "stop"
         return 
                     
+    def cleanTrnFromLoc(self, loc, trainNam):
+        loc = trainDB.trains[trainNam]["departStop"]
+        if loc != "":
+            arrTrk = self.QmgmtObj.readArrTrk(loc, trainNam)
+            #remove train from loc["trkPrms"]["arrTrk"]
+            self.QmgmtObj.remTrnArrTrk(loc, arrTrk, trainNam)
+            #remove train from loc["trains"] list and
+            #arrival Q
+            self.rmTrnFrmLoc(loc, trainNam)
+            #remove train rectangle from action list above loc
+            self.dispObj.clearActionTrnRecs(loc, trainNam)
+    
 
     def cleanupSwAction(self, loc, trainNam, action):
         dispObj = dispItems()
@@ -327,9 +341,6 @@ class locMgmt():
             pass
         # remove from ydTrains action list
         self.rmTrnFrmActions(action, loc, trainNam)
-
-        # clear action data from display
-        dispObj.clearActionDat(loc)
 
     def printLocData(self, loc):
         locStem = locs.locDat[loc]

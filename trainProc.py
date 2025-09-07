@@ -61,21 +61,12 @@ class trnProc:
             case "wait4Clrnce" if mVars.prms["useDispatch"] == False:
                 print("train: ", trainNam, " switching to enroute status")
                 trainDict["status"] = "enroute"
+                currentLoc = trainDict["currentLoc"]
                 trainDict["currentLoc"] = trainDict["rtToEnter"]
                 self.rtMgmtObj.addTrn2Route(trainDict["currentLoc"], trainNam)
                 # remove train rectangles above the location rectangle
                 self.dispObj.drawTrain(trainNam)
-                loc = trainDB.trains[trainNam]["departStop"]
-                if loc != "":
-                    arrTrk = self.locQmgmtObj.readArrTrk(loc, trainNam)
-                    #remove train from location arrivals Queue
-                    self.locQmgmtObj.remTrnLocQ(loc, trainNam)
-                    #remove train from loc["trkPrms"]["arrTrk"]
-                    self.locQmgmtObj.remTrnArrTrk(loc, arrTrk, trainNam)
-                    #remove train from loc["trains"] list
-                    self.locMgmtObj.rmTrnFrmLoc(loc, trainNam)
-                    #remove train rectangle from action list above loc
-                    self.dispObj.clearActionTrnRecs(loc, trainNam)
+                self.locMgmtObj.cleanTrnFromLoc(currentLoc, trainNam)
                 pass
             case "building"|"built"|"init":
                 #procssing done in locProc

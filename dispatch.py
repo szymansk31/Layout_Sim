@@ -52,7 +52,22 @@ class schedProc():
         # (may not be complete depending on detail in sched file
         # and starting trains file)
         trainDB.trains[trainNam] = tmpTrain
-        
+      
+    def addTrn2Sched(self, loc, finalLoc):
+        trainDB.numTrains +=1
+        newTrainNum = trainDB.numTrains
+        newTrainNam = "train" + str(newTrainNum)
+        dspCh.sched.update ({
+          newTrainNam: {
+            "origLoc": loc,
+            "currentLoc": loc,
+            "finalLoc": finalLoc,
+            "status":"init",
+            "startTime": mVars.time
+          }
+        })
+        print("added train to sched:", newTrainNam, "params:", dspCh.sched[newTrainNam])
+
     
 #=================================================
 #=================================================

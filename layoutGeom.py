@@ -65,8 +65,8 @@ class routeGeom():
         routeDictOut = {
             "yTrn": yRoute - height*0.25,
             "yTrnCon": westObj["y0"] - 5,
-            "rtLength": lineLen,
-            "distPerTime": lineLen/routeDict["transTime"]
+            "rtLength": round(lineLen, 2),
+            "distPerTime": round(lineLen/routeDict["transTime"], 2)
                     }
         return routeDictOut
 

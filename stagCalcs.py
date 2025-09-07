@@ -53,5 +53,6 @@ class stCalcs():
                     if trainNam not in trainDB.ydTrains["wait4Clrnce"]:
                         trainDB.ydTrains["wait4Clrnce"].append(trainNam)
                 case "terminate":
+                    self.dispObj.clearRouteTrnRecs(trainNam)
                     if trainNam not in trainDB.ydTrains["terminated"]:
                         trainDB.ydTrains["terminated"].append(trainNam)

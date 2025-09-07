@@ -101,7 +101,7 @@ class locProc():
                     startTime = trainDB.trains[trainNam]["startTime"]
                     if (mVars.time >= startTime):
                         locs.locDat[loc]["trnCnts"]["started"] += 1
-                        #locs.locDat[loc]["bldTrnDepTimes"].pop(0)
+                        #locs.locDat[loc]["bldTrnTimes"].pop(0)
                         nextLoc = trainDB.trains[trainNam]["nextLoc"]
                         #dispItemsObj.clearTrnRecs(trainNam)
                         print(trainNam, ": with start time ", startTime,

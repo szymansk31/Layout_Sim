@@ -10,7 +10,7 @@
     "numAdjLocs": 1,
     "adjLocNames": {"E":"Kiski"},
     "trains": [],
-    "bldTrnDepTimes": [5, 10, 25, 30],
+    "bldTrnTimes": [5, 10, 25, 30],
     "stops": {
         "yard1": {"action": "dropPickup"},
         "swArea1": {"action": "terminate"}

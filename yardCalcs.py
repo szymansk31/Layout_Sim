@@ -25,6 +25,9 @@ class ydCalcs():
         self.classObj = classCars()
         from display import dispItems
         self.dispObj = dispItems()
+        from dispatch import schedProc
+        self.schedProcObj = schedProc()
+        self.newTrnDest = ""
         
 
     class Action_e(Enum):
@@ -34,7 +37,7 @@ class ydCalcs():
         SERVINDUS    = 3
         MISC         = 4
 
-    def setWeights(self):
+    def setWeights(self, loc):
         action_e = ydCalcs.Action_e
         totTrains = 0
         numTrains = {}
@@ -44,12 +47,11 @@ class ydCalcs():
             numTrains.update(
                 {action: len(trainDB.ydTrains[action])
                 })
-        """
-        Decision about building a train now determined by schedule
+        
         # if a track has enough cars to build a train, then that increases weight of buildTrain
-        numCars, maxCarTrk = self.ready2Build(loc)
+        numCars, self.newTrnDest = self.ready2Build(loc)
         if (numCars>0) and (numTrains["buildTrain"] == 0): numTrains["buildTrain"] = 1
-        """
+        
         totTrains = sum(numTrains[action] for action in numTrains)
         idx = 0
         print("numTrains list, totTrains: ", numTrains, ",", totTrains)
@@ -74,7 +76,7 @@ class ydCalcs():
         locs.locDat[loc]["cars2Class"] = cars2Class
 
     def yardMaster(self, loc):
-        totTrains = self.setWeights()
+        totTrains = self.setWeights(loc)
         if totTrains == 0: 
             print("\nLocation: ", loc, " no trains to classify")
             return
@@ -122,12 +124,7 @@ class ydCalcs():
                 # remove train name from trainDB.ydTrains and locs.locData
                 locs.locDat[loc]["trnCnts"]["brkDown"] += 1
                 self.locMgmtObj.rmTrnFrmActions("brkDnTrn", loc, ydTrainNam)
-                #remove train from loc["trkPrms"]["arrTrk"]
-                arrTrk = self.locQmgmtObj.readArrTrk(loc, ydTrainNam)
-                self.locQmgmtObj.remTrnArrTrk(loc, arrTrk, ydTrainNam)
-                #remove train from loc["trains"] list and
-                #arrival Q
-                self.locMgmtObjObj.rmTrnFrmLoc(loc, ydTrainNam)
+                self.locMgmtObj.cleanTrnFromLoc(loc, ydTrainNam)
                 trainDB.trains.pop(ydTrainNam)
 
         if mVars.prms["dbgYdProc"]: 
@@ -138,11 +135,17 @@ class ydCalcs():
 
         
     def buildTrain(self, loc):   
-        ydTrainNam = trainDB.ydTrains["buildTrain"][0]
         # yard has no train undergoing build
+        if len(trainDB.ydTrains["buildTrain"]) == 0:
+            if mVars.time >= locs.locDat[loc]["bldTrnTimes"][0]:
+                locs.locDat[loc]["bldTrnTimes"].pop(0)
+                self.schedProcObj.addTrn2Sched(loc, self.newTrnDest)
+                return
+        ydTrainNam = trainDB.ydTrains["buildTrain"][0]
         if trainDB.trains[ydTrainNam]["status"] == "init":
             #trainInitObj.fillTrnDicts(loc, ydTrainNam)
             trainDB.trains[ydTrainNam]["status"] = "building"
+            return
         else:
             # yard has a train already building; add cars to it
             # single train is allowed to build in a yard
@@ -150,13 +153,13 @@ class ydCalcs():
             availCars, trainDest = self.classObj.track2Train(loc, "", ydTrainNam)
             trainStem = trainDB.trains[ydTrainNam]
 
+            self.dispObj.dispActionDat(loc, "buildTrain", ydTrainNam)
             if trainStem["numCars"] >= mVars.prms["trainSize"]*0.7:
                 # train has reached max size
                 trainStem["status"] = "built"
                 trainStem["estDeptTime"] = mVars.time
                 locs.locDat[loc]["trnCnts"]["built"] += 1
                 self.locMgmtObj.rmTrnFrmActions("buildTrain", loc, ydTrainNam)
-            self.dispObj.dispActionDat(loc, "buildTrain", ydTrainNam)
 
     def ready2Build(self, loc):
         import copy
@@ -226,7 +229,8 @@ class ydCalcs():
                 
                 self.locProcObj.startTrain(loc, ydTrainNam)
                 self.locMgmtObj.cleanupSwAction(loc, ydTrainNam, "swTrain")
-        
+                self.locMgmtObj.cleanTrnFromLoc(loc, ydTrainNam)
+       
         pass
     def servIndus(self, loc):
         pass
