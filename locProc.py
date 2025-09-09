@@ -41,7 +41,7 @@ class locProc():
 
         if mVars.prms["dbgYdProc"]: 
             print("\nentering locCalcs: location: ", loc)
-            self.locMgmtObj.printLocData(loc)
+            #self.locMgmtObj.printLocData(loc)
 
         locStem = locs.locDat[loc]
         self.locBaseObj.countCars(loc)

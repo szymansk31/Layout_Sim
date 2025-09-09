@@ -98,7 +98,7 @@ class routeMgmt():
                 self.calcTrnArrTime("trnArrTimes:loc ", routeNam, trainNam)
 
     def calcTrnArrTime(self, callFunc, loc, trainNam):
-        print("calcTrnArrTime; called from: ", callFunc, " loc: ", loc, " , trainNam: ", trainNam)
+        #print("calcTrnArrTime; called from: ", callFunc, " loc: ", loc, " , trainNam: ", trainNam)
         trainStem = trainDB.trains[trainNam]
         if "route" in loc:
             routeStem = routeCls.routes[loc]

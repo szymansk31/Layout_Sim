@@ -17,6 +17,8 @@ class mainMethods():
     def __init__(self):
         from locProc import locProc
         self.locProcObj = locProc()
+        from locBase import locBase, Qmgmt, locMgmt
+        self.locMgmtObj = locMgmt() 
         from trainProc import trnProc
         self.trnProcObj = trnProc()
         from routeProc import rtProc, routeMgmt, rtCaps
@@ -35,6 +37,8 @@ class mainMethods():
             displayObj.updateTimer()
             print("\nmVars.time: ", mVars.time, ", savIDX: ", stVarSaves.savIDX)
             self.dispchObj.mainDispatch()
+            for loc in locs.locDat:
+                self.locMgmtObj.printLocData(loc)
             if mVars.wait:
                 print("waiting....")
                 self.step_button.wait_variable(self.var)

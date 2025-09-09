@@ -189,9 +189,10 @@ class Qmgmt():
 
     def readArrTrk(self, loc, trainNam):
         QStem = locs.locDat[loc]["Qs"]["arrivals"]
-        index = [idx for idx, d in enumerate(QStem) if trainNam in d.items()]
+        QDict = [d for d in QStem if trainNam in d]
+        print("readArrTrk; loc:", loc, ", QDict:", QDict)
         try:
-            arrTrk = QStem[index[0]][trainNam]["arrTrk"]        
+            arrTrk = QDict[0][trainNam]["arrTrk"]        
             return arrTrk
         except:
             return ""
@@ -352,7 +353,7 @@ class locMgmt():
         for key, value in locStem.items():
             subDict[key] = value
             if key == "cars2Class": break
-        print(loc, subDict)
+        print("\nLoc printout:", loc, subDict)
         print("arrival Q:", locStem["Qs"])
         print("trains:", locStem["trains"])
         print("routes:", locStem["routes"])
