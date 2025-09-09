@@ -321,6 +321,8 @@ class locMgmt():
             self.rmTrnFrmLoc(loc, trainNam)
             #remove train rectangle from action list above loc
             self.dispObj.clearActionTrnRecs(loc, trainNam)
+            #re-display action rects after train removed from loc
+            self.dispObj.dispTrnActnRecs(loc)
     
 
     def cleanupSwAction(self, loc, trainNam, action):

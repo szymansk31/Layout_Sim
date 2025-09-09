@@ -140,7 +140,6 @@ class locProc():
         trainStem["estArrTime"] = mVars.time + routeCls.routes[routeNam]["transTime"]
         self.locMgmtObj.placeTrain(routeNam, trainStem, trainNam)
         self.locQmgmtObj.remTrnLocQ(loc, trainNam)
-        #self.rtCapsObj.addTrn2RouteQ(routeNam, trainNam)
         trainStem["firstDispTrn"] = 1
         
         #print("trainStem: ", trainStem, ", original dict: ", trainDB.trains[trainNam])

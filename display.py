@@ -124,7 +124,7 @@ class dispItems():
         else:
             gui.C.itemconfigure(locStem["locObjID"], text=text, font=("Arial", 8))
 
-        self.dispTrnActnRecs(locStem, loc, ydTrains, numTrns)
+        self.dispTrnActnRecs(loc)
 
     def clearActionDat(self, loc):
         text = ''
@@ -164,33 +164,34 @@ class dispItems():
         gui.C.delete(trainStem["trnRectTag"])
         gui.C.delete(trainStem["trnNumTag"])
  
-    def dispTrnActnRecs(self, locStem, loc, ydtrains, numTrns):        
-        actionIter = iter(trainDB.ydTrains)
-        action1 = next(actionIter)
-        action2 = next(actionIter)
+    def dispTrnActnRecs(self, loc):   
+        locStem = locs.locDat[loc]  
+        ydTrains = trainDB.ydTrains   
+        # first two actions in yardTrains will be displayed, not all of them
+        labels = list(ydTrains.keys())
 
         y0 = gui.guiDict[loc]["y0"]
+        yOffsets = [55, 40, 25, 10]
+        yPosns = [y0-yOffsets[idx] for idx, val in enumerate(yOffsets)]
         dispList = {}
-        dispList = {
-            "actions": {
-            action1: {"trains": [], 
-                "y": y0 - 55,},
-            action2: {"trains": [],
-                "y": y0 - 40}}
-            }
+        idx = 0
+        while idx < 1:
+            label = labels[idx]
+            dispList[label] = dict(trains = [], y = yPosns[idx])
+            for trainNam in ydTrains[label]:
+                dispList[label]["trains"].append(trainNam)
+            idx +=1
         
-        for action in dispList["actions"]:
-            for train in ydtrains[action]:
-                dispList["actions"][action]["trains"].append(train)
-
-        dispList["actions"]["wait4Clrnce"] = dict(trains= [], y= y0 - 25)
-        dispList["actions"]["built"] = dict(trains = [], y = y0 - 10)
-        tmp = locs.locDat[loc]["trains"]
-        for train in tmp:
-            if trainDB.trains[train]["status"] == "wait4Clrnce":
-                dispList["actions"]["wait4Clrnce"]["trains"].append(train)
-            if trainDB.trains[train]["status"] == "built":
-                dispList["actions"]["built"]["trains"].append(train)
+        # these two display items are not loc actions, but train states
+        dispList["wait4Clrnce"] = dict(trains= [], y = yPosns[2])
+        dispList["built"] = dict(trains = [], y = yPosns[3])
+        numTrns = 0
+        for trainNam in locStem["trains"]:
+            numTrns +=1
+            if trainDB.trains[trainNam]["status"] == "wait4Clrnce":
+                dispList["wait4Clrnce"]["trains"].append(trainNam)
+            if trainDB.trains[trainNam]["status"] == "built":
+                dispList["built"]["trains"].append(trainNam)
         print("dispList: ", dispList)
         trainStem = trainDB.trains
         trnLen = gui.guiDict["trainData"]["length"]
@@ -201,14 +202,14 @@ class dispItems():
 
         gui.C.delete(locStem["locTrnRectID"])
         gui.C.delete(locStem["locTrnNumID"])
-        for action in dispList["actions"]:
+        for label in dispList:
             idx = 0
-            actionStem = dispList["actions"][action]
-            y = actionStem["y"]
+            labelStem = dispList[label]
+            y = labelStem["y"]
             if locStem["firstDispTrnTxt"]:
-                gui.C.create_text(xtrn-90, y+6, text=action, 
+                gui.C.create_text(xtrn-90, y+6, text=label, 
                         font=("Arial", 8))
-            for train in actionStem["trains"]:
+            for train in labelStem["trains"]:
                 trainNum = train[5:]
                 #gui.C.delete(trainStem[train]["trnRectTag"])
                 #gui.C.delete(trainStem[train]["trnNumTag"])

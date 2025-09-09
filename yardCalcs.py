@@ -137,10 +137,12 @@ class ydCalcs():
     def buildTrain(self, loc):   
         # yard has no train undergoing build
         if len(trainDB.ydTrains["buildTrain"]) == 0:
+            # if no more bldTrnTimes defined, then no more auto builds
+            if len(locs.locDat[loc]["bldTrnTimes"]) == 0: return
             if mVars.time >= locs.locDat[loc]["bldTrnTimes"][0]:
                 locs.locDat[loc]["bldTrnTimes"].pop(0)
                 self.schedProcObj.addTrn2Sched(loc, self.newTrnDest)
-                return
+            return
         ydTrainNam = trainDB.ydTrains["buildTrain"][0]
         if trainDB.trains[ydTrainNam]["status"] == "init":
             #trainInitObj.fillTrnDicts(loc, ydTrainNam)
@@ -229,7 +231,6 @@ class ydCalcs():
                 
                 self.locProcObj.startTrain(loc, ydTrainNam)
                 self.locMgmtObj.cleanupSwAction(loc, ydTrainNam, "swTrain")
-                self.locMgmtObj.cleanTrnFromLoc(loc, ydTrainNam)
        
         pass
     def servIndus(self, loc):

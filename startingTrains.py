@@ -24,10 +24,7 @@ class trainFromFile():
         
     def readTrain(self):
         trainInitObj = trainInit()
-        coordObj = transForms()
-        locBaseObj = locBase()
         locProcObj = locProc()
-        rtCapsObj = rtCaps()
         trainDict = files.readFile("startingTrainFile")
         self.consistFromFile(files, "startingConsistFile")
         trainDB.consists.update(self.consist)

@@ -64,12 +64,6 @@ class classCars():
                 nCarsDest = sum(trainDB.consists[conNam]["stops"][stop].values())
                 nCarsStop.update({stop: nCarsDest})
         print("nCarsStop: ", nCarsStop)
-        #nCarsStop = [{stop, sum()}\
-        #    for stop in stops if stop != loc]
-        numCars = trainDB.trains[trainNam]["numCars"]
-        sumCars = sum(nCarsStop.values())
-        print("any size difference?: numCars vs sum(nCarStop)", numCars, sumCars)
-        nCarMax = mVars.prms["trainSize"]*1.2 - sumCars
         #nCarsStop = [{stop, nCarMax-nCarsStop[stop]} for stop in nCarsStop]
         destFewestCars = min(nCarsStop, key=nCarsStop.get)
         if locs.locDat[loc]["destTrkTots"][destFewestCars] > 0:
