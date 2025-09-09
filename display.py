@@ -80,7 +80,7 @@ class dispItems():
         type = locs.locDat[loc]["type"]
         locStem = locs.locDat[loc]
         trainStem = trainDB.trains
-        ydTrains = trainDB.ydTrains
+        ydTrains = trainDB.ydTrains[loc]
         numTrns = 0
         x = (gui.guiDict[loc]["x0"] + gui.guiDict[loc]["x1"])*0.5
         y = gui.guiDict[loc]["y0"] + 300
@@ -166,7 +166,7 @@ class dispItems():
  
     def dispTrnActnRecs(self, loc):   
         locStem = locs.locDat[loc]  
-        ydTrains = trainDB.ydTrains   
+        ydTrains = trainDB.ydTrains[loc]   
         # first two actions in yardTrains will be displayed, not all of them
         labels = list(ydTrains.keys())
 
@@ -175,7 +175,7 @@ class dispItems():
         yPosns = [y0-yOffsets[idx] for idx, val in enumerate(yOffsets)]
         dispList = {}
         idx = 0
-        while idx < 1:
+        while idx <= 1:
             label = labels[idx]
             dispList[label] = dict(trains = [], y = yPosns[idx])
             for trainNam in ydTrains[label]:

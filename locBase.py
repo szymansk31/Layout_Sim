@@ -189,7 +189,7 @@ class Qmgmt():
 
     def readArrTrk(self, loc, trainNam):
         QStem = locs.locDat[loc]["Qs"]["arrivals"]
-        index = [idx for idx, d in enumerate(QStem) if trainNam in d]
+        index = [idx for idx, d in enumerate(QStem) if trainNam in d.items()]
         try:
             arrTrk = QStem[index[0]][trainNam]["arrTrk"]        
             return arrTrk
@@ -210,6 +210,7 @@ class Qmgmt():
             locs.locDat[loc]["trkCounts"]["openArrTrks"] +=1
             return
         except:
+            print("cannot remove train ", trainNam, " from arr track: ", track, "in loc ", loc)
             return
     
                                 
@@ -228,13 +229,13 @@ class locMgmt():
     def rmTrnFrmActions(self, action, loc, trainNam):
         dispObj = dispItems()
         # remove train from ydTrains and location
-        print("rmTrnFrmActions: trainDB.ydTrains: ", trainDB.ydTrains)
+        print("rmTrnFrmActions: trainDB.ydTrains[loc]: ", trainDB.ydTrains[loc])
         try:
-            index = trainDB.ydTrains[action].index(trainNam)
-            trainDB.ydTrains[action].pop(index)
+            index = trainDB.ydTrains[loc][action].index(trainNam)
+            trainDB.ydTrains[loc][action].pop(index)
         except:
             pass
-        if dbgLocal: print("after removal: trainDB.ydTrains: ", trainDB.ydTrains)
+        if dbgLocal: print("after removal: trainDB.ydTrains[loc]: ", trainDB.ydTrains[loc])
 
         # clear action data from display
         dispObj.clearActionDat(loc)

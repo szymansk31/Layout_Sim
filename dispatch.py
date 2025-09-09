@@ -99,7 +99,7 @@ class clearTrnCalcs():
         QDict = [QDict for idx, QDict in enumerate(QStem) if trainNam in QDict]
         rtClear = self.rtCapsObj.checkRtSlots(trainNam)
         if QDict[0][trainNam]["arrTrk"] != "": arrTrkAssnd = True
-        print("clearTrn: rtClear = ", rtClear, " , arrTrkAssnd = ", arrTrkAssnd)
+        print("clearTrn; train:", trainNam, ", loc:", loc, ", rtClear = ", rtClear, ", arrTrkAssnd = ", arrTrkAssnd)
         return rtClear and arrTrkAssnd
         
 # trains already on routes get first priority to arrival slots

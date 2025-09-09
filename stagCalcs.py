@@ -29,7 +29,7 @@ class stCalcs():
 
     def staging(self, loc):
         
-        for trainNam in trainDB.ydTrains["wait4Clrnce"]:
+        for trainNam in trainDB.ydTrains[loc]["wait4Clrnce"]:
             if mVars.time == trainDB.trains[trainNam]["startTime"]:
                 nextLoc = trainDB.trains[trainNam]["nextLoc"]
 
@@ -42,7 +42,7 @@ class stCalcs():
         self.dispObj.dispTrnLocDat(loc)
                 
     def stAnalyzeTrains(self, loc):
-        trainDB.ydTrains = {"wait4Clrnce": [], "terminated": [], "turn": []}
+        trainDB.ydTrains[loc] = {"wait4Clrnce": [], "terminated": [], "turn": []}
 
         # train status leads to actions by the yard crew or
         # the train crew.  Train actions are the same name as
@@ -50,9 +50,9 @@ class stCalcs():
         for trainNam in locs.locDat[loc]["trains"]:
             match trainDB.trains[trainNam]["status"]:
                 case "wait4Clrnce":
-                    if trainNam not in trainDB.ydTrains["wait4Clrnce"]:
-                        trainDB.ydTrains["wait4Clrnce"].append(trainNam)
+                    if trainNam not in trainDB.ydTrains[loc]["wait4Clrnce"]:
+                        trainDB.ydTrains[loc]["wait4Clrnce"].append(trainNam)
                 case "terminate":
                     self.dispObj.clearRouteTrnRecs(trainNam)
-                    if trainNam not in trainDB.ydTrains["terminated"]:
-                        trainDB.ydTrains["terminated"].append(trainNam)
+                    if trainNam not in trainDB.ydTrains[loc]["terminated"]:
+                        trainDB.ydTrains[loc]["terminated"].append(trainNam)

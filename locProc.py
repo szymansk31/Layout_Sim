@@ -27,9 +27,9 @@ class locProc():
       
     #classmethod:
     
-    def printydTrains(self):
-        if mVars.prms["dbgYdProc"]: print("trains analyzed: trainDB.ydTrains: ",
-                    trainDB.ydTrains)
+    def printydTrains(self, loc):
+        if mVars.prms["dbgYdProc"]: print("trains analyzed: trainDB.ydTrains[loc]: ",
+                    trainDB.ydTrains[loc])
         
     def locCalcs(self, loc):
         from yardCalcs import ydCalcs
@@ -49,22 +49,22 @@ class locProc():
         match locStem["type"]:
             case "yard":
                 self.analyzeTrains(loc)
-                self.printydTrains()
+                self.printydTrains(loc)
                 self.ydCalcObj.yardMaster(loc)
             case "swArea":
                 self.swAreaObj.swAnalyzeTrains(loc)
-                self.printydTrains()
+                self.printydTrains(loc)
                 self.swAreaObj.switchCalcs(loc)
             case "staging":
                 self.stagCalcObj.stAnalyzeTrains(loc)
-                self.printydTrains()
+                self.printydTrains(loc)
                 self.stagCalcObj.staging(loc)
 
                     
         #dispObj.dispTrnLocDat(loc)
             
     def analyzeTrains(self, loc):
-        trainDB.ydTrains = {"brkDnTrn": [], "buildTrain": [], "swTrain": [], "rdCrwSw": [], "continue": []}
+        trainDB.ydTrains[loc] = {"brkDnTrn": [], "buildTrain": [], "swTrain": [], "rdCrwSw": [], "continue": []}
 
         # train status leads to actions by the yard crew or
         # the train crew.  Train actions are the same name as
@@ -72,23 +72,23 @@ class locProc():
         for trainNam in locs.locDat[loc]["trains"]:
             match trainDB.trains[trainNam]["status"]:
                 case "terminate":
-                    if trainNam not in trainDB.ydTrains["brkDnTrn"]:
-                        trainDB.ydTrains["brkDnTrn"].append(trainNam)
+                    if trainNam not in trainDB.ydTrains[loc]["brkDnTrn"]:
+                        trainDB.ydTrains[loc]["brkDnTrn"].append(trainNam)
                 case "dropPickup":
                     # in a yard this action is often undertaken by 
                     # the yard crew; hence a yard action
-                    if trainNam not in trainDB.ydTrains["swTrain"]:
-                        trainDB.ydTrains["swTrain"].append(trainNam)
+                    if trainNam not in trainDB.ydTrains[loc]["swTrain"]:
+                        trainDB.ydTrains[loc]["swTrain"].append(trainNam)
                 case "building"|"init":
                     # for yards, not switch areas
-                    if trainNam not in trainDB.ydTrains["buildTrain"]:
-                        trainDB.ydTrains["buildTrain"].append(trainNam)
+                    if trainNam not in trainDB.ydTrains[loc]["buildTrain"]:
+                        trainDB.ydTrains[loc]["buildTrain"].append(trainNam)
                 case "rdCrwSw":
                     # for switch areas no yards
                     # code is in locProc but actions are undertaken by
                     # the virtual train crew
-                    if trainNam not in trainDB.ydTrains["rdCrwSw"]:
-                        trainDB.ydTrains["rdCrwSw"].append(trainNam)
+                    if trainNam not in trainDB.ydTrains[loc]["rdCrwSw"]:
+                        trainDB.ydTrains[loc]["rdCrwSw"].append(trainNam)
                     pass
                 case "continue":
                     # no action for yard.  May have a call to 
@@ -139,7 +139,6 @@ class locProc():
         routeNam = trainStem["rtToEnter"]
         trainStem["estArrTime"] = mVars.time + routeCls.routes[routeNam]["transTime"]
         self.locMgmtObj.placeTrain(routeNam, trainStem, trainNam)
-        self.locQmgmtObj.remTrnLocQ(loc, trainNam)
         trainStem["firstDispTrn"] = 1
         
         #print("trainStem: ", trainStem, ", original dict: ", trainDB.trains[trainNam])

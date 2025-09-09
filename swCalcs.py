@@ -43,9 +43,9 @@ class swCalcs():
         numTrains = {}
         weightPortion = 1 - self.weights[action_e.SERVINDUS.value] - self.weights[action_e.MISC.value]
 
-        for action in trainDB.ydTrains:
+        for action in trainDB.ydTrains[loc]:
             numTrains.update(
-                {action: len(trainDB.ydTrains[action])
+                {action: len(trainDB.ydTrains[loc][action])
                 })
         # if a track has enough cars to build a train, then that increases weight of buildTrain
         if self.ready2Build(loc) and (numTrains["buildTrain"] == 0): numTrains["buildTrain"] +=1
@@ -53,13 +53,13 @@ class swCalcs():
         idx = 0
         print("numTrains list, totTrains: ", numTrains, ",", totTrains)
         if totTrains != 0:
-            for action in trainDB.ydTrains:
+            for action in trainDB.ydTrains[loc]:
                 self.weights[idx] = numTrains[action]/totTrains*weightPortion
                 idx +=1
         if mVars.prms["dbgYdProc"]: print("action weights are: ", self.weights)
         
     def swAnalyzeTrains(self, loc):
-        trainDB.ydTrains = {"dropPickup": [], "rdCrwSw": [], "wait4Clrnce": [], "turn": []}
+        trainDB.ydTrains[loc] = {"dropPickup": [], "rdCrwSw": [], "wait4Clrnce": [], "turn": []}
 
         # train status leads to actions by the yard crew or
         # the train crew.  Train actions are the same name as
@@ -67,20 +67,20 @@ class swCalcs():
         for trainNam in locs.locDat[loc]["trains"]:
             match trainDB.trains[trainNam]["status"]:
                 case "dropPickup":
-                    if trainNam not in trainDB.ydTrains["dropPickup"]:
-                        trainDB.ydTrains["dropPickup"].append(trainNam)
+                    if trainNam not in trainDB.ydTrains[loc]["dropPickup"]:
+                        trainDB.ydTrains[loc]["dropPickup"].append(trainNam)
                 case "rdCrwSw":
-                    if trainNam not in trainDB.ydTrains["rdCrwSw"]:
-                        trainDB.ydTrains["rdCrwSw"].append(trainNam)
+                    if trainNam not in trainDB.ydTrains[loc]["rdCrwSw"]:
+                        trainDB.ydTrains[loc]["rdCrwSw"].append(trainNam)
                 case "wait4Clrnce":
-                    if trainNam not in trainDB.ydTrains["wait4Clrnce"]:
-                        trainDB.ydTrains["wait4Clrnce"].append(trainNam)
+                    if trainNam not in trainDB.ydTrains[loc]["wait4Clrnce"]:
+                        trainDB.ydTrains[loc]["wait4Clrnce"].append(trainNam)
                 case "continue":
                     # May have a call to 
                     # dispatcher eventually, so process "continue" here 
                     # as no action needed by train crew (modulo dispatch call)
-                    if trainNam not in trainDB.ydTrains["continue"]:
-                        trainDB.ydTrains["continue"].append(trainNam)
+                    if trainNam not in trainDB.ydTrains[loc]["continue"]:
+                        trainDB.ydTrains[loc]["continue"].append(trainNam)
                     # train never entered ydTrains, so no need to remove
                     self.locProcObj.startTrain(loc, trainNam)
         
@@ -92,8 +92,8 @@ class swCalcs():
         for action in ["dropPickup", "rdCrwSw"]:
             # allow up to two trains working at once
             
-            if len(trainDB.ydTrains[action]) != 0:
-                train = ''.join(trainDB.ydTrains[action])
+            if len(trainDB.ydTrains[loc][action]) != 0:
+                train = ''.join(trainDB.ydTrains[loc][action])
                 match action:
                     case "dropPickup":
                         self.dropPickup(loc, train)
@@ -111,7 +111,7 @@ class swCalcs():
             #availCars = self.classObj.track2Train(loc, trainNam)
             #if availCars == 0:
                 # train no longer has cars
-                # remove train name from trainDB.ydTrains and locs.locData
+                # remove train name from trainDB.ydTrains[loc] and locs.locData
                 self.locProcObj.startTrain(loc, trainNam)
                 self.locMgmtObj.cleanupSwAction(loc, trainNam, "dropPickup")
 
@@ -119,14 +119,14 @@ class swCalcs():
     def rdCrwSw(self, loc, trainNam):
         # prepare for multiple trains in a swArea
         # first see if a train is already switching
-        if len(trainDB.ydTrains["rdCrwSw"]) == 0: return
+        if len(trainDB.ydTrains[loc]["rdCrwSw"]) == 0: return
         
         
         locActionStem = locs.locDat[loc]["trn4Action"]
         index = [i for i, d in enumerate(locActionStem) if "rdCrwSw" in d]
         if len(index) == 0:
             # no trains are undergoing swTrain
-            ydTrainNam = random.choice(trainDB.ydTrains.get("rdCrwSw"))
+            ydTrainNam = random.choice(trainDB.ydTrains[loc].get("rdCrwSw"))
             locActionStem.append({"rdCrwSw": ydTrainNam})
         else:
             ydTrainNam = locActionStem[index[0]]["rdCrwSw"]
