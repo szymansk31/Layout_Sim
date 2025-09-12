@@ -117,44 +117,30 @@ class Qmgmt():
                 estArrTime = trainDB.trains[trainNam]["estArrTime"]
                 loc = trainDB.trains[trainNam]["nextLoc"]
                 #if estArrTime - mVars.time <= mVars.prms["arrTimDelta"]:
-                self.addTrn2LocQ(loc, "arrivals", trainNam, "")
+                self.addTrn2LocQ(loc, trainNam, "")
                 
-    def sortLocQ(self, QNam, sortVar):
+    def sortLocQ(self, sortVar):
         def getTimVal(subDict):
             for key, value in subDict.items():
                 return value[sortVar]
         for loc in locs.locDat:
-            tmpList = locs.locDat[loc]["Qs"][QNam]
-            locs.locDat[loc]["Qs"][QNam] = sorted(tmpList, key=getTimVal)
-            print("loc: ", loc, " , Q: ", QNam, locs.locDat[loc]["Qs"][QNam])   
+            tmpList = locs.locDat[loc]["Qs"]["arrivals"]
+            locs.locDat[loc]["Qs"]["arrivals"] = sorted(tmpList, key=getTimVal)
+            print("loc: ", loc, " , Q: ", "arrivals", locs.locDat[loc]["Qs"]["arrivals"])   
             
     # track is an optional input if known           
-    def addTrn2LocQ(self, loc, QNam, trainNam, track):
-        if any(trainNam in d for d in locs.locDat[loc]["Qs"][QNam]): return
+    def addTrn2LocQ(self, loc, trainNam, track):
+        if any(trainNam in d for d in locs.locDat[loc]["Qs"]["arrivals"]): return
         conNam = trainDB.getConNam(trainNam)
         trainStem = trainDB.trains[trainNam]
         
-        match QNam:
-            case "arrivals":
-                nCars4ThisLoc = sum(trainDB.consists[conNam]["stops"][loc].values())
-                locs.locDat[loc]["Qs"]["arrivals"].append({ \
-                    trainNam: {"estArrTime": trainStem["estArrTime"],
-                    "action": trainStem["stops"][loc]["action"],
-                    "arrTrk": track,
-                    "nCars4ThisLoc": nCars4ThisLoc,
-                    "estDeptTime": trainStem["estDeptTime"]}})
-            case "working":
-                locs.locDat[loc]["Qs"]["working"].append({ \
-                    trainNam: {"estDeptTime": trainStem["estDeptTime"],
-                    "status": trainStem["status"],
-                    "rtToEnter": trainStem["rtToEnter"]}})
-            case "builds":
-                numCars2Add = mVars.prms["trainSize"] - trainStem["numCars"]
-                locs.locDat[loc]["Qs"]["builds"].append({ \
-                    trainNam: {"numCars": trainStem["numCars"],
-                    "numCars2Add": numCars2Add,
-                    "status": trainStem["status"],
-                    "rtToEnter": trainStem["rtToEnter"]}})
+        nCars4ThisLoc = sum(trainDB.consists[conNam]["stops"][loc].values())
+        locs.locDat[loc]["Qs"]["arrivals"].append({ \
+            trainNam: {"estArrTime": trainStem["estArrTime"],
+            "action": trainStem["stops"][loc]["action"],
+            "arrTrk": track,
+            "nCars4ThisLoc": nCars4ThisLoc,
+            "estDeptTime": trainStem["estDeptTime"]}})
 
     def remTrnLocQ(self, loc, trainNam):
         QStem = locs.locDat[loc]["Qs"]["arrivals"]
@@ -169,23 +155,21 @@ class Qmgmt():
             QStem = locs.locDat[loc]["Qs"]["arrivals"]
             for QDict in QStem:
                 trainNam = next(iter(QDict))
-                self.updateLocQ(loc, "arrivals", trainNam)
+                self.updateLocQ(loc, trainNam)
 
-    def updateLocQ(self, loc, QNam, trainNam):
-        if not any(trainNam in d for d in locs.locDat[loc]["Qs"][QNam]): return
+    def updateLocQ(self, loc, trainNam):
+        if not any(trainNam in d for d in locs.locDat[loc]["Qs"]["arrivals"]): return
         trainStem = trainDB.trains[trainNam]
         
-        match QNam:
-            case "arrivals":
-                QStem = locs.locDat[loc]["Qs"]["arrivals"]
-                #nCars4ThisLoc = sum(trainDB.consists[conNam]["stops"][loc].values())
-                index = [idx for idx, d in enumerate(QStem) if trainNam in d]
-                locs.locDat[loc]["Qs"]["arrivals"][index[0]][trainNam].update({ \
-                    "estArrTime": trainStem["estArrTime"],
-                    #"action": trainStem["stops"][loc]["action"],
-                    #"arrTrk": trainStem["arrTrk"],
-                    #"nCars4ThisLoc": nCars4ThisLoc,
-                    "estDeptTime": trainStem["estDeptTime"]})
+        QStem = locs.locDat[loc]["Qs"]["arrivals"]
+        #nCars4ThisLoc = sum(trainDB.consists[conNam]["stops"][loc].values())
+        index = [idx for idx, d in enumerate(QStem) if trainNam in d]
+        locs.locDat[loc]["Qs"]["arrivals"][index[0]][trainNam].update({ \
+            "estArrTime": trainStem["estArrTime"],
+            #"action": trainStem["stops"][loc]["action"],
+            #"arrTrk": trainStem["arrTrk"],
+            #"nCars4ThisLoc": nCars4ThisLoc,
+            "estDeptTime": trainStem["estDeptTime"]})
 
     def readArrTrk(self, loc, trainNam):
         QStem = locs.locDat[loc]["Qs"]["arrivals"]
@@ -261,11 +245,11 @@ class locMgmt():
             coordObj.xRoute2xPlot(loc, trainNam)
             self.rtCapsObj.addTrn2RouteQ(loc, trainNam)
             #self.rtMgmtObj.addTrn2Route(loc, trainNam)
-            self.QmgmtObj.addTrn2LocQ(trainStem["nextLoc"], "arrivals", trainNam, "")
+            self.QmgmtObj.addTrn2LocQ(trainStem["nextLoc"], trainNam, "")
             return
         else:
             locs.locDat[loc]["trains"].append(trainNam)
-            self.QmgmtObj.updateLocQ(loc, "arrivals", trainNam)
+            self.QmgmtObj.updateLocQ(loc, trainNam)
             return
 
     def setTrnCoord(self, currLoc, trainNam):

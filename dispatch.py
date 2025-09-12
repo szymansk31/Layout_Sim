@@ -7,7 +7,6 @@ from display import dispItems
 files = readFiles()
 np.set_printoptions(precision=2, suppress=True) 
 
-
 dbgLocal = 1   
 
 #=================================================
@@ -70,7 +69,6 @@ class schedProc():
 
     
 #=================================================
-#=================================================
 class clearTrnCalcs():
     
     def __init__(self):
@@ -89,7 +87,7 @@ class clearTrnCalcs():
         self.QmgmtObj.calcDeptTimes()
         self.QmgmtObj.calcArrivTrns()
         self.QmgmtObj.updateArrvQs()
-        self.QmgmtObj.sortLocQ("arrivals", "estArrTime")
+        self.QmgmtObj.sortLocQ("estArrTime")
         self.assnArrTrks()
         # are 
 

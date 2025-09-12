@@ -1,16 +1,12 @@
-import random
 import numpy as np
 from mainVars import mVars
 from stateVars import locs, trainDB, routeCls
 from display import dispItems
 from dispatch import schedProc, dspCh
-from gui import gui
 from routeProc import routeMgmt, rtCaps
 from locBase import locBase, Qmgmt, locMgmt
-        
 
 np.set_printoptions(precision=2, suppress=True) 
-
 
 dbgLocal = 1     
     
@@ -34,7 +30,7 @@ class locProc():
     def locCalcs(self, loc):
         from yardCalcs import ydCalcs
         from swCalcs import swCalcs
-        from stagCalcs import stCalcs
+        from stagingCalcs import stCalcs
         self.ydCalcObj = ydCalcs()
         self.swAreaObj = swCalcs()
         self.stagCalcObj = stCalcs()
@@ -100,7 +96,7 @@ class locProc():
                 case "built":
                     startTime = trainDB.trains[trainNam]["startTime"]
                     if (mVars.time >= startTime):
-                        locs.locDat[loc]["trnCnts"]["started"] += 1
+                        #locs.locDat[loc]["trnCnts"]["started"] += 1
                         #locs.locDat[loc]["bldTrnTimes"].pop(0)
                         nextLoc = trainDB.trains[trainNam]["nextLoc"]
                         #dispItemsObj.clearTrnRecs(trainNam)
@@ -109,24 +105,6 @@ class locProc():
                               " built and leaving for (nextLoc): ", 
                               nextLoc)
                         self.startTrain(loc, trainNam)
-
-
-    def procWorkingQ(self, loc):
-        locStem = locs.locDat[loc]
-        self.locQmgmtObj.sortLocQ("working", "estDeptTime")
-        for QDict in locStem["Qs"]["working"]:
-            trainNam = next(iter(QDict))
-            estDeptTime = trainDB.trains[trainNam]["estDeptTime"]
-            locArrTime = trainDB.trains[trainNam]["locArrTime"]
-            if (mVars.time >= estDeptTime) or \
-                ((mVars.time - locArrTime) >= mVars.prms["mxTrnDwlTim"]):
-                nextLoc = trainDB.trains[trainNam]["nextLoc"]
-                #dispItemsObj.clearTrnRecs(trainNam)
-                print(trainNam, ": with departure time ", estDeptTime,
-                        " in loc: ", loc, 
-                        "leaving for (nextLoc): ", 
-                        nextLoc)
-                self.startTrain(loc, trainNam)
 
 
     def startTrain(self, loc, trainNam):
