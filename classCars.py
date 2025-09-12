@@ -82,8 +82,8 @@ class classCars():
         match self.type:
             case "yard":
                 if trackNam != None:
-                    #thisTrack = self.locStem["tracks"][trainDest]
-                    thisTrack = self.locStem["tracks"][trackNam]
+                    #thisTrack = self.locStem["trkCarDict"][trainDest]
+                    thisTrack = self.locStem["trkCarDict"][trackNam]
                     #trainDest = trackNam
                     desTrkTots = self.locStem["destTrkTots"]
                 else:
@@ -115,7 +115,7 @@ class classCars():
             
         try:
         #    trainDB.consists[self.consistNum]["stops"][loc] = self.consistStem[trackNam]
-        #    self.locStem["tracks"][trackNam] = thisTrack
+        #    self.locStem["trkCarDict"][trackNam] = thisTrack
             pass
         except:
             pass
@@ -160,7 +160,7 @@ class classCars():
             case "yard":
                 destTrkSel = self.randomTrack(weights)
                 destTrkTots = locs.locDat[loc]["destTrkTots"][destTrkSel]
-                destTrack = locs.locDat[loc]["tracks"][destTrkSel]
+                destTrack = locs.locDat[loc]["trkCarDict"][destTrkSel]
             case "swArea":
                 destTrkTots = locs.locDat[loc]["numOffspot"]
                 destTrack = locs.locDat[loc]["offspot"]

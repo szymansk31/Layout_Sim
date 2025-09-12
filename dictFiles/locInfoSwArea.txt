@@ -5,7 +5,7 @@
     "totCars": 0,
     "cars2Class": 0,
     "time2Class": 0,
-    "tracks": {
+    "trkCarDict": {
         "swArea1"   :{"box": 4, "tank": 2, "rfr": 3, "hop": 8, 
         "gons": 0, "flats": 0},
         "yard2"    :{"box": 3, "tank": 0, "rfr": 1, "hop": 0, 
@@ -97,7 +97,7 @@
     "totCars": 0,
     "cars2Class": 0,
     "time2Class": 0,
-    "tracks": {
+    "trkCarDict": {
         "yard1"    :{"box": 3, "tank": 2, "rfr": 5, "hop": 5, 
         "gons": 1, "flats": 3},
         "staging1"    :{"box": 2, "tank": 3, "rfr": 3, "hop": 0, 
@@ -129,7 +129,7 @@
     "totCars": 0,
     "cars2Class": 0,
     "time2Class": 0,
-    "tracks": {},
+    "trkCarDict": {},
     "numAdjLocs": 1,
     "adjLocNames": {"E":"yard2"},
     "time2AdjLocs": [10, 10],
@@ -154,7 +154,7 @@
     "totCars": 0,
     "cars2Class": 0,
     "time2Class": 0,
-    "tracks": {},
+    "trkCarDict": {},
     "numAdjLocs": 1,
     "adjLocNames": {"W":"swArea1"},
     "time2AdjLocs": [10, 10],

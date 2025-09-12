@@ -40,9 +40,9 @@ class dispItems():
         locStem = locs.locDat[loc]
         match type:
             case "yard":
-                for track in locStem["tracks"]:
+                for track in locStem["trkCarDict"]:
                     text += track + "\n"
-                    text += str(locStem["tracks"][track]) + "\n"
+                    text += str(locStem["trkCarDict"][track]) + "\n"
             case "swArea":
                 indusStem = locStem["industries"]
                 for indus in indusStem:
@@ -88,9 +88,9 @@ class dispItems():
         match type:
             case "yard":
                 text = loc + ": yard tracks: \n"
-                for track in locStem["tracks"]:
+                for track in locStem["trkCarDict"]:
                     text += track + "\n"
-                    text += str(locStem["tracks"][track]) + "\n"
+                    text += str(locStem["trkCarDict"][track]) + "\n"
                 text += "\nTrains worked in yard\n"
             case "swArea":
                 indusStem = locStem["industries"]

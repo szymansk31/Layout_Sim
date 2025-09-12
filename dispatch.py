@@ -169,7 +169,6 @@ class clearTrnCalcs():
         trnStem["estDeptTime"] = trnStem["estArrTime"] + trainDB.avgSwTime
         QStem[idx[0]][trainNam]["arrTrk"] = arrTrk
 
-        locs.locDat[loc]["trkCounts"]["openArrTrks"] -=1
         pass
     
 

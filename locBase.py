@@ -28,7 +28,6 @@ class locBase():
             
         QmgmtObj = Qmgmt()
         QmgmtObj.initLocQs()
-        QmgmtObj.initLocArrDepSlots()
         
     def countCars(self, loc):
         locStem = locs.locDat[loc]
@@ -36,7 +35,7 @@ class locBase():
         locStem["totCars"] = 0
         match type:
             case "yard":
-                trackStem = locStem["tracks"]
+                trackStem = locStem["trkCarDict"]
             case "swArea":
                 trackStem = locStem["industries"]
         if type == "staging":
@@ -81,20 +80,7 @@ class Qmgmt():
             QStem = locs.locDat[loc]["Qs"]
             for Q in QStem:
                 QStem[Q].pop(0)
-    
-    def initLocArrDepSlots(self):
-        for loc in locs.locDat:
-            locStem = locs.locDat[loc]
-            for track in locStem["trkPrms"]:
-                if "arrival" in locStem["trkPrms"][track]["funcs"]:
-                    locStem["trkCounts"]["numArrTrks"] += 1
-                if "depart" in locStem["trkPrms"][track]["funcs"]:
-                    locStem["trkCounts"]["numDepTrks"] += 1
-                if ("arrival" in locStem["trkPrms"][track]["funcs"]) and \
-                (locStem["trkPrms"][track]["status"] == "unAssnd"):
-                    locStem["trkCounts"]["openArrTrks"] += 1
-
-                    
+                        
     def calcDeptTimes(self):
         for loc in locs.locDat:
             locStem = locs.locDat[loc]
@@ -342,7 +328,7 @@ class locMgmt():
         print("trains:", locStem["trains"])
         print("routes:", locStem["routes"])
         try:
-            for trkContents in locStem["tracks"]:
+            for trkContents in locStem["trkCarDict"]:
                 print(trkContents)
         except:
             pass

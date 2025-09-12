@@ -9,7 +9,7 @@
         "arrivals": [{"train": {"estArrTime": 0, 
 		    "action": "", "arrTrk": "", "nCars4ThisLoc": 0, "estDeptTime":0}}]
     },
-    "tracks": {
+    "trkCarDict": {
         "Kiski"   :{"box": 4, "tank": 2, "rfr": 3, "hop": 8, 
         "gons": 0, "flats": 0},
         "OilCity"    :{"box": 3, "tank": 0, "rfr": 1, "hop": 0, 
@@ -37,12 +37,6 @@
         "track8" : {"funcs": ["arrival", "depart"], "train": "", 
             "maxCars": 0, "currCars": 0, "status": "unAssnd"}
    },
-    "trkCounts": {
-        "numArrTrks": 2,
-        "numDepTrks": 3,
-        "openArrTrks": 0,
-        "openDepTrks": 0
-    },
     "numAdjLocs": 1,
     "adjLocNames": {"E":"Kiski"},
     "time2AdjLocs": [10, 10],
@@ -82,7 +76,7 @@
 		    "action": "", "arrTrk": "", "nCars4ThisLoc": 0, "estDeptTime":0}}]
     
     },
-    "tracks": {
+    "trkCarDict": {
         "pgh"    :{"box": 2, "tank": 3, "rfr": 3, "hop": 0, 
         "gons": 1, "flats": 1},
         "OilCity"    :{"box": 3, "tank": 2, "rfr": 5, "hop": 5, 
@@ -106,12 +100,6 @@
         "NStaging" : {"funcs": ["classify", "depart"], "train": "",
             "maxCars": 0, "currCars": 0, "status": "unAssnd"}
    },
-    "trkCounts": {
-        "numArrTrks": 2,
-        "numDepTrks": 3,
-        "openArrTrks": 0,
-        "openDepTrks": 0
-    },
     "numAdjLocs": 2,
     "adjLocNames": {"W":"pgh", "E":"OilCity"},
     "time2AdjLocs": [10, 10],
@@ -152,7 +140,7 @@
 		    "action": "", "arrTrk": "", "nCars4ThisLoc": 0, "estDeptTime":0}}]
     
     },
-    "tracks": {
+    "trkCarDict": {
         "pgh"    :{"box": 2, "tank": 3, "rfr": 3, "hop": 0, 
         "gons": 1, "flats": 1},
         "Kiski"    :{"box": 3, "tank": 2, "rfr": 5, "hop": 5, 
@@ -178,12 +166,6 @@
         "ErieRRStaging" : {"funcs": ["classify", "depart"], "train": "",
             "maxCars": 0, "currCars": 0, "status": "unAssnd"}
    },
-    "trkCounts": {
-        "numArrTrks": 2,
-        "numDepTrks": 3,
-        "openArrTrks": 0,
-        "openDepTrks": 0
-    },
     "numAdjLocs": 3,
     "adjLocNames": {"Wstag":"ErieRRStaging", "W":"Kiski", "E":"NStaging"},
     "time2AdjLocs": [10, 10],
@@ -234,12 +216,6 @@
         "track5" : {"funcs": ["arrival", "depart"], "train": "",
             "maxCars": 0, "currCars": 0, "status": "unAssnd"}
    },
-    "trkCounts": {
-        "numArrTrks": 5,
-        "numDepTrks": 0,
-        "openArrTrks": 0,
-        "openDepTrks": 0
-    },
     "numAdjLocs": 1,
     "adjLocNames": {"W":"OilCity"},
     "time2AdjLocs": [10, 10],
@@ -288,12 +264,6 @@
         "track4" : {"funcs": ["arrival", "depart"], "train": "", 
             "maxCars": 0, "currCars": 0, "status": "unAssnd"}
    },
-    "trkCounts": {
-        "numArrTrks": 2,
-        "numDepTrks": 3,
-        "openArrTrks": 0,
-        "openDepTrks": 0
-    },
     "numDepTrks": 0,
     "numAdjLocs": 1,
     "adjLocNames": {"E":"OilCity"},
