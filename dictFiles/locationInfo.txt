@@ -2,7 +2,7 @@
 "yard1": {
     "type":"yard",
     "destTrkTots": {"swArea1": 0, "yard2": 0, "staging1":0, "industries": 0},
-    "tracks": {
+    "trkCarDict": {
         "swArea1"   :{"box": 4, "tank": 2, "rfr": 3, "hop": 8, 
         "gons": 0, "flats": 0},
         "yard2"    :{"box": 3, "tank": 0, "rfr": 1, "hop": 0, 
@@ -27,13 +27,13 @@
     "locTrnNumID": "",
     "startMisc": 0,
     "trains": [],
-    "bldTrnDepTimes": [15, 20, 25, 30],
+    "bldTrnTimes": [15, 20, 25, 30],
     "trn4Action":[]
 },
 "swArea1": {
     "type":"yard",
     "destTrkTots": {"yard1": 0, "yard2": 0, "staging1": 0, "industries": 0},
-    "tracks": {
+    "trkCarDict": {
         "yard1"   :{"box": 2, "tank": 2, "rfr": 3, "hop": 3, 
         "gons": 2, "flats": 2},
         "yard2"    :{"box": 3, "tank": 2, "rfr": 1, "hop": 0, 
@@ -58,13 +58,13 @@
     "locTrnNumID": "",
     "startMisc": 0,
     "trains": [],
-    "bldTrnDepTimes": [15, 20, 25, 30],
+    "bldTrnTimes": [15, 20, 25, 30],
     "trn4Action":[]
 },
 "yard2": {
     "type":"yard",
     "destTrkTots": {"yard1": 0, "staging1": 0, "industries": 0},
-    "tracks": {
+    "trkCarDict": {
         "yard1"    :{"box": 3, "tank": 2, "rfr": 5, "hop": 5, 
         "gons": 1, "flats": 3},
         "staging1"    :{"box": 2, "tank": 3, "rfr": 3, "hop": 0, 
@@ -87,13 +87,13 @@
     "locTrnNumID": "",
     "startMisc": 0,
     "trains": [],
-    "bldTrnDepTimes": [15, 20, 25, 30],
+    "bldTrnTimes": [15, 20, 25, 30],
     "trn4Action":[]
 },
 "staging1": {
     "type":"staging",
     "destTrkTots": {},
-    "tracks": {},
+    "trkCarDict": {},
     "numAdjLocs": 1,
     "adjLocNames": {"E":"yard2"},
     "time2AdjLocs": [10, 10],
@@ -109,7 +109,7 @@
     "locTrnNumID": "",
     "startMisc": 0,
     "trains": [],
-    "bldTrnDepTimes": [],
+    "bldTrnTimes": [],
     "trn4Action":[]
 }
 }

@@ -1,7 +1,7 @@
 
 from mainVars import mVars
 from stateVars import locs, trainDB, routeCls
-from routeCalcs import rtCaps
+from routeProc import rtCaps
 from datetime import datetime
 import json
 
@@ -44,18 +44,11 @@ class printMethods():
             ", finL: " + finalLoc + ", dir: " + direction + 
             ", status: " + status)
 
-    def printRtCaps(self):
-        print("\nrtCaps.rtCap: ")
-        for route in rtCaps.rtCap:
-            print(route, ": ", "trains: ", 
-                  routeCls.routes[route]["trains"],
-                  rtCaps.rtCap[route])
-            
-    def writeRtCaps(self, file, route):
-        file.write("\nrtCaps.rtCap: ")
-        file.write("\n" + route + ": " +  \
-            "trains: " + str(routeCls.routes[route]["trains"]) + \
-            str(rtCaps.rtCap[route]))
+    def writeRtCaps(self, file, routeNam):
+        file.write("\nroute capacities: ")
+        file.write("\n" + routeNam + ": " +  \
+            "trains: " + str(routeCls.routes[routeNam]["trains"]) + \
+            str(routeCls.routes[routeNam]["capacity"]))
        
 class statSave():
     statFile  = ""
@@ -113,13 +106,13 @@ class statSave():
                             str(numCars) + str(stopStem[stop]))
                     statFile.write("\n")
 
-            for route in routeCls.routes:
+            for routeNam in routeCls.routes:
                 statFile.write("\n---------------------------\n")
                 statFile.write("\ntime step: " + str(mVars.time))
-                statFile.write("\nroute: " + route)
-                self.printObj.writeRtCaps(statFile, route)
+                statFile.write("\nroute: " + routeNam)
+                self.printObj.writeRtCaps(statFile, routeNam)
                 statFile.write("\nTrain and consist:     ")
-                for train in routeCls.routes[route]["trains"]:
+                for train in routeCls.routes[routeNam]["trains"]:
                     self.printObj.writeTrainInfo(statFile, train)
                     consistNum = trainDB.trains[train]["consistNum"]
                     consistNam = "consist"+str(consistNum)

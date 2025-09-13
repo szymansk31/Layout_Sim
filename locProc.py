@@ -1,21 +1,12 @@
-import random
 import numpy as np
 from mainVars import mVars
 from stateVars import locs, trainDB, routeCls
 from display import dispItems
 from dispatch import schedProc, dspCh
-from yardCalcs import ydCalcs
-from swCalcs import swCalcs
-from stagCalcs import stCalcs
-from gui import gui
-from coords import transForms
-from routeCalcs import routeCalcs, rtCaps
-from outputMethods import printMethods
-from locBase import locBase
-        
+from routeProc import routeMgmt, rtCaps
+from locBase import locBase, Qmgmt, locMgmt
 
 np.set_printoptions(precision=2, suppress=True) 
-
 
 dbgLocal = 1     
     
@@ -23,51 +14,53 @@ dbgLocal = 1
 class locProc():
     
     def __init__(self):
-        pass
-    
+        self.locQmgmtObj = Qmgmt()
+        self.locBaseObj = locBase()
+        self.locMgmtObj = locMgmt()
+        self.schedProcObj = schedProc()
+        self.dispObj = dispItems()
+        self.rtCapsObj = rtCaps()
+      
     #classmethod:
     
-    def printydTrains(self):
-        if mVars.prms["dbgYdProc"]: print("trains analyzed: trainDB.ydTrains: ",
-                    trainDB.ydTrains)
+    def printydTrains(self, loc):
+        if mVars.prms["dbgYdProc"]: print("trains analyzed: trainDB.ydTrains[loc]: ",
+                    trainDB.ydTrains[loc])
         
-    def locCalcs(self, locStem, loc):
-        locBaseObj = locBase()
-        schedProcObj = schedProc()
-        ydCalcObj = ydCalcs()
-        swAreaObj = swCalcs()
-        stagCalcObj = stCalcs()
-        rtCapsObj = rtCaps()
-        printObj = printMethods()
+    def locCalcs(self, loc):
+        from yardCalcs import ydCalcs
+        from swCalcs import swCalcs
+        from stagingCalcs import stCalcs
+        self.ydCalcObj = ydCalcs()
+        self.swAreaObj = swCalcs()
+        self.stagCalcObj = stCalcs()
 
         if mVars.prms["dbgYdProc"]: 
-            print("\nentering locCalcs: location: ", loc, ", locDat: ", locs.locDat[loc])
+            print("\nentering locCalcs: location: ", loc)
+            #self.locMgmtObj.printLocData(loc)
 
-        locBaseObj.countCars(loc)
-        rtCapsObj.updateRtSlots()
-        #print("rtCaps.rtCap: ", rtCaps.rtCap)
-        printObj.printRtCaps()
-        schedProcObj.fetchLocSchedItem(loc)
-        match locStem[loc]["type"]:
+        locStem = locs.locDat[loc]
+        self.locBaseObj.countCars(loc)
+        self.schedProcObj.fetchLocSchedItem(loc)
+        match locStem["type"]:
             case "yard":
                 self.analyzeTrains(loc)
-                self.printydTrains()
-                ydCalcObj.yardMaster(loc)
+                self.printydTrains(loc)
+                self.ydCalcObj.yardMaster(loc)
             case "swArea":
-                swAreaObj.swAnalyzeTrains(loc)
-                self.printydTrains()
-                swAreaObj.switchCalcs(loc)
+                self.swAreaObj.swAnalyzeTrains(loc)
+                self.printydTrains(loc)
+                self.swAreaObj.switchCalcs(loc)
             case "staging":
-                stagCalcObj.stAnalyzeTrains(loc)
-                self.printydTrains()
-                stagCalcObj.staging(loc)
+                self.stagCalcObj.stAnalyzeTrains(loc)
+                self.printydTrains(loc)
+                self.stagCalcObj.staging(loc)
 
                     
         #dispObj.dispTrnLocDat(loc)
             
     def analyzeTrains(self, loc):
-        trainDB.ydTrains = {"brkDnTrn": [], "buildTrain": [], "swTrain": [], "rdCrwSw": [], "continue": []}
-        rtCapsObj = rtCaps()
+        trainDB.ydTrains[loc] = {"brkDnTrn": [], "buildTrain": [], "swTrain": [], "rdCrwSw": [], "continue": []}
 
         # train status leads to actions by the yard crew or
         # the train crew.  Train actions are the same name as
@@ -75,23 +68,23 @@ class locProc():
         for trainNam in locs.locDat[loc]["trains"]:
             match trainDB.trains[trainNam]["status"]:
                 case "terminate":
-                    if trainNam not in trainDB.ydTrains["brkDnTrn"]:
-                        trainDB.ydTrains["brkDnTrn"].append(trainNam)
+                    if trainNam not in trainDB.ydTrains[loc]["brkDnTrn"]:
+                        trainDB.ydTrains[loc]["brkDnTrn"].append(trainNam)
                 case "dropPickup":
                     # in a yard this action is often undertaken by 
                     # the yard crew; hence a yard action
-                    if trainNam not in trainDB.ydTrains["swTrain"]:
-                        trainDB.ydTrains["swTrain"].append(trainNam)
+                    if trainNam not in trainDB.ydTrains[loc]["swTrain"]:
+                        trainDB.ydTrains[loc]["swTrain"].append(trainNam)
                 case "building"|"init":
                     # for yards, not switch areas
-                    if trainNam not in trainDB.ydTrains["buildTrain"]:
-                        trainDB.ydTrains["buildTrain"].append(trainNam)
+                    if trainNam not in trainDB.ydTrains[loc]["buildTrain"]:
+                        trainDB.ydTrains[loc]["buildTrain"].append(trainNam)
                 case "rdCrwSw":
                     # for switch areas no yards
                     # code is in locProc but actions are undertaken by
                     # the virtual train crew
-                    if trainNam not in trainDB.ydTrains["rdCrwSw"]:
-                        trainDB.ydTrains["rdCrwSw"].append(trainNam)
+                    if trainNam not in trainDB.ydTrains[loc]["rdCrwSw"]:
+                        trainDB.ydTrains[loc]["rdCrwSw"].append(trainNam)
                     pass
                 case "continue":
                     # no action for yard.  May have a call to 
@@ -99,11 +92,12 @@ class locProc():
                     # as no action needed by train crew (modulo dispatch call)
                     locs.locDat[loc]["trnCnts"]["passThru"] += 1
                     self.startTrain(loc, trainNam)
+
                 case "built":
                     startTime = trainDB.trains[trainNam]["startTime"]
                     if (mVars.time >= startTime):
-                        locs.locDat[loc]["trnCnts"]["started"] += 1
-                        #locs.locDat[loc]["bldTrnDepTimes"].pop(0)
+                        #locs.locDat[loc]["trnCnts"]["started"] += 1
+                        #locs.locDat[loc]["bldTrnTimes"].pop(0)
                         nextLoc = trainDB.trains[trainNam]["nextLoc"]
                         #dispItemsObj.clearTrnRecs(trainNam)
                         print(trainNam, ": with start time ", startTime,
@@ -111,33 +105,23 @@ class locProc():
                               " built and leaving for (nextLoc): ", 
                               nextLoc)
                         self.startTrain(loc, trainNam)
-        
+
 
     def startTrain(self, loc, trainNam):
         # setup train
-        dispObj = dispItems()
-        coordObj = transForms()
-        locBaseObj = locBase()
-        rtCapsObj = rtCaps()
         
         trainStem = trainDB.trains[trainNam]
         trainStem["status"] = "wait4Clrnce"
         if trainStem["rtToEnter"] == "":
-            locBaseObj.findRtPrms(loc, trainNam)
+            self.locMgmtObj.findRtPrms(loc, trainNam)
         routeNam = trainStem["rtToEnter"]
-        #trainStem["currentLoc"] = routeNam
-               
-        #sets initial coords in rotated system 
-        if (trainStem["coord"]["xTrnInit"] == 0) or\
-            (trainStem["coord"]["xTrnInit"]) == None:
-            #train not on route to start
-            trainStem["coord"]["xTrnInit"] = 0  
-        locBaseObj.addTrn2LocOrRt(routeNam, trainStem, trainNam)
-        #rtCapsObj.addTrn2RouteQ(routeNam, trainNam)
+        trainStem["estArrTime"] = mVars.time + routeCls.routes[routeNam]["transTime"]
+        self.locMgmtObj.placeTrain(routeNam, trainStem, trainNam)
         trainStem["firstDispTrn"] = 1
         
         #print("trainStem: ", trainStem, ", original dict: ", trainDB.trains[trainNam])
-        dispObj.drawTrain(trainNam)
+        self.dispObj.drawTrain(trainNam)
+        locs.locDat[loc]["trnCnts"]["started"] += 1
                 
         if mVars.prms["dbgYdProc"]: print("train",trainNam," starting: "
             ,trainStem, ",\n")
@@ -147,7 +131,7 @@ class locProc():
         """
         eastXPlot = gui.guiDict[loc]["x1"]
         westXPlot = gui.guiDict[loc]["x0"] - trainInit.trnLength
-        eastYPlot = gui.guiDict[leftObj]["y0"] - gui.guiDict["locDims"]["height"]*0.25
+        eastYPlot = gui.guiDict[westObj]["y0"] - gui.guiDict["locDims"]["height"]*0.25
         if trainStem["direction"] == "west": 
             trainStem["coord"]["xPlot"] -= trainInit.trnLength
             westXPlotTransform = trainStem["coord"]["xPlot"]

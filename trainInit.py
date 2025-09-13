@@ -1,9 +1,6 @@
 
 from fileProc import readFiles
-from display import dispItems
-from coords import transForms
 from stateVars import locs, dspCh, trainDB, routeCls
-
 
 #=================================================
 class trainInit():
@@ -12,7 +9,8 @@ class trainInit():
     colorIDX = 0
     colorList = ["red", "green", "yellow", "orange", "purple1", "dodger blue", "deep pink",
                  "lawn green", "goldenrod", "OrangeRed2", "magenta2", "RoyalBlue1"]
-    trnStatusList = ["enroute", "wait4Clrnce", "init", "building", "built", "terminate", "rdCrwSw",
+    trnStatusList = ["enroute", "wait4Clrnce", "waitOnRoute", "init", "building", "built", 
+                     "terminate", "rdCrwSw",
                      "dropPickup", "continue", "turn", "misc", "stop"]
 
 
@@ -21,7 +19,10 @@ class trainInit():
         self.trainNam = ""
         self.conName = ""
         self.files = readFiles()
-
+        from locBase import locMgmt
+        self.locMgmtObj = locMgmt()
+        from routeProc import routeMgmt
+        self.rtMgmtObj = routeMgmt()
         pass
     
     @classmethod
@@ -49,29 +50,6 @@ class trainInit():
             numCars += sum(consist["stops"][loc].values())
         return numCars
             
-    def newTrain(self, newTrainNam):
-        newTrain = {}
-        #newTrainNum = trainDB.numTrains+1
-        newTrainNum = newTrainNam[5:]
-        #newTrainNam = "train"+str(newTrainNum)
-        newConsistNum = trainDB.numConsists+1 
-        newConsistNam = "consist"+str(newConsistNum)
-        tmpTrain = self.files.readFile("trainFile")
-        
-        newTrain[newTrainNam] = tmpTrain.pop("trnProtype")
-        newTrain[newTrainNam]["trainNum"] = newTrainNum
-        newTrain[newTrainNam]["consistNum"] = newConsistNum
-        newTrain[newTrainNam]["numCars"] = 0
-    
-        print("newTrain: partial dict: ", newTrain)
-        trainDB.trains.update(newTrain)
-        
-        self.newConsist(newConsistNum, newTrainNum)
-        trainDB.numTrains +=1
-        trainDB.numConsists +=1
-        return newConsistNam
-    
-
     def fillTrnDicts(self, loc, trainNam):
         
         finalLoc = trainDB.trains[trainNam]["finalLoc"]
@@ -96,9 +74,10 @@ class trainInit():
             "color": trainInit.colors()           
                 })
         
+        self.locMgmtObj.findRtPrms(loc, trainNam)
+        self.rtMgmtObj.calcTrnArrTime("fillTrnDicts ", loc, trainNam)
         print("new train: ", trainNam, ": ", trainDB.trains[trainNam])
         print("new consist: ", conNam, ":", trainDB.consists[conNam])
-        trainDB.numTrains +=1
 
         return
 
@@ -106,7 +85,7 @@ class trainInit():
         #stops defined in sched files, but may be blank
         stops = trainDB.trains[trainNam]["stops"]
         numStops = 0
-        if stops != None:
+        if stops != {}:
             for stopLoc in stops:
                 numStops += 1 
             nextLoc = next(iter(stops))

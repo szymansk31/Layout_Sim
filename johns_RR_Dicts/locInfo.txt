@@ -5,13 +5,12 @@
     "totCars": 0,
     "cars2Class": 0,
     "time2Class": 0,
+    "carCapacity": 0,
     "Qs": {
-        "arrvs": [{"train": {"estArrTime": 0, "action": "", "nCars4ThisLoc":0}}],
-        "departs": [{"train": {"startTime": 0, "status": "", "rtToEnter":""}}],
-        "builds": [{"train": {"numCars": 0, "numCars2Add": 0, "status": "", "rtToEnter":""}}]
-    
-    }
-    "tracks": {
+        "arrivals": [{"train": {"estArrTime": 0, 
+		    "action": "", "arrTrk": "", "nCars4ThisLoc": 0, "estDeptTime":0}}]
+    },
+    "trkCarDict": {
         "Kiski"   :{"box": 4, "tank": 2, "rfr": 3, "hop": 8, 
         "gons": 0, "flats": 0},
         "OilCity"    :{"box": 3, "tank": 0, "rfr": 1, "hop": 0, 
@@ -21,29 +20,28 @@
         "NewKenLocal" :{"box": 1, "tank": 1, "rfr": 2, "hop": 0, 
         "gons": 1, "flats": 0}
     },
-    "trackPrms": {
+    "trkPrms": {
         "track2" : {"funcs": ["arrival"], "train": "",
-            "maxCars": 0, "currCars": 0, "status": "mt"},
+            "maxCars": 0, "currCars": 0, "status": "unAssnd"},
         "track3" : {"funcs": ["arrival", "depart"], "train": "", 
-            "maxCars": 0, "currCars": 0, "status": "mt"},
+            "maxCars": 0, "currCars": 0, "status": "unAssnd"},
         "Kiski" : {"funcs": ["classify", "depart"], "train": "", 
-            "maxCars": 0, "currCars": 0, "status": "mt"},
+            "maxCars": 0, "currCars": 0, "status": "unAssnd"},
         "OilCity" : {"funcs": ["classify", "depart"], "train": "", 
-            "maxCars": 0, "currCars": 0, "status": "mt"},
+            "maxCars": 0, "currCars": 0, "status": "unAssnd"},
         "NStaging" : {"funcs": ["classify", "depart"], "train": "", 
-            "maxCars": 0, "currCars": 0, "status": "mt"},
+            "maxCars": 0, "currCars": 0, "status": "unAssnd"},
         "NewKenLocal" : {"funcs": ["classify", "depart"], "train": "", 
-            "maxCars": 0, "currCars": 0, "status": "mt"},
+            "maxCars": 0, "currCars": 0, "status": "unAssnd"},
         "track7" : {"funcs": ["arrival", "depart"], "train": "", 
-            "maxCars": 0, "currCars": 0, "status": "mt"},
+            "maxCars": 0, "currCars": 0, "status": "unAssnd"},
         "track8" : {"funcs": ["arrival", "depart"], "train": "", 
-            "maxCars": 0, "currCars": 0, "status": "mt"},
+            "maxCars": 0, "currCars": 0, "status": "unAssnd"}
    },
-    "numArrTrks": 2,
-    "numDepTrks": 3,
     "numAdjLocs": 1,
     "adjLocNames": {"E":"Kiski"},
     "time2AdjLocs": [10, 10],
+    "trains": [],
     "firstDispLoc": 1,
     "firstDispTrnTxt": 1,
     "locObjID": 0,
@@ -55,15 +53,14 @@
     "locTrnRectID": "",
     "locTrnNumID": "",
     "startMisc": 0,
-    "trains": [],
     "trnCnts": {
-	"built": 0,
-	"started": 0,
-	"switched": 0,
-	"brkDown": 0,
-	"passThru": 0
+        "built": 0,
+        "started": 0,
+        "switched": 0,
+        "brkDown": 0,
+        "passThru": 0
 	},
-    "bldTrnDepTimes": [5, 10, 25, 30],
+    "bldTrnTimes": [10, 20, 30],
     "trn4Action":[],
     "ready2Pickup": 0,
     "classRate": 2,
@@ -75,13 +72,13 @@
     "totCars": 0,
     "cars2Class": 0,
     "time2Class": 0,
+    "carCapacity": 0,
     "Qs": {
-        "arrvs": [{"train": {"estArrTime": 0, "action": "", "nCars4ThisLoc":0, "destTrack": ""}}],
-        "departs": [{"train": {"startTime": 0, "status": "", "rtToEnter":""}}],
-        "builds": [{"train": {"numCars": 0, "numCars2Add": 0, "status": "", "rtToEnter":""}}]
+        "arrivals": [{"train": {"estArrTime": 0, 
+		    "action": "", "arrTrk": "", "nCars4ThisLoc": 0, "estDeptTime":0}}]
     
-    }
-    "tracks": {
+    },
+    "trkCarDict": {
         "pgh"    :{"box": 2, "tank": 3, "rfr": 3, "hop": 0, 
         "gons": 1, "flats": 1},
         "OilCity"    :{"box": 3, "tank": 2, "rfr": 5, "hop": 5, 
@@ -91,19 +88,24 @@
         "industries"   :{"box": 0, "tank": 0, "rfr": 0, "hop": 0, 
         "gons": 0, "flats": 0}
     },
-    "trackPrms": {
+    "trkPrms": {
+        "track7" : {"funcs": ["arrival", "depart"], "train": "",
+            "maxCars": 0, "currCars": 0, "status": "unAssnd"},
+        "track9" : {"funcs": ["arrival", "depart"], "train": "", 
+            "maxCars": 0, "currCars": 0, "status": "unAssnd"},
+        "mainLine" : {"funcs": ["arrival", "depart"], "train": "", 
+            "maxCars": 0, "currCars": 0, "status": "unAssnd"},
         "pgh" : {"funcs": ["classify", "depart"], "train": "",
-            "maxCars": 0, "currCars": 0, "status": "mt"},
+            "maxCars": 0, "currCars": 0, "status": "unAssnd"},
         "OilCity" : {"funcs": ["classify", "depart"], "train": "",
-            "maxCars": 0, "currCars": 0, "status": "mt"},
+            "maxCars": 0, "currCars": 0, "status": "unAssnd"},
         "NStaging" : {"funcs": ["classify", "depart"], "train": "",
-            "maxCars": 0, "currCars": 0, "status": "mt"}
+            "maxCars": 0, "currCars": 0, "status": "unAssnd"}
    },
-    "numArrTrks": 2,
-    "numDepTrks": 3,
     "numAdjLocs": 2,
     "adjLocNames": {"W":"pgh", "E":"OilCity"},
     "time2AdjLocs": [10, 10],
+    "trains": [],
     "firstDispLoc": 1,
     "firstDispTrnTxt": 1,
     "locObjID": 0,
@@ -115,15 +117,14 @@
     "locTrnRectID": "",
     "locTrnNumID": "",
     "startMisc": 0,
-    "trains": [],
     "trnCnts": {
-	"built": 0,
-	"started": 0,
-	"switched": 0,
-	"brkDown": 0,
-	"passThru": 0
+        "built": 0,
+        "started": 0,
+        "switched": 0,
+        "brkDown": 0,
+        "passThru": 0
 	},
-    "bldTrnDepTimes": [5, 10, 25, 30],
+    "bldTrnTimes": [10, 25, 30],
     "trn4Action":[],
     "ready2Pickup": 0,
     "classRate": 2,
@@ -136,13 +137,13 @@
     "totCars": 0,
     "cars2Class": 0,
     "time2Class": 0,
+    "carCapacity": 0,
     "Qs": {
-        "arrvs": [{"train": {"estArrTime": 0, "action": "", "nCars4ThisLoc":0, "destTrack": ""}}],
-        "departs": [{"train": {"startTime": 0, "status": "", "rtToEnter":""}}],
-        "builds": [{"train": {"numCars": 0, "numCars2Add": 0, "status": "", "rtToEnter":""}}]
+        "arrivals": [{"train": {"estArrTime": 0, 
+		    "action": "", "arrTrk": "", "nCars4ThisLoc": 0, "estDeptTime":0}}]
     
-    }
-    "tracks": {
+    },
+    "trkCarDict": {
         "pgh"    :{"box": 2, "tank": 3, "rfr": 3, "hop": 0, 
         "gons": 1, "flats": 1},
         "Kiski"    :{"box": 3, "tank": 2, "rfr": 5, "hop": 5, 
@@ -154,21 +155,24 @@
         "industries"   :{"box": 0, "tank": 0, "rfr": 0, "hop": 0, 
         "gons": 0, "flats": 0}
     },
-    "trackPrms": {
+    "trkPrms": {
+        "arrival1" : {"funcs": ["arrival"], "train": "",
+            "maxCars": 0, "currCars": 0, "status": "unAssnd"},
+        "arrival2" : {"funcs": ["arrival"], "train": "",
+            "maxCars": 0, "currCars": 0, "status": "unAssnd"},
         "pgh" : {"funcs": ["classify", "depart"], "train": "",
-            "maxCars": 0, "currCars": 0, "status": "mt"},
+            "maxCars": 0, "currCars": 0, "status": "unAssnd"},
         "Kiski" : {"funcs": ["classify", "depart"], "train": "",
-            "maxCars": 0, "currCars": 0, "status": "mt"},
+            "maxCars": 0, "currCars": 0, "status": "unAssnd"},
         "NStaging" : {"funcs": ["classify", "depart"], "train": "",
-            "maxCars": 0, "currCars": 0, "status": "mt"},
+            "maxCars": 0, "currCars": 0, "status": "unAssnd"},
         "ErieRRStaging" : {"funcs": ["classify", "depart"], "train": "",
-            "maxCars": 0, "currCars": 0, "status": "mt"}
+            "maxCars": 0, "currCars": 0, "status": "unAssnd"}
    },
-    "numArrTrks": 1,
-    "numDepTrks": 1,
     "numAdjLocs": 3,
     "adjLocNames": {"Wstag":"ErieRRStaging", "W":"Kiski", "E":"NStaging"},
     "time2AdjLocs": [10, 10],
+    "trains": [],
     "firstDispLoc": 1,
     "firstDispTrnTxt": 1,
     "locObjID": 0,
@@ -180,15 +184,14 @@
     "locTrnRectID": "",
     "locTrnNumID": "",
     "startMisc": 0,
-    "trains": [],
     "trnCnts": {
-	"built": 0,
-	"started": 0,
-	"switched": 0,
-	"brkDown": 0,
-	"passThru": 0
+        "built": 0,
+        "started": 0,
+        "switched": 0,
+        "brkDown": 0,
+        "passThru": 0
 	},
-    "bldTrnDepTimes": [5, 10, 25, 30],
+    "bldTrnTimes": [10, 25, 30],
     "trn4Action":[],
     "ready2Pickup": 0,
     "classRate": 2,
@@ -200,29 +203,27 @@
     "totCars": 0,
     "cars2Class": 0,
     "time2Class": 0,
+    "carCapacity": 0,
     "Qs": {
-        "arrvs": [{"train": {"estArrTime": 0, "action": "", "nCars4ThisLoc":0, "destTrack": ""}}],
-        "departs": [{"train": {"startTime": 0, "status": "", "rtToEnter":""}}],
-        "builds": [{"train": {"numCars": 0, "numCars2Add": 0, "status": "", "rtToEnter":""}}]
-    
-    }
-    "trackPrms": {
-        "track1" : {"funcs": ["classify", "depart"], "train": "", 
-            "maxCars": 0, "currCars": 0, "status": "mt"},
-        "track2" : {"funcs": ["classify", "depart"], "train": "",
-            "maxCars": 0, "currCars": 0, "status": "mt"},
-        "track3" : {"funcs": ["classify", "depart"], "train": "",
-            "maxCars": 0, "currCars": 0, "status": "mt"},
-        "track4" : {"funcs": ["classify", "depart"], "train": "",
-            "maxCars": 0, "currCars": 0, "status": "mt"},
-        "track5" : {"funcs": ["classify", "depart"], "train": "",
-            "maxCars": 0, "currCars": 0, "status": "mt"}
+        "arrivals": [{"train": {"estArrTime": 0, 
+		    "action": "", "arrTrk": "", "nCars4ThisLoc": 0, "estDeptTime":0}}]
+    },
+    "trkPrms": {
+        "track1" : {"funcs": ["arrival", "depart"], "train": "", 
+            "maxCars": 0, "currCars": 0, "status": "unAssnd"},
+        "track2" : {"funcs": ["arrival", "depart"], "train": "",
+            "maxCars": 0, "currCars": 0, "status": "unAssnd"},
+        "track3" : {"funcs": ["arrival", "depart"], "train": "",
+            "maxCars": 0, "currCars": 0, "status": "unAssnd"},
+        "track4" : {"funcs": ["arrival", "depart"], "train": "",
+            "maxCars": 0, "currCars": 0, "status": "unAssnd"},
+        "track5" : {"funcs": ["arrival", "depart"], "train": "",
+            "maxCars": 0, "currCars": 0, "status": "unAssnd"}
    },
-    "numArrTrks": 5,
-    "numDepTrks": 0,
     "numAdjLocs": 1,
     "adjLocNames": {"W":"OilCity"},
     "time2AdjLocs": [10, 10],
+    "trains": [],
     "firstDispLoc": 1,
     "firstDispTrnTxt": 1,
     "locObjID": 0,
@@ -234,15 +235,14 @@
     "locTrnRectID": "",
     "locTrnNumID": "",
     "startMisc": 0,
-    "trains": [],
     "trnCnts": {
-	"built": 0,
-	"started": 0,
-	"switched": 0,
-	"brkDown": 0,
-	"passThru": 0
+        "built": 0,
+        "started": 0,
+        "switched": 0,
+        "brkDown": 0,
+        "passThru": 0
 	},
-    "bldTrnDepTimes": [],
+    "bldTrnTimes": [],
     "trn4Action":[],
     "ready2Pickup": 0,
     "classRate": 2,
@@ -254,28 +254,26 @@
     "totCars": 0,
     "cars2Class": 0,
     "time2Class": 0,
+    "carCapacity": 0,
     "Qs": {
-        "arrvs": [{"train": {"estArrTime": 0, "action": "", "nCars4ThisLoc":0, "destTrack": ""}}],
-        "departs": [{"train": {"startTime": 0, "status": "", "rtToEnter":""}}],
-        "builds": [{"train": {"numCars": 0, "numCars2Add": 0, "status": "", "rtToEnter":""}}]
-    
-    }
-    "trackPrms": {
-        "track1" : {"funcs": ["classify", "depart"], "train": "", 
-            "maxCars": 0, "currCars": 0, "status": "mt"},
-        "track2" : {"funcs": ["classify", "depart"], "train": "", 
-            "maxCars": 0, "currCars": 0, "status": "mt"},
-        "track3" : {"funcs": ["classify", "depart"], "train": "", 
-            "maxCars": 0, "currCars": 0, "status": "mt"},
-        "track4" : {"funcs": ["classify", "depart"], "train": "", 
-            "maxCars": 0, "currCars": 0, "status": "mt"}
+        "arrivals": [{"train": {"estArrTime": 0, 
+		    "action": "", "arrTrk": "", "nCars4ThisLoc": 0, "estDeptTime":0}}]
+    },
+    "trkPrms": {
+        "track1" : {"funcs": ["arrival", "depart"], "train": "", 
+            "maxCars": 0, "currCars": 0, "status": "unAssnd"},
+        "track2" : {"funcs": ["arrival", "depart"], "train": "", 
+            "maxCars": 0, "currCars": 0, "status": "unAssnd"},
+        "track3" : {"funcs": ["arrival", "depart"], "train": "", 
+            "maxCars": 0, "currCars": 0, "status": "unAssnd"},
+        "track4" : {"funcs": ["arrival", "depart"], "train": "", 
+            "maxCars": 0, "currCars": 0, "status": "unAssnd"}
    },
-    "numArrTrks": 4,
-    "availArrTrks": 0,
     "numDepTrks": 0,
     "numAdjLocs": 1,
     "adjLocNames": {"E":"OilCity"},
     "time2AdjLocs": [10, 10],
+    "trains": [],
     "firstDispLoc": 1,
     "firstDispTrnTxt": 1,
     "locObjID": 0,
@@ -287,15 +285,14 @@
     "locTrnRectID": "",
     "locTrnNumID": "",
     "startMisc": 0,
-    "trains": [],
     "trnCnts": {
-	"built": 0,
-	"started": 0,
-	"switched": 0,
-	"brkDown": 0,
-	"passThru": 0
+        "built": 0,
+        "started": 0,
+        "switched": 0,
+        "brkDown": 0,
+        "passThru": 0
 	},
-    "bldTrnDepTimes": [1, 5],
+    "bldTrnTimes": [1, 5],
     "trn4Action":[],
     "ready2Pickup": 0,
     "classRate": 2,

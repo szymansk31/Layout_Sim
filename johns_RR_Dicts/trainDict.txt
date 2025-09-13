@@ -12,6 +12,7 @@
 "direction": "",
 "locArrTime": 0,
 "estArrTime": 0, 
+"estDeptTime": 0,
 "startTime": 0, 
 "coord": {
     "xTrnInit": 0,

@@ -17,8 +17,14 @@ class mainMethods():
     def __init__(self):
         from locProc import locProc
         self.locProcObj = locProc()
+        from locBase import locBase, Qmgmt, locMgmt
+        self.locMgmtObj = locMgmt() 
         from trainProc import trnProc
         self.trnProcObj = trnProc()
+        from routeProc import rtProc, routeMgmt, rtCaps
+        self.rtProcObj = rtProc()
+        from dispatch import clearTrnCalcs
+        self.dispchObj = clearTrnCalcs()
         pass
 
 #=================================================
@@ -30,6 +36,9 @@ class mainMethods():
             # save state variables and statistics for this time step
             displayObj.updateTimer()
             print("\nmVars.time: ", mVars.time, ", savIDX: ", stVarSaves.savIDX)
+            self.dispchObj.mainDispatch()
+            for loc in locs.locDat:
+                self.locMgmtObj.printLocData(loc)
             if mVars.wait:
                 print("waiting....")
                 self.step_button.wait_variable(self.var)
@@ -41,20 +50,20 @@ class mainMethods():
                 self.var.set(0)
                 print("\nafter step back: mVars.time: ", mVars.time
                     , ", savIDX: ", stVarSaves.savIDX)
-    
-            for train in trainDB.trains:
-                if mVars.time >= trainDB.trains[train]["startTime"]:
-                    printObj.printTrainInfo(train)
-                    self.trnProcObj.trainCalcs(trainDB.trains[train], train)
+
+            for loc in locs.locDat:
+                print("\nmVars.time: ", mVars.time)
+
+                if mVars.prms["dbgLoop"]: print ("About to process: ", 
+                    loc)
+                self.locProcObj.locCalcs(loc)
+                
+            self.rtProcObj.routeProc()
             if count == maxCount:
                 print("routes: ", routeCls.routes)
                 count = 0
             count +=1
-            for loc in locs.locDat:
-                if mVars.prms["dbgLoop"]: print ("\nAbout to process: ", 
-                    loc)
-
-                self.locProcObj.locCalcs(locs.locDat, loc)
+            
             statSaveObj.savStats()
             statSaveObj.timeSeries()
             stVarObj.saveStVars()
@@ -128,10 +137,6 @@ gui.guiDict = files.readFile("guiFile")
 guiObj.preProcGui()
 routeGeomObj.initRoutes(gui.guiDict)
 
-from routeCalcs import rtCaps
-rtCapsObj = rtCaps()
-rtCapsObj.initRouteCaps()
-
 
 #setup initial car distribution
 from carProc import carProc
@@ -151,9 +156,9 @@ dispObj.drawLayout(gui.guiDict)
 # initialize dynamic action display in locations
 displayObj.initLocDisp()
 
-from startingTrains import trainFromFile
-startTrainObj = trainFromFile()
-startTrainObj.readTrain()
+#from startingTrains import trainFromFile
+#startTrainObj = trainFromFile()
+#startTrainObj.readTrain()
 from dispatch import schedProc
 schedProcObj = schedProc()
 schedProcObj.initSchedule()

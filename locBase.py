@@ -1,27 +1,18 @@
-import random
 import numpy as np
 from mainVars import mVars
 from stateVars import locs, trainDB, routeCls
 from display import dispItems
-from dispatch import schedProc, dspCh
-from yardCalcs import ydCalcs
-from swCalcs import swCalcs
-from stagCalcs import stCalcs
-from gui import gui
 from coords import transForms
-from routeCalcs import routeCalcs, rtCaps
-from outputMethods import printMethods
         
-
 np.set_printoptions(precision=2, suppress=True) 
-
 
 dbgLocal = 1     
 #=================================================
 class locBase():
     
     def __init__(self):
-        self.routeCalcsObj = routeCalcs()
+        from routeProc import routeMgmt, rtCaps
+        self.routeMgmtObj = routeMgmt()
         pass
     
     def initLocDicts(self):
@@ -34,6 +25,9 @@ class locBase():
             locs.locDat[loc]["locTrnRectID"] = loc+"TrnRectID"
             locs.locDat[loc]["locTrnNumID"] = loc+"TrnNumID"
             locs.locDat[loc]["locRectID"] = loc+"RectID"
+            
+        QmgmtObj = Qmgmt()
+        QmgmtObj.initLocQs()
         
     def countCars(self, loc):
         locStem = locs.locDat[loc]
@@ -41,7 +35,7 @@ class locBase():
         locStem["totCars"] = 0
         match type:
             case "yard":
-                trackStem = locStem["tracks"]
+                trackStem = locStem["trkCarDict"]
             case "swArea":
                 trackStem = locStem["industries"]
         if type == "staging":
@@ -71,87 +65,149 @@ class locBase():
         for dest in locs.locDat[loc]["destTrkTots"]:
             thisLocDests.append(dest)
         return thisLocDests
-
-    def initLocQs(self, loc):
-        # remove placeholder/prototype of each Q from input files
-        QStem = locs.locDat[loc]["Qs"]
-        for Q in QStem:
-            QStem[Q].pop(0)
     
-    def initLocArrDepSlots(self, loc):
+#=================================================
+class Qmgmt():
+    
+    def __init__(self):
+        from routeProc import routeMgmt, rtCaps
+        self.routeMgmtObj = routeMgmt()
+        pass
+    
+    def initLocQs(self):
+        # remove placeholder/prototype of each Q from input files
+        for loc in locs.locDat:
+            QStem = locs.locDat[loc]["Qs"]
+            for Q in QStem:
+                QStem[Q].pop(0)
+                        
+    def calcDeptTimes(self):
         for loc in locs.locDat:
             locStem = locs.locDat[loc]
-            for track in locStem["trackPrms"]:
-                if "arrival" in locStem["trackPrms"][track]["funcs"]:
-                    locStem["numArrTrks"] += 1
-                if "depart" in locStem["trackPrms"][track]["funcs"]:
-                    locStem["numDepTrks"] += 1
-                    
-# trains already on routes get first priority to arrival slots
-# as opposed to trains being built at other locs for travel to this loc                
-    def checkLocArrDepSlots(self, loc):
+            for trainNam in locStem["trains"]:
+                estDeptTime = mVars.time + trainDB.avgSwTime
+                trainDB.trains[trainNam]["estDeptTime"] = round(estDeptTime, 2)
+        #calc estDeptTime for all trains enroute; calc above is
+        # for trains in locations being worked.  Unlike arrTime calcs
+        # trains in route Qs are still formally in a loc and caught above
         for route in routeCls.routes:
             for trainNam in routeCls.routes[route]["trains"]:
-                self.routeCalcsObj.calcTrnArrivalTime(route)
                 estArrTime = trainDB.trains[trainNam]["estArrTime"]
-                if estArrTime - mVars.time <= mVars.prms["arrTimDelta"]:
-                    self.addTrn2ArrvsQ(self, "arrvs", loc, trainNam)
-            
-    def calcArrivTrns(self, loc):
-        for route in routeCls.routes:
-            for trainNam in routeCls.routes[route]["trains"]:
-                self.routeCalcsObj.calcTrnArrivalTime(route)
-                estArrTime = trainDB.trains[trainNam]["estArrTime"]
-                if estArrTime - mVars.time <= mVars.prms["arrTimDelta"]:
-                    self.addTrn2LocQ(self, "arrvs", loc, trainNam)
-            
-    def addTrain2ArrTrack(self, loc, trainNam):
-        
+                trainDB.trains[trainNam]["estDeptTime"] = round(estArrTime + trainDB.avgSwTime, 2)
         pass
                 
-    def addTrn2LocQ(self, loc, QNam, trainNam):
-        if trainNam in locs.locDat[loc]["Qs"][QNam]: return
-        from stateVars import trainDB
+    def calcArrivTrns(self):
+        self.routeMgmtObj.trnArrivalTimes()
+        for route in routeCls.routes:
+            for trainNam in routeCls.routes[route]["trains"]:
+                estArrTime = trainDB.trains[trainNam]["estArrTime"]
+                loc = trainDB.trains[trainNam]["nextLoc"]
+                #if estArrTime - mVars.time <= mVars.prms["arrTimDelta"]:
+                self.addTrn2LocQ(loc, trainNam, "")
+                
+    def sortLocQ(self, sortVar):
+        def getTimVal(subDict):
+            for key, value in subDict.items():
+                return value[sortVar]
+        for loc in locs.locDat:
+            tmpList = locs.locDat[loc]["Qs"]["arrivals"]
+            locs.locDat[loc]["Qs"]["arrivals"] = sorted(tmpList, key=getTimVal)
+            print("loc: ", loc, " , Q: ", "arrivals", locs.locDat[loc]["Qs"]["arrivals"])   
+            
+    # track is an optional input if known           
+    def addTrn2LocQ(self, loc, trainNam, track):
+        if any(trainNam in d for d in locs.locDat[loc]["Qs"]["arrivals"]): return
         conNam = trainDB.getConNam(trainNam)
         trainStem = trainDB.trains[trainNam]
         
-        match QNam:
-            case "arrvs":
-                nCars4ThisLoc = sum(trainDB.consists[conNam]["stops"][loc].values())
-                locs.locDat[loc]["Qs"]["arrvs"].append({ \
-                    trainNam: {"estArrTime": trainStem["estArrTime"],
-                    "action": trainStem["stops"][loc]["action"],
-                    "nCars4ThisLoc": nCars4ThisLoc}})
-            case "departs":
-                locs.locDat[loc]["Qs"]["departs"].append({ \
-                    trainNam: {"startTime": trainStem["startTime"],
-                    "status": trainStem["status"],
-                    "rtToEnter": trainStem["rtToEnter"]}})
-            case "builds":
-                numCars2Add = mVars.prms["trainSize"] - trainStem["numCars"]
-                locs.locDat[loc]["Qs"]["builds"].append({ \
-                    trainNam: {"numCars": trainStem["numCars"],
-                    "numCars2Add": numCars2Add,
-                    "status": trainStem["status"],
-                    "rtToEnter": trainStem["rtToEnter"]}})
+        nCars4ThisLoc = sum(trainDB.consists[conNam]["stops"][loc].values())
+        locs.locDat[loc]["Qs"]["arrivals"].append({ \
+            trainNam: {"estArrTime": trainStem["estArrTime"],
+            "action": trainStem["stops"][loc]["action"],
+            "arrTrk": track,
+            "nCars4ThisLoc": nCars4ThisLoc,
+            "estDeptTime": trainStem["estDeptTime"]}})
 
-    def remTrnLocQ(self, loc, QNam, trainNam):
-        QStem = locs.locDat[loc]["Qs"][QNam]
+    def remTrnLocQ(self, loc, trainNam):
+        QStem = locs.locDat[loc]["Qs"]["arrivals"]
         index = [idx for idx, d in enumerate(QStem) if trainNam in d]
-        QStem.pop(index[0])
+        try:
+            QStem.pop(index[0])
+        except:
+            return
         
-                     
+    def updateArrvQs(self):
+        for loc in locs.locDat:
+            QStem = locs.locDat[loc]["Qs"]["arrivals"]
+            for QDict in QStem:
+                trainNam = next(iter(QDict))
+                self.updateLocQ(loc, trainNam)
+
+    def updateLocQ(self, loc, trainNam):
+        if not any(trainNam in d for d in locs.locDat[loc]["Qs"]["arrivals"]): return
+        trainStem = trainDB.trains[trainNam]
+        
+        QStem = locs.locDat[loc]["Qs"]["arrivals"]
+        #nCars4ThisLoc = sum(trainDB.consists[conNam]["stops"][loc].values())
+        index = [idx for idx, d in enumerate(QStem) if trainNam in d]
+        locs.locDat[loc]["Qs"]["arrivals"][index[0]][trainNam].update({ \
+            "estArrTime": trainStem["estArrTime"],
+            #"action": trainStem["stops"][loc]["action"],
+            #"arrTrk": trainStem["arrTrk"],
+            #"nCars4ThisLoc": nCars4ThisLoc,
+            "estDeptTime": trainStem["estDeptTime"]})
+
+    def readArrTrk(self, loc, trainNam):
+        QStem = locs.locDat[loc]["Qs"]["arrivals"]
+        QDict = [d for d in QStem if trainNam in d]
+        print("readArrTrk; loc:", loc, ", QDict:", QDict)
+        try:
+            arrTrk = QDict[0][trainNam]["arrTrk"]        
+            return arrTrk
+        except:
+            return ""
+    
+    def setArrTrk(self, loc, trainNam, arrTrk):
+        QStem = locs.locDat[loc]["Qs"]["arrivals"]
+        index = [idx for idx, d in enumerate(QStem) if trainNam in d]
+        QStem[index[0]][trainNam]["arrTrk"] = arrTrk
+        
+    def remTrnArrTrk(self, loc, track, trainNam):
+        print("removing train ", trainNam, " from arr track: ", track, "in loc ", loc)
+        try:
+            locStem = locs.locDat[loc]["trkPrms"]
+            locStem[track]["train"] = ""
+            locStem[track]["status"] = "unAssnd"
+            locs.locDat[loc]["trkCounts"]["openArrTrks"] +=1
+            return
+        except:
+            print("cannot remove train ", trainNam, " from arr track: ", track, "in loc ", loc)
+            return
+    
+                                
+#=================================================
+class locMgmt():
+    
+    def __init__(self):
+        from routeProc import routeMgmt, rtCaps
+        self.rtCapsObj = rtCaps()
+        self.rtMgmtObj = routeMgmt()
+        self.QmgmtObj = Qmgmt()
+        from display import dispItems
+        self.dispObj = dispItems()
+        pass
+                   
     def rmTrnFrmActions(self, action, loc, trainNam):
         dispObj = dispItems()
         # remove train from ydTrains and location
-        print("rmTrnFrmActions: trainDB.ydTrains: ", trainDB.ydTrains)
+        print("rmTrnFrmActions: trainDB.ydTrains[loc]: ", trainDB.ydTrains[loc])
         try:
-            index = trainDB.ydTrains[action].index(trainNam)
-            trainDB.ydTrains[action].pop(index)
+            index = trainDB.ydTrains[loc][action].index(trainNam)
+            trainDB.ydTrains[loc][action].pop(index)
         except:
             pass
-        if dbgLocal: print("after removal: trainDB.ydTrains: ", trainDB.ydTrains, 
-                "\n trains[trainNam]: ", trainDB.trains[trainNam])
+        if dbgLocal: print("after removal: trainDB.ydTrains[loc]: ", trainDB.ydTrains[loc])
+
         # clear action data from display
         dispObj.clearActionDat(loc)
     
@@ -159,49 +215,27 @@ class locBase():
         try:
             index = locs.locDat[loc]["trains"].index(trainNam)
             locs.locDat[loc]["trains"].pop(index)
+            self.QmgmtObj.remTrnLocQ(loc, trainNam)
         except:
+            print("cannot remove train ", trainNam, " from loc ", loc)
             pass
-        
-    def fillTrnsOnRoute(self, routeNam, trainNam):
-        routeStem = routeCls.routes[routeNam]["trains"]
-        routeStem.append(trainNam)
-        dir = trainDB.trains[trainNam]["direction"]
-        if dir == "east":
-            rtCaps.rtCap[routeNam]["nEastTns"] +=1
-        elif dir == "west":
-            rtCaps.rtCap[routeNam]["nWestTns"] +=1
-       
-    def remTrnsOnRoute(self, routeNam, trainNam):
-        routeStem = routeCls.routes[routeNam]["trains"]
-        try:
-            index = routeStem.index(trainNam)
-            routeStem.pop(index)
-        except:
-            pass
-        
-        dir = trainDB.trains[trainNam]["direction"]
-        numEast = rtCaps.rtCap[routeNam]["nEastTns"]
-        numWest = rtCaps.rtCap[routeNam]["nWestTns"]
-        if dir == "east":
-            num = max(numEast -1, 0)
-            rtCaps.rtCap[routeNam]["nEastTns"] = num
-        elif dir == "west":
-            num = max(numWest -1, 0)
-            rtCaps.rtCap[routeNam]["nWestTns"] = num
         
 
-    def addTrn2LocOrRt(self, loc, trainStem, trainNam): 
+    def placeTrain(self, loc, trainStem, trainNam): 
         coordObj = transForms()
-        rtToEnter = ""
-        if trainStem["status"] != "init":
-            rtToEnter = trainStem["rtToEnter"]
-        if "route" in rtToEnter:
+        #if trainStem["status"] == "init":
+        #    loc = trainStem["rtToEnter"]
+        if "route" in loc:
             self.setTrnCoord(loc, trainNam)
             # fill trainDB with xPlot and yPlot, the canvas/screen coords
             coordObj.xRoute2xPlot(loc, trainNam)
+            self.rtCapsObj.addTrn2RouteQ(loc, trainNam)
+            #self.rtMgmtObj.addTrn2Route(loc, trainNam)
+            self.QmgmtObj.addTrn2LocQ(trainStem["nextLoc"], trainNam, "")
             return
         else:
             locs.locDat[loc]["trains"].append(trainNam)
+            self.QmgmtObj.updateLocQ(loc, trainNam)
             return
 
     def setTrnCoord(self, currLoc, trainNam):
@@ -221,34 +255,47 @@ class locBase():
         for routeNam in routeCls.routes:
             loc = ''.join(loc)
             dest = ''.join(nextLoc)
-            if dbgLocal: print("routNam: ", routeNam, " loc: ", loc, 
+            if dbgLocal and 0: print("routNam: ", routeNam, " loc: ", loc, 
                 " nextLoc: ", dest, "route: ", routeCls.routes[routeNam])
             if (loc in routeCls.routes[routeNam].values()) and \
                 (dest in routeCls.routes[routeNam].values()):
                 return routeNam
         
-    def findRtPrms(self, loc,  trainNam):
-        rtCapsObj = rtCaps()
+    def findRtPrms(self, loc, trainNam):
         # setup train
         trainStem = trainDB.trains[trainNam]
         dest = trainDB.trains[trainNam]["nextLoc"]
         if dest != "":
             # setup new route
-            route4newTrn = self.findRoutes(loc,  trainNam)
+            route4newTrn = self.findRoutes(loc, trainNam)
             trainStem["rtToEnter"] = route4newTrn
-            leftObj = routeCls.routes[route4newTrn]["leftObj"].strip()
-            rtObj = routeCls.routes[route4newTrn]["rtObj"].strip()
+            westObj = routeCls.routes[route4newTrn]["westObj"].strip()
+            eastObj = routeCls.routes[route4newTrn]["eastObj"].strip()
             #routeCls.routes[route4newTrn]["trains"].append( trainNam)
-            if loc == leftObj: 
+            if loc == westObj: 
                 trainStem["direction"] = "east"
-            elif loc == rtObj:
+            elif loc == eastObj:
                 trainStem["direction"] = "west"
             else: 
-                print("no route found",  trainNam,  "leftObj: ", leftObj, "rtObj: "
-                        , rtObj,"loc: ", loc, "direction: ", trainStem["direction"])
+                print("no route found",  trainNam,  "westObj: ", westObj, "eastObj: "
+                        , eastObj,"loc: ", loc, "direction: ", trainStem["direction"])
                 trainStem["status"] = "stop"
         return 
                     
+    def cleanTrnFromLoc(self, loc, trainNam):
+        loc = trainDB.trains[trainNam]["departStop"]
+        if loc != "":
+            arrTrk = self.QmgmtObj.readArrTrk(loc, trainNam)
+            #remove train from loc["trkPrms"]["arrTrk"]
+            self.QmgmtObj.remTrnArrTrk(loc, arrTrk, trainNam)
+            #remove train from loc["trains"] list and
+            #arrival Q
+            self.rmTrnFrmLoc(loc, trainNam)
+            #remove train rectangle from action list above loc
+            self.dispObj.clearActionTrnRecs(loc, trainNam)
+            #re-display action rects after train removed from loc
+            self.dispObj.dispTrnActnRecs(loc)
+    
 
     def cleanupSwAction(self, loc, trainNam, action):
         dispObj = dispItems()
@@ -269,7 +316,25 @@ class locBase():
         # remove from ydTrains action list
         self.rmTrnFrmActions(action, loc, trainNam)
 
-        # clear action data from display
-        dispObj.clearActionDat(loc)
+    def printLocData(self, loc):
+        locStem = locs.locDat[loc]
+        subDict = {}
 
-    
+        for key, value in locStem.items():
+            subDict[key] = value
+            if key == "cars2Class": break
+        print("\nLoc printout:", loc, subDict)
+        print("arrival Q:", locStem["Qs"])
+        print("trains:", locStem["trains"])
+        print("routes:", locStem["routes"])
+        try:
+            for trkContents in locStem["trkCarDict"]:
+                print(trkContents)
+        except:
+            pass
+        for trackNam in locStem["trkPrms"]:
+            print(trackNam, ":", locStem["trkPrms"][trackNam])
+        print("trkCounts:", locStem["trkCounts"])
+        
+        print("trnCnts:", locStem["trnCnts"])
+

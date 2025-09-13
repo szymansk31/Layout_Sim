@@ -2,23 +2,28 @@ import numpy as np
 import tkinter as tk
 from mainVars import mVars
 from fileProc import readFiles
-from display import dispItems
-from locBase import locBase
-from coords import transForms
 from stateVars import locs, dspCh, trainDB, routeCls
-from routeCalcs import rtCaps
 np.set_printoptions(precision=2, suppress=True) 
   
 class trnProc:    
     
     def __init__(self):
+        from locBase import locBase, Qmgmt, locMgmt
         self.locBaseObj = locBase()
+        self.locQmgmtObj = Qmgmt()
+        self.locMgmtObj = locMgmt()
+        from routeProc import routeMgmt, rtCaps
+        self.rtMgmtObj = routeMgmt()
+        self.rtCapsObj = rtCaps()
+        from display import dispItems
+        self.dispObj = dispItems()
+        from coords import transForms
+        self.coordObj = transForms()
+        from dispatch import clearTrnCalcs
+        self.clrTrnObj = clearTrnCalcs()
         pass
     
     def trainCalcs(self, trainDict, trainNam):
-        dispObj = dispItems()
-        coordObj = transForms()
-        rtCapsObj = rtCaps()
 
         match trainDict["status"]:
             case "enroute":
@@ -36,12 +41,13 @@ class trnProc:
                 trainDict["coord"]["xRoute"] += deltaX
                 trainDict["timeEnRoute"] += deltaT
                 trainDict["timeEnRoute"] = round(trainDict["timeEnRoute"], 2)
-                print("distance via timeEnRoute: ", trainDict["timeEnRoute"]*velocity)
+                distTot = round(trainDict["timeEnRoute"]*velocity, 2)
+                print("distance via timeEnRoute: ", distTot)
                 transTime = routeCls.routes[trainDict["currentLoc"]]["transTime"]
                 if mVars.prms["dbgTrnProc"]: self.printTrnEnRoute(trainDict, routeNam, transTime, variance, deltaX)
                 
-                coordObj.xRoute2xPlot(routeNam, trainNam)
-                dispObj.drawTrain(trainNam)
+                self.coordObj.xRoute2xPlot(routeNam, trainNam)
+                self.dispObj.drawTrain(trainNam)
                 match trainDict["direction"]:
                     case "east":
                         if trainDict["coord"]["xPlot"] >= routeCls.routes[routeNam]["x1"]:
@@ -50,22 +56,17 @@ class trnProc:
                         if trainDict["coord"]["xPlot"] <= routeCls.routes[routeNam]["x0"]:
                             self.procTrnStop(trainDict, trainNam)
                                                 
-                    
-            case "wait4Clrnce" if rtCapsObj.checkRtSlots(trainNam):
+            case "waitOnRoute":
+                pass
+            case "wait4Clrnce" if mVars.prms["useDispatch"] == False:
                 print("train: ", trainNam, " switching to enroute status")
                 trainDict["status"] = "enroute"
+                currentLoc = trainDict["currentLoc"]
                 trainDict["currentLoc"] = trainDict["rtToEnter"]
-                self.locBaseObj.fillTrnsOnRoute(trainDict["currentLoc"], trainNam)
+                self.rtMgmtObj.addTrn2Route(trainDict["currentLoc"], trainNam)
                 # remove train rectangles above the location rectangle
-                dispObj.drawTrain(trainNam)
-                loc = trainDB.trains[trainNam]["departStop"]
-                if loc != "":
-                    self.locBaseObj.rmTrnFrmLoc(loc, trainNam)
-                    dispObj.clearActionTrnRecs(loc, trainNam)
-                pass
-            case "wait4Clrnce" if not rtCapsObj.checkRtSlots(trainNam):
-                rtCapsObj.addTrn2RouteQ(trainDict["rtToEnter"], trainNam)
-                
+                self.dispObj.drawTrain(trainNam)
+                self.locMgmtObj.cleanTrnFromLoc(currentLoc, trainNam)
                 pass
             case "building"|"built"|"init":
                 #procssing done in locProc
@@ -92,8 +93,6 @@ class trnProc:
 
             
     def procTrnStop(self, trainDict, trainNam):
-        dispObj = dispItems()
-        rtCapsObj = rtCaps()
         routeNam = trainDict["currentLoc"]
         consistNum = trainDict["consistNum"]
         consistNam = "consist"+str(consistNum)
@@ -103,6 +102,12 @@ class trnProc:
         trainDict["rtToEnter"] = ""
         trainDict["currentLoc"] = stopLoc
         trainDict["departStop"] = stopLoc
+        QStem = locs.locDat[stopLoc]["Qs"]["arrivals"]
+        if mVars.prms["useDispatch"] == True:
+            idx = [idx for idx, QDict in enumerate(QStem) if trainNam in QDict]
+            arrTrk = QStem[idx[0]][trainNam]["arrTrk"]
+            self.rtMgmtObj.remTrnsOnRoute(routeNam, trainNam)
+        trainDict["coord"]["xTrnInit"] = 0 # reset for next route
         print("train: ", trainNam, "entering terminal: ", stopLoc, "trainDict: ", trainDict)
         print("train: ", trainNam, "consistNum: ", consistNum, 
               "contents: ", trainDB.consists[consistNam])
@@ -113,7 +118,8 @@ class trnProc:
             case "terminate":
                 trainDict["status"] = "terminate"
                 trainDict["timeEnRoute"] = 0
-                dispObj.clearRouteTrnRecs(trainNam)
+                trainDict["estDeptTime"] = mVars.time + trainDB.avgSwTime
+                #self.dispObj.clearRouteTrnRecs(trainNam)
                 pass
             case "rdCrwSw": 
                 from swCalcs import swCalcs
@@ -121,41 +127,42 @@ class trnProc:
                 trainDict["status"] = "rdCrwSw"
                 # setup list of industries when first entering swArea
                 swCalcs.indusIter = iter(locs.locDat[stopLoc]["industries"])
-                self.updateTrain4Stop(stopLoc, trainDict)
+                trainDict["estDeptTime"] = mVars.time + trainDB.avgSwTime
+                self.updateTrain4Stop(stopLoc, trainDict, trainNam, arrTrk)
                 pass
             case "dropPickup":
                 # no industry switching done, just car exchange
                 # switching typically done by yard crew at yards,
                 # train crew at other locations
                 trainDict["status"] = "dropPickup"
-                trainDict["timeEnRoute"] = 0
-                self.updateTrain4Stop(stopLoc, trainDict)
-                pass
+                trainDict["estDeptTime"] = mVars.time + trainDB.avgSwTime
+                self.updateTrain4Stop(stopLoc, trainDict, trainNam, arrTrk)
             case "continue":
                 #no action at this stop - continue to nextLoc
                 trainDict["status"] = "continue"
-                trainDict["timeEnRoute"] = 0
-                self.updateTrain4Stop(stopLoc, trainDict)
+                trainDict["estDeptTime"] = mVars.time + trainDB.avgContTime
+                self.updateTrain4Stop(stopLoc, trainDict, trainNam, arrTrk)
 
-        dispObj.drawTrain(trainNam)
-        self.locBaseObj.addTrn2LocOrRt(stopLoc, trainDict, trainNam)
+        self.locMgmtObj.findRtPrms(stopLoc, trainNam)
+        self.dispObj.drawTrain(trainNam)
+        self.locMgmtObj.placeTrain(stopLoc, trainDict, trainNam)
 
-        #remove train from that route
-        self.locBaseObj.remTrnsOnRoute(routeNam, trainNam)
         #routeStem["trains"].pop(index)
         mVars.numOpBusy -=1
 
-    def updateTrain4Stop(self, stopLoc, trainDict):
+    def updateTrain4Stop(self, stopLoc, trainDict, trainNam, arrTrk):
         trainDict["numStops"] -=1
         if trainDict["numStops"] == 0: 
             trainDict["status"] = "terminate"
             return
         self.fillNextLoc(stopLoc, trainDict)
-        pass
+
+        trainDict["timeEnRoute"] = 0
+       
     
 
     def fillNextLoc(self, stopLoc, trainDict):        
-        print("getNextLoc: trainDict: ", trainDict)
+        print("fillNextLoc: trainDict: ", trainDict)
         
         iterStops = iter(trainDict["stops"].keys())
         nextLoc = None
@@ -168,7 +175,7 @@ class trnProc:
         else:
             trainDict["nextLoc"] = nextLoc
          
-        print("getNextLoc: trainDict: ", trainDict)
+        print("fillNextLoc: trainDict: ", trainDict)
             
         return 
 
