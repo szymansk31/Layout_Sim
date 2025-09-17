@@ -18,7 +18,7 @@ class dispItems():
             x = (gui.guiDict[loc]["x0"] + gui.guiDict[loc]["x1"])*0.5
             y = gui.guiDict[loc]["y0"] + gui.guiDict["locDims"]["yActTxt"]
             text = "action: "
-            locs.locDat[loc]["dispObjs"]["actionObjID"] = \
+            locs.locDat[loc]["actionObjID"] = \
                 gui.C.create_text(x, y, text=text, font=("Arial", 8))
             
             type = locs.locDat[loc]["type"]
@@ -112,17 +112,17 @@ class dispItems():
                         text += stop+": "+str(trainDB.consists[consistNam]["stops"][stop]) 
                         text += "\n"
             numTrns +=1
-        if locStem["dispObjs"]["firstDispLoc"]:
-            locStem["dispObjs"]["locObjID"] = \
+        if locStem["firstDispLoc"]:
+            locStem["locObjID"] = \
                 gui.C.create_text(x, y, text=text, font=("Arial", 8), justify="left")
-            locStem["dispObjs"]["firstDispLoc"] = 0
+            locStem["firstDispLoc"] = 0
 
         if loc in locs.labels:
             locs.labels[loc].config(text=text)
-            gui.C.delete(locStem["dispObjs"]["locTrnTxtID"])
-            gui.C.delete(locStem["dispObjs"]["locObjID"])
+            gui.C.delete(locStem["locTrnTxtID"])
+            gui.C.delete(locStem["locObjID"])
         else:
-            gui.C.itemconfigure(locStem["dispObjs"]["locObjID"], text=text, font=("Arial", 8))
+            gui.C.itemconfigure(locStem["locObjID"], text=text, font=("Arial", 8))
 
         self.dispTrnActnRecs(loc)
 
@@ -131,7 +131,7 @@ class dispItems():
         locStem = locs.locDat[loc]
         text = "# Cars: " + str(locStem["totCars"]) + ", class: " + \
             str(locStem["cars2Class"]) + " \n"
-        gui.C.itemconfigure(locStem["dispObjs"]["actionObjID"], text=text, font=("Arial", 8))
+        gui.C.itemconfigure(locStem["actionObjID"], text=text, font=("Arial", 8))
         
     def dispActionDat(self, loc, action, ydTrainNam):
         text = ''
@@ -140,7 +140,7 @@ class dispItems():
             str(locStem["cars2Class"]) + " \n"
         text += "action:" + action + " \n" + \
             ydTrainNam 
-        gui.C.itemconfigure(locStem["dispObjs"]["actionObjID"], text=text, font=("Arial", 8))
+        gui.C.itemconfigure(locStem["actionObjID"], text=text, font=("Arial", 8))
         pass
 
     def dispSwitchDat(self, loc, indus, ydTrainNam):
@@ -149,12 +149,12 @@ class dispItems():
         text = "# Cars: " + str(locStem["totCars"]) + ", class: " + \
             str(locStem["cars2Class"]) + " \n"
         text += ydTrainNam + " switching:\n" + indus
-        gui.C.itemconfigure(locStem["dispObjs"]["actionObjID"], text=text, font=("Arial", 8))
+        gui.C.itemconfigure(locStem["actionObjID"], text=text, font=("Arial", 8))
         pass
 
     def clearActionTrnRecs(self, loc, ydTrainNam):
         print("clearing action train rectangles for train ", ydTrainNam, " in loc: ", loc)
-        locStem = locs.locDat[loc]["dispObjs"]
+        locStem = locs.locDat[loc]
         gui.C.delete(locStem["locTrnRectID"])
         gui.C.delete(locStem["locTrnNumID"])
         
@@ -200,13 +200,13 @@ class dispItems():
         totXWidth = numTrns*trnLen
         xtrn = (gui.guiDict[loc]["x0"] + gui.guiDict[loc]["x1"])*0.5 - totXWidth*0.5
 
-        gui.C.delete(locStem["dispObjs"]["locTrnRectID"])
-        gui.C.delete(locStem["dispObjs"]["locTrnNumID"])
+        gui.C.delete(locStem["locTrnRectID"])
+        gui.C.delete(locStem["locTrnNumID"])
         for label in dispList:
             idx = 0
             labelStem = dispList[label]
             y = labelStem["y"]
-            if locStem["dispObjs"]["firstDispTrnTxt"]:
+            if locStem["firstDispTrnTxt"]:
                 gui.C.create_text(xtrn-90, y+6, text=label, 
                         font=("Arial", 8))
             for train in labelStem["trains"]:
@@ -215,11 +215,11 @@ class dispItems():
                 #gui.C.delete(trainStem[train]["trnNumTag"])
                 gui.C.create_rectangle(xtrn+20*idx, y, xtrn+20*idx+trnLen, 
                     y+trnHt, fill=trainStem[train]["color"], 
-                    tags=locStem["dispObjs"]["locTrnRectID"])
+                    tags=locStem["locTrnRectID"])
                 gui.C.create_text(xtrn+10+20*idx, y+6, text=trainNum , 
-                    font=("Arial", 8), tags=locStem["dispObjs"]["locTrnNumID"])
+                    font=("Arial", 8), tags=locStem["locTrnNumID"])
                 idx +=1
-        locStem["dispObjs"]["firstDispTrnTxt"] = 0
+        locStem["firstDispTrnTxt"] = 0
 
     # coordinates are x, y within the canvas; routes at an angle have movement calculated
     # along rotated coordinates in trainProc

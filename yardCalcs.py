@@ -199,7 +199,6 @@ class ydCalcs():
         # take first train under swTrain action; this will
         # continue to be switched until completed
         ydTrainNam = trainDB.ydTrains[loc]["swTrain"][0]
-        locs.locDat[loc]["ready2Pickup"] = locs.locDat[loc]["ready2Pickup"]
         print("ydtrainNam: ", ydTrainNam, "ready2Pickup: ", locs.locDat[loc]["ready2Pickup"])
         self.dispObj.dispActionDat(loc, "swTrain", ydTrainNam)
 
@@ -220,7 +219,7 @@ class ydCalcs():
             availCars, trainDest = self.classObj.track2Train(loc, "", ydTrainNam)
             numCars = trainDB.trains[ydTrainNam]["numCars"]
             locArrTime = trainDB.trains[ydTrainNam]["locArrTime"]
-            if (numCars >= mVars.prms["trainSize"]*0.7) or\
+            if (availCars >= mVars.prms["trainSize"]*0.7) or\
                 ((mVars.time - locArrTime) >= mVars.prms["mxTrnDwlTim"]):
                 # train has reached max size or max dwell time
                 # train no longer has pickups or drops

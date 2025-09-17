@@ -22,9 +22,9 @@ class locBase():
         locs.locDat = files.readFile("locationFile")
         for loc in locs.locDat:
             self.countCars(loc)
-            locs.locDat[loc]["locTrnRectID"] = loc+"TrnRectID"
-            locs.locDat[loc]["locTrnNumID"] = loc+"TrnNumID"
-            locs.locDat[loc]["locRectID"] = loc+"RectID"
+            locs.locDat[loc]["dispObjs"]["locTrnRectID"] = loc+"TrnRectID"
+            locs.locDat[loc]["dispObjs"]["locTrnNumID"] = loc+"TrnNumID"
+            locs.locDat[loc]["dispObjs"]["locRectID"] = loc+"RectID"
             
         QmgmtObj = Qmgmt()
         QmgmtObj.initLocQs()
@@ -334,7 +334,6 @@ class locMgmt():
             pass
         for trackNam in locStem["trkPrms"]:
             print(trackNam, ":", locStem["trkPrms"][trackNam])
-        print("trkCounts:", locStem["trkCounts"])
         
         print("trnCnts:", locStem["trnCnts"])
 

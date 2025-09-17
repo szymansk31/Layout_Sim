@@ -47,7 +47,7 @@ class dispSim():
         for item in guiDict:
             match guiDict[item]["type"]:
                 case "yard"|"swArea"|"staging":
-                    locStem = locs.locDat[item]
+                    locStem = locs.locDat[item]["dispObjs"]
                     gui.C.create_rectangle(
                         guiDict[item]["x0"], 
                         guiDict[item]["y0"], 
