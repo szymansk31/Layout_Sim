@@ -145,7 +145,7 @@ class trnProc:
 
         self.locMgmtObj.findRtPrms(stopLoc, trainNam)
         self.dispObj.drawTrain(trainNam)
-        self.locMgmtObj.placeTrain(stopLoc, trainDict, trainNam)
+        self.locMgmtObj.placeTrain(stopLoc, trainNam)
 
         #routeStem["trains"].pop(index)
         mVars.numOpBusy -=1

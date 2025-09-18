@@ -41,5 +41,14 @@
     "OilCity": {"box": 2, "tank": 0,"rfr": 2, "hop": 0, 
         "gons": 0, "flats": 0}
         }
+    },
+"consist9": {
+"consistNum": 9,
+"trainNum": 9,
+"stops": {
+    "Kiski": {},
+    "KiskiIndus": {"box": 5, "tank": 2,"rfr": 2, "hop": 3, 
+        "gons": 0, "flats": 0}
+        }
     }
 }

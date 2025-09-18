@@ -30,7 +30,7 @@ class dispItems():
         # Create a Toplevel window for the popup
         locs.locPop[loc] = tk.Toplevel(gui.root)
         print("popup windows: ", locs.locPop)
-        locs.locPop[loc].title(loc + " Window")
+        locs.locPop[loc].title(loc)
         locs.locPop[loc].geometry("400x400")
         locs.locPop[loc]['bg'] = 'tan'
         

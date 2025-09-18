@@ -31,6 +31,19 @@
     "stops": {
     "ErieRRStaging": {"action": "terminate"}
             }
+    },
+"train9": {
+    "trainNum": 9,
+    "consistNum": 9,
+    "origLoc":"OilCity", 
+    "currentLoc":"OilCity", 
+    "finalLoc": "KiskiIndus",
+    "status": "wait4Clrnce",
+    "startTime": 0,
+    "stops": {
+    "Kiski": {"action": "continue"},
+    "KiskiIndus": {"action": "rdCrwSw"}
+            }
     }
 }
 

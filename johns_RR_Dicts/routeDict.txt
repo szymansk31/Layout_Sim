@@ -49,5 +49,16 @@
         "eastSlots": 0,
         "westSlots": 0
     }
+},
+"route5": {
+    "Q": [],
+    "capacity": {
+        "nEastTns": 0,
+        "nWestTns": 0,
+        "totTrns": 0,
+        "samNoOpoCap": 1, "samOppoCap": 0, "oppoDirCap": 0,
+        "eastSlots": 0,
+        "westSlots": 0
+    }
 }
 }

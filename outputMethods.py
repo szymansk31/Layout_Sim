@@ -85,7 +85,7 @@ class statSave():
                     "; started: " + str(locStem["trnCnts"]["started"]) +\
                     "; switched: " + str(locStem["trnCnts"]["switched"]) +\
                     "; brkDown: " + str(locStem["trnCnts"]["brkDown"]) +\
-                    "; passThru: " + str(locStem["trnCnts"]["passThru"])
+                    "; continue: " + str(locStem["trnCnts"]["continue"])
                 statFile.write(text)
  
                 statFile.write("\nTrain and consist:     ")
@@ -148,7 +148,7 @@ class statSave():
                     "started":  locStem["trnCnts"]["started"],
                     "switched":  locStem["trnCnts"]["switched"],
                     "brkDown":  locStem["trnCnts"]["brkDown"],
-                    "passThru":  locStem["trnCnts"]["passThru"]}
+                    "continue":  locStem["trnCnts"]["continue"]}
                 tmpDict.update(trnCnts)
                 varDict[timeKey][loc] = tmpDict
 

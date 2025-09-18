@@ -24,6 +24,11 @@
     "x0": 600, "y0": 220, 
     "text": "ErieRRStaging"
 },
+"KiskiIndus": {
+    "type": "swArea",
+    "x0": 300, "y0": 220, 
+    "text": "KiskiIndus"
+},
 "route1": {
     "type": "route", "westObj": "pgh", "eastObj": "Kiski",
     "text": "Route 1",
@@ -43,6 +48,11 @@
     "type": "route", "westObj": "ErieRRStaging", "eastObj": "OilCity",
     "text": "Route 4",
     "transTime": 10
+},
+"route5": {
+    "type": "route", "westObj": "KiskiIndus", "eastObj": "Kiski",
+    "text": "Route 5",
+    "transTime": 5
 },
 "trainData": {
     "type": "train", "height": 10, "length": 20

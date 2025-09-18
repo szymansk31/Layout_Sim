@@ -146,26 +146,50 @@ class trainInit():
         trainStem["trnLabelTag"] = trainNam+"LabelTag"
 
     def findStops(self, loc, dest):
+        adjLocWest = locs.locDat[loc]["adjLocWest"]
+        adjLocEast = locs.locDat[loc]["adjLocEast"]
+        print("findStops; loc:", loc, ", dest:", dest)
+        print("adjLocWest:", adjLocWest,
+              ", adjLocEast:", adjLocEast)
         from gui import gui
         stops = {}
-        testLoc = loc
+        currLoc = loc
         nextLoc = dest
+        nWestAdjLocs = len(adjLocWest)
+        nEastAdjLocs = len(adjLocEast)
+        eastLocIdx = 0
+        westLocIdx = 0
         numStops = 0
+        if gui.guiDict[nextLoc]["x0"] < gui.guiDict[currLoc]["x0"]:
+            searchDir = "west"
+        else: searchDir = "east"
         while 1:
-            if dest in locs.locDat[testLoc]["adjLocNames"].values():
+            match searchDir:
+                case "west":
+                    locList = locs.locDat[currLoc]["adjLocWest"]
+                case "east":
+                    locList = locs.locDat[currLoc]["adjLocEast"]
+            if dest in locList:
                 stops.update({dest: {"action": "terminate"}})
                 numStops +=1
                 return numStops, stops, nextLoc
 
-            if gui.guiDict[dest]["x0"] < gui.guiDict[loc]["x0"]:
-                tmpStop = locs.locDat[testLoc]["adjLocNames"]["W"]
-                stops[tmpStop] = dict(action = "continue")
-                numStops +=1
+                if searchDir == "west" and westLocIdx == nWestAdjLocs: westLocIdx +=1
+                if searchDir == "east" and eastLocIdx == nEastAdjLocs: eastLocIdx +=1
+                eastLocIdx +=1
+                
+
+            if searchDir == "west":
+                tmpStop = locs.locDat[currLoc]["adjLocWest"][westLocIdx]
             else:
-                tmpStop = locs.locDat[testLoc]["adjLocNames"]["E"]
-                stops[tmpStop] = dict(action = "continue")
-                numStops +=1
+                tmpStop = locs.locDat[currLoc]["adjLocEast"][eastLocIdx]
+            stops[tmpStop] = dict(action = "continue")
+            currLoc = tmpStop
+            numStops +=1
             if numStops == 1: nextLoc = tmpStop
-            testLoc = tmpStop    
+                
         
         return
+    
+    def chooseBranchLine(self, loc, dest):
+        pass

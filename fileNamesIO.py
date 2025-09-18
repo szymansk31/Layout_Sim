@@ -8,7 +8,7 @@ class fileNames:
         self.fNames = {
             "paramFile": "paramDict.txt",
             "guiFile": mVars.prms["dictDirect"] + "/guiInfo.txt",
-            "layoutGeomFile": mVars.prms["dictDirect"] + "/layoutGeom.txt",
+            #"layoutGeomFile": mVars.prms["dictDirect"] + "/layoutGeom.txt",
             "routeFile": mVars.prms["dictDirect"] + "/routeDict.txt",
             "scheduleFile": mVars.prms["dictDirect"] + "/schedule.txt",
             "locationFile": mVars.prms["dictDirect"] + "/locInfo.txt",

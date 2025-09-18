@@ -39,8 +39,8 @@
             "maxCars": 0, "currCars": 0, "status": "unAssnd"}
    },
     "numAdjLocs": 1,
-    "adjLocNames": {"E":"Kiski"},
-    "time2AdjLocs": [10, 10],
+    "adjLocWest": [],
+    "adjLocEast": ["Kiski"],
     "trains": [],
     "dispObjs": {
         "firstDispLoc": 1,
@@ -58,7 +58,7 @@
         "started": 0,
         "switched": 0,
         "brkDown": 0,
-        "passThru": 0
+        "continue": 0
 	},
     "bldTrnTimes": [10, 20, 30],
     "trn4Action":[],
@@ -68,7 +68,7 @@
 },
 "Kiski": {
     "type":"yard",
-    "destTrkTots": {"pgh": 0, "OilCity": 0, "NStaging": 0, "industries": 0},
+    "destTrkTots": {"pgh": 0, "OilCity": 0, "NStaging": 0, "KiskiIndus": 0, "industries": 0},
     "totCars": 0,
     "cars2Class": 0,
     "time2Class": 0,
@@ -84,6 +84,8 @@
         "OilCity"    :{"box": 3, "tank": 2, "rfr": 5, "hop": 5, 
         "gons": 1, "flats": 3},
         "NStaging"    :{"box": 6, "tank": 1, "rfr": 2, "hop": 2, 
+        "gons": 1, "flats": 1},
+        "KiskiIndus"    :{"box": 6, "tank": 1, "rfr": 2, "hop": 2, 
         "gons": 1, "flats": 1},
         "industries"   :{"box": 0, "tank": 0, "rfr": 0, "hop": 0, 
         "gons": 0, "flats": 0}
@@ -102,9 +104,9 @@
         "NStaging" : {"funcs": ["classify", "depart"], "train": "",
             "maxCars": 0, "currCars": 0, "status": "unAssnd"}
    },
-    "numAdjLocs": 2,
-    "adjLocNames": {"W":"pgh", "E":"OilCity"},
-    "time2AdjLocs": [10, 10],
+    "numAdjLocs": 3,
+    "adjLocWest": ["pgh", "KiskiIndus"],
+    "adjLocEast": ["OilCity"],
     "trains": [],
     "dispObjs": {
         "firstDispLoc": 1,
@@ -122,7 +124,7 @@
         "started": 0,
         "switched": 0,
         "brkDown": 0,
-        "passThru": 0
+        "continue": 0
 	},
     "bldTrnTimes": [10, 25, 30],
     "trn4Action":[],
@@ -170,8 +172,8 @@
             "maxCars": 0, "currCars": 0, "status": "unAssnd"}
    },
     "numAdjLocs": 3,
-    "adjLocNames": {"Wstag":"ErieRRStaging", "W":"Kiski", "E":"NStaging"},
-    "time2AdjLocs": [10, 10],
+    "adjLocWest": ["ErieRRStaging", "Kiski"],
+    "adjLocEast": ["NStaging"],
     "trains": [],
     "dispObjs": {
         "firstDispLoc": 1,
@@ -189,7 +191,7 @@
         "started": 0,
         "switched": 0,
         "brkDown": 0,
-        "passThru": 0
+        "continue": 0
 	},
     "bldTrnTimes": [10, 25, 30],
     "trn4Action":[],
@@ -221,8 +223,8 @@
             "maxCars": 0, "currCars": 0, "status": "unAssnd"}
    },
     "numAdjLocs": 1,
-    "adjLocNames": {"W":"OilCity"},
-    "time2AdjLocs": [10, 10],
+    "adjLocWest": ["OilCity"],
+    "adjLocEast": [],
     "trains": [],
     "dispObjs": {
         "firstDispLoc": 1,
@@ -240,7 +242,7 @@
         "started": 0,
         "switched": 0,
         "brkDown": 0,
-        "passThru": 0
+        "continue": 0
 	},
     "bldTrnTimes": [],
     "trn4Action":[],
@@ -271,8 +273,8 @@
    },
     "numDepTrks": 0,
     "numAdjLocs": 1,
-    "adjLocNames": {"E":"OilCity"},
-    "time2AdjLocs": [10, 10],
+    "adjLocWest": [],
+    "adjLocEast": ["OilCity"],
     "trains": [],
     "dispObjs": {
         "firstDispLoc": 1,
@@ -290,12 +292,100 @@
         "started": 0,
         "switched": 0,
         "brkDown": 0,
-        "passThru": 0
+        "continue": 0
 	},
     "bldTrnTimes": [1, 5],
     "trn4Action":[],
     "ready2Pickup": 0,
     "classRate": 2,
     "routes": []
+},
+"KiskiIndus": {
+    "type":"swArea",
+    "totCars": 0,
+    "cars2Class": 0,
+    "time2Class": 0,
+    "carCapacity": 30,
+    "offspot": 
+        {"box": 0, "tank": 0, "rfr": 0, "hop": 2, "gons": 1, "flats": 0},
+    "numOffspot": 0,
+    "destTrkTots": {"yard1": 0, "yard2": 0, "staging1":0, "staging2": 0},
+    "indusTots": {"indus1": 0, "bakery": 0, "foundry": 0},
+    "industries": {
+        "teamTrack": {
+            "numCarSpots": 3,
+            "pickups":
+                {"box": 1, "tank": 1, "rfr": 0},
+            "spot"    :
+                {"box": 1, "tank": 1, "flats": 1},
+            "leave"    :
+                {"box": 1, "tank": 1, "rfr": 0, "hop": 0, "flats": 1}
+            },
+        "oilDealer": {
+            "numCarSpots": 2,
+            "pickups":
+                {"box": 2},
+            "spot"    :
+                {"box": 2},
+            "leave"    :
+                {"box": 1}
+            },
+        "warehouses": {
+            "numCarSpots": 3,
+            "pickups":
+                {"box": 0, "hop": 2, "gons": 1, "flats": 0},
+            "spot"    :
+                {"box": 1, "hop": 1, "gons": 0, "flats": 1},
+            "leave"    :
+                {"box": 1, "hop": 0, "gons": 0, "flats": 1}
+            }
+        },
+    "Qs": {
+        "arrivals": [{"train": {"estArrTime": 0, 
+		    "action": "", "arrTrk": "", "nCars4ThisLoc": 0, "estDeptTime":0}}]
+    
+    },
+    "trkPrms": {
+        "track7" : {"funcs": ["arrival", "depart"], "train": "",
+            "maxCars": 0, "currCars": 0, "status": "unAssnd"},
+        "track9" : {"funcs": ["arrival", "depart"], "train": "", 
+            "maxCars": 0, "currCars": 0, "status": "unAssnd"},
+        "mainLine" : {"funcs": ["arrival", "depart"], "train": "", 
+            "maxCars": 0, "currCars": 0, "status": "unAssnd"},
+        "pgh" : {"funcs": ["classify", "depart"], "train": "",
+            "maxCars": 0, "currCars": 0, "status": "unAssnd"},
+        "OilCity" : {"funcs": ["classify", "depart"], "train": "",
+            "maxCars": 0, "currCars": 0, "status": "unAssnd"},
+        "NStaging" : {"funcs": ["classify", "depart"], "train": "",
+            "maxCars": 0, "currCars": 0, "status": "unAssnd"}
+   },
+    "numAdjLocs": 2,
+    "adjLocWest": [],
+    "adjLocEast": ["Kiski"],
+    "trains": [],
+    "dispObjs": {
+        "firstDispLoc": 1,
+        "firstDispTrnTxt": 1,
+        "locObjID": 0,
+        "locRectID": "",
+        "actionObjID": 0,
+        "locTrnTxtID": 0,
+        "locTrnRectID": "",
+        "locTrnNumID": ""
+    },
+    "startMisc": 0,
+    "trnCnts": {
+        "built": 0,
+        "started": 0,
+        "switched": 0,
+        "brkDown": 0,
+        "continue": 0
+	},
+    "bldTrnTimes": [10, 25, 30],
+    "trn4Action":[],
+    "ready2Pickup": 0,
+    "classRate": 2,
+    "routes": []
 }
+
 }

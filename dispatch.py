@@ -33,8 +33,7 @@ class schedProc():
                 (mVars.time >= dspCh.sched[trainNam]["startTime"]):
                 self.baseTrnDict(trainNam)
                 self.trainInitObj.fillTrnDicts(loc, trainNam)
-                self.locMgmtObj.placeTrain(currentLoc, trainDB.trains[trainNam], 
-                        trainNam)
+                self.locMgmtObj.placeTrain(currentLoc, trainNam)
                 self.dispItemsObj.drawTrain(trainNam)
                 dspCh.sched.pop(trainNam)
                 return

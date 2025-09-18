@@ -90,7 +90,7 @@ class locProc():
                     # no action for yard.  May have a call to 
                     # dispatcher eventually, so process "continue" here 
                     # as no action needed by train crew (modulo dispatch call)
-                    locs.locDat[loc]["trnCnts"]["passThru"] += 1
+                    locs.locDat[loc]["trnCnts"]["continue"] += 1
                     self.startTrain(loc, trainNam)
 
                 case "built":
@@ -105,6 +105,12 @@ class locProc():
                               " built and leaving for (nextLoc): ", 
                               nextLoc)
                         self.startTrain(loc, trainNam)
+                        
+                case "wait4Clrnce":
+                    rtToEnter = trainDB.trains[trainNam]["rtToEnter"]
+                    if trainNam not in routeCls.routes[rtToEnter]["Q"]:
+                        self.locMgmtObj.placeTrain(rtToEnter, trainNam)
+                    
 
 
     def startTrain(self, loc, trainNam):
@@ -116,7 +122,9 @@ class locProc():
             self.locMgmtObj.findRtPrms(loc, trainNam)
         routeNam = trainStem["rtToEnter"]
         trainStem["estArrTime"] = mVars.time + routeCls.routes[routeNam]["transTime"]
-        self.locMgmtObj.placeTrain(routeNam, trainStem, trainNam)
+        # note that routeNam is passed to placeTrain, which therefore
+        # places train on routeQ and locQ for nextLoc
+        self.locMgmtObj.placeTrain(routeNam, trainNam)
         trainStem["firstDispTrn"] = 1
         
         #print("trainStem: ", trainStem, ", original dict: ", trainDB.trains[trainNam])

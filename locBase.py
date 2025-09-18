@@ -221,8 +221,9 @@ class locMgmt():
             pass
         
 
-    def placeTrain(self, loc, trainStem, trainNam): 
+    def placeTrain(self, loc, trainNam): 
         coordObj = transForms()
+        trainStem = trainDB.trains[trainNam]
         #if trainStem["status"] == "init":
         #    loc = trainStem["rtToEnter"]
         if "route" in loc:
@@ -327,6 +328,8 @@ class locMgmt():
         print("arrival Q:", locStem["Qs"])
         print("trains:", locStem["trains"])
         print("routes:", locStem["routes"])
+        print("adjLocWest:", locStem["adjLocWest"],
+              ", adjLocEast:", locStem["adjLocEast"])
         try:
             for trkContents in locStem["trkCarDict"]:
                 print(trkContents)
